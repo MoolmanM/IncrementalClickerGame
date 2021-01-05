@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public Swipe swipeControls;
     private int menuValue = 0;
     private float buildPanelY, buildPanelSizeDeltaY;
+    public Animator animator;
     public void Start()
     {
         BuildingsTabActive();
@@ -58,12 +59,15 @@ public class UIManager : MonoBehaviour
 
         if (swipeControls.SwipeLeft)
         {
+            animator.SetBool("hasSwipedLeft", true);
             menuValue++;
+            
         }
         else if (swipeControls.SwipeRight)
         {
             menuValue--;
         }
+        
     }
     private void Update()
     {
@@ -78,7 +82,8 @@ public class UIManager : MonoBehaviour
         }
         else if (menuValue == 1)
         {
-            CraftingTabActive();         
+            CraftingTabActive();
+            animator.SetBool("hasChanged", true);
         }
     }
     /*public void HandleDropdownValue(int value)
