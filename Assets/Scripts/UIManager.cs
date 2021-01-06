@@ -8,9 +8,9 @@ public class UIManager : MonoBehaviour
 {
     public GameObject buildingMainPanel, craftingMainPanel, headerText, buildPanel, layoutGroup;
     public Swipe swipeControls;
-    private int menuValue = 0;
+    public static int menuValue = 0;
     private float buildPanelY, buildPanelSizeDeltaY;
-    public Animator animator;
+    public Animation buildPanelAnimation;
     public void Start()
     {
         BuildingsTabActive();
@@ -59,16 +59,18 @@ public class UIManager : MonoBehaviour
 
         if (swipeControls.SwipeLeft)
         {
-            animator.SetBool("hasSwipedLeft", true);
-            menuValue++;
+            buildPanelAnimation.Play("BuildPanelSwipeLeft");
+            //buildPanelAnimation.GetComponent<AnimationEvent>.
+            //menuValue++;
             
         }
         else if (swipeControls.SwipeRight)
         {
             menuValue--;
         }
-        
+
     }
+
     private void Update()
     {
         Swiping();
@@ -83,30 +85,6 @@ public class UIManager : MonoBehaviour
         else if (menuValue == 1)
         {
             CraftingTabActive();
-            animator.SetBool("hasChanged", true);
         }
     }
-    /*public void HandleDropdownValue(int value)
-    {
-
-        if (value == 0)
-        {
-            Debug.Log(value);
-            BuildingsTabActive();
-            //make everything else not visible besides building tab
-        }
-
-        if (value == 1)
-        {
-            Debug.Log(value);
-            CraftingTabActive();
-            //make every not not visible besides crafting tab
-        }
-
-        if (value == 2)
-        {
-            Debug.Log(value);
-            //make every tab not visible besides research tab
-        }
-    }*/
 }
