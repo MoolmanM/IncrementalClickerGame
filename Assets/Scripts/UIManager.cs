@@ -3,19 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject buildingMainPanel, craftingMainPanel, headerText, buildPanel, layoutGroup;
+    public GameObject buildingMainPanel, craftingMainPanel, headerText, buildPanel, mainGroup, sideGroup;
     public Swipe swipeControls;
     public static int menuValue = 0;
-    private float buildPanelY, buildPanelSizeDeltaY;
     public Animation buildPanelAnimation;
+    private int halfOfParent, cacheOfHalf;
+
     public void Start()
-    {
+    {     
         BuildingsTabActive();
-        buildPanelY = buildPanel.transform.localPosition.y;
-        buildPanelSizeDeltaY = buildPanel.GetComponent<RectTransform>().sizeDelta.y;
+        if (mainGroup.transform.childCount % 2 != 0)
+        {
+            halfOfParent = (mainGroup.transform.childCount / 2) + 1;
+            cacheOfHalf = halfOfParent;
+        }
+        else
+        {
+            halfOfParent = (mainGroup.transform.childCount / 2);
+        }
+        while (mainGroup.transform.childCount > cacheOfHalf)
+        {
+            mainGroup.transform.GetChild(Random.Range(0, mainGroup.transform.childCount)).SetParent(sideGroup.transform, false);
+        }
     }
 
     public void LargeBuildingTabActive()
@@ -23,22 +36,42 @@ public class UIManager : MonoBehaviour
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
         headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
-        buildPanel.transform.localPosition = new Vector2(-0.2293701f, buildPanelY);
-        buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-0.5004883f, buildPanelSizeDeltaY);
-        buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(-0.2293701f, buildPanelY);
-        layoutGroup.GetComponent<GridLayoutGroup>().constraintCount = 2;
-        layoutGroup.GetComponent<GridLayoutGroup>().cellSize = new Vector2(540, 80);
+        sideGroup.SetActive(true);
+        /*if (mainGroup.transform.childCount % 2 != 0)
+        {
+            halfOfParent = (mainGroup.transform.childCount / 2) + 1;
+            cacheOfHalf = halfOfParent;
+        }
+        else
+        {
+            halfOfParent = (mainGroup.transform.childCount / 2);
+        } */
+        halfOfParent = (mainGroup.transform.childCount / 2);
+        cacheOfHalf = halfOfParent;
+        if (mainGroup.transform.childCount > cacheOfHalf)
+        {
+            mainGroup.transform.GetChild(Random.Range(0, mainGroup.transform.childCount + 1)).SetParent(sideGroup.transform, false);
+        }
+
+        mainGroup.GetComponent<RectTransform>().sizeDelta = new Vector2(540, 80);
+        buildPanel.transform.localPosition = new Vector2(0.01062012f, -37.1001f);
+        buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-0.02050781f, -74.12451f);
+        buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.01062012f, -37.1001f);
     }
     public void BuildingsTabActive()
     {
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
         headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
-        buildPanel.transform.localPosition = new Vector2(158, -37.1001f);
-        buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-316.9592f, -74.12451f);
-        buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(158, -37.1001f);
-        layoutGroup.GetComponent<GridLayoutGroup>().constraintCount = 1;
-        layoutGroup.GetComponent<GridLayoutGroup>().cellSize = new Vector2(763, 80);
+        //while (sideGroup.transform.childCount > 0)
+        //{
+        //    sideGroup.transform.GetChild(sideGroup.transform.childCount - 1).SetParent(mainGroup.transform, false);
+        //}
+        //sideGroup.SetActive(false);
+        buildPanel.transform.localPosition = new Vector2(158.24f, -37.1001f);
+        buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-316.4792f, -74.12451f);
+        buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(158.24f, -37.1001f);
+        mainGroup.GetComponent<RectTransform>().sizeDelta = new Vector2(763, 80);
     }
     public void CraftingTabActive()
     {
