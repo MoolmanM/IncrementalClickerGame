@@ -161,8 +161,8 @@ public class GameManager : MonoBehaviour
     }
       public void UpdateResources()
       {
-          //PotatoField resources
-          float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier);
+        #region Food Resource
+        float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier);
           if (resourceList[0].resourceAmount <= (resourceList[0].resourceMaxStorage - potatoFieldMultiplier) - 0.1)
           {
               resourceList[0].resourceAmount += potatoFieldMultiplier;
@@ -173,19 +173,22 @@ public class GameManager : MonoBehaviour
           }
           resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(resourceList[0].resourceAmount * 100f) / 100f) + "";
           resourceList[0].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(potatoFieldMultiplier * 100f) / 100f) + "/sec";
+        #endregion
 
-          //Wood-lot resources
-          float woodlotMultiplier = (float)(buildingList[1].buildingAmount * buildingList[1].buildingResourceMultiplier);
-          resourceList[1].resourceAmount += woodlotMultiplier;
-          resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(resourceList[1].resourceAmount * 100f) / 100f) + "";
-          resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(woodlotMultiplier * 100f) / 100f) + "/sec";
+        #region Wood Resource
+                float woodlotMultiplier = (float)(buildingList[1].buildingAmount * buildingList[1].buildingResourceMultiplier);
+                  resourceList[1].resourceAmount += woodlotMultiplier;
+                  resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(resourceList[1].resourceAmount * 100f) / 100f) + "";
+                  resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(woodlotMultiplier * 100f) / 100f) + "/sec";
+                #endregion
 
-          //Dig Site resources, need to make all the resourceList[1] to [2] when new resource 'Stone' is created.
-          //float digSiteMultiplier = (float)(buildingList[2].buildingAmount * buildingList[2].buildingResourceMultiplier);
-          //resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(resourceList[1].resourceAmount * 100f) / 100f) + "";
-          //resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(woodlotMultiplier * 100f) / 100f) + "/sec";
+        #region Stone Resource
+        float digSiteMultiplier = (float)(buildingList[2].buildingAmount * buildingList[2].buildingResourceMultiplier);
+        resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(resourceList[2].resourceAmount * 100f) / 100f) + "";
+        resourceList[2].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = (Mathf.Round(digSiteMultiplier * 100f) / 100f) + "/sec";
+        #endregion
 
-          GetCurrentFill(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar);
+        GetCurrentFill(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar);
           GetCurrentFill(resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount, buildingList[1].progressBar);
           GetCurrentFill(resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount, buildingList[2].progressBar);
           GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar);

@@ -59,10 +59,7 @@ public class UIManager : MonoBehaviour
 
         if (swipeControls.SwipeLeft)
         {
-            buildPanelAnimation.Play("BuildPanelSwipeLeft");
-            //buildPanelAnimation.GetComponent<AnimationEvent>.
-            //menuValue++;
-            
+            buildPanelAnimation.Play("BuildPanelSwipeLeft");       
         }
         else if (swipeControls.SwipeRight)
         {
@@ -78,7 +75,7 @@ public class UIManager : MonoBehaviour
         {
             LargeBuildingTabActive();
         }
-        if (menuValue == 0)
+        else if (menuValue == 0)
         {
             BuildingsTabActive();          
         }
