@@ -1053,7 +1053,7 @@ GameObject:
   - component: {fileID: 120006464}
   - component: {fileID: 120006465}
   m_Layer: 5
-  m_Name: Content
+  m_Name: MainGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 120006463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -1101,12 +1101,13 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 763, y: 80}
-  m_Spacing: {x: 0, y: 1}
-  m_Constraint: 1
-  m_ConstraintCount: 1
+  m_Spacing: 1
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
 --- !u!1 &120494601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,7 +1340,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 763, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &144460721
 MonoBehaviour:
@@ -3137,6 +3138,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 120006464}
+  - {fileID: 480712858}
   m_Father: {fileID: 892850213}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3560,7 +3562,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1302608425}
+  m_TargetGraphic: {fileID: 378429995}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -4225,7 +4227,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 763, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &461587869
 MonoBehaviour:
@@ -4456,6 +4458,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477166357}
   m_CullTransparentMesh: 0
+--- !u!1 &480712857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 480712858}
+  - component: {fileID: 480712859}
+  m_Layer: 5
+  m_Name: Side Group
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &480712858
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480712857}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 335139810}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -540, y: 0}
+  m_SizeDelta: {x: 540, y: 80}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &480712859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480712857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 2
+  m_Spacing: 1
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
 --- !u!1 &483799234
 GameObject:
   m_ObjectHideFlags: 0
@@ -5604,6 +5667,7 @@ GameObject:
   - component: {fileID: 625699894}
   - component: {fileID: 625699893}
   - component: {fileID: 625699895}
+  - component: {fileID: 625699896}
   m_Layer: 5
   m_Name: BuildPanel
   m_TagString: Untagged
@@ -5630,8 +5694,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 158.48, y: -37.100098}
-  m_SizeDelta: {x: -316.95923, y: -74.12451}
+  m_AnchoredPosition: {x: 158.23999, y: -37.100098}
+  m_SizeDelta: {x: -316.47925, y: -74.12451}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &625699893
 MonoBehaviour:
@@ -5670,25 +5734,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625699891}
   m_CullTransparentMesh: 0
---- !u!95 &625699895
-Animator:
-  serializedVersion: 3
+--- !u!111 &625699895
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625699891}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 664531306f5f4524db81236749977202, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 885ba56f020f9274cb32fa0013f43068, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 885ba56f020f9274cb32fa0013f43068, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &625699896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625699891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7a54272a43685439b0b0e8eeec0d27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &687534115
 GameObject:
   m_ObjectHideFlags: 0
@@ -6394,7 +6467,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 763, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &716278346
 MonoBehaviour:
@@ -8418,7 +8491,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 763, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &910944360
 MonoBehaviour:
@@ -12145,7 +12218,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1302608425}
+  m_TargetGraphic: {fileID: 1468434403}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -13429,9 +13502,10 @@ MonoBehaviour:
   craftingMainPanel: {fileID: 1709195813}
   headerText: {fileID: 1809431098}
   buildPanel: {fileID: 625699891}
-  layoutGroup: {fileID: 120006463}
+  mainGroup: {fileID: 120006463}
+  sideGroup: {fileID: 480712857}
   swipeControls: {fileID: 1419882555}
-  animator: {fileID: 625699895}
+  buildPanelAnimation: {fileID: 625699895}
 --- !u!4 &1654375653
 Transform:
   m_ObjectHideFlags: 0
@@ -14793,6 +14867,13 @@ MonoBehaviour:
     resourcePerSecond: {fileID: 1931980576}
     resourceStorageText: {fileID: 1183176793}
     mainPanel: {fileID: 1591492949}
+  - name: Stone
+    resourceMaxStorage: 300
+    resourceAmount: 0
+    resourceAmountText: {fileID: 1740787639}
+    resourcePerSecond: {fileID: 1931980576}
+    resourceStorageText: {fileID: 1183176793}
+    mainPanel: {fileID: 1591492949}
 --- !u!4 &1767940232
 Transform:
   m_ObjectHideFlags: 0
@@ -15488,7 +15569,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 763, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1838852016
 MonoBehaviour:
@@ -16629,7 +16710,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1302608425}
+  m_TargetGraphic: {fileID: 1948064726}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -16783,7 +16864,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1302608425}
+  m_TargetGraphic: {fileID: 1979446568}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
