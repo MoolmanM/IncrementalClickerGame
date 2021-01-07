@@ -16,6 +16,15 @@ public class UIManager : MonoBehaviour
     public void Start()
     {     
         BuildingsTabActive();
+
+    }
+
+    public void LargeBuildingTabActive()
+    {
+        buildingMainPanel.SetActive(true);
+        craftingMainPanel.SetActive(false);
+        headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
+        sideGroup.SetActive(true);
         if (mainGroup.transform.childCount % 2 != 0)
         {
             halfOfParent = (mainGroup.transform.childCount / 2) + 1;
@@ -29,30 +38,6 @@ public class UIManager : MonoBehaviour
         {
             mainGroup.transform.GetChild(Random.Range(0, mainGroup.transform.childCount)).SetParent(sideGroup.transform, false);
         }
-    }
-
-    public void LargeBuildingTabActive()
-    {
-        buildingMainPanel.SetActive(true);
-        craftingMainPanel.SetActive(false);
-        headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
-        sideGroup.SetActive(true);
-        /*if (mainGroup.transform.childCount % 2 != 0)
-        {
-            halfOfParent = (mainGroup.transform.childCount / 2) + 1;
-            cacheOfHalf = halfOfParent;
-        }
-        else
-        {
-            halfOfParent = (mainGroup.transform.childCount / 2);
-        } */
-        halfOfParent = (mainGroup.transform.childCount / 2);
-        cacheOfHalf = halfOfParent;
-        if (mainGroup.transform.childCount > cacheOfHalf)
-        {
-            mainGroup.transform.GetChild(Random.Range(0, mainGroup.transform.childCount + 1)).SetParent(sideGroup.transform, false);
-        }
-
         mainGroup.GetComponent<RectTransform>().sizeDelta = new Vector2(540, 80);
         buildPanel.transform.localPosition = new Vector2(0.01062012f, -37.1001f);
         buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-0.02050781f, -74.12451f);
@@ -63,11 +48,11 @@ public class UIManager : MonoBehaviour
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
         headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
-        //while (sideGroup.transform.childCount > 0)
-        //{
-        //    sideGroup.transform.GetChild(sideGroup.transform.childCount - 1).SetParent(mainGroup.transform, false);
-        //}
-        //sideGroup.SetActive(false);
+        while (sideGroup.transform.childCount > 0)
+        {
+            sideGroup.transform.GetChild(sideGroup.transform.childCount - 1).SetParent(mainGroup.transform, false);
+        }
+        sideGroup.SetActive(false);
         buildPanel.transform.localPosition = new Vector2(158.24f, -37.1001f);
         buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-316.4792f, -74.12451f);
         buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(158.24f, -37.1001f);
