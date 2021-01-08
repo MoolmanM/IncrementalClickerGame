@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActiveHandlerLeft : MonoBehaviour
+public class ActiveHandler : MonoBehaviour
 { 
    public void SetActiveEventLeft()
    {
         UIManager.menuValue++;
+   }
+   public void SetActiveEventRight()
+   {
+       UIManager.menuValue--;
    }
 }
