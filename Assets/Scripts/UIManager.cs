@@ -9,17 +9,19 @@ public class UIManager : MonoBehaviour
 {
     public GameObject buildingMainPanel, craftingMainPanel, headerText, buildPanel, mainGroup, sideGroup;
     public Swipe swipeControls;
-    public static int menuValue = 0;
-    public Animation buildPanelAnimation;
-    private int halfOfParent, cacheOfHalf;
+    public static int menuValue;
+    private int minSwipeValue, maxSwipeValue;
+    //private int halfOfParent, cacheOfHalf;
+    public Animator buildPanelAnim, SettingsPanelAnim;
 
     public void Start()
     {     
         BuildingsTabActive();
-
+        minSwipeValue = 0;
+        maxSwipeValue = 1;
     }
 
-    public void LargeBuildingTabActive()
+    /*public void LargeBuildingTabActive()
     {
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
@@ -42,13 +44,13 @@ public class UIManager : MonoBehaviour
         buildPanel.transform.localPosition = new Vector2(0.01062012f, -37.1001f);
         buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-0.02050781f, -74.12451f);
         buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.01062012f, -37.1001f);
-    }
+    }*/
     public void BuildingsTabActive()
     {
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
         headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
-        while (sideGroup.transform.childCount > 0)
+        /*while (sideGroup.transform.childCount > 0)
         {
             sideGroup.transform.GetChild(sideGroup.transform.childCount - 1).SetParent(mainGroup.transform, false);
         }
@@ -56,7 +58,7 @@ public class UIManager : MonoBehaviour
         buildPanel.transform.localPosition = new Vector2(158.24f, -37.1001f);
         buildPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(-316.4792f, -74.12451f);
         buildPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(158.24f, -37.1001f);
-        mainGroup.GetComponent<RectTransform>().sizeDelta = new Vector2(763, 80);
+        mainGroup.GetComponent<RectTransform>().sizeDelta = new Vector2(763, 80);*/
     }
     public void CraftingTabActive()
     {
@@ -66,34 +68,43 @@ public class UIManager : MonoBehaviour
     }
     private void Swiping()
     {
-        if (menuValue < -1)
+        if (menuValue < minSwipeValue)
         {
-            menuValue = -1;
+            menuValue = minSwipeValue;
         }
-        if (menuValue > 1)
+        if (menuValue > maxSwipeValue)
         {
-            menuValue = 1;
+            menuValue = maxSwipeValue;
         }
 
-        if (swipeControls.SwipeLeft)
+        if (swipeControls.SwipeLeft && (menuValue < maxSwipeValue))
         {
-            buildPanelAnimation.Play("BuildPanelSwipeLeft");       
+            buildPanelAnim.SetTrigger("hasSwipedLeft");       
         }
-        else if (swipeControls.SwipeRight)
+        else if (swipeControls.SwipeRight && (menuValue > minSwipeValue))
         {
-            menuValue--;
+            buildPanelAnim.SetTrigger("hasSwipedRight");
         }
 
     }
 
+    public void OnSettingsButton()
+    {
+        SettingsPanelAnim.SetTrigger("Enter");
+    }
+
+    public void OnBackButton()
+    {
+        SettingsPanelAnim.SetTrigger("Exit");
+    }
     private void Update()
     {
         Swiping();
-        if (menuValue == -1)
+        /*if (menuValue == -1)
         {
             LargeBuildingTabActive();
-        }
-        else if (menuValue == 0)
+        }*/
+        if (menuValue == 0)
         {
             BuildingsTabActive();          
         }

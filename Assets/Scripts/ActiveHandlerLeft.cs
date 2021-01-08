@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActiveHandler : MonoBehaviour
-{
-    public void SetActiveEvent()
-    {
+public class ActiveHandlerLeft : MonoBehaviour
+{ 
+   public void SetActiveEventLeft()
+   {
         UIManager.menuValue++;
-    }
+   }
 }
