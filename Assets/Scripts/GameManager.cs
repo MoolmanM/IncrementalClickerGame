@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public List<Building> buildingList = new List<Building>();
     public List<Resource> resourceList = new List<Resource>();
     private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
+    public float globalMultiplier;
+    //Multiple every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
     {
