@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public List<Resource> resourceList = new List<Resource>();
     private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
     public float globalMultiplier;
+    public GameObject seasonText;
+    private string season, year, day;
     //Multiple every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
@@ -177,6 +179,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Not enough sticks!");
         }
     }
+    public void BuildMakeshiftBed()
+    {
+
+    }
     public void GetCurrentFill(float current, float max, Image progressCircle)
     {
         float fillAmount = current / max;
@@ -184,6 +190,7 @@ public class GameManager : MonoBehaviour
     }
     public void UpdateResources()
     {
+        //Debug.Log("Time Right Now: " + )
         #region Food Resource
         float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier);
         if (resourceList[0].resourceAmount >= (resourceList[0].resourceMaxStorage - potatoFieldMultiplier))
@@ -196,7 +203,7 @@ public class GameManager : MonoBehaviour
             resourceList[0].resourceAmount += potatoFieldMultiplier;
             resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].resourceAmount);
         }
-        resourceList[0].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} /sec", potatoFieldMultiplier);
+        resourceList[0].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", potatoFieldMultiplier);
         #endregion
 
         #region Wood Resource
@@ -211,7 +218,7 @@ public class GameManager : MonoBehaviour
             resourceList[1].resourceAmount += woodlotMultiplier;
             resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[1].resourceAmount);
         }
-        resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} /sec", woodlotMultiplier);
+        resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", woodlotMultiplier);
         #endregion
 
         #region Stone Resource
@@ -226,7 +233,7 @@ public class GameManager : MonoBehaviour
             resourceList[2].resourceAmount += woodlotMultiplier;
             resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[2].resourceAmount);
         }
-        resourceList[2].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} /sec", digSiteMultiplier);
+        resourceList[2].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", digSiteMultiplier);
         #endregion
 
         #region Update Resource Costs 
