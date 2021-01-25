@@ -7,7 +7,7 @@ using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject buildingMainPanel, craftingMainPanel, headerText, buildPanel, mainGroup, sideGroup;
+    public GameObject buildingMainPanel, craftingMainPanel;
     public Swipe swipeControls;
     public static int menuValue;
     private int minSwipeValue, maxSwipeValue;
@@ -24,13 +24,11 @@ public class UIManager : MonoBehaviour
     {
         buildingMainPanel.SetActive(true);
         craftingMainPanel.SetActive(false);
-        headerText.GetComponent<TextMeshProUGUI>().text = "Buildings:";
     }
     public void CraftingTabActive()
     {
         buildingMainPanel.SetActive(false);
         craftingMainPanel.SetActive(true);
-        headerText.GetComponent<TextMeshProUGUI>().text = "Crafting:";
     }
     private void Swiping()
     {

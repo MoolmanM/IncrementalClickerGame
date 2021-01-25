@@ -13,9 +13,10 @@ public class GameManager : MonoBehaviour
     public List<Resource> resourceList = new List<Resource>();
     private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
     public float globalMultiplier;
-    public GameObject seasonText;
-    private string season, year, day;
-    //Multiple every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
+    public GameObject seasonObject;
+    private string seasonText;
+    private int day, year, seasonCount;
+    //Multiply every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
     {
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
         craftingItemsList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[0].resourceCosts[0].costAmount;
         craftingItemsList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[1].resourceCosts[0].costAmount;
         craftingItemsList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[2].resourceCosts[0].costAmount;
-        //buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[0].resourceAmount + "/" + buildingList[0].resourceCosts[0].costAmount;
+        buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[0].resourceAmount + "/" + buildingList[0].resourceCosts[0].costAmount;
         buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + buildingList[1].resourceCosts[0].costAmount;
         buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[0].resourceAmount + "/" + buildingList[2].resourceCosts[0].costAmount;
         buildingList[0].description.GetComponent<TextMeshProUGUI>().text = "Increases food yield by " + buildingList[0].buildingResourceMultiplier + " /sec";
@@ -49,10 +50,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         InvokeRepeating("UpdateResources", 0, (float)0.1);
-        if (buildingList[0].resourceCosts[0].costAmount <= 1)
-        {
-            buildingList[0].mainPanel.SetActive(false);
-        }
+        InvokeRepeating("UpdateDay", 0, (float)5);
     }
     public void OnGatherPotatoes()
     {
@@ -132,14 +130,13 @@ public class GameManager : MonoBehaviour
     }
     public void BuildPotatoField()
     {
-
         if (resourceList[0].resourceAmount >= buildingList[0].resourceCosts[0].costAmount)
-        {
+        {            
             buildingList[0].buildingAmount++;          
-            resourceList[0].resourceAmount -= buildingList[0].resourceCosts[0].costAmount;
-            buildingList[0].resourceCosts[0].costAmount = ((float)(buildingList[0].resourceCosts[0].costAmount * buildingList[0].buildingCostMultiplier));
+            resourceList[0].resourceAmount = resourceList[0].resourceAmount - buildingList[0].resourceCosts[0].costAmount;
+            buildingList[0].resourceCosts[0].costAmount = buildingList[0].resourceCosts[0].costAmount * Mathf.Pow(buildingList[0].buildingCostMultiplier, buildingList[0].buildingAmount);
             buildingList[0].buildingName.GetComponent<TextMeshProUGUI>().text = string.Format("Potato Field ({0})", buildingList[0].buildingAmount);
-            buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount);
+            buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount);
         }
         else
         {
@@ -148,14 +145,13 @@ public class GameManager : MonoBehaviour
     }
     public void BuildWoodlot()
     {
-
         if (resourceList[1].resourceAmount >= buildingList[1].resourceCosts[0].costAmount)
         {
             buildingList[1].buildingAmount++;
-            resourceList[1].resourceAmount -= buildingList[1].resourceCosts[0].costAmount;
-            buildingList[1].resourceCosts[0].costAmount = ((float)(buildingList[1].resourceCosts[0].costAmount * buildingList[1].buildingCostMultiplier));
+            resourceList[1].resourceAmount = resourceList[1].resourceAmount - buildingList[1].resourceCosts[0].costAmount;
+            buildingList[1].resourceCosts[0].costAmount = buildingList[1].resourceCosts[0].costAmount * Mathf.Pow(buildingList[1].buildingCostMultiplier, buildingList[1].buildingAmount);
             buildingList[1].buildingName.GetComponent<TextMeshProUGUI>().text = string.Format("Wood-lot ({0})", buildingList[1].buildingAmount);
-            buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount);
+            buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount);
         }
         else
         {
@@ -164,15 +160,13 @@ public class GameManager : MonoBehaviour
     }
     public void BuildDigSite()
     {
-
         if (resourceList[1].resourceAmount >= buildingList[2].resourceCosts[0].costAmount)
         {
             buildingList[2].buildingAmount++;
-            resourceList[1].resourceAmount -= buildingList[2].resourceCosts[0].costAmount;
-            buildingList[2].resourceCosts[0].costAmount = ((float)(buildingList[2].resourceCosts[0].costAmount * buildingList[2].buildingCostMultiplier));
+            resourceList[1].resourceAmount = resourceList[1].resourceAmount - buildingList[2].resourceCosts[0].costAmount;
+            buildingList[2].resourceCosts[0].costAmount = buildingList[2].resourceCosts[0].costAmount * Mathf.Pow(buildingList[2].buildingCostMultiplier, buildingList[2].buildingAmount);
             buildingList[2].buildingName.GetComponent<TextMeshProUGUI>().text = string.Format("Dig Site ({0})", buildingList[2].buildingAmount);
-            resourceList[2].mainPanel.SetActive(true);
-            buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount);
+            buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount);
         }
         else
         {
@@ -188,22 +182,27 @@ public class GameManager : MonoBehaviour
         float fillAmount = current / max;
         progressCircle.fillAmount = fillAmount;
     }
+    public void GetCurrentFillTwo(float current, float current1, float max, float max1, Image progressCircle)
+    {
+        float fillAmount = current / max;
+        float fillAmount1 = current1 / max1;
+        progressCircle.fillAmount = (fillAmount + fillAmount1) / 2;
+    }
     public void UpdateResources()
     {
-        //Debug.Log("Time Right Now: " + )
         #region Food Resource
         float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier);
         if (resourceList[0].resourceAmount >= (resourceList[0].resourceMaxStorage - potatoFieldMultiplier))
         {
             resourceList[0].resourceAmount = resourceList[0].resourceMaxStorage;
-            resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].resourceMaxStorage);
+            resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}", resourceList[0].resourceMaxStorage);
         }
         else
         {
             resourceList[0].resourceAmount += potatoFieldMultiplier;
-            resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].resourceAmount);
+            resourceList[0].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}", resourceList[0].resourceAmount);
         }
-        resourceList[0].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", potatoFieldMultiplier);
+        resourceList[0].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#0.00} /sec", potatoFieldMultiplier);
         #endregion
 
         #region Wood Resource
@@ -216,24 +215,24 @@ public class GameManager : MonoBehaviour
         else
         {
             resourceList[1].resourceAmount += woodlotMultiplier;
-            resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[1].resourceAmount);
+            resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}", resourceList[1].resourceAmount);
         }
-        resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", woodlotMultiplier);
+        resourceList[1].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#0.00} /sec", woodlotMultiplier);
         #endregion
 
         #region Stone Resource
         float digSiteMultiplier = (float)(buildingList[2].buildingAmount * buildingList[2].buildingResourceMultiplier);
-        if (resourceList[2].resourceAmount >= (resourceList[2].resourceMaxStorage - woodlotMultiplier))
+        if (resourceList[2].resourceAmount >= (resourceList[2].resourceMaxStorage - digSiteMultiplier))
         {
             resourceList[2].resourceAmount = resourceList[2].resourceMaxStorage;
-            resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[2].resourceMaxStorage);
+            resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}", resourceList[2].resourceMaxStorage);
         }
         else
         {
-            resourceList[2].resourceAmount += woodlotMultiplier;
-            resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[2].resourceAmount);
+            resourceList[2].resourceAmount += digSiteMultiplier;
+            resourceList[2].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}", resourceList[2].resourceAmount);
         }
-        resourceList[2].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#.00} /sec", digSiteMultiplier);
+        resourceList[2].resourcePerSecond.GetComponent<TextMeshProUGUI>().text = string.Format("+{0:#0.00} /sec", digSiteMultiplier);
         #endregion
 
         #region Update Resource Costs 
@@ -250,8 +249,51 @@ public class GameManager : MonoBehaviour
         GetCurrentFill(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount, buildingList[1].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount, buildingList[2].progressBar);
+        GetCurrentFillTwo(resourceList[1].resourceAmount, resourceList[2].resourceAmount, buildingList[3].resourceCosts[0].costAmount, buildingList[3].resourceCosts[1].costAmount, buildingList[3].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount, craftingItemsList[1].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount, craftingItemsList[2].progressBar);
+    }
+    public void UpdateDay()
+    {
+        day++;
+        if (seasonCount == 0)
+        {
+            seasonText = "Spring";
+        }    
+        else if (seasonCount == 1)
+        {
+            seasonText = "Summer";
+        }
+        else if (seasonCount == 2)
+        {
+            seasonText = "Fall";
+        }
+        else if (seasonCount == 3)
+        {
+            seasonText = "Winter";
+        }
+        else
+        {
+            seasonCount = 0;
+        }
+
+        if (day == 100 && seasonCount == 3)
+        {
+            year++;
+            seasonCount++;
+            day = 0;
+        }
+
+        else if (day == 100)
+        {
+            seasonCount++;
+            day = 0;
+        }
+
+        seasonObject.GetComponent<TextMeshProUGUI>().text = string.Format("Year {0} - {1}, day {2}", year, seasonText, day);
+        
+
+        
     }
 }
