@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public GameObject seasonObject;
     private string seasonText;
     private int day, year, seasonCount;
+    public int availableWorkers, maxWorkers;
+    public GameObject availableWorkerObject;
     //Multiply every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
@@ -175,7 +177,26 @@ public class GameManager : MonoBehaviour
     }
     public void BuildMakeshiftBed()
     {
-
+        Debug.Log("Clicked");
+        if ((resourceList[1].resourceAmount >= buildingList[3].resourceCosts[0].costAmount) && (resourceList[2].resourceAmount >= buildingList[3].resourceCosts[0].costAmount))
+        {
+            Debug.Log("Reached here");
+            buildingList[3].buildingAmount++;
+            availableWorkers++;
+            maxWorkers = buildingList[3].buildingAmount;
+            availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", availableWorkers, maxWorkers);
+            resourceList[1].resourceAmount = resourceList[1].resourceAmount - buildingList[3].resourceCosts[0].costAmount;
+            resourceList[2].resourceAmount = resourceList[1].resourceAmount - buildingList[3].resourceCosts[0].costAmount;
+            buildingList[3].resourceCosts[0].costAmount = buildingList[3].resourceCosts[0].costAmount * Mathf.Pow(buildingList[3].buildingCostMultiplier, buildingList[3].buildingAmount);
+            buildingList[3].resourceCosts[1].costAmount = buildingList[3].resourceCosts[1].costAmount * Mathf.Pow(buildingList[3].buildingCostMultiplier, buildingList[3].buildingAmount);
+            buildingList[3].buildingName.GetComponent<TextMeshProUGUI>().text = string.Format("Makeshift Bed ({0})", buildingList[3].buildingAmount);
+            buildingList[3].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].resourceAmount, buildingList[3].resourceCosts[0].costAmount);
+            buildingList[3].resourceCosts[1].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[2].resourceAmount, buildingList[3].resourceCosts[1].costAmount);
+        }
+        else
+        {
+            Debug.Log("Not enough sticks && stones");
+        }
     }
     public void GetCurrentFill(float current, float max, Image progressCircle)
     {
