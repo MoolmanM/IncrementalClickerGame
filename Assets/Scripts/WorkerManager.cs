@@ -10,68 +10,38 @@ public class WorkerManager : MonoBehaviour
     public int increaseAmount, woodcutterWorkerAmount, minerWorkerAmount, farmerWorkerAmount;
     public GameObject woodcutterText, minerText, farmerText;
     public Animator toggleAnim;
-    public Toggle toggle1, toggle10, toggle100, toggleMax;
 
     public void Start()
     {
         increaseAmount = 1;
     }
-    /*public void XOneToggle()
+
+    public void Button1()
     {
         increaseAmount = 1;
         toggleAnim.SetTrigger("One");
     }
 
-    public void XTenToggle()
+    public void Button10()
     {
         increaseAmount = 10;
         toggleAnim.SetTrigger("Ten");
     }
 
-    public void XHundredToggle()
+    public void Button100()
     {
         increaseAmount = 100;
         toggleAnim.SetTrigger("Hundred");
     }
 
-    public void XMaxToggle()
+    public void ButtonMax()
     {
         increaseAmount = GameManager.Instance.availableWorkers;
         toggleAnim.SetTrigger("Max");
         xMax = true;
 
-    }*/
-
-    public void ToggleManager()
-    {
-        while (toggle1.isOn)
-        {
-            increaseAmount = 1;
-            toggleAnim.SetTrigger("One");
-        }
-        while (toggle10.isOn)
-        {
-            increaseAmount = 10;
-            toggleAnim.SetTrigger("One");
-            toggleAnim.SetTrigger("Ten");
-        }
-        while (toggle100.isOn)
-        {
-            increaseAmount = 100;
-            toggleAnim.SetTrigger("One");
-            toggleAnim.SetTrigger("Ten");
-            toggleAnim.SetTrigger("Hundred");
-        }
-        while (toggleMax.isOn)
-        {
-            increaseAmount = GameManager.Instance.availableWorkers;
-            toggleAnim.SetTrigger("One");
-            toggleAnim.SetTrigger("Ten");
-            toggleAnim.SetTrigger("Hundred");
-            toggleAnim.SetTrigger("Max");
-        }
     }
-    
+
     public void OnWoodcutterPlusClick()
     {
         
