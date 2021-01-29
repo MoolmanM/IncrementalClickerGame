@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public List<CraftingItem> craftingItemsList = new List<CraftingItem>();
     public List<Building> buildingList = new List<Building>();
     public List<Resource> resourceList = new List<Resource>();
-    private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
+    //private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
     public float globalMultiplier;
     public GameObject seasonObject;
     private string seasonText;
@@ -88,7 +88,6 @@ public class GameManager : MonoBehaviour
     {
         if (resourceList[1].resourceAmount >= craftingItemsList[0].resourceCosts[0].costAmount)
         {
-            craftedWoodenAxe = true;
             craftingItemsList[0].craftName.GetComponent<TextMeshProUGUI>().text = "Wooden Hoe (Complete)";
             resourceList[1].resourceAmount -= craftingItemsList[0].resourceCosts[0].costAmount;
             resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].resourceAmount);
@@ -104,7 +103,6 @@ public class GameManager : MonoBehaviour
     {
         if (resourceList[1].resourceAmount >= craftingItemsList[1].resourceCosts[0].costAmount)
         {
-            craftedWoodenAxe = true;
             craftingItemsList[1].craftName.GetComponent<TextMeshProUGUI>().text = "Wooden Axe (Complete)";
             resourceList[1].resourceAmount -= craftingItemsList[0].resourceCosts[0].costAmount;
             resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].resourceAmount);
@@ -119,7 +117,6 @@ public class GameManager : MonoBehaviour
     {
         if (resourceList[1].resourceAmount >= craftingItemsList[2].resourceCosts[0].costAmount)
         {
-            craftedWoodenPickaxe = true;
             craftingItemsList[2].craftName.GetComponent<TextMeshProUGUI>().text = "Wooden Pickaxe (Complete)";
             resourceList[1].resourceAmount -= craftingItemsList[2].resourceCosts[0].costAmount;
             resourceList[1].resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].resourceAmount);
