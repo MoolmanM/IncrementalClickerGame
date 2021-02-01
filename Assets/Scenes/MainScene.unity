@@ -11472,8 +11472,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
-        m_MethodName: BuildPotatoField
+      - m_Target: {fileID: 2034220044}
+        m_MethodName: ButtonMinerPlus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15124,7 +15124,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2034220044}
-        m_MethodName: OnWoodcutterMinusClick
+        m_MethodName: ButtonWoodcutterMinus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16250,8 +16250,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
-        m_MethodName: BuildPotatoField
+      - m_Target: {fileID: 2034220044}
+        m_MethodName: ButtonMinerMinus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21726,8 +21726,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
-        m_MethodName: BuildPotatoField
+      - m_Target: {fileID: 2034220044}
+        m_MethodName: ButtonFarmerMinus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -23090,8 +23090,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
-        m_MethodName: BuildPotatoField
+      - m_Target: {fileID: 2034220044}
+        m_MethodName: ButtonFarmerPlus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -27070,7 +27070,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2034220044}
-        m_MethodName: OnWoodcutterPlusClick
+        m_MethodName: ButtonWoodcutterPlus
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -33714,6 +33714,8 @@ MonoBehaviour:
   minerText: {fileID: 1054410746}
   farmerText: {fileID: 150398868}
   toggleAnim: {fileID: 1269452733}
+  testAmountGlobal: 0
+  testAmountGlobal2: 0
 --- !u!4 &2034220045
 Transform:
   m_ObjectHideFlags: 0
