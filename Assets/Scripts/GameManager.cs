@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Reached here");
             buildingList[3].buildingAmount++;
             availableWorkers++;
-            maxWorkers = buildingList[3].buildingAmount;
+            maxWorkers++;
             availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", availableWorkers, maxWorkers);
             resourceList[1].resourceAmount = resourceList[1].resourceAmount - buildingList[3].resourceCosts[0].costAmount;
             resourceList[2].resourceAmount = resourceList[1].resourceAmount - buildingList[3].resourceCosts[0].costAmount;
@@ -204,12 +204,21 @@ public class GameManager : MonoBehaviour
     {
         float fillAmount = current / max;
         float fillAmount1 = current1 / max1;
-        progressCircle.fillAmount = (fillAmount + fillAmount1) / 2;
+        if (fillAmount >= 1)
+        {
+            fillAmount = 1;
+        }
+
+        if (fillAmount1 >= 1)
+        {
+            fillAmount1 = 1;
+        }
+            progressCircle.fillAmount = (fillAmount + fillAmount1) / 2;
     }
     public void UpdateResources()
     {
         #region Food Resource
-        float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier);
+        float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier) + (WorkerManager.farmerWorkMultiplier * WorkerManager.farmerWorkerAmount);
         if (resourceList[0].resourceAmount >= (resourceList[0].resourceMaxStorage - potatoFieldMultiplier))
         {
             resourceList[0].resourceAmount = resourceList[0].resourceMaxStorage;
@@ -224,7 +233,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region Wood Resource
-        float woodlotMultiplier = (float)(buildingList[1].buildingAmount * buildingList[1].buildingResourceMultiplier);
+        float woodlotMultiplier = (float)(buildingList[1].buildingAmount * buildingList[1].buildingResourceMultiplier) + (WorkerManager.woodcutterWorkMutliplier * WorkerManager.woodcutterWorkerAmount);
         if (resourceList[1].resourceAmount >= (resourceList[1].resourceMaxStorage - woodlotMultiplier))
         {
             resourceList[1].resourceAmount = resourceList[1].resourceMaxStorage;
@@ -239,7 +248,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region Stone Resource
-        float digSiteMultiplier = (float)(buildingList[2].buildingAmount * buildingList[2].buildingResourceMultiplier);
+        float digSiteMultiplier = (float)(buildingList[2].buildingAmount * buildingList[2].buildingResourceMultiplier) + (WorkerManager.minerWorkMultiplier * WorkerManager.minerWorkerAmount);
         if (resourceList[2].resourceAmount >= (resourceList[2].resourceMaxStorage - digSiteMultiplier))
         {
             resourceList[2].resourceAmount = resourceList[2].resourceMaxStorage;
@@ -261,9 +270,12 @@ public class GameManager : MonoBehaviour
         buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount);
         buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount);
         buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount);
+        buildingList[3].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[3].resourceCosts[0].costAmount);
+        buildingList[3].resourceCosts[1].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[2].resourceAmount, buildingList[3].resourceCosts[1].costAmount);
 
         #endregion
 
+        #region GetFills
         GetCurrentFill(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount, buildingList[1].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount, buildingList[2].progressBar);
@@ -271,6 +283,7 @@ public class GameManager : MonoBehaviour
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount, craftingItemsList[1].progressBar);
         GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount, craftingItemsList[2].progressBar);
+        #endregion
     }
     public void UpdateDay()
     {

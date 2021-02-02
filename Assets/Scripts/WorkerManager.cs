@@ -7,13 +7,19 @@ using UnityEngine.UI;
 public class WorkerManager : MonoBehaviour
 {
     public bool xOne, xTen, xHundred, xMax;
-    public int increaseAmount, increaseAmountCache, woodcutterWorkerAmount, minerWorkerAmount, farmerWorkerAmount, workerAmountToMinus;
+    public int increaseAmount, increaseAmountCache, workerAmountToMinus;
     public GameObject woodcutterText, minerText, farmerText;
     public Animator toggleAnim;
+    public static float woodcutterWorkMutliplier, minerWorkMultiplier, farmerWorkMultiplier;
+    public static int woodcutterWorkerAmount, minerWorkerAmount, farmerWorkerAmount;
 
     public void Start()
     {
         increaseAmount = 1;
+        woodcutterWorkMutliplier = (float)0.15;
+        minerWorkMultiplier = (float)0.15;
+        farmerWorkMultiplier = (float)0.15;
+
     }
 
     public void Button1()
@@ -85,7 +91,7 @@ public class WorkerManager : MonoBehaviour
 
         increaseAmount = GameManager.Instance.availableWorkers;
     }
-    private void WorkerButtonPlus(ref int thisWorkerAmouunt, GameObject thisWorkerObject, string thisWorkerName)
+    private void WorkerButtonPlus(ref int thisWorkerAmount, GameObject thisWorkerObject, string thisWorkerName)
     {
         increaseAmountCache = increaseAmount;
 
@@ -93,38 +99,37 @@ public class WorkerManager : MonoBehaviour
         {
             increaseAmountCache = GameManager.Instance.availableWorkers;
             GameManager.Instance.availableWorkers -= increaseAmountCache;
-            thisWorkerAmouunt += increaseAmountCache;
+            thisWorkerAmount += increaseAmountCache;
         }
 
         else if (increaseAmount <= GameManager.Instance.availableWorkers)
         {
             GameManager.Instance.availableWorkers -= increaseAmountCache;
-            thisWorkerAmouunt += increaseAmountCache;
+            thisWorkerAmount += increaseAmountCache;
         }
         else
         {
             Debug.Log("Catch all");
         }
-        GameManager.Instance.availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", GameManager.Instance.availableWorkers, GameManager.Instance.maxWorkers);
-        thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmouunt);
 
-        Debug.Log(string.Format("{0}, {1}, {2}", thisWorkerAmouunt, thisWorkerObject, thisWorkerName));
+        GameManager.Instance.availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", GameManager.Instance.availableWorkers, GameManager.Instance.maxWorkers);
+        thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmount);
     }
 
-    private void WorkerButtonMinus(ref int thisWorkerAmouunt, GameObject thisWorkerObject, string thisWorkerName)
+    private void WorkerButtonMinus(ref int thisWorkerAmount, GameObject thisWorkerObject, string thisWorkerName)
     {
         increaseAmountCache = increaseAmount;
 
-        if ((increaseAmountCache > thisWorkerAmouunt) || (xMax))
+        if ((increaseAmountCache > thisWorkerAmount) || (xMax))
         {
-            workerAmountToMinus = thisWorkerAmouunt;
-            thisWorkerAmouunt -= workerAmountToMinus;
+            workerAmountToMinus = thisWorkerAmount;
+            thisWorkerAmount -= workerAmountToMinus;
             GameManager.Instance.availableWorkers += workerAmountToMinus;
         }
 
-        else if (increaseAmount <= thisWorkerAmouunt)
+        else if (increaseAmount <= thisWorkerAmount)
         {
-            thisWorkerAmouunt -= increaseAmountCache;
+            thisWorkerAmount -= increaseAmountCache;
             GameManager.Instance.availableWorkers += increaseAmountCache;
         }
 
@@ -134,7 +139,7 @@ public class WorkerManager : MonoBehaviour
         }
 
         GameManager.Instance.availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", GameManager.Instance.availableWorkers, GameManager.Instance.maxWorkers);
-        thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmouunt);
+        thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmount);
     }
     public void ButtonWoodcutterPlus()
     {
@@ -142,7 +147,7 @@ public class WorkerManager : MonoBehaviour
     }
     public void ButtonWoodcutterMinus()
     {
-        WorkerButtonPlus(ref woodcutterWorkerAmount, woodcutterText, "Woodcutters");
+        WorkerButtonMinus(ref woodcutterWorkerAmount, woodcutterText, "Woodcutters");
     }
     public void ButtonMinerPlus()
     {
