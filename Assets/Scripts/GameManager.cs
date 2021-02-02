@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private int day, year, seasonCount;
     public int availableWorkers, maxWorkers;
     public GameObject availableWorkerObject;
+    public ParticleSystem particleCompletion;
     //Multiply every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
@@ -197,8 +198,13 @@ public class GameManager : MonoBehaviour
     }
     public void GetCurrentFill(float current, float max, Image progressCircle)
     {
-        float fillAmount = current / max;
+        float fillAmount = current / max;   
         progressCircle.fillAmount = fillAmount;
+
+        if (progressCircle.fillAmount == 1)
+        {
+            particleCompletion.Play();
+        }
     }
     public void GetCurrentFillTwo(float current, float current1, float max, float max1, Image progressCircle)
     {
