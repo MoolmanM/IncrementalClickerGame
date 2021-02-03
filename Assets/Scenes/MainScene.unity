@@ -157,8 +157,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -385}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -597.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6581196
 MonoBehaviour:
@@ -2424,7 +2424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &155339662
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3093,6 +3093,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!1 &233593667 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 2007838407}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &234155276
 GameObject:
   m_ObjectHideFlags: 0
@@ -4908,7 +4914,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: Sticks
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5713,8 +5719,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -50}
+  m_SizeDelta: {x: 765.6602, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &395579526
 MonoBehaviour:
@@ -5811,8 +5817,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -92.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &397013608
 MonoBehaviour:
@@ -6562,8 +6568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 382.8301, y: -62}
-  m_SizeDelta: {x: 765.6602, y: 40}
+  m_AnchoredPosition: {x: 382.8301, y: -82}
+  m_SizeDelta: {x: 765.6602, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &452221824
 MonoBehaviour:
@@ -6603,6 +6609,12 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 2
+--- !u!1 &456811534 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 927855595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &460707713
 GameObject:
   m_ObjectHideFlags: 0
@@ -7263,7 +7275,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: Sticks
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8348,7 +8360,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: Stones
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8824,9 +8836,9 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589271194}
   m_CullTransparentMesh: 0
---- !u!198 &594153762 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 456811539, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+--- !u!1 &594153757 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
     type: 3}
   m_PrefabInstance: {fileID: 730023289}
   m_PrefabAsset: {fileID: 0}
@@ -9303,8 +9315,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -50}
+  m_SizeDelta: {x: 765.6602, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &619495411
 MonoBehaviour:
@@ -10161,7 +10173,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases population.
+  m_text: Allows mining.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10378,6 +10390,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 548004014}
     m_Modifications:
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
         type: 3}
       propertyPath: m_Name
@@ -10842,6 +10870,12 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &675430320 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 653770858}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &700033116
 GameObject:
   m_ObjectHideFlags: 0
@@ -11291,6 +11325,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
         type: 3}
       propertyPath: m_Name
@@ -11691,7 +11729,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: 0/100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12378,6 +12416,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1998760740}
     m_Modifications:
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
         type: 3}
       propertyPath: m_Name
@@ -13819,6 +13873,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
         type: 3}
       propertyPath: m_Name
@@ -14068,7 +14126,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: Sticks
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14164,7 +14222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &895948823
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14844,6 +14902,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 456811539, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
       propertyPath: SubModule.subEmitters.Array.data[0].emitter
       value: 
@@ -14958,7 +15020,8 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 456811537, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
 --- !u!224 &927855596 stripped
 RectTransform:
@@ -15009,7 +15072,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.82996, y: 0}
+  m_AnchoredPosition: {x: 382.85, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &930345101
@@ -15274,7 +15337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: Sticks
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16155,8 +16218,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -50}
+  m_SizeDelta: {x: 765.6602, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1003033456
 MonoBehaviour:
@@ -16534,8 +16597,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -92.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027421913
 MonoBehaviour:
@@ -17201,7 +17264,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases population.
+  m_text: Increases Population
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20291,7 +20354,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1205331526
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21164,8 +21227,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -175}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -217.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1234727574
 MonoBehaviour:
@@ -22558,7 +22621,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases food yield by 0.15 /sec
+  m_text: 'Increases food yield by: 0.15/sec'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22822,8 +22885,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -60}
-  m_SizeDelta: {x: 763.6602, y: 120}
+  m_AnchoredPosition: {x: 382.8301, y: -60}
+  m_SizeDelta: {x: 765.6602, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1273087662
 MonoBehaviour:
@@ -23294,8 +23357,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -280}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -407.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1309585998
 MonoBehaviour:
@@ -23516,7 +23579,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Wooden Pickaxe (Complete)
+  m_text: 'Wooden Pickaxe
 
 '
   m_isRightToLeft: 0
@@ -23561,9 +23624,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -23862,7 +23925,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases stone gathering by 0.15 /sec
+  m_text: 'Increases stone yield by: 0.15/sec'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -23976,8 +24039,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 382.8301, y: -144}
-  m_SizeDelta: {x: 765.6602, y: 82}
+  m_AnchoredPosition: {x: 382.8301, y: -164}
+  m_SizeDelta: {x: 765.6602, y: 122}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1364389019
 MonoBehaviour:
@@ -24111,7 +24174,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases population.
+  m_text: Enables building potato field.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24395,7 +24458,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: 0/100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -25194,7 +25257,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1421997743
 GameObject:
@@ -25488,8 +25551,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 382.8301, y: -41}
-  m_SizeDelta: {x: 765.6602, y: 82}
+  m_AnchoredPosition: {x: 382.8301, y: -61}
+  m_SizeDelta: {x: 765.6602, y: 122}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1437343216
 MonoBehaviour:
@@ -25890,6 +25953,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2113132554}
     m_Modifications:
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
         type: 3}
       propertyPath: m_Name
@@ -26000,7 +26079,8 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 456811537, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
 --- !u!224 &1467108030 stripped
 RectTransform:
@@ -28257,6 +28337,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625556062}
   m_CullTransparentMesh: 0
+--- !u!1 &1633608224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 1467108029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1646061315
 GameObject:
   m_ObjectHideFlags: 0
@@ -29278,7 +29364,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 574.7452, y: -20}
+  m_AnchoredPosition: {x: 574.7452, y: -60}
   m_SizeDelta: {x: 381.8301, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1725263662
@@ -29527,8 +29613,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.82996, y: 0}
-  m_SizeDelta: {x: 763.6602, y: 435}
+  m_AnchoredPosition: {x: 382.7, y: 0}
+  m_SizeDelta: {x: 765.6602, y: 690}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1744286942
 MonoBehaviour:
@@ -30054,9 +30140,11 @@ MonoBehaviour:
     craftName: {fileID: 1649263754}
     body: {fileID: 155339661}
     description: {fileID: 1374356112}
+    particleEffect: {fileID: 2108720936}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 40
+      costNameText: {fileID: 498257463}
       costAmountText: {fileID: 208462322}
   - name: Wooden Axe
     progressBar: {fileID: 835617407}
@@ -30064,9 +30152,11 @@ MonoBehaviour:
     craftName: {fileID: 1152224365}
     body: {fileID: 1205331525}
     description: {fileID: 1960396685}
+    particleEffect: {fileID: 675430320}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 20
+      costNameText: {fileID: 891188503}
       costAmountText: {fileID: 2040948329}
   - name: Wooden Pickaxe
     progressBar: {fileID: 1467108031}
@@ -30074,12 +30164,15 @@ MonoBehaviour:
     craftName: {fileID: 1331821646}
     body: {fileID: 895948822}
     description: {fileID: 652797587}
+    particleEffect: {fileID: 1633608224}
     resourceCosts:
     - resourceName: Sticks
-      costAmount: 25
-      costAmountText: {fileID: 2040948329}
+      costAmount: 100
+      costNameText: {fileID: 319915078}
+      costAmountText: {fileID: 740323413}
   buildingList:
   - name: Potato Field
+    descriptionString: Increases food yield by
     buildingResourceMultiplier: 0.15
     buildingCostMultiplier: 1.15
     buildingAmount: 0
@@ -30088,12 +30181,18 @@ MonoBehaviour:
     body: {fileID: 595603570}
     buildingName: {fileID: 1268277125}
     description: {fileID: 1270531715}
+    particleEffect: {fileID: 233593667}
     resourceCosts:
     - resourceName: Food
       costAmount: 20
       resourceNameText: {fileID: 1736648850}
       costAmountText: {fileID: 2134036096}
+    maxValuesArray:
+    - 20
+    currentValuesArray:
+    - 0
   - name: Wood-lot
+    descriptionString: Increases stick yield by
     buildingResourceMultiplier: 0.15
     buildingCostMultiplier: 1.09
     buildingAmount: 0
@@ -30102,12 +30201,18 @@ MonoBehaviour:
     body: {fileID: 705817174}
     buildingName: {fileID: 809849969}
     description: {fileID: 2140659672}
+    particleEffect: {fileID: 594153757}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 40
       resourceNameText: {fileID: 1194237991}
       costAmountText: {fileID: 1485455531}
+    maxValuesArray:
+    - 40
+    currentValuesArray:
+    - 0
   - name: Dig Site
+    descriptionString: Increases stone yield by
     buildingResourceMultiplier: 0.15
     buildingCostMultiplier: 1.12
     buildingAmount: 0
@@ -30116,12 +30221,18 @@ MonoBehaviour:
     body: {fileID: 1499325797}
     buildingName: {fileID: 1504552235}
     description: {fileID: 1364235251}
+    particleEffect: {fileID: 1893509277}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 120
       resourceNameText: {fileID: 585945276}
       costAmountText: {fileID: 624812693}
+    maxValuesArray:
+    - 120
+    currentValuesArray:
+    - 0
   - name: Makeshift Bed
+    descriptionString: Increases Population
     buildingResourceMultiplier: 0
     buildingCostMultiplier: 1.15
     buildingAmount: 0
@@ -30130,6 +30241,7 @@ MonoBehaviour:
     body: {fileID: 1364389017}
     buildingName: {fileID: 135505346}
     description: {fileID: 1059088811}
+    particleEffect: {fileID: 456811534}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 200
@@ -30139,6 +30251,12 @@ MonoBehaviour:
       costAmount: 100
       resourceNameText: {fileID: 562574031}
       costAmountText: {fileID: 1385918198}
+    maxValuesArray:
+    - 200
+    - 100
+    currentValuesArray:
+    - 0
+    - 0
   resourceList:
   - name: Food
     resourceMaxStorage: 500
@@ -30166,7 +30284,6 @@ MonoBehaviour:
   availableWorkers: 0
   maxWorkers: 0
   availableWorkerObject: {fileID: 589271194}
-  particleCompletion: {fileID: 594153762}
 --- !u!4 &1767940232
 Transform:
   m_ObjectHideFlags: 0
@@ -30179,7 +30296,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774284839
 GameObject:
@@ -31587,6 +31704,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892449915}
   m_CullTransparentMesh: 0
+--- !u!1 &1893509277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 880154806}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1896246483
 GameObject:
   m_ObjectHideFlags: 0
@@ -31625,8 +31748,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.8301, y: -50}
-  m_SizeDelta: {x: 763.6602, y: 100}
+  m_AnchoredPosition: {x: 382.8301, y: -92.5}
+  m_SizeDelta: {x: 765.6602, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1896246485
 MonoBehaviour:
@@ -32756,7 +32879,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases population.
+  m_text: Allows woodcutting.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -33216,7 +33339,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190.91505, y: -20}
+  m_AnchoredPosition: {x: 190.91505, y: -60}
   m_SizeDelta: {x: 381.8301, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1999993955
@@ -33406,6 +33529,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 353487419, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
       propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456811538, guid: 8872c1e7bb08d4c42a367ee6b205f7ce, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6496414244855618812, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
@@ -33782,7 +33909,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2040674520
 GameObject:
@@ -33924,7 +34051,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0/25
+  m_text: 0/20
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -34428,7 +34555,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Example Text
+  m_text: 0/200
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -34644,6 +34771,12 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!1 &2108720936 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 807678989}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2113132553
 GameObject:
   m_ObjectHideFlags: 0
@@ -35067,7 +35200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases stick gathering by 0.15 /sec
+  m_text: 'Increases stick yield by: 0.15/sec'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

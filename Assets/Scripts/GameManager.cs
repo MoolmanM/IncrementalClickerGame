@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     private int day, year, seasonCount;
     public int availableWorkers, maxWorkers;
     public GameObject availableWorkerObject;
-    public ParticleSystem particleCompletion;
     //Multiply every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
 
     public static GameManager Instance
@@ -35,23 +34,71 @@ public class GameManager : MonoBehaviour
 
         _instance = this;
     }
+
+    private void UpdateResourcesCode()
+    {
+        for (int b = 0; b < buildingList.Count; b++)
+        {
+            buildingList[b].currentValuesArray = new float[buildingList[b].resourceCosts.Count];
+            for (int i = 0; i < buildingList[b].currentValuesArray.Length; i++)
+            {
+                for (int r = 0; r < resourceList.Count; r++)
+                {
+                    if (resourceList[r].name == buildingList[b].resourceCosts[i].resourceName)
+                    {
+                        buildingList[b].currentValuesArray[i] = resourceList[r].resourceAmount;
+                    }
+                }
+
+            }
+        }
+
+        for (int b = 0; b < buildingList.Count; b++)
+        {
+            buildingList[b].maxValuesArray = new float[buildingList[b].resourceCosts.Count];
+            for (int i = 0; i < buildingList[b].maxValuesArray.Length; i++)
+            {
+                buildingList[b].maxValuesArray[i] = buildingList[b].resourceCosts[i].costAmount;
+            }
+        }
+
+        for (int c = 0; c < craftingItemsList.Count; c++)
+        {
+            for (int i = 0; i < craftingItemsList[c].resourceCosts.Count; i++)
+            {
+                craftingItemsList[c].resourceCosts[i].costNameText.GetComponent<TextMeshProUGUI>().text = craftingItemsList[c].resourceCosts[i].resourceName;
+
+                for (int r = 0; r < resourceList.Count; r++)
+                {
+                    craftingItemsList[c].resourceCosts[i].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[r].resourceAmount + "/" + craftingItemsList[c].resourceCosts[i].costAmount;
+
+                }
+            }
+
+        }
+
+        for (int b = 0; b < buildingList.Count; b++)
+        {
+            buildingList[b].description.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: {1}/sec", buildingList[b].descriptionString, buildingList[b].buildingResourceMultiplier);
+            for (int i = 0; i < buildingList[b].resourceCosts.Count; i++)
+            {
+                buildingList[b].resourceCosts[i].resourceNameText.GetComponent<TextMeshProUGUI>().text = buildingList[b].resourceCosts[i].resourceName;
+                for (int r = 0; r < resourceList.Count; r++)
+                {
+                    buildingList[b].resourceCosts[i].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[r].resourceAmount + "/" + buildingList[b].resourceCosts[i].costAmount;
+                }
+            }
+        }
+
+        buildingList[3].description.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", buildingList[3].descriptionString);
+    }
     private void OnValidate()
     {
-        craftingItemsList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[0].resourceCosts[0].costAmount;
-        craftingItemsList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[1].resourceCosts[0].costAmount;
-        craftingItemsList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + craftingItemsList[2].resourceCosts[0].costAmount;
-        buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[0].resourceAmount + "/" + buildingList[0].resourceCosts[0].costAmount;
-        buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[1].resourceAmount + "/" + buildingList[1].resourceCosts[0].costAmount;
-        buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = resourceList[0].resourceAmount + "/" + buildingList[2].resourceCosts[0].costAmount;
-        buildingList[0].description.GetComponent<TextMeshProUGUI>().text = "Increases food yield by " + buildingList[0].buildingResourceMultiplier + " /sec";
-        buildingList[1].description.GetComponent<TextMeshProUGUI>().text = "Increases stick gathering by " + buildingList[1].buildingResourceMultiplier + " /sec";
-        buildingList[2].description.GetComponent<TextMeshProUGUI>().text = "Increases stone gathering by " + buildingList[2].buildingResourceMultiplier + " /sec";
-        buildingList[0].resourceCosts[0].resourceNameText.GetComponent<TextMeshProUGUI>().text = buildingList[0].resourceCosts[0].resourceName;
-        buildingList[1].resourceCosts[0].resourceNameText.GetComponent<TextMeshProUGUI>().text = buildingList[1].resourceCosts[0].resourceName;
-        buildingList[2].resourceCosts[0].resourceNameText.GetComponent<TextMeshProUGUI>().text = buildingList[2].resourceCosts[0].resourceName;
+        UpdateResourcesCode();
     }
     public void Start()
     {
+        //float fill = GetAveragedSample(current, max);
         InvokeRepeating("UpdateResources", 0, (float)0.1);
         InvokeRepeating("UpdateDay", 0, (float)5);
     }
@@ -83,7 +130,7 @@ public class GameManager : MonoBehaviour
         }
         buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount);
         buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount);
-        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar);
+        //GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar, craftingItemsList[0].particleEffect);
     }
     public void OnCraftingWoodenHoe()
     {
@@ -196,15 +243,17 @@ public class GameManager : MonoBehaviour
             Debug.Log("Not enough sticks && stones");
         }
     }
-    public void GetCurrentFill(float current, float max, Image progressCircle)
+    /*public void GetCurrentFill(float current, float max, Image progressCircle, GameObject thisParticleEffect)
     {
         float fillAmount = current / max;   
         progressCircle.fillAmount = fillAmount;
-
-        if (progressCircle.fillAmount == 1)
+        
+        if (fillAmount >= 1)
         {
-            particleCompletion.Play();
+            fillAmount = 1;
         }
+
+        thisParticleEffect.GetComponent<ParticleSystem>().Play();
     }
     public void GetCurrentFillTwo(float current, float current1, float max, float max1, Image progressCircle)
     {
@@ -220,9 +269,30 @@ public class GameManager : MonoBehaviour
             fillAmount1 = 1;
         }
             progressCircle.fillAmount = (fillAmount + fillAmount1) / 2;
+    }*/
+
+    public float GetCurrentFill(float[] maxValues, float[] currentValues)
+    {
+        float add = 0;
+
+        for (int i = 0; i < currentValues.Length; i++)
+        {
+            add += currentValues[i];
+        }
+
+        float div = 0;
+
+        for (int i = 0; i < maxValues.Length; i++)
+        {
+            div += maxValues[i];
+        }
+
+        return add / div;
     }
+
     public void UpdateResources()
     {
+        UpdateResourcesCode();
         #region Food Resource
         float potatoFieldMultiplier = (float)(buildingList[0].buildingAmount * buildingList[0].buildingResourceMultiplier) + (WorkerManager.farmerWorkMultiplier * WorkerManager.farmerWorkerAmount);
         if (resourceList[0].resourceAmount >= (resourceList[0].resourceMaxStorage - potatoFieldMultiplier))
@@ -270,9 +340,9 @@ public class GameManager : MonoBehaviour
 
         #region Update Resource Costs 
 
-        craftingItemsList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1}", resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount);
-        craftingItemsList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1}", resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount);
-        craftingItemsList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1}", resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount);
+        craftingItemsList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1:#.00}", resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount);
+        craftingItemsList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1:#.00}", resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount);
+        craftingItemsList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00} / {1:#.00}", resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount);
         buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount);
         buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount);
         buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount);
@@ -282,13 +352,17 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region GetFills
-        GetCurrentFill(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar);
-        GetCurrentFill(resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount, buildingList[1].progressBar);
-        GetCurrentFill(resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount, buildingList[2].progressBar);
+        buildingList[0].progressBar.fillAmount = GetCurrentFill(buildingList[0].maxValuesArray, buildingList[0].currentValuesArray);
+        buildingList[1].progressBar.fillAmount = GetCurrentFill(buildingList[1].maxValuesArray, buildingList[1].currentValuesArray);
+        buildingList[2].progressBar.fillAmount = GetCurrentFill(buildingList[1].maxValuesArray, buildingList[1].currentValuesArray);
+
+        /*(resourceList[0].resourceAmount, buildingList[0].resourceCosts[0].costAmount, buildingList[0].progressBar, buildingList[0].particleEffect);
+        GetCurrentFill(resourceList[1].resourceAmount, buildingList[1].resourceCosts[0].costAmount, buildingList[1].progressBar, buildingList[1].particleEffect);
+        GetCurrentFill(resourceList[1].resourceAmount, buildingList[2].resourceCosts[0].costAmount, buildingList[2].progressBar, buildingList[2].particleEffect);
         GetCurrentFillTwo(resourceList[1].resourceAmount, resourceList[2].resourceAmount, buildingList[3].resourceCosts[0].costAmount, buildingList[3].resourceCosts[1].costAmount, buildingList[3].progressBar);
-        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar);
-        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount, craftingItemsList[1].progressBar);
-        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount, craftingItemsList[2].progressBar);
+        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].progressBar, craftingItemsList[0].particleEffect);
+        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount, craftingItemsList[1].progressBar, craftingItemsList[1].particleEffect);
+        GetCurrentFill(resourceList[1].resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount, craftingItemsList[2].progressBar, craftingItemsList[2].particleEffect);*/
         #endregion
     }
     public void UpdateDay()

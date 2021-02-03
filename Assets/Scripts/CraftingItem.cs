@@ -7,7 +7,7 @@ public class CraftingItem
 {
     public string name;
     public UnityEngine.UI.Image progressBar;
-    public GameObject mainPanel, craftName, body, description;
+    public GameObject mainPanel, craftName, body, description, particleEffect;
     public List<ResourceCosts> resourceCosts = new List<ResourceCosts>();
 
 
@@ -17,6 +17,6 @@ public class CraftingItem
     {
         public string resourceName;
         public float costAmount;
-        public GameObject costAmountText;      
+        public GameObject costNameText, costAmountText;      
     }
 }
