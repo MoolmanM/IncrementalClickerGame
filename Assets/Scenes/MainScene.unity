@@ -3093,12 +3093,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!1 &233593667 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 2007838407}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &234155276
 GameObject:
   m_ObjectHideFlags: 0
@@ -6609,12 +6603,6 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 2
---- !u!1 &456811534 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 927855595}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &460707713
 GameObject:
   m_ObjectHideFlags: 0
@@ -7770,18 +7758,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &526635305 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 880154806}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &532306875
 GameObject:
   m_ObjectHideFlags: 0
@@ -8836,12 +8812,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589271194}
   m_CullTransparentMesh: 0
---- !u!1 &594153757 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 730023289}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &595603570
 GameObject:
   m_ObjectHideFlags: 0
@@ -10870,12 +10840,6 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &675430320 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 653770858}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &700033116
 GameObject:
   m_ObjectHideFlags: 0
@@ -12550,18 +12514,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 807678989}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &807678991 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 807678989}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &809849969
 GameObject:
   m_ObjectHideFlags: 0
@@ -13212,18 +13164,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 653770858}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &835617407 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 653770858}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &836028456
 GameObject:
   m_ObjectHideFlags: 0
@@ -26088,18 +26028,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1467108029}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1467108031 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 1467108029}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1485455531
 GameObject:
   m_ObjectHideFlags: 0
@@ -27938,18 +27866,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1605082164}
   m_CullTransparentMesh: 0
---- !u!114 &1608326149 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 2007838407}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1609304706
 GameObject:
   m_ObjectHideFlags: 0
@@ -28337,12 +28253,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625556062}
   m_CullTransparentMesh: 0
---- !u!1 &1633608224 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 1467108029}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1646061315
 GameObject:
   m_ObjectHideFlags: 0
@@ -30135,36 +30045,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingItemsList:
   - name: Wooden Hoe
-    progressBar: {fileID: 807678991}
-    mainPanel: {fileID: 1234727572}
-    craftName: {fileID: 1649263754}
-    body: {fileID: 155339661}
-    description: {fileID: 1374356112}
-    particleEffect: {fileID: 2108720936}
+    objects:
+      mainPanel: {fileID: 0}
+      headerText: {fileID: 0}
+      body: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
+      progressBar: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 40
       costNameText: {fileID: 498257463}
       costAmountText: {fileID: 208462322}
   - name: Wooden Axe
-    progressBar: {fileID: 835617407}
-    mainPanel: {fileID: 1309585996}
-    craftName: {fileID: 1152224365}
-    body: {fileID: 1205331525}
-    description: {fileID: 1960396685}
-    particleEffect: {fileID: 675430320}
+    objects:
+      mainPanel: {fileID: 0}
+      headerText: {fileID: 0}
+      body: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
+      progressBar: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 20
       costNameText: {fileID: 891188503}
       costAmountText: {fileID: 2040948329}
   - name: Wooden Pickaxe
-    progressBar: {fileID: 1467108031}
-    mainPanel: {fileID: 6581194}
-    craftName: {fileID: 1331821646}
-    body: {fileID: 895948822}
-    description: {fileID: 652797587}
-    particleEffect: {fileID: 1633608224}
+    objects:
+      mainPanel: {fileID: 0}
+      headerText: {fileID: 0}
+      body: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
+      progressBar: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 100
@@ -30172,113 +30085,109 @@ MonoBehaviour:
       costAmountText: {fileID: 740323413}
   buildingList:
   - name: Potato Field
-    descriptionString: Increases food yield by
-    buildingResourceMultiplier: 0.15
-    buildingCostMultiplier: 1.15
-    buildingAmount: 0
-    progressBar: {fileID: 1608326149}
-    mainPanel: {fileID: 513744049}
-    body: {fileID: 595603570}
-    buildingName: {fileID: 1268277125}
-    description: {fileID: 1270531715}
-    particleEffect: {fileID: 233593667}
+    objects:
+      progressBar: {fileID: 0}
+      mainPanel: {fileID: 0}
+      body: {fileID: 0}
+      buildingNameText: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
     resourceCosts:
     - resourceName: Food
       costAmount: 20
-      resourceNameText: {fileID: 1736648850}
+      costNameText: {fileID: 0}
       costAmountText: {fileID: 2134036096}
-    maxValuesArray:
-    - 20
-    currentValuesArray:
-    - 0
+    valuesToEnter:
+      descriptionString: 
+      buildingResourceMultiplier: 0
+      buildingCostMultiplier: 0
+      buildingAmount: 0
   - name: Wood-lot
-    descriptionString: Increases stick yield by
-    buildingResourceMultiplier: 0.15
-    buildingCostMultiplier: 1.09
-    buildingAmount: 0
-    progressBar: {fileID: 2023337720}
-    mainPanel: {fileID: 1247572241}
-    body: {fileID: 705817174}
-    buildingName: {fileID: 809849969}
-    description: {fileID: 2140659672}
-    particleEffect: {fileID: 594153757}
+    objects:
+      progressBar: {fileID: 0}
+      mainPanel: {fileID: 0}
+      body: {fileID: 0}
+      buildingNameText: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 40
-      resourceNameText: {fileID: 1194237991}
+      costNameText: {fileID: 0}
       costAmountText: {fileID: 1485455531}
-    maxValuesArray:
-    - 40
-    currentValuesArray:
-    - 0
+    valuesToEnter:
+      descriptionString: 
+      buildingResourceMultiplier: 0
+      buildingCostMultiplier: 0
+      buildingAmount: 0
   - name: Dig Site
-    descriptionString: Increases stone yield by
-    buildingResourceMultiplier: 0.15
-    buildingCostMultiplier: 1.12
-    buildingAmount: 0
-    progressBar: {fileID: 526635305}
-    mainPanel: {fileID: 1188958118}
-    body: {fileID: 1499325797}
-    buildingName: {fileID: 1504552235}
-    description: {fileID: 1364235251}
-    particleEffect: {fileID: 1893509277}
+    objects:
+      progressBar: {fileID: 0}
+      mainPanel: {fileID: 0}
+      body: {fileID: 0}
+      buildingNameText: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 120
-      resourceNameText: {fileID: 585945276}
+      costNameText: {fileID: 0}
       costAmountText: {fileID: 624812693}
-    maxValuesArray:
-    - 120
-    currentValuesArray:
-    - 0
+    valuesToEnter:
+      descriptionString: 
+      buildingResourceMultiplier: 0
+      buildingCostMultiplier: 0
+      buildingAmount: 0
   - name: Makeshift Bed
-    descriptionString: Increases Population
-    buildingResourceMultiplier: 0
-    buildingCostMultiplier: 1.15
-    buildingAmount: 0
-    progressBar: {fileID: 2065516080}
-    mainPanel: {fileID: 1112149847}
-    body: {fileID: 1364389017}
-    buildingName: {fileID: 135505346}
-    description: {fileID: 1059088811}
-    particleEffect: {fileID: 456811534}
+    objects:
+      progressBar: {fileID: 0}
+      mainPanel: {fileID: 0}
+      body: {fileID: 0}
+      buildingNameText: {fileID: 0}
+      descriptionText: {fileID: 0}
+      particleEffect: {fileID: 0}
     resourceCosts:
     - resourceName: Sticks
       costAmount: 200
-      resourceNameText: {fileID: 943123005}
+      costNameText: {fileID: 0}
       costAmountText: {fileID: 2090165581}
     - resourceName: Stones
       costAmount: 100
-      resourceNameText: {fileID: 562574031}
+      costNameText: {fileID: 0}
       costAmountText: {fileID: 1385918198}
-    maxValuesArray:
-    - 200
-    - 100
-    currentValuesArray:
-    - 0
-    - 0
+    valuesToEnter:
+      descriptionString: 
+      buildingResourceMultiplier: 0
+      buildingCostMultiplier: 0
+      buildingAmount: 0
   resourceList:
   - name: Food
-    resourceMaxStorage: 500
-    resourceAmount: 0
-    resourceAmountText: {fileID: 1597544647}
-    resourcePerSecond: {fileID: 1905733286}
-    resourceStorageText: {fileID: 1230242417}
-    mainPanel: {fileID: 1090582352}
+    objects:
+      resourceAmountText: {fileID: 0}
+      resourcePerSecondText: {fileID: 0}
+      resourceStorageText: {fileID: 0}
+      mainPanel: {fileID: 0}
+    valuesToEnter:
+      resourceMaxStorage: 0
+      resourceAmount: 0
   - name: Sticks
-    resourceMaxStorage: 300
-    resourceAmount: 0
-    resourceAmountText: {fileID: 653581764}
-    resourcePerSecond: {fileID: 1049250593}
-    resourceStorageText: {fileID: 742162554}
-    mainPanel: {fileID: 1463278513}
+    objects:
+      resourceAmountText: {fileID: 0}
+      resourcePerSecondText: {fileID: 0}
+      resourceStorageText: {fileID: 0}
+      mainPanel: {fileID: 0}
+    valuesToEnter:
+      resourceMaxStorage: 0
+      resourceAmount: 0
   - name: Stones
-    resourceMaxStorage: 300
-    resourceAmount: 0
-    resourceAmountText: {fileID: 1593756683}
-    resourcePerSecond: {fileID: 146136737}
-    resourceStorageText: {fileID: 516188197}
-    mainPanel: {fileID: 1315756555}
+    objects:
+      resourceAmountText: {fileID: 0}
+      resourcePerSecondText: {fileID: 0}
+      resourceStorageText: {fileID: 0}
+      mainPanel: {fileID: 0}
+    valuesToEnter:
+      resourceMaxStorage: 0
+      resourceAmount: 0
   globalMultiplier: 0
   seasonObject: {fileID: 17962495}
   availableWorkers: 0
@@ -31704,12 +31613,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892449915}
   m_CullTransparentMesh: 0
---- !u!1 &1893509277 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 880154806}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1896246483
 GameObject:
   m_ObjectHideFlags: 0
@@ -33653,18 +33556,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2007838407}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2023337720 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 730023289}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2026842420
 GameObject:
   m_ObjectHideFlags: 0
@@ -34336,18 +34227,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061573880}
   m_CullTransparentMesh: 0
---- !u!114 &2065516080 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 927855595}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2071173649
 GameObject:
   m_ObjectHideFlags: 0
@@ -34771,12 +34650,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!1 &2108720936 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 807678989}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2113132553
 GameObject:
   m_ObjectHideFlags: 0
