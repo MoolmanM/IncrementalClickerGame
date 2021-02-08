@@ -6,18 +6,31 @@ using TMPro;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    /*
+    private float _timer;
+
+    private void Update()
+    {
+        if ((_timer -= Time.deltaTime) <= 0)
+        {
+            _timer = maxValue;
+            // run logic
+        }
+    }
+    */
+
     public List<CraftingItem> craftingItemsList = new List<CraftingItem>();
     public List<Building> buildingList = new List<Building>();
     public List<Resource> resourceList = new List<Resource>();
     //private bool craftedWoodenHoe, craftedWoodenAxe, craftedWoodenPickaxe;
     public float globalMultiplier;
     public GameObject seasonObject;
-    private string seasonText;
-    private int day, year, seasonCount;
+
     public int availableWorkers, maxWorkers;
     public GameObject availableWorkerObject;
     //Multiply every single resource with globalMultiplier, for in the future for testing and the player, when they watch ads.
-    private void UpdateResourcesCode()
+
+    private void UpdateResourceTextsCode()
     {
         for (int b = 0; b < buildingList.Count; b++)
         {
@@ -80,151 +93,10 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void Start()
     {
-        //float fill = GetAveragedSample(current, max);
         InvokeRepeating("UpdateResources", 0, (float)0.1);
         InvokeRepeating("UpdateDay", 0, (float)5);
     }
-    public void OnGatherPotatoes()
-    {
-        if (resourceList[0].valuesToEnter.resourceAmount >= resourceList[0].valuesToEnter.resourceMaxStorage)
-        {
-            resourceList[0].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].valuesToEnter.resourceMaxStorage);
-        }
-        else
-        {
-            resourceList[0].valuesToEnter.resourceAmount++;
-            resourceList[0].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].valuesToEnter.resourceAmount);
-        }
-        
-        buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[0].valuesToEnter.resourceAmount, buildingList[0].resourceCosts[0].costAmount);
-    }
-    public void OnGatherSticks()
-    {
-        craftingItemsList[1].objects.mainPanel.SetActive(true);
-        if (resourceList[1].valuesToEnter.resourceAmount >= resourceList[1].valuesToEnter.resourceMaxStorage)
-        {
-            resourceList[1].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[0].valuesToEnter.resourceMaxStorage);
-        }
-        else
-        {
-            resourceList[1].valuesToEnter.resourceAmount++;
-            resourceList[1].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}", resourceList[1].valuesToEnter.resourceAmount);
-        }
-        buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].valuesToEnter.resourceAmount, buildingList[1].resourceCosts[0].costAmount);
-        buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#.00}/{1:#.00}", resourceList[1].valuesToEnter.resourceAmount, buildingList[2].resourceCosts[0].costAmount);
-        //GetCurrentFill(resourceList[1].valuesToEnter.resourceAmount, craftingItemsList[0].resourceCosts[0].costAmount, craftingItemsList[0].objects.progressBar, craftingItemsList[0].objects.particleEffect);
-    }
-    public void OnCraftingWoodenHoe()
-    {
-        if (resourceList[1].valuesToEnter.resourceAmount >= craftingItemsList[0].resourceCosts[0].costAmount)
-        {
-            craftingItemsList[0].objects.headerText.GetComponent<TextMeshProUGUI>().text = "Wooden Hoe (Complete)";
-            resourceList[1].valuesToEnter.resourceAmount -= craftingItemsList[0].resourceCosts[0].costAmount;
-            resourceList[1].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].valuesToEnter.resourceAmount);
-            buildingList[0].objects.mainPanel.SetActive(true);        
-        }
-        else
-        {
-            //Not enough 'insert stick name variable'!
-        }
-
-    }
-    public void OnCraftingWoodenAxe()
-    {
-        if (resourceList[1].valuesToEnter.resourceAmount >= craftingItemsList[1].resourceCosts[0].costAmount)
-        {
-            craftingItemsList[1].objects.headerText.GetComponent<TextMeshProUGUI>().text = "Wooden Axe (Complete)";
-            resourceList[1].valuesToEnter.resourceAmount -= craftingItemsList[0].resourceCosts[0].costAmount;
-            resourceList[1].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].valuesToEnter.resourceAmount);
-            buildingList[1].objects.mainPanel.SetActive(true);          
-        }
-        else
-        {
-            //Not enough 'insert stick name variable'!
-        }
-    }
-    public void OnCraftingWoodenPickaxe()
-    {
-        if (resourceList[1].valuesToEnter.resourceAmount >= craftingItemsList[2].resourceCosts[0].costAmount)
-        {
-            craftingItemsList[2].objects.headerText.GetComponent<TextMeshProUGUI>().text = "Wooden Pickaxe (Complete)";
-            resourceList[1].valuesToEnter.resourceAmount -= craftingItemsList[2].resourceCosts[0].costAmount;
-            resourceList[1].objects.resourceAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", resourceList[1].valuesToEnter.resourceAmount);
-            buildingList[2].objects.mainPanel.SetActive(true);
-        }
-        else
-        {
-            //Not enough 'insert stick name variable'!
-        }
-    }
-    public void BuildPotatoField()
-    {
-        if (resourceList[0].valuesToEnter.resourceAmount >= buildingList[0].resourceCosts[0].costAmount)
-        {            
-            buildingList[0].valuesToEnter.buildingAmount++;          
-            resourceList[0].valuesToEnter.resourceAmount = resourceList[0].valuesToEnter.resourceAmount - buildingList[0].resourceCosts[0].costAmount;
-            buildingList[0].resourceCosts[0].costAmount = buildingList[0].resourceCosts[0].costAmount * Mathf.Pow(buildingList[0].valuesToEnter.buildingCostMultiplier, buildingList[0].valuesToEnter.buildingAmount);
-            buildingList[0].objects.buildingNameText.GetComponent<TextMeshProUGUI>().text = string.Format("Potato Field ({0})", buildingList[0].valuesToEnter.buildingAmount);
-            buildingList[0].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[0].valuesToEnter.resourceAmount, buildingList[0].resourceCosts[0].costAmount);
-        }
-        else
-        {
-            Debug.Log("Not enough food!");
-        }
-    }
-    public void BuildWoodlot()
-    {
-        if (resourceList[1].valuesToEnter.resourceAmount >= buildingList[1].resourceCosts[0].costAmount)
-        {
-            buildingList[1].valuesToEnter.buildingAmount++;
-            resourceList[1].valuesToEnter.resourceAmount = resourceList[1].valuesToEnter.resourceAmount - buildingList[1].resourceCosts[0].costAmount;
-            buildingList[1].resourceCosts[0].costAmount = buildingList[1].resourceCosts[0].costAmount * Mathf.Pow(buildingList[1].valuesToEnter.buildingCostMultiplier, buildingList[1].valuesToEnter.buildingAmount);
-            buildingList[1].objects.buildingNameText.GetComponent<TextMeshProUGUI>().text = string.Format("Wood-lot ({0})", buildingList[1].valuesToEnter.buildingAmount);
-            buildingList[1].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].valuesToEnter.resourceAmount, buildingList[1].resourceCosts[0].costAmount);
-        }
-        else
-        {
-            Debug.Log("Not enough sticks!");
-        }
-    }
-    public void BuildDigSite()
-    {
-        if (resourceList[1].valuesToEnter.resourceAmount >= buildingList[2].resourceCosts[0].costAmount)
-        {
-            buildingList[2].valuesToEnter.buildingAmount++;
-            resourceList[1].valuesToEnter.resourceAmount = resourceList[1].valuesToEnter.resourceAmount - buildingList[2].resourceCosts[0].costAmount;
-            buildingList[2].resourceCosts[0].costAmount = buildingList[2].resourceCosts[0].costAmount * Mathf.Pow(buildingList[2].valuesToEnter.buildingCostMultiplier, buildingList[2].valuesToEnter.buildingAmount);
-            buildingList[2].objects.buildingNameText.GetComponent<TextMeshProUGUI>().text = string.Format("Dig Site ({0})", buildingList[2].valuesToEnter.buildingAmount);
-            buildingList[2].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].valuesToEnter.resourceAmount, buildingList[2].resourceCosts[0].costAmount);
-        }
-        else
-        {
-            Debug.Log("Not enough sticks!");
-        }
-    }
-    public void BuildMakeshiftBed()
-    {
-        Debug.Log("Clicked");
-        if ((resourceList[1].valuesToEnter.resourceAmount >= buildingList[3].resourceCosts[0].costAmount) && (resourceList[2].valuesToEnter.resourceAmount >= buildingList[3].resourceCosts[0].costAmount))
-        {
-            Debug.Log("Reached here");
-            buildingList[3].valuesToEnter.buildingAmount++;
-            availableWorkers++;
-            maxWorkers++;
-            availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", availableWorkers, maxWorkers);
-            resourceList[1].valuesToEnter.resourceAmount = resourceList[1].valuesToEnter.resourceAmount - buildingList[3].resourceCosts[0].costAmount;
-            resourceList[2].valuesToEnter.resourceAmount = resourceList[1].valuesToEnter.resourceAmount - buildingList[3].resourceCosts[0].costAmount;
-            buildingList[3].resourceCosts[0].costAmount = buildingList[3].resourceCosts[0].costAmount * Mathf.Pow(buildingList[3].valuesToEnter.buildingCostMultiplier, buildingList[3].valuesToEnter.buildingAmount);
-            buildingList[3].resourceCosts[1].costAmount = buildingList[3].resourceCosts[1].costAmount * Mathf.Pow(buildingList[3].valuesToEnter.buildingCostMultiplier, buildingList[3].valuesToEnter.buildingAmount);
-            buildingList[3].objects.buildingNameText.GetComponent<TextMeshProUGUI>().text = string.Format("Makeshift Bed ({0})", buildingList[3].valuesToEnter.buildingAmount);
-            buildingList[3].resourceCosts[0].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[1].valuesToEnter.resourceAmount, buildingList[3].resourceCosts[0].costAmount);
-            buildingList[3].resourceCosts[1].costAmountText.GetComponent<TextMeshProUGUI>().text = string.Format("{0:#0.00}/{1:#0.00}", resourceList[2].valuesToEnter.resourceAmount, buildingList[3].resourceCosts[1].costAmount);
-        }
-        else
-        {
-            Debug.Log("Not enough sticks && stones");
-        }
-    }
+   
     public float GetCurrentFill(float[] maxValues, float[] currentValues, GameObject thisParticleEffect)
     {
         float add = 0;
@@ -248,7 +120,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void UpdateResources()
     {
-        UpdateResourcesCode();
+        UpdateResourceTextsCode();
         #region Food Resource
         float potatoFieldMultiplier = (float)(buildingList[0].valuesToEnter.buildingAmount * buildingList[0].valuesToEnter.buildingResourceMultiplier) + (WorkerManager.farmerWorkMultiplier * WorkerManager.farmerWorkerAmount);
         if (resourceList[0].valuesToEnter.resourceAmount >= (resourceList[0].valuesToEnter.resourceMaxStorage - potatoFieldMultiplier))
@@ -334,47 +206,5 @@ public class GameManager : MonoSingleton<GameManager>
         GetCurrentFill(resourceList[1].valuesToEnter.resourceAmount, craftingItemsList[1].resourceCosts[0].costAmount, craftingItemsList[1].objects.progressBar, craftingItemsList[1].objects.particleEffect);
         GetCurrentFill(resourceList[1].valuesToEnter.resourceAmount, craftingItemsList[2].resourceCosts[0].costAmount, craftingItemsList[2].objects.progressBar, craftingItemsList[2].objects.particleEffect);*/
         #endregion
-    }
-    public void UpdateDay()
-    {
-        day++;
-        if (seasonCount == 0)
-        {
-            seasonText = "Spring";
-        }    
-        else if (seasonCount == 1)
-        {
-            seasonText = "Summer";
-        }
-        else if (seasonCount == 2)
-        {
-            seasonText = "Fall";
-        }
-        else if (seasonCount == 3)
-        {
-            seasonText = "Winter";
-        }
-        else
-        {
-            seasonCount = 0;
-        }
-
-        if (day == 100 && seasonCount == 3)
-        {
-            year++;
-            seasonCount++;
-            day = 0;
-        }
-
-        else if (day == 100)
-        {
-            seasonCount++;
-            day = 0;
-        }
-
-        seasonObject.GetComponent<TextMeshProUGUI>().text = string.Format("Year {0} - {1}, day {2}", year, seasonText, day);
-        
-
-        
     }
 }

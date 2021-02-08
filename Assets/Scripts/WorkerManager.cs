@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class WorkerManager : MonoBehaviour
+public class WorkerManager : MonoSingleton<GameManager>
 {
     public bool xOne, xTen, xHundred, xMax;
     public int increaseAmount, increaseAmountCache, workerAmountToMinus;

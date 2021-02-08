@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [System.Serializable]
 public class CraftingItem
@@ -14,7 +15,8 @@ public class CraftingItem
     [System.Serializable]
     public class Objects
     {
-        public GameObject mainPanel, headerText, body, descriptionText, particleEffect;
+        public GameObject mainPanel, body, particleEffect;
+        public TMP_Text headerText, descriptionText;
         public UnityEngine.UI.Image progressBar;
     }
 
@@ -30,7 +32,7 @@ public class CraftingItem
     {
         public string resourceName;
         public float costAmount;
-        public GameObject costNameText, costAmountText;
+        public TMP_Text costNameText, costAmountText;
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [System.Serializable]
 public class Building
@@ -9,7 +10,7 @@ public class Building
     public string name;
     public Objects objects;
     public List<ResourceCosts> resourceCosts = new List<ResourceCosts>();
-    public ValuesToEnter valuesToEnter;
+    public InputValues inputValues;
     public ProgressFillValues progressFillValues;
 
 
@@ -18,7 +19,7 @@ public class Building
     {
         public string resourceName;
         public float costAmount;
-        public GameObject costNameText, costAmountText;
+        public TMP_Text costNameText, costAmountText;
     }
 
     //[System.Serializable]
@@ -32,11 +33,12 @@ public class Building
     public class Objects
     {
         public UnityEngine.UI.Image progressBar;
-        public GameObject mainPanel, body, buildingNameText, descriptionText, particleEffect;
+        public GameObject mainPanel, body, particleEffect;
+        public TMP_Text buildingNameText, descriptionText;
     }
 
     [System.Serializable]
-    public class ValuesToEnter
+    public class InputValues
     {
         public string descriptionString;
         public float buildingResourceMultiplier, buildingCostMultiplier;

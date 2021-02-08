@@ -1,22 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [System.Serializable]
 public class Resource
 {
     public string name;
     public Objects objects;
-    public ValuesToEnter valuesToEnter;
+    public InputValues inputValues;
     
     [System.Serializable]
     public class Objects
     {
-        public GameObject resourceAmountText, resourcePerSecondText, resourceStorageText, mainPanel;
+        public GameObject mainPanel;
+        public TMP_Text resourceAmountText, resourcePerSecondText, resourceStorageText;
     }
 
     [System.Serializable]
-    public class ValuesToEnter
+    public class InputValues
     {
         public float resourceMaxStorage, resourceAmount;
     }
