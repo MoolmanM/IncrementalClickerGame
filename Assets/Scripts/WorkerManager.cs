@@ -4,14 +4,15 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class WorkerManager : MonoSingleton<GameManager>
+public class WorkerManager : MonoBehaviour
 {
     public bool xOne, xTen, xHundred, xMax;
     public int increaseAmount, increaseAmountCache, workerAmountToMinus;
     public GameObject woodcutterText, minerText, farmerText;
+
     public Animator toggleAnim;
     public static float woodcutterWorkMutliplier, minerWorkMultiplier, farmerWorkMultiplier;
-    public static int woodcutterWorkerAmount, minerWorkerAmount, farmerWorkerAmount;
+    public static int woodcutterWorkerAmount, minerWorkerAmount, farmerWorkerAmount, availableWorkers, maxWorkers;
 
     public void Start()
     {
@@ -21,8 +22,7 @@ public class WorkerManager : MonoSingleton<GameManager>
         farmerWorkMultiplier = (float)0.15;
 
     }
-
-    public void Button1()
+    public void Selected1()
     {
         xOne = true;
         xTen = false;
@@ -32,8 +32,7 @@ public class WorkerManager : MonoSingleton<GameManager>
         increaseAmount = 1;
         toggleAnim.SetTrigger("1Idle");
     }
-
-    public void Button10()
+    public void Selected10()
     {
         toggleAnim.SetTrigger("2Anim");
         xOne = false;
@@ -44,8 +43,7 @@ public class WorkerManager : MonoSingleton<GameManager>
         increaseAmount = 10;
 
     }
-
-    public void Button100()
+    public void Selected100()
     {
         if (xOne == true)
         {
@@ -68,8 +66,7 @@ public class WorkerManager : MonoSingleton<GameManager>
         increaseAmount = 100;
 
     }
-
-    public void ButtonMax()
+    public void SelctedMax()
     {
         if (xOne == true)
         {
@@ -89,22 +86,22 @@ public class WorkerManager : MonoSingleton<GameManager>
         xHundred = false;
         xMax = true;
 
-        increaseAmount = GameManager.Instance.availableWorkers;
+        increaseAmount = availableWorkers;
     }
     private void WorkerButtonPlus(ref int thisWorkerAmount, GameObject thisWorkerObject, string thisWorkerName)
     {
         increaseAmountCache = increaseAmount;
 
-        if ((xMax) || (increaseAmountCache > GameManager.Instance.availableWorkers))
+        if ((xMax) || (increaseAmountCache > availableWorkers))
         {
-            increaseAmountCache = GameManager.Instance.availableWorkers;
-            GameManager.Instance.availableWorkers -= increaseAmountCache;
+            increaseAmountCache = availableWorkers;
+            availableWorkers -= increaseAmountCache;
             thisWorkerAmount += increaseAmountCache;
         }
 
-        else if (increaseAmount <= GameManager.Instance.availableWorkers)
+        else if (increaseAmount <= availableWorkers)
         {
-            GameManager.Instance.availableWorkers -= increaseAmountCache;
+            availableWorkers -= increaseAmountCache;
             thisWorkerAmount += increaseAmountCache;
         }
         else
@@ -112,10 +109,9 @@ public class WorkerManager : MonoSingleton<GameManager>
             Debug.Log("Catch all");
         }
 
-        GameManager.Instance.availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", GameManager.Instance.availableWorkers, GameManager.Instance.maxWorkers);
+        //availableWorkerText.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", availableWorkers, maxWorkers);
         thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmount);
     }
-
     private void WorkerButtonMinus(ref int thisWorkerAmount, GameObject thisWorkerObject, string thisWorkerName)
     {
         increaseAmountCache = increaseAmount;
@@ -124,13 +120,13 @@ public class WorkerManager : MonoSingleton<GameManager>
         {
             workerAmountToMinus = thisWorkerAmount;
             thisWorkerAmount -= workerAmountToMinus;
-            GameManager.Instance.availableWorkers += workerAmountToMinus;
+            availableWorkers += workerAmountToMinus;
         }
 
         else if (increaseAmount <= thisWorkerAmount)
         {
             thisWorkerAmount -= increaseAmountCache;
-            GameManager.Instance.availableWorkers += increaseAmountCache;
+            availableWorkers += increaseAmountCache;
         }
 
         else
@@ -138,7 +134,7 @@ public class WorkerManager : MonoSingleton<GameManager>
             Debug.Log("Catch all");
         }
 
-        GameManager.Instance.availableWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", GameManager.Instance.availableWorkers, GameManager.Instance.maxWorkers);
+        //availableWorkerText.GetComponent<TextMeshProUGUI>().text = string.Format("Available Workers: [{0}/{1}]", availableWorkers, maxWorkers);
         thisWorkerObject.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: [{1}]", thisWorkerName, thisWorkerAmount);
     }
     public void ButtonWoodcutterPlus()
@@ -153,17 +149,14 @@ public class WorkerManager : MonoSingleton<GameManager>
     {
         WorkerButtonPlus(ref minerWorkerAmount, minerText, "Miners");
     }
-
     public void ButtonMinerMinus()
     {
         WorkerButtonMinus(ref minerWorkerAmount, minerText, "Miners");
     }
-
     public void ButtonFarmerPlus()
     {
         WorkerButtonPlus(ref farmerWorkerAmount, farmerText, "Farmers");
     }
-
     public void ButtonFarmerMinus()
     {
         WorkerButtonMinus(ref farmerWorkerAmount, farmerText, "Farmers");
