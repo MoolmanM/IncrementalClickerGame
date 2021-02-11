@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 [System.Serializable]
-public class Resource
+public class DeprecatedResource
 {
     public string name;
     public Objects objects;

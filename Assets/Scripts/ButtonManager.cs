@@ -76,6 +76,7 @@ public class ButtonManager : MonoBehaviour
         }
     }
     */
+
     public void BuildPotatoField()
     {
         float _resourceAmount = GameManager.Instance.resourceList[0].inputValues.resourceAmount;

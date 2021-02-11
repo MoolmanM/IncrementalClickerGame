@@ -2,46 +2,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-[System.Serializable]
-public class Building
+public struct Resource
+{
+    public ResourceType type;
+    public float storedAmount;
+    // I personally don't like this at all. Cost should probably be calculated elsewhere
+    public float cost;
+}
+
+public struct ResourceType
 {
     public string name;
-    public Objects objects;
-    public List<ResourceCosts> resourceCosts = new List<ResourceCosts>();
-    public InputValues inputValues;
-    public ProgressFillValues progressFillValues;
+}
 
+public abstract class Building
+{
+    private readonly Dictionary<ResourceType, Resource> _resources;
 
-    [System.Serializable]
-    public class ResourceCosts
+    protected Resource GivenResource;
+    protected uint SelfCount;
+    protected float CostMultiplier;
+    protected Building()
     {
-        public string resourceName;
-        public float costAmount;
-        public TMP_Text costNameText, costAmountText;
+        _resources = new Dictionary<ResourceType, Resource>();
     }
 
-    //[System.Serializable]
-    public class ProgressFillValues
+    public virtual void Build(ResourceType type)
     {
-        public float[] maxValuesArray;
-        public float[] currentValuesArray;
+        if (!_resources.TryGetValue(type, out Resource storedResource) || storedResource.storedAmount < storedResource.cost)
+        {
+            return;
+        }
+
+        storedResource.storedAmount -= storedResource.cost;
+        storedResource.cost *= Mathf.Pow(CostMultiplier, SelfCount);
+
+        _resources[type] = storedResource;
     }
 
-    [System.Serializable]
-    public class Objects
+    public void RegisterResource(ResourceType type, float amount, float baseCost)
     {
-        public UnityEngine.UI.Image progressBar;
-        public GameObject mainPanel, body, particleEffect;
-        public TMP_Text buildingNameText, descriptionText;
-    }
-
-    [System.Serializable]
-    public class InputValues
-    {
-        public string descriptionString;
-        public float buildingResourceMultiplier, buildingCostMultiplier;
-        public int buildingAmount;
+        _resources.Add(type, new Resource(amount, baseCost));
     }
 }
+

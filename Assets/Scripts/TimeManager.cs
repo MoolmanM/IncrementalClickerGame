@@ -65,3 +65,5 @@ public class TimeManager : MonoBehaviour
 
     }
 }
+
+//I'm starting to think if you want to play a particle system just once, just instantiate it and destroy it afterwards? Could work.
