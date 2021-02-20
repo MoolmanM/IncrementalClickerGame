@@ -1,49 +1,59 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public struct Resource
 {
     public ResourceType type;
     public float storedAmount;
-    // I personally don't like this at all. Cost should probably be calculated elsewhere
-    public float cost;
+    private float amount;
+
+    public Resource(float amount) : this()
+    {
+        this.amount = amount;
+    }
 }
 
-public struct ResourceType
+
+public enum ResourceType
 {
-    public string name;
+    Food,
+    Sticks,
+    Stones
 }
 
-public abstract class Building
+public abstract class Building : MonoBehaviour
 {
-    private readonly Dictionary<ResourceType, Resource> _resources;
+    private readonly Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
 
     protected Resource GivenResource;
     protected uint SelfCount;
+    protected float cost;
     protected float CostMultiplier;
-    protected Building()
-    {
-        _resources = new Dictionary<ResourceType, Resource>();
-    }
 
     public virtual void Build(ResourceType type)
     {
-        if (!_resources.TryGetValue(type, out Resource storedResource) || storedResource.storedAmount < storedResource.cost)
+        if (!_resources.TryGetValue(type, out Resource storedResource) || storedResource.storedAmount < cost)
         {
             return;
         }
 
-        storedResource.storedAmount -= storedResource.cost;
-        storedResource.cost *= Mathf.Pow(CostMultiplier, SelfCount);
+        storedResource.storedAmount -= cost;
+        cost *= Mathf.Pow(CostMultiplier, SelfCount);
 
         _resources[type] = storedResource;
     }
 
-    public void RegisterResource(ResourceType type, float amount, float baseCost)
+    public void RegisterResource(ResourceType type, float amount)
     {
-        _resources.Add(type, new Resource(amount, baseCost));
+        _resources.Add(type, new Resource(amount));
     }
 }
+
+
+
+
+
+
 

@@ -6,10 +6,10 @@ public class ActiveHandler : MonoBehaviour
 { 
    public void SetActiveEventLeft()
    {
-        UIManager.menuValue++;
+        //UIManager.menuValue++;
    }
    public void SetActiveEventRight()
    {
-       UIManager.menuValue--;
+       //UIManager.menuValue--;
    }
 }

@@ -1,29 +1,13 @@
-﻿using UnityEngine;
-using TMPro;
-using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class BuildingUI
+public class BuildingUI : MonoBehaviour
 {
-    internal Action<ResourceType> OnBuildClicked;
+    public Resource[] _resourceCacheArray;
 
-    [System.Serializable]
-    public class Objects
+    public Resource[] FillResourcesInDictionary()
     {
-        public UnityEngine.UI.Image progressBar;
-        public GameObject mainPanel, body, particleEffect;
-        public TMP_Text buildingNameText, descriptionText;
-    }
-
-    [System.Serializable]
-    public class InputValues
-    {
-        public string descriptionString;
-        public float buildingResourceMultiplier, buildingCostMultiplier;
-        public int buildingAmount;
-    }
-
-    public void RegisterEvents(Building building)
-    {
-
+        return _resourceCacheArray;
     }
 }

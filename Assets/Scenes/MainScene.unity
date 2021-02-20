@@ -833,7 +833,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &29446533
@@ -987,12 +987,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 43083683}
   m_CullTransparentMesh: 0
---- !u!1 &45868382 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 730023289}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &55606570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,49 +1947,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 139081590}
   m_CullTransparentMesh: 0
---- !u!1 &139596237
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 139596239}
-  - component: {fileID: 139596238}
-  m_Layer: 0
-  m_Name: TimeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &139596238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139596237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a60b3f5653103744860ce97428ec956, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &139596239
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139596237}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 158.25024, y: 1844.8379, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &145213253
 GameObject:
   m_ObjectHideFlags: 0
@@ -3142,12 +3093,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!1 &233623889 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 927855595}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &234155276
 GameObject:
   m_ObjectHideFlags: 0
@@ -4198,7 +4143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 157.9893, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &275212417
@@ -6500,7 +6445,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &452062469
@@ -6887,12 +6832,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 466251069}
   m_CullTransparentMesh: 0
---- !u!1 &470743538 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 807678989}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &477830426
 GameObject:
   m_ObjectHideFlags: 0
@@ -7117,18 +7056,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf715ed44a60d554e93da7e6d7921df8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &488052776 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 1467108029}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &492019084
@@ -7526,6 +7453,8 @@ GameObject:
   - component: {fileID: 513744053}
   - component: {fileID: 513744052}
   - component: {fileID: 513744051}
+  - component: {fileID: 513744054}
+  - component: {fileID: 513744055}
   m_Layer: 5
   m_Name: Potato_Field
   m_TagString: Untagged
@@ -7615,6 +7544,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 513744049}
   m_CullTransparentMesh: 0
+--- !u!114 &513744054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513744049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef2313ebc5d1e85478cd5bbd6e909572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &513744055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513744049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3660ad37a250b43b6ccd889ce2f006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceCacheArray:
+  - type: 0
+    storedAmount: 50
 --- !u!1 &516188197
 GameObject:
   m_ObjectHideFlags: 0
@@ -10141,7 +10097,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: Button10
         m_Mode: 1
         m_Arguments:
@@ -10599,7 +10555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &658898909
@@ -10913,12 +10869,6 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &692057526 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 880154806}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &700033116
 GameObject:
   m_ObjectHideFlags: 0
@@ -11038,7 +10988,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: OnGatherPotatoes
         m_Mode: 1
         m_Arguments:
@@ -11069,12 +11019,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!1 &700672525 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 2007838407}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705817174
 GameObject:
   m_ObjectHideFlags: 0
@@ -11578,7 +11522,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonMinerPlus
         m_Mode: 1
         m_Arguments:
@@ -12107,7 +12051,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: BuildWoodlot
         m_Mode: 1
         m_Arguments:
@@ -12911,7 +12855,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: Button1
         m_Mode: 1
         m_Arguments:
@@ -13368,7 +13312,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: BuildDigSite
         m_Mode: 1
         m_Arguments:
@@ -13591,7 +13535,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 157.9893, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &852088246
@@ -15258,7 +15202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonWoodcutterMinus
         m_Mode: 1
         m_Arguments:
@@ -15572,18 +15516,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944827618}
   m_CullTransparentMesh: 0
---- !u!114 &949555462 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 880154806}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &951574978
 GameObject:
   m_ObjectHideFlags: 0
@@ -15797,7 +15729,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &963675659
@@ -16315,18 +16247,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1003033454}
   m_CullTransparentMesh: 0
---- !u!114 &1010328826 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 927855595}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1017940197
 GameObject:
   m_ObjectHideFlags: 0
@@ -16409,7 +16329,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonMinerMinus
         m_Mode: 1
         m_Arguments:
@@ -16457,18 +16377,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017940197}
   m_CullTransparentMesh: 0
---- !u!114 &1020616142 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 807678989}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1024974606
 GameObject:
   m_ObjectHideFlags: 0
@@ -18338,7 +18246,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: OnGatherSticks
         m_Mode: 1
         m_Arguments:
@@ -20302,7 +20210,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonMax
         m_Mode: 1
         m_Arguments:
@@ -20682,7 +20590,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1207262332
@@ -20864,7 +20772,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1654375652}
+      - m_Target: {fileID: 0}
         m_MethodName: OnBackButton
         m_Mode: 1
         m_Arguments:
@@ -21516,6 +21424,8 @@ GameObject:
   - component: {fileID: 1247572245}
   - component: {fileID: 1247572244}
   - component: {fileID: 1247572243}
+  - component: {fileID: 1247572247}
+  - component: {fileID: 1247572246}
   m_Layer: 5
   m_Name: Wood-lot
   m_TagString: Untagged
@@ -21605,6 +21515,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247572241}
   m_CullTransparentMesh: 0
+--- !u!114 &1247572246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247572241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3660ad37a250b43b6ccd889ce2f006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceCacheArray:
+  - type: 1
+    storedAmount: 60
+  - type: 2
+    storedAmount: 80
+--- !u!114 &1247572247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247572241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b9a336834f6a1442ab30cd258c71280, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1249458430
 GameObject:
   m_ObjectHideFlags: 0
@@ -21895,7 +21834,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonFarmerMinus
         m_Mode: 1
         m_Arguments:
@@ -23260,7 +23199,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonFarmerPlus
         m_Mode: 1
         m_Arguments:
@@ -25906,18 +25845,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442599781}
   m_CullTransparentMesh: 0
---- !u!114 &1461913311 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 653770858}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1463278513
 GameObject:
   m_ObjectHideFlags: 0
@@ -26413,7 +26340,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: BuildMakeshiftBed
         m_Mode: 1
         m_Arguments:
@@ -27256,7 +27183,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: ButtonWoodcutterPlus
         m_Mode: 1
         m_Arguments:
@@ -27379,49 +27306,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562395568}
   m_CullTransparentMesh: 0
---- !u!1 &1568628691
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1568628693}
-  - component: {fileID: 1568628692}
-  m_Layer: 0
-  m_Name: ButtonManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1568628692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568628691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e793113e5661217469fde42969ddb796, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1568628693
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568628691}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 66.98184, y: 1027.1178, z: -186.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1583165823
 GameObject:
   m_ObjectHideFlags: 0
@@ -28042,18 +27926,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1605082164}
   m_CullTransparentMesh: 0
---- !u!114 &1606928453 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 2007838407}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1609304706
 GameObject:
   m_ObjectHideFlags: 0
@@ -28287,7 +28159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 381.8301, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1617953065
@@ -28727,68 +28599,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649263754}
   m_CullTransparentMesh: 0
---- !u!1 &1654375651
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1654375653}
-  - component: {fileID: 1654375652}
-  - component: {fileID: 1654375654}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1654375652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654375651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1be680c98a17f804ca7df8ab7341f3e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  availableWorkerText: {fileID: 589271196}
-  buildingMainPanel: {fileID: 930345099}
-  craftingMainPanel: {fileID: 1744286940}
-  workerMainPanel: {fileID: 1612442808}
-  swipeControls: {fileID: 1419882555}
-  mainPanelAnim: {fileID: 479791301}
---- !u!4 &1654375653
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654375651}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 127.56325, y: 1672.6702, z: -29}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1654375654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654375651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bc91fd9801e11a4d9d8d0d79803fcf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1663389020
 GameObject:
   m_ObjectHideFlags: 0
@@ -29672,36 +29482,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736648850}
   m_CullTransparentMesh: 0
---- !u!1 &1741630753
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1741630754}
-  m_Layer: 0
-  m_Name: StaticManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1741630754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1741630753}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 66.98184, y: 1027.1178, z: -186.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1744286940
 GameObject:
   m_ObjectHideFlags: 0
@@ -30233,195 +30013,6 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 2
---- !u!1 &1767940230
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1767940232}
-  - component: {fileID: 1767940231}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1767940231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1767940230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e995414fab74bcf45b16cb457705af03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  craftingItemsList:
-  - name: Wooden Hoe
-    objects:
-      mainPanel: {fileID: 1234727572}
-      body: {fileID: 155339661}
-      particleEffect: {fileID: 470743538}
-      headerText: {fileID: 1649263756}
-      descriptionText: {fileID: 1374356114}
-      progressBar: {fileID: 1020616142}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 40
-      costNameText: {fileID: 498257465}
-      costAmountText: {fileID: 208462324}
-  - name: Wooden Axe
-    objects:
-      mainPanel: {fileID: 1309585996}
-      body: {fileID: 1205331525}
-      particleEffect: {fileID: 1863328907}
-      headerText: {fileID: 1152224367}
-      descriptionText: {fileID: 1960396687}
-      progressBar: {fileID: 1461913311}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 20
-      costNameText: {fileID: 891188505}
-      costAmountText: {fileID: 2040948331}
-  - name: Wooden Pickaxe
-    objects:
-      mainPanel: {fileID: 6581194}
-      body: {fileID: 895948822}
-      particleEffect: {fileID: 1796525494}
-      headerText: {fileID: 1331821648}
-      descriptionText: {fileID: 652797589}
-      progressBar: {fileID: 488052776}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 100
-      costNameText: {fileID: 319915080}
-      costAmountText: {fileID: 740323415}
-  buildingList:
-  - name: Potato Field
-    objects:
-      progressBar: {fileID: 1606928453}
-      mainPanel: {fileID: 513744049}
-      body: {fileID: 595603570}
-      particleEffect: {fileID: 700672525}
-      buildingNameText: {fileID: 1268277127}
-      descriptionText: {fileID: 1270531717}
-    resourceCosts:
-    - resourceName: Food
-      costAmount: 20
-      costNameText: {fileID: 1736648852}
-      costAmountText: {fileID: 2134036098}
-    inputValues:
-      descriptionString: 'Increases food yield by: '
-      buildingResourceMultiplier: 0.15
-      buildingCostMultiplier: 1.15
-      buildingAmount: 0
-  - name: Wood-lot
-    objects:
-      progressBar: {fileID: 1821328063}
-      mainPanel: {fileID: 1247572241}
-      body: {fileID: 705817174}
-      particleEffect: {fileID: 45868382}
-      buildingNameText: {fileID: 809849971}
-      descriptionText: {fileID: 2140659674}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 40
-      costNameText: {fileID: 1194237993}
-      costAmountText: {fileID: 1485455533}
-    inputValues:
-      descriptionString: 'Increases wood yield by: '
-      buildingResourceMultiplier: 0.15
-      buildingCostMultiplier: 1.15
-      buildingAmount: 0
-  - name: Dig Site
-    objects:
-      progressBar: {fileID: 949555462}
-      mainPanel: {fileID: 1188958118}
-      body: {fileID: 1499325797}
-      particleEffect: {fileID: 692057526}
-      buildingNameText: {fileID: 1504552237}
-      descriptionText: {fileID: 1364235253}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 120
-      costNameText: {fileID: 585945278}
-      costAmountText: {fileID: 624812695}
-    inputValues:
-      descriptionString: 'Increases stone yield by:'
-      buildingResourceMultiplier: 0.15
-      buildingCostMultiplier: 1.15
-      buildingAmount: 0
-  - name: Makeshift Bed
-    objects:
-      progressBar: {fileID: 1010328826}
-      mainPanel: {fileID: 1112149847}
-      body: {fileID: 1364389017}
-      particleEffect: {fileID: 233623889}
-      buildingNameText: {fileID: 135505348}
-      descriptionText: {fileID: 1059088813}
-    resourceCosts:
-    - resourceName: Sticks
-      costAmount: 200
-      costNameText: {fileID: 943123007}
-      costAmountText: {fileID: 2090165583}
-    - resourceName: Stones
-      costAmount: 100
-      costNameText: {fileID: 562574033}
-      costAmountText: {fileID: 1385918200}
-    inputValues:
-      descriptionString: Increases population by 1
-      buildingResourceMultiplier: 0.15
-      buildingCostMultiplier: 1.15
-      buildingAmount: 0
-  resourceList:
-  - name: Food
-    objects:
-      mainPanel: {fileID: 1090582352}
-      resourceAmountText: {fileID: 1597544649}
-      resourcePerSecondText: {fileID: 1905733288}
-      resourceStorageText: {fileID: 1230242419}
-    inputValues:
-      resourceMaxStorage: 3000
-      resourceAmount: 0
-  - name: Sticks
-    objects:
-      mainPanel: {fileID: 1463278513}
-      resourceAmountText: {fileID: 653581766}
-      resourcePerSecondText: {fileID: 1049250595}
-      resourceStorageText: {fileID: 742162556}
-    inputValues:
-      resourceMaxStorage: 1200
-      resourceAmount: 0
-  - name: Stones
-    objects:
-      mainPanel: {fileID: 1315756555}
-      resourceAmountText: {fileID: 1593756685}
-      resourcePerSecondText: {fileID: 146136739}
-      resourceStorageText: {fileID: 516188199}
-    inputValues:
-      resourceMaxStorage: 500
-      resourceAmount: 0
-  seasonObject: {fileID: 17962495}
---- !u!4 &1767940232
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1767940230}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 723.14655, y: 1809.693, z: -52.537598}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774284839
 GameObject:
   m_ObjectHideFlags: 0
@@ -30503,7 +30094,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1654375652}
+      - m_Target: {fileID: 0}
         m_MethodName: OnSettingsButton
         m_Mode: 1
         m_Arguments:
@@ -30626,12 +30217,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789631867}
   m_CullTransparentMesh: 0
---- !u!1 &1796525494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 1467108029}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1807409778
 GameObject:
   m_ObjectHideFlags: 0
@@ -30707,18 +30292,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807409778}
   m_CullTransparentMesh: 0
---- !u!114 &1821328063 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496414244855618815, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 730023289}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1825710260
 GameObject:
   m_ObjectHideFlags: 0
@@ -31155,7 +30728,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2034220044}
+      - m_Target: {fileID: 0}
         m_MethodName: Button100
         m_Mode: 1
         m_Arguments:
@@ -31467,12 +31040,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859003738}
   m_CullTransparentMesh: 0
---- !u!1 &1863328907 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 456811534, guid: 8872c1e7bb08d4c42a367ee6b205f7ce,
-    type: 3}
-  m_PrefabInstance: {fileID: 653770858}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1866831468
 GameObject:
   m_ObjectHideFlags: 0
@@ -32162,7 +31729,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1767940231}
+      - m_Target: {fileID: 0}
         m_MethodName: BuildPotatoField
         m_Mode: 1
         m_Arguments:
@@ -32886,7 +32453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 157.9893, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1943887907
@@ -33987,60 +33554,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027185722}
   m_CullTransparentMesh: 0
---- !u!1 &2034220043
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2034220045}
-  - component: {fileID: 2034220044}
-  m_Layer: 0
-  m_Name: WorkerManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2034220044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034220043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59a40da65f82d9f48a4b221bf8ed92ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xOne: 0
-  xTen: 0
-  xHundred: 0
-  xMax: 0
-  increaseAmount: 0
-  increaseAmountCache: 0
-  workerAmountToMinus: 0
-  woodcutterText: {fileID: 11105612}
-  minerText: {fileID: 1054410746}
-  farmerText: {fileID: 150398868}
-  toggleAnim: {fileID: 1269452733}
---- !u!4 &2034220045
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034220043}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 700.8926, y: 1480.4814, z: -21.355047}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2040674520
 GameObject:
   m_ObjectHideFlags: 0
