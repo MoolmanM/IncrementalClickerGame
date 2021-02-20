@@ -5,7 +5,6 @@ using UnityEngine;
 public class BuildingUI : MonoBehaviour
 {
     public Resource[] _resourceCacheArray;
-
     public Resource[] FillResourcesInDictionary()
     {
         return _resourceCacheArray;

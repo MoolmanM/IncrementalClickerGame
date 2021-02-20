@@ -6,9 +6,8 @@ using UnityEngine;
 public struct Resource
 {
     public ResourceType type;
-    public float storedAmount;
-    private float amount;
-
+    public float amount;
+    //Maybe add a amountPerSecond here.
     public Resource(float amount) : this()
     {
         this.amount = amount;
@@ -29,19 +28,22 @@ public abstract class Building : MonoBehaviour
 
     protected Resource GivenResource;
     protected uint SelfCount;
-    protected float cost;
+    protected float Cost;
     protected float CostMultiplier;
 
+    private void Start()
+    {
+        
+    }
     public virtual void Build(ResourceType type)
     {
-        if (!_resources.TryGetValue(type, out Resource storedResource) || storedResource.storedAmount < cost)
+        if (!_resources.TryGetValue(type, out Resource storedResource) || storedResource.amount < Cost)
         {
             return;
         }
-
-        storedResource.storedAmount -= cost;
-        cost *= Mathf.Pow(CostMultiplier, SelfCount);
-
+        SelfCount++;
+        storedResource.amount -= Cost;
+        Cost *= Mathf.Pow(CostMultiplier, SelfCount);
         _resources[type] = storedResource;
     }
 

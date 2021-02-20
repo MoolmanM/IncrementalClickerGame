@@ -20,8 +20,8 @@ public class PotatoField : Building
 
         for (int i = 0; i < resources.Length; i++)
         {
-            _building.RegisterResource(resources[i].type, resources[i].storedAmount);
-            Debug.Log(resources[i].type + " " + resources[i].storedAmount);
+            _building.RegisterResource(resources[i].type, resources[i].amount);
+            Debug.Log(resources[i].type + " " + resources[i].amount);
         }
     }
 }
