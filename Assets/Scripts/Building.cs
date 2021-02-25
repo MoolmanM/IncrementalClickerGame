@@ -22,23 +22,24 @@ public enum ResourceType
 
 public struct Collector
 {
-    public float buildingMultiplier, amountPerSecond;
-    //Maybe create an array of type float? To check how many resources are associated to that building.
+    public float buildingMultiplier;
+    public float buildingIncrementPerSecondAmount;
+    public ResourceType type;
 }
 
 public abstract class Building : MonoBehaviour
 {
-    private readonly Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
+    //private readonly Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
+    public Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
 
     protected Resource GivenResource;
     protected uint SelfCount;
     protected float Cost;
     protected float CostMultiplier;
-
     public virtual void HandleCollector(ref Collector collector)
     {
-        collector.amountPerSecond = (SelfCount * collector.buildingMultiplier);
-        //Debug.Log(collector + " " + collector.amountPerSecond);
+        collector.buildingIncrementPerSecondAmount = SelfCount * collector.buildingMultiplier;
+        //Debug.Log(collector.type + " " + collector.buildingIncrementPerSecondAmount);
     }
 
     public virtual void Build(ResourceType type)
@@ -57,8 +58,6 @@ public abstract class Building : MonoBehaviour
     {
         _resources.Add(type, new Resource(amount));
     }
-
-
 }
 
 

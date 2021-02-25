@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Woodlot : Building
+public class TestStickBuilding : Building
 {
     private Building _building;
     private BuildingUI _ui;
@@ -12,8 +12,8 @@ public class Woodlot : Building
 
     public override void HandleCollector(ref Collector collector)
     {
-        SelfCount = 5;
-        collector.buildingMultiplier = (float)0.13;
+        SelfCount = 4;
+        collector.buildingMultiplier = (float)0.11;
         collector.type = ResourceType.Sticks;
 
         base.HandleCollector(ref collector);
@@ -30,7 +30,7 @@ public class Woodlot : Building
         Resource[] resources = _ui.FillResourcesInDictionary();
 
         BuildingManager.Register(_building, resources);
-        
+
         for (int i = 0; i < resources.Length; i++)
         {
             _building.RegisterResource(resources[i].type, resources[i].amount);

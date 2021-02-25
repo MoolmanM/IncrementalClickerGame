@@ -7,16 +7,18 @@ public class PotatoField : Building
     private Building _building;
     private BuildingUI _ui;
     private Collector collector;
-    private float amountPerSecond; 
+    private float _timer = 1f;
+    private float maxValue = 0.1f;
+
     public override void HandleCollector(ref Collector collector)
     {
-        SelfCount = 15;
-        collector.buildingMultiplier = (float)0.16;
-        base.HandleCollector(ref collector);
-        //amountPerSecond = collector.amountPerSecond;
-        Debug.Log("Amount per second from this building " + _building + " " + collector.amountPerSecond);
-    }
+        SelfCount = 6;
+        collector.buildingMultiplier = (float)0.15;
+        collector.type = ResourceType.Food;
 
+        base.HandleCollector(ref collector);
+    }
+    
     private void Awake()
     {
         _building = GetComponent<Building>();
@@ -24,7 +26,7 @@ public class PotatoField : Building
     }
     public void Start()
     {
-        HandleCollector(ref collector);
+        //HandleCollector(ref collector);
         Resource[] resources = _ui.FillResourcesInDictionary();
 
         BuildingManager.Register(_building, resources);
@@ -32,16 +34,7 @@ public class PotatoField : Building
         for (int i = 0; i < resources.Length; i++)
         {
             _building.RegisterResource(resources[i].type, resources[i].amount);
-            //resources[i].amount += collector.amountPerSecond;
-            //Debug.Log(resources[i].type + "  " + resources[i].amount);
         }
 
-        
-    }
-
-    private void Update()
-    {
-
-        //_incrementResource.UpdateResourceAmount(resources[i].amount);
-    }
+    } 
 }
