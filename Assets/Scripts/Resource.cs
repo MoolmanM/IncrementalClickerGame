@@ -16,10 +16,10 @@ public struct UiForResource
 [System.Serializable]
 public class Resource : MonoBehaviour
 {
-    public static ResourceType type;
-    public static float amount;
+    public ResourceType type;
+    public float amount;
     public UiForResource uiForResource;
 
     [Serializable]
-    public class ResourcesDictionary : SerializableDictionaryBase<ResourceType, float> { }
+    public class ResourcesDictionary : SerializableDictionaryBase<ResourceType, Resource> { }
 }

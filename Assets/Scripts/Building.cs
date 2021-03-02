@@ -15,7 +15,7 @@ public struct Collector
 {
     public float buildingMultiplier;
     public float buildingIncrementPerSecondAmount;
-    public float resourceAmountToIncrement;
+    public Resource resourceToModify;
     public ResourceType type;
     public Dictionary<ResourceType, ResourceCost> dicResourceCosts;
     public ResourceCost[] resourceCostArray;
@@ -87,18 +87,17 @@ public abstract class Building : MonoBehaviour
         //I just realized this contains key just check to see if there is a key? not a specific key, same with the try get value. but it should be like that though. I actually this this works?
         if (!resources.ContainsKey(type))
         {
-            resources.Add(type, collector.resourceAmountToIncrement);
+            resources.Add(type, collector.resourceToModify);
         }
-
-        if (resources.TryGetValue(type, out float value))
+        Debug.Log(type + " " + resources[type]);
+        if (resources.TryGetValue(type, out Resource resource))
         {
             if ((_timer -= Time.deltaTime) <= 0)
             {
                 _timer = _maxValue;
 
-                value += incrementPerSecond;
-                resources[type] = value;
-                resources[type].
+                resource.amount += incrementPerSecond;
+                resources[type] = resource;
                 Debug.Log(type + " " + resources[type]);
                 //Maybe do some code here that says if type == typeof(one of the resource classes?) 
                 //I think I have to createa script maybe that says ResourceUI? 
@@ -112,7 +111,7 @@ public abstract class Building : MonoBehaviour
 
                     if (type == cResourceCosts[cCostArray[i].type].type)
                     {
-                        cCostArray[i].currentAmount = value;
+                        cCostArray[i].currentAmount = resource.amount;
                         //Debug.Log(string.Format("Display for the update: {0}, {1}, {2}", cResourceCosts[cCostArray[i].type].type, cResourceCosts[cCostArray[i].type].costAmount, cResourceCosts[cCostArray[i].type].currentAmount));
                     }
                     cCostArray[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", cCostArray[i].currentAmount, cCostArray[i].costAmount);
@@ -126,7 +125,7 @@ public abstract class Building : MonoBehaviour
 
         collector.buildingIncrementPerSecondAmount = 0;
         collector.buildingMultiplier = 0;
-        collector.resourceAmountToIncrement = 0;
+        collector.resourceToModify = null;
         cResourceCosts = null;
         cCostArray = null;
         collector.type = 0;

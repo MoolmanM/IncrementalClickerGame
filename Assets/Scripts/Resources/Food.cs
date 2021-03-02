@@ -13,6 +13,6 @@ public class Food : Resource
 
     private void Start()
     {
-        Debug.Log(_resource);
+        //Debug.Log(_resource);
     }
 }
