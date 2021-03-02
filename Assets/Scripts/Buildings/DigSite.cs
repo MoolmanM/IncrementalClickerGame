@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Woodlot : Building
+public class DigSite : Building
 {
     private Building _building;
     private BuildingUI _ui;
