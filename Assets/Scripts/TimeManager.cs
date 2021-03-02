@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    private string seasonString;
+    public string seasonString;
     private int day, year, season, seasonCount;
     public void CalculateSeason()
     {
