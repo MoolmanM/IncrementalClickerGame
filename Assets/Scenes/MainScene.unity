@@ -7611,6 +7611,10 @@ MonoBehaviour:
   - type: 0
     currentAmount: 0
     costAmount: 50
+    uiForBuilding:
+      costNameText: {fileID: 0}
+      costAmountText: {fileID: 0}
+      descriptionText: {fileID: 0}
 --- !u!1 &516188197
 GameObject:
   m_ObjectHideFlags: 0
@@ -19963,6 +19967,10 @@ MonoBehaviour:
   - type: 1
     currentAmount: 0
     costAmount: 70
+    uiForBuilding:
+      costNameText: {fileID: 0}
+      costAmountText: {fileID: 0}
+      descriptionText: {fileID: 0}
 --- !u!1 &1191784105
 GameObject:
   m_ObjectHideFlags: 0
@@ -21707,6 +21715,10 @@ MonoBehaviour:
   - type: 1
     currentAmount: 0
     costAmount: 60
+    uiForBuilding:
+      costNameText: {fileID: 0}
+      costAmountText: {fileID: 0}
+      descriptionText: {fileID: 0}
 --- !u!114 &1247572247
 MonoBehaviour:
   m_ObjectHideFlags: 0

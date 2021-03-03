@@ -11,7 +11,7 @@ public class PotatoField : Building
     public override void HandleCollector(ref Collector collector)
     {
         SelfCount = 4;
-        collector.buildingMultiplier = (float)0.10;
+        collector.multiplier = (float)0.10;
         collector.type = ResourceType.Food;
 
         base.HandleCollector(ref collector);
@@ -38,7 +38,7 @@ public class PotatoField : Building
             collector.resourceCostArray[i].costAmount = resourceCosts[i].costAmount;
             collector.resourceCostArray[i].currentAmount = resourceCosts[i].currentAmount;
 
-            collector.dicResourceCosts = new Dictionary<ResourceType, ResourceCost>
+            collector.resourceCostDictionary = new Dictionary<ResourceType, ResourceCost>
             {
                 { collector.resourceCostArray[i].type, collector.resourceCostArray[i] }
             };
