@@ -3,13 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Sticks : MonoBehaviour
+public class Sticks : Resource
 {
-    public TMP_Text amountText;
-    public TMP_Text amountPerSecondText;
-    public void UpdateResource(float amount, float amountPerSecond)
+    private Resource _resource;
+
+    private void Awake()
     {
-        amountText.text = string.Format("{0:0.00}", amount);
-        amountPerSecondText.text = string.Format("+{0:0.00}/sec", amountPerSecond);
+        _resource = GetComponent<Resource>();
+    }
+
+    private void Start()
+    {
+        _resources.Add(_resource.type, _resource);
+        //DisplayConsole();
+    }
+
+    private void DisplayConsole()
+    {
+        foreach (KeyValuePair<ResourceType, Resource> kvp in _resources)
+        {
+            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+        }
     }
 }

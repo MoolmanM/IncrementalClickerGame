@@ -14,14 +14,6 @@ public struct UiForBuilding
     public TMP_Text descriptionText;
 }
 
-[System.Serializable]
-public struct UiForResource
-{
-    public TMP_Text storageAmount;
-    public TMP_Text amount;
-    public TMP_Text amountPerSecond;
-}
-
 public class BuildingUI : MonoBehaviour
 {
     [SerializeField] public ResourceCost[] _resourceCacheArray;
