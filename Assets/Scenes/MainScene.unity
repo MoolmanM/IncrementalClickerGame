@@ -7143,7 +7143,6 @@ GameObject:
   - component: {fileID: 498158313}
   - component: {fileID: 498158315}
   - component: {fileID: 498158314}
-  - component: {fileID: 498158316}
   m_Layer: 5
   m_Name: Main_Panel_Resource
   m_TagString: Untagged
@@ -7208,18 +7207,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498158312}
   m_CullTransparentMesh: 0
---- !u!114 &498158316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 498158312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263119a381aaa34fa6ff97ce7c652c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &498257463
 GameObject:
   m_ObjectHideFlags: 0
@@ -7467,7 +7454,6 @@ GameObject:
   - component: {fileID: 513744052}
   - component: {fileID: 513744051}
   - component: {fileID: 513744054}
-  - component: {fileID: 513744055}
   m_Layer: 5
   m_Name: Potato_Field
   m_TagString: Untagged
@@ -7569,52 +7555,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef2313ebc5d1e85478cd5bbd6e909572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceDictionary:
-    reorderableList:
-      canAdd: 1
-      canRemove: 1
-      draggable: 1
-      expandable: 1
-      multipleSelection: 1
-      isExpanded: 1
-      label:
-        m_Text: Keys
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-      headerHeight: 18
-      footerHeight: 13
-      slideEasing: 0.15
-      verticalSpacing: 2
-      showDefaultBackground: 1
-      elementDisplayType: 0
-      elementNameProperty: 
-      elementNameOverride: 
-      elementIcon: {fileID: 0}
-    reqReferences: {fileID: 0}
-    isExpanded: 1
-    _keyValues: 
-    _keys: 
-    _values: []
---- !u!114 &513744055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513744049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e3660ad37a250b43b6ccd889ce2f006, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _resourceCacheArray:
-  - type: 0
-    currentAmount: 0
+  type: 0
+  CostMultiplier: 0.12
+  resourceTypeToModify: 0
+  resourceCost:
+  - associatedType: 0
     costAmount: 50
     uiForBuilding:
-      costNameText: {fileID: 0}
-      costAmountText: {fileID: 0}
-      descriptionText: {fileID: 0}
+      costNameText: {fileID: 1736648852}
+      costAmountText: {fileID: 2134036098}
+  descriptionText: {fileID: 1270531717}
 --- !u!1 &516188197
 GameObject:
   m_ObjectHideFlags: 0
@@ -17851,6 +17801,7 @@ GameObject:
   - component: {fileID: 1090582356}
   - component: {fileID: 1090582355}
   - component: {fileID: 1090582354}
+  - component: {fileID: 1090582357}
   m_Layer: 5
   m_Name: Food
   m_TagString: Untagged
@@ -17940,6 +17891,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090582352}
   m_CullTransparentMesh: 0
+--- !u!114 &1090582357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090582352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e8441ff33adfe41a0e6f976b1201ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  uiForResource:
+    storageAmount: {fileID: 1230242419}
+    amount: {fileID: 1597544649}
+    amountPerSecond: {fileID: 1905733288}
 --- !u!1 &1094759949
 GameObject:
   m_ObjectHideFlags: 0
@@ -19823,7 +19791,6 @@ GameObject:
   - component: {fileID: 1188958121}
   - component: {fileID: 1188958120}
   - component: {fileID: 1188958123}
-  - component: {fileID: 1188958124}
   m_Layer: 5
   m_Name: Dig_Site
   m_TagString: Untagged
@@ -19925,52 +19892,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec5eece1f345da4e99fcebf437f77f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceDictionary:
-    reorderableList:
-      canAdd: 0
-      canRemove: 0
-      draggable: 0
-      expandable: 0
-      multipleSelection: 0
-      isExpanded: 0
-      label:
-        m_Text: 
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-      headerHeight: 0
-      footerHeight: 0
-      slideEasing: 0
-      verticalSpacing: 0
-      showDefaultBackground: 0
-      elementDisplayType: 0
-      elementNameProperty: 
-      elementNameOverride: 
-      elementIcon: {fileID: 0}
-    reqReferences: {fileID: 0}
-    isExpanded: 0
-    _keyValues: 
-    _keys: 
-    _values: []
---- !u!114 &1188958124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1188958118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e3660ad37a250b43b6ccd889ce2f006, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _resourceCacheArray:
-  - type: 1
-    currentAmount: 0
+  type: 2
+  CostMultiplier: 0.1
+  resourceTypeToModify: 1
+  resourceCost:
+  - associatedType: 1
     costAmount: 70
     uiForBuilding:
-      costNameText: {fileID: 0}
-      costAmountText: {fileID: 0}
-      descriptionText: {fileID: 0}
+      costNameText: {fileID: 585945278}
+      costAmountText: {fileID: 624812695}
+  descriptionText: {fileID: 1364235253}
 --- !u!1 &1191784105
 GameObject:
   m_ObjectHideFlags: 0
@@ -21609,7 +21540,6 @@ GameObject:
   - component: {fileID: 1247572244}
   - component: {fileID: 1247572243}
   - component: {fileID: 1247572247}
-  - component: {fileID: 1247572246}
   m_Layer: 5
   m_Name: Wood-lot
   m_TagString: Untagged
@@ -21699,26 +21629,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247572241}
   m_CullTransparentMesh: 0
---- !u!114 &1247572246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1247572241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e3660ad37a250b43b6ccd889ce2f006, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _resourceCacheArray:
-  - type: 1
-    currentAmount: 0
-    costAmount: 60
-    uiForBuilding:
-      costNameText: {fileID: 0}
-      costAmountText: {fileID: 0}
-      descriptionText: {fileID: 0}
 --- !u!114 &1247572247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21731,32 +21641,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9a336834f6a1442ab30cd258c71280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceDictionary:
-    reorderableList:
-      canAdd: 0
-      canRemove: 0
-      draggable: 0
-      expandable: 0
-      multipleSelection: 0
-      isExpanded: 0
-      label:
-        m_Text: 
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-      headerHeight: 0
-      footerHeight: 0
-      slideEasing: 0
-      verticalSpacing: 0
-      showDefaultBackground: 0
-      elementDisplayType: 0
-      elementNameProperty: 
-      elementNameOverride: 
-      elementIcon: {fileID: 0}
-    reqReferences: {fileID: 0}
-    isExpanded: 0
-    _keyValues: 
-    _keys: 
-    _values: []
+  type: 1
+  CostMultiplier: 0.15
+  resourceTypeToModify: 1
+  resourceCost:
+  - associatedType: 1
+    costAmount: 60
+    uiForBuilding:
+      costNameText: {fileID: 1194237993}
+      costAmountText: {fileID: 1485455533}
+  descriptionText: {fileID: 2140659674}
 --- !u!1 &1249458430
 GameObject:
   m_ObjectHideFlags: 0
@@ -26144,6 +26038,7 @@ GameObject:
   - component: {fileID: 1463278517}
   - component: {fileID: 1463278516}
   - component: {fileID: 1463278515}
+  - component: {fileID: 1463278518}
   m_Layer: 5
   m_Name: Sticks
   m_TagString: Untagged
@@ -26233,6 +26128,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463278513}
   m_CullTransparentMesh: 0
+--- !u!114 &1463278518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463278513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5381fc95188471341b876f19d17c32c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+  uiForResource:
+    storageAmount: {fileID: 742162556}
+    amount: {fileID: 653581766}
+    amountPerSecond: {fileID: 1049250595}
 --- !u!1001 &1467108029
 PrefabInstance:
   m_ObjectHideFlags: 0
