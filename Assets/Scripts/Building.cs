@@ -4,22 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public struct Collector
+[System.Serializable]
+public struct UiForBuilding
 {
-    public float multiplier;
-    public float incrementPerSecond;
-    public Resource resourceToIncrement;
-    public ResourceType type;
-    public Dictionary<ResourceType, ResourceCost> resourceCostDictionary;
-    public ResourceCost[] resourceCostArray;
-    public UiForBuilding uiForBuilding;
+    public TMP_Text costNameText;
+    public TMP_Text costAmountText;
 }
 
 [System.Serializable]
 public struct ResourceCost
 {
-    public ResourceType type;
-    public float currentAmount;
+    public ResourceType associatedType;
+    [System.NonSerialized] public float currentAmount;
     public float costAmount;
     public UiForBuilding uiForBuilding;
 
@@ -34,91 +30,81 @@ public struct ResourceCost
     public float CostAmount { get; }
 }
 
+public enum BuildingType
+{
+    PotatoField,
+    Woodlot,
+    DigSite
+}
+
 public abstract class Building : MonoBehaviour
 {
-    private readonly Dictionary<ResourceType, ResourceCost> _resourceCosts;
+    public static Dictionary<BuildingType, Building> _buildings = new Dictionary<BuildingType, Building>();
 
     protected uint SelfCount;
-    protected float Cost;
-    protected float CostMultiplier;
+    public BuildingType type;  
+    public float CostMultiplier;
+    public ResourceType resourceTypeToModify;
+    public ResourceCost[] resourceCost;
+    protected float incrementAmount;
+    public TMP_Text descriptionText;
 
-    private float _timer = 0.1f, _maxValue = 0.1f;
+    private float _timer = 0.1f, maxValue = 1f;
+    private bool gotTotalIncrement;
+    private float totalIncrementAmount;
+    private float totalAmount;
 
-    protected Building()
+    public virtual void HandleBuilding()
     {
+        incrementAmount = SelfCount * CostMultiplier;
 
-        _resourceCosts = new Dictionary<ResourceType, ResourceCost>();
+        //Debug.Log(type + " " + resourceTypeToModify + " " + incrementAmount);
+        
     }
 
-    public virtual void Build(ResourceType type)
+    public virtual void UpdateResources()
     {
-        if (!_resourceCosts.TryGetValue(type, out ResourceCost associatedResource) || associatedResource.currentAmount < associatedResource.costAmount)
-        {
-            return;
-        }
-
-        associatedResource.currentAmount -= associatedResource.costAmount;
-        associatedResource.costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-
-        _resourceCosts[type] = associatedResource;
-    }
-
-    public virtual void HandleCollector(ref Collector collector)
-    {
-        //BIG NOTE: I'm pretty sure, I can do what I did to the resource to the buildings too to clean up the code more.
-        collector.resourceCostDictionary = new Dictionary<ResourceType, ResourceCost>();
-
-        ResourceCost[] costArray = collector.resourceCostArray;
-        Dictionary<ResourceType, ResourceCost> costDictionary = collector.resourceCostDictionary;
-        Dictionary<ResourceType, Resource> resources = Resource._resources;
-        float incrementPerSecond = collector.incrementPerSecond;
-        ResourceType type = collector.type;
-
-        //Multiplier should probably be in the building directly? Not in the collector. Needs further investigation
-        incrementPerSecond = SelfCount * collector.multiplier;
-
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            _timer = maxValue;
 
-            Debug.Log(type);
-            resources[type].amount += incrementPerSecond;
-            resources[type].amount = resources[type].amount;
-            resources[type].uiForResource.amount.text = string.Format("{0:0.00}", resources[type].amount);
-            resources[type].uiForResource.amountPerSecond.text = string.Format("{0:0.00}/sec", (incrementPerSecond * 10));
 
-            for (int i = 0; i < costArray.Length; i++)
+            Resource._resources[resourceTypeToModify].amountPerSecond = incrementAmount;
+            Resource._resources[resourceTypeToModify].amount += Resource._resources[resourceTypeToModify].amountPerSecond;
+            Resource._resources[resourceTypeToModify].uiForResource.amount.text = string.Format("{0:0.00}", Resource._resources[resourceTypeToModify].amount);
+            if (gotTotalIncrement == false)
             {
-                costDictionary = new Dictionary<ResourceType, ResourceCost>
-                    {
-                        { costArray[i].type, costArray[i] }
-                    };
+                totalIncrementAmount = Resource._resources[resourceTypeToModify].amount;
+                gotTotalIncrement = true;
+            }
+            Resource._resources[resourceTypeToModify].uiForResource.amountPerSecond.text = string.Format("{0:0.00}/sec", totalIncrementAmount);
 
-                if (type == costDictionary[costArray[i].type].type)
-                {
-                    costArray[i].currentAmount = resources[type].amount;
-
-                }
-                costArray[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", costArray[i].currentAmount, costArray[i].costAmount);
-
-
-                //This is for description text, this works nicely because I can have a default value here, but then in cases like the makeshift bed, I can edit the value inside the override method.
-                costArray[i].uiForBuilding.descriptionText.text = string.Format("Increases {0} yield by: {1}/sec", costArray[i].type.ToString(), incrementPerSecond);
+            for (int i = 0; i < resourceCost.Length; i++)
+            {
+                _buildings[type].resourceCost[i].currentAmount = Resource._resources[_buildings[type].resourceCost[i].associatedType].amount;
+                Debug.Log("Current resource amount: " + _buildings[type].resourceCost[i].currentAmount);
+                _buildings[type].resourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _buildings[type].resourceCost[i].currentAmount, _buildings[type].resourceCost[i].costAmount);
+                _buildings[type].resourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _buildings[type].resourceCost[i].associatedType.ToString());
+                _buildings[type].descriptionText.text = string.Format("Increases {0} yield by: {1:0.00}", _buildings[type].resourceCost[i].associatedType.ToString(), _buildings[type].incrementAmount);
             }
         }
 
-        collector.incrementPerSecond = 0;
-        collector.multiplier = 0;
-        resources = null;
-        costDictionary = null;
-        costArray = null;
-        type = 0;
     }
 
-    public void RegisterResourceCosts(ResourceType type, float costAmount, float currentAmount, UiForBuilding uiForBuilding)
-    {
-        _resourceCosts.Add(type, new ResourceCost(costAmount, currentAmount, uiForBuilding));
-    } 
+    //I will get to this later. Need to loop through the array and check if all resorucecosts meet the requirements to build the building.
+
+    //public virtual void Build(BuildingType type)
+    //{
+    //    if (!_buildings.TryGetValue(type, out Building associatedResource) || associatedResource.resourceCost.currentAmount < associatedResource.resourceCost.costAmount)
+    //    {
+    //        return;
+    //    }
+
+    //    associatedResource.resourceCost.currentAmount -= associatedResource.resourceCost.costAmount;
+    //    associatedResource.resourceCost.costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
+
+    //    _buildings[type] = associatedResource;
+    //}
 }
  
 

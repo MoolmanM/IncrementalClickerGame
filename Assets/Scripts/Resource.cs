@@ -14,8 +14,8 @@ public struct UiForResource
 public enum ResourceType
 {
     Food,
-    Stones,
-    Sticks
+    Sticks,
+    Stones
 }
 
 public class Resource : MonoBehaviour
@@ -25,6 +25,7 @@ public class Resource : MonoBehaviour
     [System.NonSerialized] public float amount;
     [System.NonSerialized] public float amountPerSecond;
 
-    public UiForResource uiForResource;
     public ResourceType type;
+    public UiForResource uiForResource;
+    
 }

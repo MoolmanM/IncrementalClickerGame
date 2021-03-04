@@ -14,7 +14,7 @@ public class Food : Resource
 
     private void Start()
     {
-        _resources.Add(_resource.type, _resource);
+        _resources.Add(type, _resource);
         //DisplayConsole();
     }
 
