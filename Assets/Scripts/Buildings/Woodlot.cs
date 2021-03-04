@@ -30,7 +30,6 @@ public class Woodlot : Building
         for (int i = 0; i < resourceCosts.Length; i++)
         {
             _building.RegisterResourceCosts(resourceCosts[i].type, resourceCosts[i].costAmount, resourceCosts[i].currentAmount, resourceCosts[i].uiForBuilding);
-            Debug.Log(resourceCosts[i].type + " " + resourceCosts[i].costAmount);
             collector.resourceCostArray = new ResourceCost[resourceCosts.Length];
 
             collector.resourceCostArray[i].uiForBuilding = resourceCosts[i].uiForBuilding;

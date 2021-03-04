@@ -12,7 +12,7 @@ public class DigSite : Building
     public override void HandleCollector(ref Collector collector)
     {
         SelfCount = 3;
-        collector.multiplier = (float)0.10;
+        collector.multiplier = (float)0.40;
         collector.type = ResourceType.Sticks;
 
         base.HandleCollector(ref collector);
