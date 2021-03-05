@@ -24,6 +24,7 @@ public class Resource : MonoBehaviour
 
     [System.NonSerialized] public float amount;
     [System.NonSerialized] public float amountPerSecond;
+    public float storageAmount;
 
     public ResourceType type;
     public UiForResource uiForResource;
