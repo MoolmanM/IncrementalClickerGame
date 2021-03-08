@@ -50,15 +50,12 @@ public abstract class Building : MonoBehaviour
     public TMP_Text descriptionText;
 
     private float _timer = 0.1f, maxValue = 1f;
-    private bool gotTotalIncrement;
-    private float totalIncrementAmount;
-    private float totalAmount;
 
     public virtual void HandleBuilding()
     {
         incrementAmount = SelfCount * CostMultiplier;
-
-        //Debug.Log(type + " " + resourceTypeToModify + " " + incrementAmount);
+        Resource._resources[resourceTypeToModify].amountPerSecond += incrementAmount;
+        Debug.Log("Type: " + type + " resourcetype " + resourceTypeToModify + " Increment Amount: " + incrementAmount + " amountPerSecond: " + Resource._resources[resourceTypeToModify].amountPerSecond);
         
     }
 
@@ -67,22 +64,18 @@ public abstract class Building : MonoBehaviour
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = maxValue;
-
-
-            Resource._resources[resourceTypeToModify].amountPerSecond = incrementAmount;
+            //Actually, maybe have an update method inside the resource script linked to each resource, and not one inside each building.
+            //Also tag all ui elements. 
+            //If summer make the background sky blue with clouds and a shining sun that moves.
+            Debug.Log(Resource._resources[resourceTypeToModify].amountPerSecond);
             Resource._resources[resourceTypeToModify].amount += Resource._resources[resourceTypeToModify].amountPerSecond;
+            Resource._resources[resourceTypeToModify].uiForResource.amountPerSecond.text = string.Format("{0}/sec", Resource._resources[resourceTypeToModify].amountPerSecond);
             Resource._resources[resourceTypeToModify].uiForResource.amount.text = string.Format("{0:0.00}", Resource._resources[resourceTypeToModify].amount);
-            if (gotTotalIncrement == false)
-            {
-                totalIncrementAmount = Resource._resources[resourceTypeToModify].amount;
-                gotTotalIncrement = true;
-            }
-            Resource._resources[resourceTypeToModify].uiForResource.amountPerSecond.text = string.Format("{0:0.00}/sec", totalIncrementAmount);
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 _buildings[type].resourceCost[i].currentAmount = Resource._resources[_buildings[type].resourceCost[i].associatedType].amount;
-                Debug.Log("Current resource amount: " + _buildings[type].resourceCost[i].currentAmount);
+                //Debug.Log("Current resource amount: " + _buildings[type].resourceCost[i].currentAmount);
                 _buildings[type].resourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _buildings[type].resourceCost[i].currentAmount, _buildings[type].resourceCost[i].costAmount);
                 _buildings[type].resourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _buildings[type].resourceCost[i].associatedType.ToString());
                 _buildings[type].descriptionText.text = string.Format("Increases {0} yield by: {1:0.00}", _buildings[type].resourceCost[i].associatedType.ToString(), _buildings[type].incrementAmount);
