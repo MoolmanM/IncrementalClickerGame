@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DigSite : Building
 {
     private Building _building;
+    private GameObject objectColor1;
 
     private void Awake()
     {
@@ -16,7 +18,7 @@ public class DigSite : Building
     private void Start()
     {
         _buildings.Add(type, _building);
-        HandleBuilding();
+        GetIncrementAmount();
         //DisplayConsole();
     }
 

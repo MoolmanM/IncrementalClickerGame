@@ -15,7 +15,7 @@ public class PotatoField : Building
     private void Start()
     {
         _buildings.Add(type, _building);
-        HandleBuilding();
+        GetIncrementAmount();
         //DisplayConsole();
     }
 

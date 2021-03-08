@@ -52,14 +52,11 @@ public abstract class Building : MonoBehaviour
 
     private float _timer = 0.1f, maxValue = 0.1f;
 
-    private void GetIncrementAmount()
+    public void GetIncrementAmount()
     {
         incrementAmount = SelfCount * ResourceMultiplier;
-    }
-    public virtual void HandleBuilding()
-    {
-        incrementAmount = SelfCount * ResourceMultiplier;
-        Resource._resources[resourceTypeToModify].amountPerSecond += incrementAmount;      
+        Resource._resources[resourceTypeToModify].amountPerSecond += incrementAmount;
+
     }
 
     public virtual void UpdateBuildingElements()
@@ -87,13 +84,14 @@ public abstract class Building : MonoBehaviour
             }
 
             Resource._resources[_buildings[type].resourceCost[i].associatedType].amount -= associatedResource.resourceCost[i].costAmount;
-            //associatedResource.resourceCost[i].costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-            Debug.Log(string.Format("Cost Amount: {0}, CostMultiplier: {1}, SelfCount: {2}", associatedResource.resourceCost[i].costAmount, CostMultiplier, SelfCount));
+            //Debug.Log(string.Format("Cost Amount: {0}, CostMultiplier: {1}, SelfCount: {2}", associatedResource.resourceCost[i].costAmount, CostMultiplier, SelfCount));
             associatedResource.resourceCost[i].costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
             associatedResource.resourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[_buildings[type].resourceCost[i].associatedType].amount, associatedResource.resourceCost[i].costAmount);
             SelfCount++;
-            //Need to calculate incrementAmount after every 'Build'
-            incrementAmount = SelfCount * ResourceMultiplier;
+            
+            //This seems to work but not sure for how long
+            incrementAmount += ResourceMultiplier;
+            Resource._resources[resourceTypeToModify].amountPerSecond += ResourceMultiplier;
             _buildings[type] = associatedResource;
         }
         
