@@ -30,6 +30,6 @@ public class DigSite : Building
 
     private void Update()
     {
-        UpdateResources();
+        UpdateBuildingElements();
     }
 }

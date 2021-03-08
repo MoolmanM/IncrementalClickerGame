@@ -28,6 +28,6 @@ public class PotatoField : Building
     }
     private void Update()
     {
-        UpdateResources();
+        UpdateBuildingElements();
     }
 }

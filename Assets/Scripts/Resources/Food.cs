@@ -26,4 +26,9 @@ public class Food : Resource
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
+
+    private void Update()
+    {
+        UpdateResources();
+    }
 }

@@ -28,6 +28,6 @@ public class Woodlot : Building
     }
     private void Update()
     {
-       UpdateResources();
+        UpdateBuildingElements();
     }
 }
