@@ -10,12 +10,13 @@ public class WoodenAxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        //DisplayConsole();
+        DisplayConsole();
+        SetDescriptionText("Enables building of the Wood-lot.");
     }
 
     private void Start()
     {
-        SetDescriptionText("Enables building of the Wood-lot.");
+        
     }
 
     private void DisplayConsole()

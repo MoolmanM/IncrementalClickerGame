@@ -29,7 +29,7 @@ public class Resource : MonoBehaviour
     public ResourceType type;
     public UiForResource uiForResource;
 
-    private float _timer = 0.1f, maxValue = 0.1f;
+    protected float _timer = 0.1f, maxValue = 0.1f;
 
     public virtual void UpdateResources()
     {
@@ -49,6 +49,5 @@ public class Resource : MonoBehaviour
             }
             
         }
-
     }
 }

@@ -10,12 +10,14 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        //DisplayConsole();
+        DisplayConsole();
+        SetDescriptionText("Enables building of the Potato Field.");
     }
 
     private void Start()
     {
-        SetDescriptionText("Enables building of the Potato Field.");
+        
+        
     }
 
     private void DisplayConsole()

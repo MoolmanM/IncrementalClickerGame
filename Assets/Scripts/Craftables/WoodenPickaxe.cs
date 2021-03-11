@@ -10,12 +10,13 @@ public class WoodenPickaxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        //DisplayConsole();
+        DisplayConsole();
+        SetDescriptionText("Enables building of the Dig-Site.");
     }
 
     private void Start()
     {
-        SetDescriptionText("Enables building of the Dig-Site.");
+        
     }
 
     private void DisplayConsole()

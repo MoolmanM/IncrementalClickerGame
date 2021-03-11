@@ -11,14 +11,15 @@ public class DigSite : Building
     private void Awake()
     {
         _building = GetComponent<Building>();
+        _buildings.Add(Type, _building);
+
     }
 
     private void Start()
     {
-        _buildings.Add(Type, _building);
         SetInitialValues();
+        SetDescriptionText();
         _building.MainBuildingPanel.SetActive(false);
-        
         //DisplayConsole();
     }
 
@@ -28,6 +29,11 @@ public class DigSite : Building
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
+    }
+
+    public override void Build()
+    {
+        base.Build();
     }
 
     private void Update()

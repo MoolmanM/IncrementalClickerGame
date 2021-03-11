@@ -11,6 +11,7 @@ public class Sticks : Resource
     {
         _resource = GetComponent<Resource>();
         _resources.Add(type, _resource);
+        Amount = 80;
         //DisplayConsole();
     }
 

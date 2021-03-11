@@ -25,5 +25,14 @@ public class Stones : Resource
     private void Update()
     {
         UpdateResources();
+        if ((_timer -= Time.deltaTime) <= 0)
+        {
+            _timer = maxValue;
+
+            if (Amount > 0)
+            {
+                Building._buildings[BuildingType.MakeshiftBed].MainBuildingPanel.SetActive(true);
+            }
+        }
     }
 }
