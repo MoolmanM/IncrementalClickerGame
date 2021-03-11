@@ -15,11 +15,11 @@ public abstract class Craftable : MonoBehaviour
 {
     public Dictionary<CraftingType, Craftable> _craftables = new Dictionary<CraftingType, Craftable>();
 
-    public CraftingType type;
-    public ResourceCost[] resourceCost;
-    public TMP_Text descriptionText, craftName;
-    public GameObject buttonMain;
-    public BuildingType buildingTypeToActivate;
+    public CraftingType Type;
+    public ResourceCost[] ResourceCost;
+    public TMP_Text DescriptionText, HeaderText;
+    public GameObject ButtonMain;
+    public BuildingType BuildingTypeToActivate;
 
     private float _timer = 0.1f, maxValue = 0.1f;
 
@@ -29,11 +29,11 @@ public abstract class Craftable : MonoBehaviour
         {
             _timer = maxValue;
 
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                _craftables[type].resourceCost[i].currentAmount = Resource._resources[_craftables[type].resourceCost[i].associatedType].amount;
-                _craftables[type].resourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _craftables[type].resourceCost[i].currentAmount, _craftables[type].resourceCost[i].costAmount);
-                _craftables[type].resourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _craftables[type].resourceCost[i].associatedType.ToString());
+                _craftables[Type].ResourceCost[i].currentAmount = Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount;
+                _craftables[Type].ResourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _craftables[Type].ResourceCost[i].currentAmount, _craftables[Type].ResourceCost[i].costAmount);
+                _craftables[Type].ResourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _craftables[Type].ResourceCost[i].associatedType.ToString());
                 
             }
         }
@@ -41,25 +41,25 @@ public abstract class Craftable : MonoBehaviour
 
     public virtual void Craft()
     {
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (!_craftables.TryGetValue(type, out Craftable associatedResource) || associatedResource.resourceCost[i].currentAmount < associatedResource.resourceCost[i].costAmount)
+            if (!_craftables.TryGetValue(Type, out Craftable associatedResource) || associatedResource.ResourceCost[i].currentAmount < associatedResource.ResourceCost[i].costAmount)
             {
                 return;
             }
 
-            Resource._resources[_craftables[type].resourceCost[i].associatedType].amount -= associatedResource.resourceCost[i].costAmount;
+            Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount -= associatedResource.ResourceCost[i].costAmount;
             
-            _craftables[type] = associatedResource;
-            _craftables[type].craftName.text = string.Format("{0} (Crafted)", _craftables[type].craftName.text);
-            Destroy(buttonMain);
-            Building._buildings[buildingTypeToActivate].mainBuildingPanel.SetActive(true);
+            _craftables[Type] = associatedResource;
+            _craftables[Type].HeaderText.text = string.Format("{0} (Crafted)", _craftables[Type].HeaderText.text);
+            Destroy(ButtonMain);
+            Building._buildings[BuildingTypeToActivate].MainBuildingPanel.SetActive(true);
         }
         
     }
 
     public void SetDescriptionText(string description)
     {
-        _craftables[type].descriptionText.text = string.Format("{0}", description);
+        _craftables[Type].DescriptionText.text = string.Format("{0}", description);
     }
 }

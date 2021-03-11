@@ -6,6 +6,6 @@ public class GatherPotatoes : MonoBehaviour
 {
     public void OnGatherPotatoes()
     {
-        Resource._resources[ResourceType.Food].amount++;
+        Resource._resources[ResourceType.Food].Amount++;
     }
 }

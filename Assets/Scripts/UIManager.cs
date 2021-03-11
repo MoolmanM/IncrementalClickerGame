@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     public Swipe swipe;
     private uint swipeCount = 0, panelCount = 1;
     public GameObject BuildingPanel, CraftingPanel;
+    public TMP_Text availableWorkerText;
 
     private void BuildingPanelActive()
     {

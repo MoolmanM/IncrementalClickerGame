@@ -9,7 +9,7 @@ public class WoodenAxe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        _craftables.Add(type, _craftable);
+        _craftables.Add(Type, _craftable);
         //DisplayConsole();
     }
 
@@ -28,7 +28,6 @@ public class WoodenAxe : Craftable
     public override void Craft()
     {
         base.Craft();
-        //Building._buildings[BuildingType.Woodlot].mainBuildingPanel.SetActive(false);
     }
     private void Update()
     {

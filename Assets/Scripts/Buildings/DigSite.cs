@@ -15,9 +15,9 @@ public class DigSite : Building
 
     private void Start()
     {
-        _buildings.Add(type, _building);
+        _buildings.Add(Type, _building);
         SetInitialValues();
-        _building.mainBuildingPanel.SetActive(false);
+        _building.MainBuildingPanel.SetActive(false);
         
         //DisplayConsole();
     }

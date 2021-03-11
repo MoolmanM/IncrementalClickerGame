@@ -9,7 +9,7 @@ public class WoodenHoe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        _craftables.Add(type, _craftable);
+        _craftables.Add(Type, _craftable);
         //DisplayConsole();
     }
 
@@ -29,7 +29,6 @@ public class WoodenHoe : Craftable
     public override void Craft()
     {
         base.Craft();
-        //Building._buildings[BuildingType.PotatoField].mainBuildingPanel.SetActive(true);
     }
 
     private void Update()

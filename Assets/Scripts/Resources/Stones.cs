@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Sticks : Resource
+public class Stones : Resource
 {
     private Resource _resource;
 

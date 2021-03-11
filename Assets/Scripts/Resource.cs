@@ -22,9 +22,9 @@ public class Resource : MonoBehaviour
 {
     public static Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
 
-    [System.NonSerialized] public float amount;
-    [System.NonSerialized] public float amountPerSecond;
-    public float storageAmount;
+    [System.NonSerialized] public float Amount;
+    [System.NonSerialized] public float AmountPerSecond;
+    public float StorageAmount;
 
     public ResourceType type;
     public UiForResource uiForResource;
@@ -37,15 +37,15 @@ public class Resource : MonoBehaviour
         {
             _timer = maxValue;
 
-            if (amount < (storageAmount - amountPerSecond))
+            if (Amount < (StorageAmount - AmountPerSecond))
             {
-                _resources[type].amount += _resources[type].amountPerSecond;
-                _resources[type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[type].amountPerSecond);
-                _resources[type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[type].amount);
+                _resources[type].Amount += _resources[type].AmountPerSecond;
+                _resources[type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[type].AmountPerSecond);
+                _resources[type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[type].Amount);
             }
             else
             {
-                amount = storageAmount;
+                Amount = StorageAmount;
             }
             
         }

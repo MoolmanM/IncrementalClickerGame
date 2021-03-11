@@ -9,7 +9,7 @@ public class WoodenPickaxe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        _craftables.Add(type, _craftable);
+        _craftables.Add(Type, _craftable);
         //DisplayConsole();
     }
 
@@ -28,8 +28,8 @@ public class WoodenPickaxe : Craftable
     public override void Craft()
     {
         base.Craft();
-        //Building._buildings[BuildingType.DigSite].mainBuildingPanel.SetActive(false);
     }
+
     private void Update()
     {
         UpdateCraftingElements();
