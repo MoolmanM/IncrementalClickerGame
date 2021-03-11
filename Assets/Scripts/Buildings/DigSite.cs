@@ -7,18 +7,18 @@ using UnityEngine.UI;
 public class DigSite : Building
 {
     private Building _building;
-    private GameObject objectColor1;
 
     private void Awake()
     {
-        SelfCount = 5;
         _building = GetComponent<Building>();
     }
 
     private void Start()
     {
         _buildings.Add(type, _building);
-        GetIncrementAmount();
+        SetInitialValues();
+        _building.mainBuildingPanel.SetActive(false);
+        
         //DisplayConsole();
     }
 

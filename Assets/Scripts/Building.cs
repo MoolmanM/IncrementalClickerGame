@@ -41,22 +41,25 @@ public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> _buildings = new Dictionary<BuildingType, Building>();
 
-    protected uint SelfCount;
+    public uint SelfCount;
     public BuildingType type;
-    public float ResourceMultiplier;
-    public float CostMultiplier;
+    public float ResourceMultiplier, CostMultiplier;
     public ResourceType resourceTypeToModify;
     public ResourceCost[] resourceCost;
     protected float incrementAmount;
-    public TMP_Text descriptionText;
+    public TMP_Text descriptionText, headerText;
+    public GameObject mainBuildingPanel;
+
+    private string headerString;
 
     private float _timer = 0.1f, maxValue = 0.1f;
 
-    public void GetIncrementAmount()
+    public void SetInitialValues()
     {
         incrementAmount = SelfCount * ResourceMultiplier;
         Resource._resources[resourceTypeToModify].amountPerSecond += incrementAmount;
-
+        mainBuildingPanel = this.gameObject;
+        headerString = _buildings[type].headerText.text;
     }
 
     public virtual void UpdateBuildingElements()
@@ -94,7 +97,7 @@ public abstract class Building : MonoBehaviour
             Resource._resources[resourceTypeToModify].amountPerSecond += ResourceMultiplier;
             _buildings[type] = associatedResource;
         }
-        
+        _buildings[type].headerText.text = string.Format("{0} ({1})", headerString, SelfCount);
 
         
     }

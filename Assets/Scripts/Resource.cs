@@ -37,13 +37,17 @@ public class Resource : MonoBehaviour
         {
             _timer = maxValue;
 
-            //Actually, maybe have an update method inside the resource script linked to each resource, and not one inside each building.
-            //Also tag all ui elements. 
-            //If summer make the background sky blue with clouds and a shining sun that moves.
-
-            _resources[type].amount += _resources[type].amountPerSecond;
-            _resources[type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[type].amountPerSecond);
-            _resources[type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[type].amount);
+            if (amount < (storageAmount - amountPerSecond))
+            {
+                _resources[type].amount += _resources[type].amountPerSecond;
+                _resources[type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[type].amountPerSecond);
+                _resources[type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[type].amount);
+            }
+            else
+            {
+                amount = storageAmount;
+            }
+            
         }
 
     }

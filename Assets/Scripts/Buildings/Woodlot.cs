@@ -8,14 +8,15 @@ public class Woodlot : Building
 
     private void Awake()
     {
-        SelfCount = 5;
         _building = GetComponent<Building>();
     }
 
     private void Start()
     {
         _buildings.Add(type, _building);
-        GetIncrementAmount();
+        SetInitialValues();
+        _building.mainBuildingPanel.SetActive(false);
+        
         //DisplayConsole();
     }
 
