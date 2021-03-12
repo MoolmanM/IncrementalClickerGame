@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 
 [System.Serializable]
-public struct UiForBuilding
+public struct UiForResourceCost
 {
     public TMP_Text costNameText;
     public TMP_Text costAmountText;
@@ -17,14 +17,7 @@ public struct ResourceCost
     public ResourceType associatedType;
     [System.NonSerialized] public float currentAmount;
     public float costAmount;
-    public UiForBuilding uiForBuilding;
-
-    public ResourceCost(float currentAmount, float costAmount, UiForBuilding uiForBuilding) : this()
-    {
-        CurrentAmount = currentAmount;
-        CostAmount = costAmount;
-
-    }
+    public UiForResourceCost UiForResourceCost;
 
     public float CurrentAmount { get; }
     public float CostAmount { get; }
@@ -41,29 +34,36 @@ public enum BuildingType
 public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> _buildings = new Dictionary<BuildingType, Building>();
-
-    protected uint SelfCount;
     public BuildingType Type;
     public float ResourceMultiplier, CostMultiplier;
     public ResourceType ResourceTypeToModify;
     public ResourceCost[] ResourceCost;
-    protected float IncrementAmount;
-    public TMP_Text DescriptionText, HeaderText;
-    public GameObject MainBuildingPanel;
+    public GameObject SpacerAbove;
 
+    protected uint SelfCount;    
+    protected float IncrementAmount;
+    [NonSerialized] public GameObject MainBuildingPanel;
+    protected Transform HeaderTransform, DesriptionTransform;
+    protected TMP_Text HeaderText, DescriptionText;   
     protected string HeaderString;
 
-    protected float _timer = 0.1f, maxValue = 0.1f;
+    protected float _timer = 0.1f;
+    protected readonly float maxValue = 0.1f;
 
     public void SetInitialValues()
     {
-        IncrementAmount = SelfCount * ResourceMultiplier;
-        Resource._resources[ResourceTypeToModify].AmountPerSecond += IncrementAmount;
+        //IncrementAmount = SelfCount * ResourceMultiplier;
+        //Resource._resources[ResourceTypeToModify].AmountPerSecond += IncrementAmount;
         MainBuildingPanel = this.gameObject;
-        HeaderString = _buildings[Type].HeaderText.text;
+        HeaderTransform = transform.Find("Header_Panel/Header_Text");
+        HeaderText = HeaderTransform.GetComponent<TMP_Text>();
+        HeaderString = HeaderText.text;
+        DesriptionTransform = transform.Find("Body/Description_Panel/Description_Text");
+        DescriptionText = DesriptionTransform.GetComponent<TMP_Text>();
+        SpacerAbove.SetActive(false);
     }
 
-    public virtual void UpdateBuildingElements()
+    public virtual void UpdateResourceCostTexts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
@@ -72,8 +72,8 @@ public abstract class Building : MonoBehaviour
             for (int i = 0; i < ResourceCost.Length; i++)
             {
                 _buildings[Type].ResourceCost[i].currentAmount = Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount;
-                _buildings[Type].ResourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _buildings[Type].ResourceCost[i].currentAmount, _buildings[Type].ResourceCost[i].costAmount);
-                _buildings[Type].ResourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _buildings[Type].ResourceCost[i].associatedType.ToString());                
+                _buildings[Type].ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _buildings[Type].ResourceCost[i].currentAmount, _buildings[Type].ResourceCost[i].costAmount);
+                _buildings[Type].ResourceCost[i].UiForResourceCost.costNameText.text = string.Format("{0}", _buildings[Type].ResourceCost[i].associatedType.ToString());                
             }           
         }
     }
@@ -90,7 +90,7 @@ public abstract class Building : MonoBehaviour
             SelfCount++;
             Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount -= associatedResource.ResourceCost[i].costAmount;
             associatedResource.ResourceCost[i].costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-            associatedResource.ResourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount, associatedResource.ResourceCost[i].costAmount);          
+            associatedResource.ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount, associatedResource.ResourceCost[i].costAmount);          
             _buildings[Type] = associatedResource;
 
             //This seems to work but not sure for how long
@@ -101,7 +101,7 @@ public abstract class Building : MonoBehaviour
     }
     public virtual void SetDescriptionText()
     {
-        _buildings[Type].DescriptionText.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify].type.ToString(), _buildings[Type].IncrementAmount);
+        _buildings[Type].DescriptionText.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify].Type.ToString(), IncrementAmount);
     }  
 }
 

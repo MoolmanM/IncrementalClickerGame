@@ -19,7 +19,7 @@ public class DigSite : Building
     {
         SetInitialValues();
         SetDescriptionText();
-        _building.MainBuildingPanel.SetActive(false);
+        MainBuildingPanel.SetActive(false);
         //DisplayConsole();
     }
 
@@ -38,6 +38,6 @@ public class DigSite : Building
 
     private void Update()
     {
-        UpdateBuildingElements();
+        UpdateResourceCostTexts();
     }
 }

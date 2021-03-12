@@ -10,15 +10,10 @@ public class WoodenAxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        DisplayConsole();
+        //DisplayConsole();
+        SetInitialValues();
         SetDescriptionText("Enables building of the Wood-lot.");
     }
-
-    private void Start()
-    {
-        
-    }
-
     private void DisplayConsole()
     {
         foreach (KeyValuePair<CraftingType, Craftable> kvp in _craftables)
@@ -32,6 +27,6 @@ public class WoodenAxe : Craftable
     }
     private void Update()
     {
-        UpdateCraftingElements();
+        UpdateResourceCosts();
     }
 }

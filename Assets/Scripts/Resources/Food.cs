@@ -10,13 +10,9 @@ public class Food : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(type, _resource);
+        _resources.Add(Type, _resource);
+        SetInitialValues();
         //DisplayConsole();
-    }
-
-    private void Start()
-    {
-        
     }
 
     private void DisplayConsole()

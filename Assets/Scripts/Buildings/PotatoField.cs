@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PotatoField : Building
 {
@@ -17,7 +18,7 @@ public class PotatoField : Building
     {
         SetInitialValues();
         SetDescriptionText();
-        _building.MainBuildingPanel.SetActive(false);
+        MainBuildingPanel.SetActive(false);
         //DisplayConsole();
     }
 
@@ -36,6 +37,6 @@ public class PotatoField : Building
 
     private void Update()
     {
-        UpdateBuildingElements();
+        UpdateResourceCostTexts();
     }
 }

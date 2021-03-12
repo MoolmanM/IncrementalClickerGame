@@ -17,9 +17,9 @@ public class MakeshiftBed : Building
 
     private void Start()
     {
-        SetInitialValues();
-        _building.MainBuildingPanel.SetActive(false);
+        SetInitialValues();        
         SetDescriptionText();
+        MainBuildingPanel.SetActive(false);
         //DisplayConsole();
     }
 
@@ -41,13 +41,13 @@ public class MakeshiftBed : Building
 
             Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount -= associatedResource.ResourceCost[i].costAmount;
             associatedResource.ResourceCost[i].costAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-            associatedResource.ResourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount, associatedResource.ResourceCost[i].costAmount);
+            associatedResource.ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount, associatedResource.ResourceCost[i].costAmount);
             SelfCount++;
             Worker.AvailableWorkerCount++;
             availableWorkerText.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
             _buildings[Type] = associatedResource;
         }
-        _buildings[Type].HeaderText.text = string.Format("{0} ({1})", HeaderString, SelfCount);
+        HeaderText.text = string.Format("{0} ({1})", HeaderString, SelfCount);
 
 
     }
@@ -55,13 +55,9 @@ public class MakeshiftBed : Building
     {
         availableWorkerText.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
     }
-    public override void UpdateBuildingElements()
-    {
-        base.UpdateBuildingElements();
-    }
 
     private void Update()
     {
-        UpdateBuildingElements();
+        UpdateResourceCostTexts();
     }
 }

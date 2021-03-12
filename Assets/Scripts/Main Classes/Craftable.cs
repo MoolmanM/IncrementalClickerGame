@@ -17,13 +17,25 @@ public abstract class Craftable : MonoBehaviour
 
     public CraftingType Type;
     public ResourceCost[] ResourceCost;
-    public TMP_Text DescriptionText, HeaderText;
-    public GameObject ButtonMain;
     public BuildingType BuildingTypeToActivate;
+    public GameObject SpacerAbove;
 
-    private float _timer = 0.1f, maxValue = 0.1f;
+    protected float _timer = 0.1f;
+    protected readonly float maxValue = 0.1f;
+    protected TMP_Text DescriptionText, HeaderText;
+    protected GameObject ButtonMain;
+    protected Transform DescriptionTransform, HeaderTransform, ButtonTransform;
 
-    public virtual void UpdateCraftingElements()
+    public void SetInitialValues()
+    {
+        HeaderTransform = transform.Find("Header_Panel/Header_Text");
+        HeaderText = HeaderTransform.GetComponent<TMP_Text>();
+        DescriptionTransform = transform.Find("Body/Description_Panel/Description_Text");
+        DescriptionText = DescriptionTransform.GetComponent<TMP_Text>();
+        ButtonTransform = transform.Find("Header_Panel/Button_Main");
+        ButtonMain = ButtonTransform.GetComponent<GameObject>();
+    }
+    public virtual void UpdateResourceCosts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
@@ -32,8 +44,8 @@ public abstract class Craftable : MonoBehaviour
             for (int i = 0; i < ResourceCost.Length; i++)
             {
                 _craftables[Type].ResourceCost[i].currentAmount = Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount;
-                _craftables[Type].ResourceCost[i].uiForBuilding.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _craftables[Type].ResourceCost[i].currentAmount, _craftables[Type].ResourceCost[i].costAmount);
-                _craftables[Type].ResourceCost[i].uiForBuilding.costNameText.text = string.Format("{0}", _craftables[Type].ResourceCost[i].associatedType.ToString());
+                _craftables[Type].ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _craftables[Type].ResourceCost[i].currentAmount, _craftables[Type].ResourceCost[i].costAmount);
+                _craftables[Type].ResourceCost[i].UiForResourceCost.costNameText.text = string.Format("{0}", _craftables[Type].ResourceCost[i].associatedType.ToString());
                 
             }
         }

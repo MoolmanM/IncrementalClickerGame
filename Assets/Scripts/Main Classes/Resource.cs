@@ -24,12 +24,26 @@ public class Resource : MonoBehaviour
 
     [System.NonSerialized] public float Amount;
     [System.NonSerialized] public float AmountPerSecond;
+    [System.NonSerialized] public GameObject MainResourcePanel;
     public float StorageAmount;
+    public ResourceType Type;
 
-    public ResourceType type;
-    public UiForResource uiForResource;
+    protected UiForResource uiForResource;
+    protected Transform amountTransform, amountPerSecondTransform, transformStorageAmount;
 
-    protected float _timer = 0.1f, maxValue = 0.1f;
+    protected float _timer = 0.1f;
+    protected readonly float maxValue = 0.1f;
+
+    public void SetInitialValues()
+    {
+        amountTransform = transform.Find("Header_Panel/Amount");
+        uiForResource.amount = amountTransform.GetComponent<TMP_Text>();
+        amountPerSecondTransform = transform.Find("Header_Panel/Amount");
+        uiForResource.amountPerSecond = amountTransform.GetComponent<TMP_Text>();
+        transformStorageAmount = transform.Find("Header_Panel/Amount");
+        uiForResource.storageAmount = amountTransform.GetComponent<TMP_Text>();
+        MainResourcePanel = this.gameObject;
+    }
 
     public virtual void UpdateResources()
     {
@@ -39,9 +53,9 @@ public class Resource : MonoBehaviour
 
             if (Amount < (StorageAmount - AmountPerSecond))
             {
-                _resources[type].Amount += _resources[type].AmountPerSecond;
-                _resources[type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[type].AmountPerSecond);
-                _resources[type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[type].Amount);
+                _resources[Type].Amount += _resources[Type].AmountPerSecond;
+                _resources[Type].uiForResource.amountPerSecond.text = string.Format("{0}/sec", _resources[Type].AmountPerSecond);
+                _resources[Type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[Type].Amount);
             }
             else
             {

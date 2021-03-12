@@ -10,14 +10,9 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        DisplayConsole();
+        //DisplayConsole();
+        SetInitialValues();
         SetDescriptionText("Enables building of the Potato Field.");
-    }
-
-    private void Start()
-    {
-        
-        
     }
 
     private void DisplayConsole()
@@ -35,6 +30,6 @@ public class WoodenHoe : Craftable
 
     private void Update()
     {
-        UpdateCraftingElements();
+        UpdateResourceCosts();
     }
 }

@@ -17,7 +17,7 @@ public class Woodlot : Building
     {       
         SetInitialValues();
         SetDescriptionText();
-        _building.MainBuildingPanel.SetActive(false);           
+        MainBuildingPanel.SetActive(false);           
         //DisplayConsole();
     }
 
@@ -36,6 +36,6 @@ public class Woodlot : Building
 
     private void Update()
     {
-        UpdateBuildingElements();
+        UpdateResourceCostTexts();
     }
 }

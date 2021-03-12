@@ -10,13 +10,9 @@ public class WoodenPickaxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         _craftables.Add(Type, _craftable);
-        DisplayConsole();
-        SetDescriptionText("Enables building of the Dig-Site.");
-    }
-
-    private void Start()
-    {
-        
+        //DisplayConsole();
+        SetInitialValues();
+        SetDescriptionText("Enables building of the Dig Site.");
     }
 
     private void DisplayConsole()
@@ -28,11 +24,25 @@ public class WoodenPickaxe : Craftable
     }
     public override void Craft()
     {
-        base.Craft();
+        for (int i = 0; i < ResourceCost.Length; i++)
+        {
+            if (!_craftables.TryGetValue(Type, out Craftable associatedResource) || associatedResource.ResourceCost[i].currentAmount < associatedResource.ResourceCost[i].costAmount)
+            {
+                return;
+            }
+
+            Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount -= associatedResource.ResourceCost[i].costAmount;
+
+            _craftables[Type] = associatedResource;
+            HeaderText.text = string.Format("{0} (Crafted)", HeaderText.text);
+            Destroy(ButtonMain);
+            Building._buildings[BuildingTypeToActivate].MainBuildingPanel.SetActive(true);
+            Resource._resources[ResourceType.Stones].MainResourcePanel.SetActive(true);
+        }
     }
 
     private void Update()
     {
-        UpdateCraftingElements();
+        UpdateResourceCosts();
     }
 }
