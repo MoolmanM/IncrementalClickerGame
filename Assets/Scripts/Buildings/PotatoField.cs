@@ -37,6 +37,6 @@ public class PotatoField : Building
 
     private void Update()
     {
-        UpdateResourceCostTexts();
+        UpdateResourceCosts();
     }
 }

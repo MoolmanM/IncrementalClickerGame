@@ -36,6 +36,6 @@ public class Woodlot : Building
 
     private void Update()
     {
-        UpdateResourceCostTexts();
+        UpdateResourceCosts();
     }
 }

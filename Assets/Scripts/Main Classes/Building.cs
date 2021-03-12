@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 [System.Serializable]
 public struct UiForResourceCost
@@ -46,6 +47,7 @@ public abstract class Building : MonoBehaviour
     protected Transform HeaderTransform, DesriptionTransform;
     protected TMP_Text HeaderText, DescriptionText;   
     protected string HeaderString;
+    protected Image progressCircle;
 
     protected float _timer = 0.1f;
     protected readonly float maxValue = 0.1f;
@@ -62,8 +64,8 @@ public abstract class Building : MonoBehaviour
         DescriptionText = DesriptionTransform.GetComponent<TMP_Text>();
         SpacerAbove.SetActive(false);
     }
-
-    public virtual void UpdateResourceCostTexts()
+   
+    public virtual void UpdateResourceCosts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {

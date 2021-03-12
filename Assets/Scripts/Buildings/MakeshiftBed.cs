@@ -58,6 +58,6 @@ public class MakeshiftBed : Building
 
     private void Update()
     {
-        UpdateResourceCostTexts();
+        UpdateResourceCosts();
     }
 }

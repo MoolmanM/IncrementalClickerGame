@@ -38,6 +38,6 @@ public class DigSite : Building
 
     private void Update()
     {
-        UpdateResourceCostTexts();
+        UpdateResourceCosts();
     }
 }
