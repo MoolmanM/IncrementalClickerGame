@@ -19389,6 +19389,7 @@ MonoBehaviour:
   DescriptionText: {fileID: 1059088813}
   HeaderText: {fileID: 135505348}
   MainBuildingPanel: {fileID: 1112149847}
+  availableWorkerText: {fileID: 589271196}
 --- !u!1 &1114860298
 GameObject:
   m_ObjectHideFlags: 0
