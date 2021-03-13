@@ -12,7 +12,7 @@ public class Sticks : Resource
         _resource = GetComponent<Resource>();
         _resources.Add(Type, _resource);
         SetInitialValues();
-        Amount = 80;
+        //Amount = 80;
         
         //DisplayConsole();
     }

@@ -25,6 +25,8 @@ public abstract class Craftable : MonoBehaviour
     protected TMP_Text DescriptionText, HeaderText;
     protected GameObject ButtonMain;
     protected Transform DescriptionTransform, HeaderTransform, ButtonTransform;
+    private string _isCraftedString;
+    private int _isCrafted;
 
     public void SetInitialValues()
     {
@@ -34,6 +36,18 @@ public abstract class Craftable : MonoBehaviour
         DescriptionText = DescriptionTransform.GetComponent<TMP_Text>();
         ButtonTransform = transform.Find("Header_Panel/Button_Main");
         ButtonMain = ButtonTransform.GetComponent<GameObject>();
+        _isCraftedString = Type.ToString() + "IsCrafted";
+        PlayerPrefs.GetInt(_isCraftedString, _isCrafted);
+        if (_isCrafted == 1)
+        {
+            Destroy(ButtonMain);
+            _craftables[Type].HeaderText.text = string.Format("{0} (Crafted)", _craftables[Type].HeaderText.text);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(_isCraftedString, _isCrafted);
     }
     public virtual void UpdateResourceCosts()
     {
@@ -65,7 +79,8 @@ public abstract class Craftable : MonoBehaviour
             _craftables[Type] = associatedResource;
             _craftables[Type].HeaderText.text = string.Format("{0} (Crafted)", _craftables[Type].HeaderText.text);
             Destroy(ButtonMain);
-            Building._buildings[BuildingTypeToActivate].MainBuildingPanel.SetActive(true);
+            Building._buildings[BuildingTypeToActivate].IsUnlocked = 1;
+            _isCrafted = 1;
         }
         
     }

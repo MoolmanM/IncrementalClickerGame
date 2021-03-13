@@ -18,7 +18,6 @@ public class PotatoField : Building
     {
         SetInitialValues();
         SetDescriptionText();
-        MainBuildingPanel.SetActive(false);
         //DisplayConsole();
     }
 

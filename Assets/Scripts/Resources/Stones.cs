@@ -12,7 +12,7 @@ public class Stones : Resource
         _resource = GetComponent<Resource>();
         _resources.Add(Type, _resource);
         SetInitialValues();
-        MainResourcePanel.SetActive(false);
+        //MainResourcePanel.SetActive(false);
         
         //DisplayConsole();
     }
@@ -28,14 +28,19 @@ public class Stones : Resource
     private void Update()
     {
         UpdateResources();
-        if ((_timer -= Time.deltaTime) <= 0)
-        {
-            _timer = maxValue;
-
-            if (Amount > 0)
-            {
-                Building._buildings[BuildingType.MakeshiftBed].MainBuildingPanel.SetActive(true);
-            }
-        }
     }
+
+    //public void SaveResource()
+    //{
+    //    SaveSystem.SaveResource(_resource);
+    //}
+
+    //public void LoadResource()
+    //{
+    //    ResourceData data = SaveSystem.LoadResource();
+
+    //    Amount = data.amount;
+    //}
+
+
 }

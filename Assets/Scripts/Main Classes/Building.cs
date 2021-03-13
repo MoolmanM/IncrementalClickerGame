@@ -44,16 +44,27 @@ public abstract class Building : MonoBehaviour
     protected uint SelfCount;    
     protected float IncrementAmount;
     [NonSerialized] public GameObject MainBuildingPanel;
-    protected Transform HeaderTransform, DesriptionTransform;
+    public int IsUnlocked = 0;
+    protected Transform HeaderTransform, DesriptionTransform, progressCircleTransform;
     protected TMP_Text HeaderText, DescriptionText;   
     protected string HeaderString;
     protected Image progressCircle;
+    private string _selfCountString, _isUnlockedString;
 
     protected float _timer = 0.1f;
     protected readonly float maxValue = 0.1f;
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
+        PlayerPrefs.SetInt(_selfCountString, (int)SelfCount);
+    }
+
     public void SetInitialValues()
     {
+        _selfCountString = (Type.ToString() + "SC");
+        _isUnlockedString = (Type.ToString() + "Unlocked");
+
         //IncrementAmount = SelfCount * ResourceMultiplier;
         //Resource._resources[ResourceTypeToModify].AmountPerSecond += IncrementAmount;
         MainBuildingPanel = this.gameObject;
@@ -62,9 +73,24 @@ public abstract class Building : MonoBehaviour
         HeaderString = HeaderText.text;
         DesriptionTransform = transform.Find("Body/Description_Panel/Description_Text");
         DescriptionText = DesriptionTransform.GetComponent<TMP_Text>();
+        progressCircleTransform = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        progressCircle = progressCircleTransform.GetComponent<Image>();
         SpacerAbove.SetActive(false);
+
+        IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
+        SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
+        HeaderText.text = string.Format("{0} ({1})", HeaderString, SelfCount);
+
+        if (IsUnlocked == 1)
+        {
+            MainBuildingPanel.SetActive(true);
+        }
+        else
+        {
+            MainBuildingPanel.SetActive(false);
+        }
     }
-   
+ 
     public virtual void UpdateResourceCosts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
@@ -73,11 +99,32 @@ public abstract class Building : MonoBehaviour
 
             for (int i = 0; i < ResourceCost.Length; i++)
             {
-                _buildings[Type].ResourceCost[i].currentAmount = Resource._resources[_buildings[Type].ResourceCost[i].associatedType].Amount;
-                _buildings[Type].ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _buildings[Type].ResourceCost[i].currentAmount, _buildings[Type].ResourceCost[i].costAmount);
-                _buildings[Type].ResourceCost[i].UiForResourceCost.costNameText.text = string.Format("{0}", _buildings[Type].ResourceCost[i].associatedType.ToString());                
-            }           
+                ResourceCost[i].currentAmount = Resource._resources[ResourceCost[i].associatedType].Amount;
+                ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", ResourceCost[i].currentAmount, ResourceCost[i].costAmount);
+                ResourceCost[i].UiForResourceCost.costNameText.text = string.Format("{0}", ResourceCost[i].associatedType.ToString());              
+            }
+            GetCurrentFill();
         }
+    }
+
+    public void GetCurrentFill()
+    {
+        float add = 0;
+        float div = 0;
+        float fillAmount = 0;
+
+        for (int i = 0; i < ResourceCost.Length; i++)
+        {
+            add = ResourceCost[i].currentAmount;
+            div = ResourceCost[i].costAmount;
+            if (add > div)
+            {
+                add = div;
+            }
+            fillAmount += add / div;
+        }
+        fillAmount /= ResourceCost.Length;
+        progressCircle.fillAmount = fillAmount;
     }
 
     public virtual void Build()

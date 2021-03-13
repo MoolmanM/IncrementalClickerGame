@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Woodlot : Building
@@ -16,8 +15,7 @@ public class Woodlot : Building
     private void Start()
     {       
         SetInitialValues();
-        SetDescriptionText();
-        MainBuildingPanel.SetActive(false);           
+        SetDescriptionText();         
         //DisplayConsole();
     }
 
