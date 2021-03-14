@@ -11,6 +11,7 @@ public class Sticks : Resource
     {
         _resource = GetComponent<Resource>();
         _resources.Add(Type, _resource);
+        IsUnlocked = 1;
         SetInitialValues();
         //Amount = 80;
         

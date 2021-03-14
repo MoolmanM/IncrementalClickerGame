@@ -75,7 +75,7 @@ public abstract class Building : MonoBehaviour
         DescriptionText = DesriptionTransform.GetComponent<TMP_Text>();
         progressCircleTransform = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
         progressCircle = progressCircleTransform.GetComponent<Image>();
-        SpacerAbove.SetActive(false);
+        
 
         IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
         SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
@@ -84,10 +84,12 @@ public abstract class Building : MonoBehaviour
         if (IsUnlocked == 1)
         {
             MainBuildingPanel.SetActive(true);
+            SpacerAbove.SetActive(true);
         }
         else
         {
             MainBuildingPanel.SetActive(false);
+            SpacerAbove.SetActive(false);
         }
     }
  

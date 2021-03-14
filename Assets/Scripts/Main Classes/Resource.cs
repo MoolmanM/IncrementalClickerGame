@@ -25,12 +25,14 @@ public class Resource : MonoBehaviour
     [System.NonSerialized] public float Amount;
     [System.NonSerialized] public float AmountPerSecond;
     [System.NonSerialized] public GameObject MainResourcePanel;
+    [System.NonSerialized] public int IsUnlocked;
     public float StorageAmount;
     public ResourceType Type;
 
     protected UiForResource uiForResource;
     protected Transform amountTransform, amountPerSecondTransform, transformStorageAmount;
-    private string _perSecondString, _amountString, _storageAmountString;
+    private string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
+    
 
     protected float _timer = 0.1f;
     protected readonly float maxValue = 0.1f;
@@ -48,27 +50,39 @@ public class Resource : MonoBehaviour
         _perSecondString = Type.ToString() + "PS";
         _amountString = Type.ToString() + "A";
         _storageAmountString = Type.ToString() + "Storage";
+        _isUnlockedString = Type.ToString() + "Unlocked";
 
         Amount = PlayerPrefs.GetFloat(_amountString, Amount);
         AmountPerSecond = PlayerPrefs.GetFloat(_perSecondString, AmountPerSecond);
         StorageAmount = PlayerPrefs.GetFloat(_storageAmountString, StorageAmount);
-        uiForResource.storageAmount.text = string.Format("{0}", StorageAmount);
+        IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
 
-        if (AmountPerSecond < 0)
+        if (IsUnlocked == 1)
         {
-            _resources[Type].uiForResource.amountPerSecond.text = string.Format("-{0}/sec", _resources[Type].AmountPerSecond);
+            uiForResource.storageAmount.text = string.Format("{0}", StorageAmount);
+
+            if (AmountPerSecond < 0)
+            {
+                _resources[Type].uiForResource.amountPerSecond.text = string.Format("-{0}/sec", _resources[Type].AmountPerSecond);
+            }
+            else
+            {
+                _resources[Type].uiForResource.amountPerSecond.text = string.Format("+{0}/sec", _resources[Type].AmountPerSecond);
+            }
+            _resources[Type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[Type].Amount);
         }
         else
         {
-            _resources[Type].uiForResource.amountPerSecond.text = string.Format("+{0}/sec", _resources[Type].AmountPerSecond);
+            MainResourcePanel.SetActive(false);
         }
-        _resources[Type].uiForResource.amount.text = string.Format("{0:0.00}", _resources[Type].Amount);
+        
     }
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetFloat(_amountString, Amount);
         PlayerPrefs.SetFloat(_perSecondString, AmountPerSecond);
         PlayerPrefs.SetFloat(_storageAmountString, StorageAmount);
+        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
     }
 
     private void OnApplicationFocus(bool focus)
