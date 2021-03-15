@@ -10,12 +10,10 @@ public class Sticks : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(Type, _resource);
+        _resources.Add(_Type, _resource);
         IsUnlocked = 1;
         SetInitialValues();
-        //Amount = 80;
-        
-        //DisplayConsole();
+        // DisplayConsole();
     }
 
     private void DisplayConsole()

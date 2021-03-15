@@ -10,7 +10,7 @@ public class Stones : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(Type, _resource);
+        _resources.Add(_Type, _resource);
         SetInitialValues();
         //MainResourcePanel.SetActive(false);
         

@@ -13,86 +13,129 @@ public enum CraftingType
 
 public abstract class Craftable : MonoBehaviour
 {
-    public Dictionary<CraftingType, Craftable> _craftables = new Dictionary<CraftingType, Craftable>();
+    public Dictionary<CraftingType, Craftable> Craftables = new Dictionary<CraftingType, Craftable>();
 
     public CraftingType Type;
     public ResourceCost[] ResourceCost;
-    public BuildingType BuildingTypeToActivate;
-    public ResourceType ResourceTypeToActivate;
-    public GameObject SpacerAbove;
+    public BuildingType BuildingTypeToModify;
+    public ResourceType ResourceTypeToModify;
+    public GameObject ObjSpacerBelow;
+    [System.NonSerialized] public int IsCrafted = 0;
 
-    protected float _timer = 0.1f;
-    protected readonly float maxValue = 0.1f;
-    protected TMP_Text DescriptionText, HeaderText;
-    protected GameObject ButtonMain;
-    protected Transform DescriptionTransform, HeaderTransform, ButtonTransform, progressCircleTransform;
     private string _isCraftedString;
-    private int _isCrafted;
-    protected Image progressCircle;
+
+    protected float Timer = 0.1f;
+    protected readonly float MaxValue = 0.1f;
+    protected TMP_Text TxtDescription;
+    protected Transform TformDescription, TformTxtHeader, TformBtnMain, TformProgressbar, TformProgressbarPanel, TformTxtHeaderUncraft, TformExpand, TformCollapse;      
+    protected Image ImgProgressbar, ImgMain, ImgExpand, ImgCollapse;
+    protected GameObject ObjProgressbarPanel, ObjBtnMain, ObjTxtHeader, ObjTxtHeaderUncraft;
 
     public void SetInitialValues()
     {
-        HeaderTransform = transform.Find("Header_Panel/Header_Text");
-        HeaderText = HeaderTransform.GetComponent<TMP_Text>();
-        DescriptionTransform = transform.Find("Body/Description_Panel/Description_Text");
-        DescriptionText = DescriptionTransform.GetComponent<TMP_Text>();
-        ButtonTransform = transform.Find("Header_Panel/Button_Main");
-        ButtonMain = ButtonTransform.GetComponent<GameObject>();
-        progressCircleTransform = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
-        progressCircle = progressCircleTransform.GetComponent<Image>();
+        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
+        TformTxtHeader = transform.Find("Header_Panel/Text_Header");
+        TformBtnMain = transform.Find("Header_Panel/Button_Main");
+        TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        TformProgressbarPanel = transform.Find("Header_Panel/Progress_Circle_Panel");
+        TformTxtHeaderUncraft = transform.Find("Header_Panel/Text_Header_Uncraftable");
+        TformExpand = transform.Find("Header_Panel/Button_Expand");
+        TformCollapse = transform.Find("Header_Panel/Button_Collapse");
+
+        TxtDescription = TformDescription.GetComponent<TMP_Text>();
+        ObjTxtHeader = TformTxtHeader.gameObject;
+        ObjBtnMain = TformBtnMain.gameObject;
+        ImgProgressbar = TformProgressbar.GetComponent<Image>();
+        ObjProgressbarPanel = TformProgressbarPanel.gameObject;
+        ObjTxtHeaderUncraft = TformTxtHeaderUncraft.gameObject;
+        ImgExpand = TformExpand.GetComponent<Image>();
+        ImgCollapse = TformCollapse.GetComponent<Image>();
+
         _isCraftedString = Type.ToString() + "IsCrafted";
-        PlayerPrefs.GetInt(_isCraftedString, _isCrafted);
-        if (_isCrafted == 1)
+
+        if (TimeManager.hasPlayedBefore)
         {
-            Destroy(ButtonMain);
-            _craftables[Type].HeaderText.text = string.Format("{0} (Crafted)", _craftables[Type].HeaderText.text);
+            IsCrafted = PlayerPrefs.GetInt(_isCraftedString, IsCrafted);
+        }
+        
+
+        if (IsCrafted == 1)
+        {
+            FinishedCrafting();
+        }
+        else
+        {
+            MakeCraftableAgain();
         }
     }
 
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isCraftedString, _isCrafted);
+        PlayerPrefs.SetInt(_isCraftedString, IsCrafted);
     }
     public virtual void UpdateResourceCosts()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((Timer -= Time.deltaTime) <= 0)
         {
-            _timer = maxValue;
+            Timer = MaxValue;
 
             for (int i = 0; i < ResourceCost.Length; i++)
             {
-                _craftables[Type].ResourceCost[i].currentAmount = Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount;
-                _craftables[Type].ResourceCost[i].UiForResourceCost.costAmountText.text = string.Format("{0:0.00}/{1:0.00}", _craftables[Type].ResourceCost[i].currentAmount, _craftables[Type].ResourceCost[i].costAmount);
-                _craftables[Type].ResourceCost[i].UiForResourceCost.costNameText.text = string.Format("{0}", _craftables[Type].ResourceCost[i].associatedType.ToString());              
+                Craftables[Type].ResourceCost[i].CurrentAmount = Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount;
+                Craftables[Type].ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].ResourceCost[i].CurrentAmount, Craftables[Type].ResourceCost[i].CostAmount);
+                Craftables[Type].ResourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", Craftables[Type].ResourceCost[i]._AssociatedType.ToString());              
             }
             GetCurrentFill();
         }
     }
 
-    public virtual void Craft()
+    protected virtual void Craft()
     {
         for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (!_craftables.TryGetValue(Type, out Craftable associatedResource) || associatedResource.ResourceCost[i].currentAmount < associatedResource.ResourceCost[i].costAmount)
+            if (!Craftables.TryGetValue(Type, out Craftable associatedResource) || associatedResource.ResourceCost[i].CurrentAmount < associatedResource.ResourceCost[i].CostAmount)
             {
                 return;
             }
 
-            Resource._resources[_craftables[Type].ResourceCost[i].associatedType].Amount -= associatedResource.ResourceCost[i].costAmount;
+            Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount -= associatedResource.ResourceCost[i].CostAmount;
+
+            Craftables[Type] = associatedResource;
+
+            IsCrafted = 1;
+            FinishedCrafting();
             
-            _craftables[Type] = associatedResource;
-            _craftables[Type].HeaderText.text = string.Format("{0} (Crafted)", _craftables[Type].HeaderText.text);
-            Destroy(ButtonMain);
-            Building._buildings[BuildingTypeToActivate].IsUnlocked = 1;
-            Building._buildings[BuildingTypeToActivate].MainBuildingPanel.SetActive(true);
-            Building._buildings[BuildingTypeToActivate].SpacerAbove.SetActive(true);
-            Resource._resources[ResourceTypeToActivate].IsUnlocked = 1;
-            Resource._resources[ResourceTypeToActivate].MainResourcePanel.SetActive(true);
-            //Going to have to assign spacers to the resource panels too.
-            _isCrafted = 1;
         }
-        
+
     }
+
+    protected void FinishedCrafting()
+    {
+        ObjBtnMain.GetComponent<Button>().interactable = false;
+        ObjProgressbarPanel.SetActive(false);
+        ObjTxtHeader.SetActive(false);
+        Color greyColor = new Color(0xD4, 0xD4, 0xD4, 0xFF);
+        ImgExpand.color = greyColor;
+        ImgCollapse.color = greyColor;
+        Building.Buildings[BuildingTypeToModify].IsUnlocked = 1;
+        //Building.Buildings[BuildingTypeToModify].MainBuildingPanel.SetActive(true);
+        //Building.Buildings[BuildingTypeToModify].ObjSpacerBelow.SetActive(true);
+        Resource._resources[ResourceTypeToModify].IsUnlocked = 1;
+        //Resource._resources[ResourceTypeToModify].MainResourcePanel.SetActive(true);
+        //Resource._resources[ResourceTypeToModify].spacerBelow.SetActive(true);
+    }
+
+    private void MakeCraftableAgain()
+    {
+        ObjBtnMain.GetComponent<Button>().interactable = true;
+        ObjProgressbarPanel.SetActive(true);
+        //uncraftableTextObject.SetActive(false);
+        ObjTxtHeader.SetActive(true);
+        Color darkDreyColor = new Color(0x33, 0x33, 0x33, 0xFF);
+        ImgExpand.color = darkDreyColor;
+        ImgCollapse.color = darkDreyColor;
+    }
+
     public void GetCurrentFill()
     {
         float add = 0;
@@ -101,8 +144,8 @@ public abstract class Craftable : MonoBehaviour
 
         for (int i = 0; i < ResourceCost.Length; i++)
         {
-            add = ResourceCost[i].currentAmount;
-            div = ResourceCost[i].costAmount;
+            add = ResourceCost[i].CurrentAmount;
+            div = ResourceCost[i].CostAmount;
             if (add > div)
             {
                 add = div;
@@ -110,11 +153,11 @@ public abstract class Craftable : MonoBehaviour
             fillAmount += add / div;
         }
         fillAmount /= ResourceCost.Length;
-        progressCircle.fillAmount = fillAmount;
+        ImgProgressbar.fillAmount = fillAmount;
     }
 
     public void SetDescriptionText(string description)
     {
-        _craftables[Type].DescriptionText.text = string.Format("{0}", description);
+        Craftables[Type].TxtDescription.text = string.Format("{0}", description);
     }
 }

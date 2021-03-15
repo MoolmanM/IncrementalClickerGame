@@ -11,30 +11,29 @@ public class MakeshiftBed : Building
     private void Awake()
     {
         _building = GetComponent<Building>();
-        _buildings.Add(Type, _building);
+        Buildings.Add(_Type, _building);
         
     }
-
     private void Start()
     {
         SetInitialValues();        
         SetDescriptionText();
-        //DisplayConsole();
+        // DisplayConsole();
     }
-
     private void DisplayConsole()
     {
-        foreach (KeyValuePair<BuildingType, Building> kvp in _buildings)
+        foreach (KeyValuePair<BuildingType, Building> kvp in Buildings)
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     public override void SetDescriptionText()
     {
-        availableWorkerText.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
-    }
+        TxtDescription.text = string.Format("Increases population by 1");
 
+        // availableWorkerText.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
+        // Need to do that in the override Build here.
+    }
     private void Update()
     {
         UpdateResourceCosts();

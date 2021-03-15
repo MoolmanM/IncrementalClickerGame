@@ -9,21 +9,22 @@ public class WoodenAxe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        _craftables.Add(Type, _craftable);
+        Craftables.Add(Type, _craftable);
         //DisplayConsole();
+        
+    }
+
+    private void Start()
+    {
         SetInitialValues();
         SetDescriptionText("Enables building of the Wood-lot.");
     }
     private void DisplayConsole()
     {
-        foreach (KeyValuePair<CraftingType, Craftable> kvp in _craftables)
+        foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftables)
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
-    }
-    public override void Craft()
-    {
-        base.Craft();
     }
     private void Update()
     {

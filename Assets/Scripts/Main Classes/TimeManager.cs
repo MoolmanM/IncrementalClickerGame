@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    public TMP_Text seasonText, goneForText, earnedFoodText, earnedSticksText, earnedStonesText;
-    public TMP_Text[] earnedResourceTexts;
+    public TMP_Text seasonText, goneForText;
+    public GameObject _welcomePanel;
     private DateTime currentDate;
-    private TimeSpan difference;
+    public static bool hasPlayedBefore;
+    public static TimeSpan difference;
     private string seasonString;
     private int day, year, seasonCount;
     private float _timer = 0.1f;
     private readonly float maxValue = 5f;
+    private long temp;
+
     public void CalculateSeason()
     {
         day++;
@@ -50,15 +53,19 @@ public class TimeManager : MonoBehaviour
             day = 0;
         }
         seasonText.text = string.Format("Year {0} - {1}, day {2}", year, seasonString, day);
-    }
-
-    private long temp;
-    void Start()
+    }  
+    public void Awake()
     {
         SetLaunchValues();
-        CheckIfResourceExists();
+        if (hasPlayedBefore)
+        {
+            _welcomePanel.SetActive(true);         
+        }
+        else
+        {
+            _welcomePanel.SetActive(false);
+        }
     }
-
     void OnApplicationQuit()
     {
         //Savee the current system time as a string in the player prefs class
@@ -66,7 +73,6 @@ public class TimeManager : MonoBehaviour
 
         //print("Saving this date to prefs: " + DateTime.Now);
     }
-
     private void SetLaunchValues()
     {
         //Store the current time when it stardifference
@@ -75,10 +81,12 @@ public class TimeManager : MonoBehaviour
         //Grab the old time from the player prefs as a long
         if (PlayerPrefs.GetString("sysString") == "")
         {
+            hasPlayedBefore = false;
             return;
         }
         else
         {
+            hasPlayedBefore = true;
             temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
         }
 
@@ -92,6 +100,7 @@ public class TimeManager : MonoBehaviour
         //print("Difference: " + difference);
         //Debug.Log(Resource._resources[ResourceType.Sticks].AmountPerSecond);
 
+        //Make the parts where the time is bold?
         if (difference.Days == 0 && difference.Hours == 0 && difference.Minutes == 0)
         {
             goneForText.text = string.Format("You were gone for {0:%s}s \n While you were gone, you earned:", difference.Duration());
@@ -111,18 +120,21 @@ public class TimeManager : MonoBehaviour
 
         
     }
-
-    private void CheckIfResourceExists()
+    public static void GetAFKResource(ResourceType type)
     {
-        //I think do all of this inside the Resource class.
-        float foodAmountGainedAFK = (float)(Resource._resources[ResourceType.Food].AmountPerSecond * difference.TotalSeconds);
-        float sticksAmountGainedAFK = (float)(Resource._resources[ResourceType.Sticks].AmountPerSecond * difference.TotalSeconds);
-        float stonesAmountGainedAFK = (float)(Resource._resources[ResourceType.Stones].AmountPerSecond * difference.TotalSeconds);
-        earnedFoodText.text = string.Format("{0} {1}", Resource._resources[ResourceType.Food].AmountPerSecond * difference.TotalSeconds, Resource._resources[ResourceType.Food].Type.ToString());
-        earnedSticksText.text = string.Format("{0} {1}", Resource._resources[ResourceType.Stones].AmountPerSecond * difference.TotalSeconds, Resource._resources[ResourceType.Stones].Type.ToString());
-        earnedStonesText.text = string.Format("{0} {1}", Resource._resources[ResourceType.Sticks].AmountPerSecond * difference.TotalSeconds, Resource._resources[ResourceType.Sticks].Type.ToString());
-        //Debug.Log(string.Format("{0} {1}", Resource._resources[ResourceType.Food].AmountPerSecond * difference.TotalSeconds, Resource._resources[ResourceType.Food].Type.ToString()));
+        float differenceAmount = (float)(difference.TotalSeconds * Resource._resources[type].AmountPerSecond);       
+        Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
 
+        if ((differenceAmount + Resource._resources[type].Amount) > Resource._resources[type].StorageAmount)
+        {
+            Resource._resources[type].Amount = Resource._resources[type].StorageAmount;
+            Resource._resources[type]._UiForResource.TxtAmount.text = string.Format("{0}", Resource._resources[type].Amount);
+        }
+        else
+        {
+            Resource._resources[type].Amount += differenceAmount;
+        }
+        //Resource._resources[type].uiForResource.amount.text = string.Format("{0}", Resource._resources[type].Amount);
     }
     private void Update()
     {

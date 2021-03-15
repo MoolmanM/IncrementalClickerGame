@@ -8,30 +8,22 @@ public class Woodlot : Building
     private void Awake()
     {
         _building = GetComponent<Building>();
-        _buildings.Add(Type, _building);
+        Buildings.Add(_Type, _building);
         
     }
-
     private void Start()
     {       
         SetInitialValues();
         SetDescriptionText();         
-        //DisplayConsole();
+        // DisplayConsole();
     }
-
     private void DisplayConsole()
     {
-        foreach (KeyValuePair<BuildingType, Building> kvp in _buildings)
+        foreach (KeyValuePair<BuildingType, Building> kvp in Buildings)
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
-    public override void Build()
-    {
-        base.Build();
-    }
-
     private void Update()
     {
         UpdateResourceCosts();

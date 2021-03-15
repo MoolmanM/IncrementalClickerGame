@@ -4,62 +4,62 @@ using UnityEngine;
 
 public class IncrementSelect : MonoBehaviour
 {
-    public static bool OneSelected, TenSelected, HundredSelected, MaxSelected;
-    public GameObject imageOne, imageTen, imageHundred, imageMax;
+    public static bool IsOneSelected, IsTenSelected, IsHundredSelected, IsMaxSelected;
+    public GameObject ImgOne, ImgTen, ImgHundred, ImgMax;
     private void Start()
     {
-        imageOne.SetActive(true);
+        ImgOne.SetActive(true);
     }
     public void On1()
     {
-        imageOne.SetActive(true);
-        imageTen.SetActive(false);
-        imageHundred.SetActive(false);
-        imageMax.SetActive(false);
+        ImgOne.SetActive(true);
+        ImgTen.SetActive(false);
+        ImgHundred.SetActive(false);
+        ImgMax.SetActive(false);
 
-        OneSelected = true;
-        TenSelected = false;
-        HundredSelected = false;
-        MaxSelected = false;
+        IsOneSelected = true;
+        IsTenSelected = false;
+        IsHundredSelected = false;
+        IsMaxSelected = false;
     }
 
     public void On10()
     {
-        imageOne.SetActive(false);
-        imageTen.SetActive(true);
-        imageHundred.SetActive(false);
-        imageMax.SetActive(false);
+        ImgOne.SetActive(false);
+        ImgTen.SetActive(true);
+        ImgHundred.SetActive(false);
+        ImgMax.SetActive(false);
 
-        OneSelected = false;
-        TenSelected = true;
-        HundredSelected = false;
-        MaxSelected = false;
+        IsOneSelected = false;
+        IsTenSelected = true;
+        IsHundredSelected = false;
+        IsMaxSelected = false;
 
     }
 
     public void On100()
     {
-        imageOne.SetActive(false);
-        imageTen.SetActive(false);
-        imageHundred.SetActive(true);
-        imageMax.SetActive(false);
+        ImgOne.SetActive(false);
+        ImgTen.SetActive(false);
+        ImgHundred.SetActive(true);
+        ImgMax.SetActive(false);
 
-        OneSelected = false;
-        TenSelected = false;
-        HundredSelected = true;
-        MaxSelected = false;
+        IsOneSelected = false;
+        IsTenSelected = false;
+        IsHundredSelected = true;
+        IsMaxSelected = false;
     }
 
     public void OnMax()
     {
-        imageOne.SetActive(false);
-        imageTen.SetActive(false);
-        imageHundred.SetActive(false);
-        imageMax.SetActive(true);
+        ImgOne.SetActive(false);
+        ImgTen.SetActive(false);
+        ImgHundred.SetActive(false);
+        ImgMax.SetActive(true);
 
-        OneSelected = false;
-        TenSelected = false;
-        HundredSelected = false;
-        MaxSelected = true;
+        IsOneSelected = false;
+        IsTenSelected = false;
+        IsHundredSelected = false;
+        IsMaxSelected = true;
     }
 }

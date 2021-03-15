@@ -10,10 +10,10 @@ public class Food : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(Type, _resource);
+        _resources.Add(_Type, _resource);
         IsUnlocked = 1;
-        SetInitialValues();
-        //DisplayConsole();
+        SetInitialValues();       
+        // DisplayConsole();
     }
 
     private void DisplayConsole()
@@ -23,7 +23,6 @@ public class Food : Resource
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     private void Update()
     {
         UpdateResources();
