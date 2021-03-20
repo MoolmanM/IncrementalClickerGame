@@ -8,15 +8,14 @@ public class DigSite : Building
     private void Awake()
     {
         _building = GetComponent<Building>();
-        Buildings.Add(_Type, _building);
-
+        Buildings.Add(Type, _building);
+        SetInitialValues();
     }
-
     private void Start()
     {
-        SetInitialValues();
+        CheckIfUnlocked();
         SetDescriptionText();
-        // DisplayConsole();
+        //DisplayConsole();
     }
 
     private void DisplayConsole()

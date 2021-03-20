@@ -32,7 +32,7 @@ public enum BuildingType
 public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
-    public BuildingType _Type;
+    public BuildingType Type;
     public float ResourceMultiplier, CostMultiplier;
     public ResourceType ResourceTypeToModify;
     public ResourceCost[] ResourceCost;
@@ -41,7 +41,9 @@ public abstract class Building : MonoBehaviour
     [NonSerialized] public GameObject ObjMainPanel;
 
     private string _selfCountString, _isUnlockedString;
-  
+    private string[] _costString;
+
+
     protected Transform TformTxtHeader, TformDescription, TformProgressbar;
     protected TMP_Text TxtHeader, TxtDescription;
     protected Image ImgProgressbar;
@@ -55,8 +57,45 @@ public abstract class Building : MonoBehaviour
     {
         PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
         PlayerPrefs.SetInt(_selfCountString, (int)SelfCount);
+
+        for (int i = 0; i < _costString.Length; i++)
+        {
+            PlayerPrefs.SetFloat(_costString[i], ResourceCost[i].CostAmount);
+        }
+        // GetFloat after bath
     }
     public void SetInitialValues()
+    {
+        InitializeObjects();
+
+        if (TimeManager.hasPlayedBefore)
+        {
+            IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
+            SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
+        }
+
+        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);      
+    }
+    protected void CheckIfUnlocked()
+    {
+        if (IsUnlocked == 1)
+        {
+            ObjMainPanel.SetActive(true);
+            ObjSpacerBelow.SetActive(true);
+
+            for (int i = 0; i < ResourceCost.Length; i++)
+            {
+                _costString[i] = Type.ToString() + ResourceCost[i]._AssociatedType.ToString();
+                PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
+            }
+        }
+        else
+        {
+            ObjMainPanel.SetActive(false);
+            ObjSpacerBelow.SetActive(false);
+        }
+    }
+    private void InitializeObjects()
     {
         TformDescription = transform.Find("Body/Description_Panel/Text_Description");
         TformTxtHeader = transform.Find("Header_Panel/Text_Header");
@@ -70,28 +109,12 @@ public abstract class Building : MonoBehaviour
 
         OriginalHeaderString = TxtHeader.text;
 
-        _selfCountString = (_Type.ToString() + "SC");
-        _isUnlockedString = (_Type.ToString() + "Unlocked");
-
-        if (TimeManager.hasPlayedBefore)
-        {
-            IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
-            SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
-        }
         
-        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);
-
-        if (IsUnlocked == 1)
-        {
-            ObjMainPanel.SetActive(true);
-            ObjSpacerBelow.SetActive(true);
-        }
-        else
-        {
-            ObjMainPanel.SetActive(false);
-            ObjSpacerBelow.SetActive(false);
-        }
+        
+        _selfCountString = (Type.ToString() + "SelfCount");
+        _isUnlockedString = (Type.ToString() + "IsUnlocked");
     }
+
     public virtual void UpdateResourceCosts()
     {
         if ((Timer -= Time.deltaTime) <= 0)
@@ -128,28 +151,35 @@ public abstract class Building : MonoBehaviour
     }
     public virtual void Build()
     {
+        bool canPurchase = true;
+
         for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (!Buildings.TryGetValue(_Type, out Building associatedResource) || associatedResource.ResourceCost[i].CurrentAmount < associatedResource.ResourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
-                return;
+                canPurchase = false;
+                break;
             }
+        }
 
+        if (canPurchase)
+        {
             SelfCount++;
-            Resource._resources[Buildings[_Type].ResourceCost[i]._AssociatedType].Amount -= associatedResource.ResourceCost[i].CostAmount;
-            associatedResource.ResourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-            associatedResource.ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[_Type].ResourceCost[i]._AssociatedType].Amount, associatedResource.ResourceCost[i].CostAmount);          
-            Buildings[_Type] = associatedResource;
-
-            //This seems to work but not sure for how long
+            for (int i = 0; i < ResourceCost.Length; i++)
+            {
+                Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount -= ResourceCost[i].CostAmount;
+                ResourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);
+                ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount, ResourceCost[i].CostAmount);
+            }
             IncrementAmount += ResourceMultiplier;
             Resource._resources[ResourceTypeToModify].AmountPerSecond += ResourceMultiplier;
         }
-        Buildings[_Type].TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);      
+
+        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);   
     }
     public virtual void SetDescriptionText()
     {
-        Buildings[_Type].TxtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify]._Type.ToString(), ResourceMultiplier);
+        Buildings[Type].TxtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify].Type.ToString(), ResourceMultiplier);
     }  
 }
 

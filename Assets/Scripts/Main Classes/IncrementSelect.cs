@@ -9,6 +9,7 @@ public class IncrementSelect : MonoBehaviour
     private void Start()
     {
         ImgOne.SetActive(true);
+        IsOneSelected = true;
     }
     public void On1()
     {

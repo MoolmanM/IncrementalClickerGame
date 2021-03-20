@@ -9,9 +9,7 @@ public class WoodenAxe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        Craftables.Add(Type, _craftable);
-        //DisplayConsole();
-        
+        Craftables.Add(Type, _craftable);        
     }
 
     private void Start()

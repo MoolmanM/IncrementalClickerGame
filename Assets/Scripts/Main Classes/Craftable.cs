@@ -17,8 +17,9 @@ public abstract class Craftable : MonoBehaviour
 
     public CraftingType Type;
     public ResourceCost[] ResourceCost;
-    public BuildingType BuildingTypeToModify;
-    public ResourceType ResourceTypeToModify;
+    public BuildingType[] BuildingTypesToModify;
+    public ResourceType[] ResourceTypesToModify;
+    public WorkerType[] WorkerTypesToModify;
     public GameObject ObjSpacerBelow;
     [System.NonSerialized] public int IsCrafted = 0;
 
@@ -33,26 +34,8 @@ public abstract class Craftable : MonoBehaviour
 
     public void SetInitialValues()
     {
-        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
-        TformTxtHeader = transform.Find("Header_Panel/Text_Header");
-        TformBtnMain = transform.Find("Header_Panel/Button_Main");
-        TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
-        TformProgressbarPanel = transform.Find("Header_Panel/Progress_Circle_Panel");
-        TformTxtHeaderUncraft = transform.Find("Header_Panel/Text_Header_Uncraftable");
-        TformExpand = transform.Find("Header_Panel/Button_Expand");
-        TformCollapse = transform.Find("Header_Panel/Button_Collapse");
-
-        TxtDescription = TformDescription.GetComponent<TMP_Text>();
-        ObjTxtHeader = TformTxtHeader.gameObject;
-        ObjBtnMain = TformBtnMain.gameObject;
-        ImgProgressbar = TformProgressbar.GetComponent<Image>();
-        ObjProgressbarPanel = TformProgressbarPanel.gameObject;
-        ObjTxtHeaderUncraft = TformTxtHeaderUncraft.gameObject;
-        ImgExpand = TformExpand.GetComponent<Image>();
-        ImgCollapse = TformCollapse.GetComponent<Image>();
-
-        _isCraftedString = Type.ToString() + "IsCrafted";
-
+        InitializeObjects();
+   
         if (TimeManager.hasPlayedBefore)
         {
             IsCrafted = PlayerPrefs.GetInt(_isCraftedString, IsCrafted);
@@ -61,14 +44,13 @@ public abstract class Craftable : MonoBehaviour
 
         if (IsCrafted == 1)
         {
-            FinishedCrafting();
+            Crafted();
         }
         else
         {
             MakeCraftableAgain();
         }
     }
-
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(_isCraftedString, IsCrafted);
@@ -89,51 +71,99 @@ public abstract class Craftable : MonoBehaviour
         }
     }
 
-    protected virtual void Craft()
+    public  void Craft()
     {
+        bool canPurchase = true;
+
         for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (!Craftables.TryGetValue(Type, out Craftable associatedResource) || associatedResource.ResourceCost[i].CurrentAmount < associatedResource.ResourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
-                return;
+                canPurchase = false;
+                break;
             }
-
-            Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount -= associatedResource.ResourceCost[i].CostAmount;
-
-            Craftables[Type] = associatedResource;
-
-            IsCrafted = 1;
-            FinishedCrafting();
-            
         }
 
+        if (canPurchase)
+        {
+            IsCrafted = 1;
+            Crafted();
+            for (int i = 0; i < ResourceCost.Length; i++)
+            {
+                Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount -= ResourceCost[i].CostAmount;
+            }
+
+        }
     }
 
-    protected void FinishedCrafting()
+    protected void Crafted()
     {
         ObjBtnMain.GetComponent<Button>().interactable = false;
         ObjProgressbarPanel.SetActive(false);
         ObjTxtHeader.SetActive(false);
-        Color greyColor = new Color(0xD4, 0xD4, 0xD4, 0xFF);
-        ImgExpand.color = greyColor;
-        ImgCollapse.color = greyColor;
-        Building.Buildings[BuildingTypeToModify].IsUnlocked = 1;
-        //Building.Buildings[BuildingTypeToModify].MainBuildingPanel.SetActive(true);
-        //Building.Buildings[BuildingTypeToModify].ObjSpacerBelow.SetActive(true);
-        Resource._resources[ResourceTypeToModify].IsUnlocked = 1;
-        //Resource._resources[ResourceTypeToModify].MainResourcePanel.SetActive(true);
-        //Resource._resources[ResourceTypeToModify].spacerBelow.SetActive(true);
-    }
+        ObjTxtHeaderUncraft.SetActive(true);
 
+        string htmlValue = "#D4D4D4";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+        {
+            ImgExpand.color = greyColor;
+            ImgCollapse.color = greyColor;
+        }
+
+        foreach (var building in BuildingTypesToModify)
+        {
+            Building.Buildings[building].IsUnlocked = 1;
+            Building.Buildings[building].ObjMainPanel.SetActive(true);
+            Building.Buildings[building].ObjSpacerBelow.SetActive(true);
+        }    
+        foreach (var resource in ResourceTypesToModify)
+        {
+            Resource._resources[resource].IsUnlocked = 1;
+        }
+        foreach (var worker in WorkerTypesToModify)
+        {
+            Worker.Workers[worker].IsUnlocked = 1;
+            Worker.Workers[worker].objMainPanel.SetActive(true);
+            Worker.Workers[worker].objSpacerBelow.SetActive(true);
+        }
+    }
+    private void InitializeObjects()
+    {
+        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
+        TformTxtHeader = transform.Find("Header_Panel/Text_Header");
+        TformBtnMain = transform.Find("Header_Panel/Button_Main");
+        TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        TformProgressbarPanel = transform.Find("Header_Panel/Progress_Circle_Panel");
+        TformTxtHeaderUncraft = transform.Find("Header_Panel/Text_Header_Uncraftable");
+        TformExpand = transform.Find("Header_Panel/Button_Expand");
+        TformCollapse = transform.Find("Header_Panel/Button_Collapse");
+
+        TxtDescription = TformDescription.GetComponent<TMP_Text>();
+        ObjTxtHeader = TformTxtHeader.gameObject;
+        ObjBtnMain = TformBtnMain.gameObject;
+        ImgProgressbar = TformProgressbar.GetComponent<Image>();
+        ObjProgressbarPanel = TformProgressbarPanel.gameObject;
+        ObjTxtHeaderUncraft = TformTxtHeaderUncraft.gameObject;
+        ImgExpand = TformExpand.GetComponent<Image>();
+        ImgCollapse = TformCollapse.GetComponent<Image>();
+
+        _isCraftedString = Type.ToString() + "IsCrafted";
+    }
     private void MakeCraftableAgain()
     {
         ObjBtnMain.GetComponent<Button>().interactable = true;
         ObjProgressbarPanel.SetActive(true);
-        //uncraftableTextObject.SetActive(false);
         ObjTxtHeader.SetActive(true);
-        Color darkDreyColor = new Color(0x33, 0x33, 0x33, 0xFF);
-        ImgExpand.color = darkDreyColor;
-        ImgCollapse.color = darkDreyColor;
+        ObjTxtHeaderUncraft.SetActive(false);
+
+        string htmlValue = "#333333";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
+        {
+            ImgExpand.color = darkGreyColor;
+            ImgCollapse.color = darkGreyColor;
+        }
     }
 
     public void GetCurrentFill()

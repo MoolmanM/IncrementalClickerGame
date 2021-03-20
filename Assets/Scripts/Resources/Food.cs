@@ -10,8 +10,8 @@ public class Food : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(_Type, _resource);
-        IsUnlocked = 1;
+        _resources.Add(Type, _resource);
+        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
         SetInitialValues();       
         // DisplayConsole();
     }

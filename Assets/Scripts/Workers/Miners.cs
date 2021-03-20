@@ -9,8 +9,9 @@ public class Miners : Worker
     private void Awake()
     {
         _worker = GetComponent<Worker>();
-        Workers.Add(_Type, _worker);
-        //DisplayConsole();
+        Workers.Add(Type, _worker);
+        SetInitialValues();
+        // DisplayConsole();
     }
 
     private void DisplayConsole()

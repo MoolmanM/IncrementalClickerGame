@@ -10,8 +10,6 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
-        //DisplayConsole();
-        
     }
     private void Start()
     {

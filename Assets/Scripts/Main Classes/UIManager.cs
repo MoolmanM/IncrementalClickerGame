@@ -5,74 +5,78 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public Swipe swipe;
-    private uint swipeCount = 0, panelCount = 2;
-    public GameObject buildingPanel, craftingPanel, workerPanel;
+    public Swipe _Swipe;
+    private uint _swipeCount = 0, _panelCount = 2;
+    public GameObject BuildingPanel, CraftingPanel, WorkerPanel;
 
     private void Start()
     {
-        swipeCount = 0;    
+        _swipeCount = 0;
     }
+    private void OnApplicationQuit()
+    {
+        // Just before quitting it sets all objects active so everything can get saved to playerprefs or savefile.
+        BuildingPanel.SetActive(true);
+        CraftingPanel.SetActive(true);
+        WorkerPanel.SetActive(true);
 
+    }
     private void BuildingPanelActive()
     {
-        buildingPanel.SetActive(true);
-        craftingPanel.SetActive(false);
-        workerPanel.SetActive(false);
+        BuildingPanel.SetActive(true);
+        CraftingPanel.SetActive(false);
+        WorkerPanel.SetActive(false);
     }
 
     private void CraftingPanelActive()
     {
-        buildingPanel.SetActive(false);
-        craftingPanel.SetActive(true);
-        workerPanel.SetActive(false);
+        BuildingPanel.SetActive(false);
+        CraftingPanel.SetActive(true);
+        WorkerPanel.SetActive(false);
     }
 
     private void WorkerPanelActive()
     {
-        buildingPanel.SetActive(false);
-        craftingPanel.SetActive(false);
-        workerPanel.SetActive(true);
+        BuildingPanel.SetActive(false);
+        CraftingPanel.SetActive(false);
+        WorkerPanel.SetActive(true);
+
     }
 
     private void SwipeCountHandler()
     {
-        if (swipeCount == 0)
+        #region Actual Swiping
+        if (_Swipe.SwipeRight && (_swipeCount >= 1))
+        {
+            _swipeCount--;
+        }
+        else if (_Swipe.SwipeLeft && (_swipeCount <= (_panelCount - 1)))
+        {
+            _swipeCount++;
+        }
+        #endregion
+
+        #region Sets Panels Active
+        if (_swipeCount == 0)
         {
             BuildingPanelActive();
         }
-        else if (swipeCount == 1)
+        else if (_swipeCount == 1)
         {
             CraftingPanelActive();
         }
-        else if (swipeCount == 2)
+        else if (_swipeCount == 2)
         {
             WorkerPanelActive();
         }
         else
         {
-            Debug.Log("This shouldn't happen");
+            Debug.LogError("This shouldn't happen");
         }
+        #endregion
     }
     void Update()
-    {
-        if (swipeCount >= panelCount)
-        {
-            swipeCount = panelCount;
-        }
-        if (swipeCount <= 0)
-        {
-            swipeCount = 0;
-        }
-        if (swipe.SwipeRight)
-        {
-            swipeCount--;
-        }
-        else if (swipe.SwipeLeft)
-        {
-            swipeCount++;
-        }
-
+    {       
         SwipeCountHandler();
     }
 }

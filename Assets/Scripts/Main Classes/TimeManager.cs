@@ -54,7 +54,7 @@ public class TimeManager : MonoBehaviour
         }
         seasonText.text = string.Format("Year {0} - {1}, day {2}", year, seasonString, day);
     }  
-    public void Awake()
+    public void OnEnable()
     {
         SetLaunchValues();
         if (hasPlayedBefore)
@@ -89,7 +89,6 @@ public class TimeManager : MonoBehaviour
             hasPlayedBefore = true;
             temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
         }
-
 
         //Convert the old time from binary to a DataTime variable
         DateTime oldDate = DateTime.FromBinary(temp);
