@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public struct UiForResource
 {
@@ -33,7 +34,8 @@ public class Resource : MonoBehaviour
 
     protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
 
-    protected Transform TformTxtAmount, TformTxtAmountPerSecond, TformTxtStorage;  
+    protected Transform TformTxtAmount, TformTxtAmountPerSecond, TformTxtStorage, TformImgbar;
+    protected Image imgBar;
     protected float _timer = 0.1f;
     protected readonly float maxValue = 0.1f;
 
@@ -89,7 +91,9 @@ public class Resource : MonoBehaviour
         TformTxtAmount = transform.Find("Header_Panel/Text_Amount");
         TformTxtAmountPerSecond = transform.Find("Header_Panel/Text_AmountPerSecond");
         TformTxtStorage = transform.Find("Header_Panel/Text_Storage");
+        TformImgbar = transform.Find("ProgressBar");
 
+        imgBar = TformImgbar.GetComponent<Image>();
         _UiForResource.TxtAmount = TformTxtAmount.GetComponent<TMP_Text>();
         _UiForResource.TxtAmountPerSecond = TformTxtAmountPerSecond.GetComponent<TMP_Text>();
         _UiForResource.TxtStorageAmount = TformTxtStorage.GetComponent<TMP_Text>();
@@ -108,6 +112,22 @@ public class Resource : MonoBehaviour
         PlayerPrefs.SetFloat(_perSecondString, AmountPerSecond);
         PlayerPrefs.SetFloat(_storageAmountString, StorageAmount);
         PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
+    }
+    public void GetCurrentFill()
+    {
+        float add = 0;
+        float div = 0;
+        float fillAmount = 0;
+
+        add = Amount;
+        div = StorageAmount;
+        if (add > div)
+        {
+            add = div;
+        }
+
+        fillAmount += add / div;
+        imgBar.fillAmount = fillAmount;
     }
     public virtual void UpdateResources()
     {
@@ -135,6 +155,7 @@ public class Resource : MonoBehaviour
             }
             _resources[Type]._UiForResource.TxtAmount.text = string.Format("{0:0.00}", _resources[Type].Amount);
 
+            GetCurrentFill();
         }
     }
 }

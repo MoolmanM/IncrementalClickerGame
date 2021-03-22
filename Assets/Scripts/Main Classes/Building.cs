@@ -58,20 +58,26 @@ public abstract class Building : MonoBehaviour
         PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
         PlayerPrefs.SetInt(_selfCountString, (int)SelfCount);
 
-        for (int i = 0; i < _costString.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
             PlayerPrefs.SetFloat(_costString[i], ResourceCost[i].CostAmount);
         }
-        // GetFloat after bath
     }
     public void SetInitialValues()
     {
         InitializeObjects();
 
+        
+
         if (TimeManager.hasPlayedBefore)
         {
             IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
             SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
+
+            for (int i = 0; i < ResourceCost.Length; i++)
+            {
+                ResourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
+            }
         }
 
         TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);      
@@ -83,11 +89,9 @@ public abstract class Building : MonoBehaviour
             ObjMainPanel.SetActive(true);
             ObjSpacerBelow.SetActive(true);
 
-            for (int i = 0; i < ResourceCost.Length; i++)
-            {
-                _costString[i] = Type.ToString() + ResourceCost[i]._AssociatedType.ToString();
-                PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
-            }
+            //Debug.Log("Cost String: " + _costString);
+            //Debug.Log("Type: " + Type.ToString());
+            //Debug.Log("Resource Cost, Type: " + ResourceCost[0]._AssociatedType.ToString());
         }
         else
         {
@@ -108,11 +112,17 @@ public abstract class Building : MonoBehaviour
         ObjMainPanel = gameObject;
 
         OriginalHeaderString = TxtHeader.text;
-
-        
         
         _selfCountString = (Type.ToString() + "SelfCount");
         _isUnlockedString = (Type.ToString() + "IsUnlocked");
+        _costString = new string[ResourceCost.Length];
+
+        for (int i = 0; i < ResourceCost.Length; i++)
+        {
+
+            _costString[i] = Type.ToString() + ResourceCost[i]._AssociatedType.ToString();
+            PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
+        }
     }
 
     public virtual void UpdateResourceCosts()

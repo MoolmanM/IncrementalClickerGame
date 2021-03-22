@@ -97,37 +97,46 @@ public class TimeManager : MonoBehaviour
         //Use the Subtract method and store the result as a timespan variable
         difference = currentDate.Subtract(oldDate);
         //print("Difference: " + difference);
-        //Debug.Log(Resource._resources[ResourceType.Sticks].AmountPerSecond);
 
         //Make the parts where the time is bold?
         if (difference.Days == 0 && difference.Hours == 0 && difference.Minutes == 0)
         {
-            goneForText.text = string.Format("You were gone for {0:%s}s \n While you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%s}s</b>\n While you were gone, you earned:", difference.Duration());
         }
         else if (difference.Days == 0 && difference.Hours == 0)
         {
-            goneForText.text = string.Format("You were gone for {0:%m}m {0:%s}s\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else if (difference.Days == 0)
         {
-            goneForText.text = string.Format("You were gone for {0:%h}h {0:%m}m {0:%s}s\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else
         {
-            goneForText.text = string.Format("You were gone for {0:%d}d {0:%h}h {0:%m}m {0:%s}s\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
         }
 
         
     }
     public static void GetAFKResource(ResourceType type)
     {
-        float differenceAmount = (float)(difference.TotalSeconds * Resource._resources[type].AmountPerSecond);       
-        Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
+        float differenceAmount = (float)(difference.TotalSeconds * Resource._resources[type].AmountPerSecond);    
+        
+        if (differenceAmount > Resource._resources[type].StorageAmount)
+        {
+            Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, Resource._resources[type].StorageAmount);
+        }
+        else
+        {
+            Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
+        }       
 
         if ((differenceAmount + Resource._resources[type].Amount) > Resource._resources[type].StorageAmount)
         {
             Resource._resources[type].Amount = Resource._resources[type].StorageAmount;
-            Resource._resources[type]._UiForResource.TxtAmount.text = string.Format("{0}", Resource._resources[type].Amount);
+
+            // I don't think I need to update the text because it updates every tick anyways.
+            // Resource._resources[type]._UiForResource.TxtAmount.text = string.Format("{0}", Resource._resources[type].Amount);
         }
         else
         {
