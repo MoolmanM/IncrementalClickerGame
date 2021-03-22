@@ -105,15 +105,15 @@ public class TimeManager : MonoBehaviour
         }
         else if (difference.Days == 0 && difference.Hours == 0)
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else if (difference.Days == 0)
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s<b>\nWhile you were gone, you earned:", difference.Duration());
+            goneForText.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
 
         
@@ -149,7 +149,6 @@ public class TimeManager : MonoBehaviour
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = maxValue;
-
             CalculateSeason();
         }
     }
