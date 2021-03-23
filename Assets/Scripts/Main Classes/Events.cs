@@ -49,7 +49,7 @@ public class Events : MonoBehaviour
 
                 Worker.AvailableWorkerCount++;
                 Debug.Log(Worker.AvailableWorkerCount);
-                NotableEvent("A <span style='color:red'>worker</span> has arrived");          
+                NotableEvent("A worker has arrived");          
             }
         }
     }
