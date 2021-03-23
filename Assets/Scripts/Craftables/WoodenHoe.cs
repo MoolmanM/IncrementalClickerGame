@@ -10,11 +10,14 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        BuildingTypesToModify = new BuildingType[1];
+        BuildingTypesToModify[0] = BuildingType.PotatoField;
     }
     private void Start()
     {
         SetInitialValues();
-        SetDescriptionText("Enables building of the Potato Field.");
+        CheckIfUnlocked();
+        SetDescriptionText("Enables building of the Potato Field to automatically gather potatoes.");
     }
     private void DisplayConsole()
     {

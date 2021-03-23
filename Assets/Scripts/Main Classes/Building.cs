@@ -33,9 +33,9 @@ public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
     public BuildingType Type;
-    public float ResourceMultiplier, CostMultiplier;
-    public ResourceType ResourceTypeToModify;
-    public ResourceCost[] ResourceCost;
+    
+    
+    public ResourceCost[] resourceCost;
     public GameObject ObjSpacerBelow;
     [NonSerialized] public int IsUnlocked = 0;
     [NonSerialized] public GameObject ObjMainPanel;
@@ -43,13 +43,13 @@ public abstract class Building : MonoBehaviour
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
 
-
+    protected float ResourceMultiplier, CostMultiplier;
+    protected ResourceType ResourceTypeToModify;
     protected Transform TformTxtHeader, TformDescription, TformProgressbar;
     protected TMP_Text TxtHeader, TxtDescription;
     protected Image ImgProgressbar;
     protected string OriginalHeaderString;   
     protected uint SelfCount;
-    protected float IncrementAmount;
     protected float Timer = 0.1f;
     protected readonly float MaxValue = 0.1f;
 
@@ -58,25 +58,23 @@ public abstract class Building : MonoBehaviour
         PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
         PlayerPrefs.SetInt(_selfCountString, (int)SelfCount);
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            PlayerPrefs.SetFloat(_costString[i], ResourceCost[i].CostAmount);
+            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].CostAmount);
         }
     }
     public void SetInitialValues()
     {
         InitializeObjects();
-
-        
-
+      
         if (TimeManager.hasPlayedBefore)
         {
             IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
             SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
 
-            for (int i = 0; i < ResourceCost.Length; i++)
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                ResourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
+                resourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
             }
         }
 
@@ -88,10 +86,6 @@ public abstract class Building : MonoBehaviour
         {
             ObjMainPanel.SetActive(true);
             ObjSpacerBelow.SetActive(true);
-
-            //Debug.Log("Cost String: " + _costString);
-            //Debug.Log("Type: " + Type.ToString());
-            //Debug.Log("Resource Cost, Type: " + ResourceCost[0]._AssociatedType.ToString());
         }
         else
         {
@@ -115,27 +109,26 @@ public abstract class Building : MonoBehaviour
         
         _selfCountString = (Type.ToString() + "SelfCount");
         _isUnlockedString = (Type.ToString() + "IsUnlocked");
-        _costString = new string[ResourceCost.Length];
+        _costString = new string[resourceCost.Length];
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
 
-            _costString[i] = Type.ToString() + ResourceCost[i]._AssociatedType.ToString();
-            PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
+            _costString[i] = Type.ToString() + resourceCost[i]._AssociatedType.ToString();
+            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
         }
     }
-
     public virtual void UpdateResourceCosts()
     {
         if ((Timer -= Time.deltaTime) <= 0)
         {
             Timer = MaxValue;
 
-            for (int i = 0; i < ResourceCost.Length; i++)
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                ResourceCost[i].CurrentAmount = Resource._resources[ResourceCost[i]._AssociatedType].Amount;
-                ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", ResourceCost[i].CurrentAmount, ResourceCost[i].CostAmount);
-                ResourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", ResourceCost[i]._AssociatedType.ToString());              
+                resourceCost[i].CurrentAmount = Resource._resources[resourceCost[i]._AssociatedType].Amount;
+                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].CurrentAmount, resourceCost[i].CostAmount);
+                resourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i]._AssociatedType.ToString());              
             }
             GetCurrentFill();
         }
@@ -146,26 +139,26 @@ public abstract class Building : MonoBehaviour
         float div = 0;
         float fillAmount = 0;
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            add = ResourceCost[i].CurrentAmount;
-            div = ResourceCost[i].CostAmount;
+            add = resourceCost[i].CurrentAmount;
+            div = resourceCost[i].CostAmount;
             if (add > div)
             {
                 add = div;
             }
             fillAmount += add / div;
         }
-        fillAmount /= ResourceCost.Length;
+        fillAmount /= resourceCost.Length;
         ImgProgressbar.fillAmount = fillAmount;
     }
-    public virtual void Build()
+    public virtual void OnBuild()
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -175,14 +168,13 @@ public abstract class Building : MonoBehaviour
         if (canPurchase)
         {
             SelfCount++;
-            for (int i = 0; i < ResourceCost.Length; i++)
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount -= ResourceCost[i].CostAmount;
-                ResourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-                ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount, ResourceCost[i].CostAmount);
+                Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
+                resourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);
+                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount, resourceCost[i].CostAmount);
             }
-            IncrementAmount += ResourceMultiplier;
-            Resource._resources[ResourceTypeToModify].AmountPerSecond += ResourceMultiplier;
+            ModifyResource();
         }
 
         TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);   
@@ -191,6 +183,10 @@ public abstract class Building : MonoBehaviour
     {
         Buildings[Type].TxtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify].Type.ToString(), ResourceMultiplier);
     }  
+    protected virtual void ModifyResource()
+    {
+        Resource._resources[ResourceTypeToModify].AmountPerSecond += ResourceMultiplier;
+    }
 }
 
 

@@ -5,13 +5,15 @@ using TMPro;
 
 public class MakeshiftBed : Building
 {
-    private Building _building;
-    public TMP_Text availableWorkerText;
+    private Building _building; 
+    public static new uint SelfCount;
+
     private void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
         SetInitialValues();
+        SelfCount = 10;
     }
     private void Start()
     {       
@@ -26,13 +28,13 @@ public class MakeshiftBed : Building
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    public override void Build()
+    public override void OnBuild()
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -42,15 +44,12 @@ public class MakeshiftBed : Building
         if (canPurchase)
         {
             SelfCount++;
-            for (int i = 0; i < ResourceCost.Length; i++)
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount -= ResourceCost[i].CostAmount;
-                ResourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);                
-                ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].ResourceCost[i]._AssociatedType].Amount, ResourceCost[i].CostAmount);              
-            }
-            Worker.AvailableWorkerCount++;
-            availableWorkerText.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
-            
+                Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
+                resourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);                
+                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount, resourceCost[i].CostAmount);              
+            }          
         }
 
         TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);

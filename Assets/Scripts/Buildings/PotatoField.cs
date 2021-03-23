@@ -11,11 +11,14 @@ public class PotatoField : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
+        ResourceMultiplier = 0.10f;
+        CostMultiplier = 1.15f;
+        ResourceTypeToModify = ResourceType.Food;
         SetInitialValues();
     }
     private void Start()
     {
-        CheckIfUnlocked();
+        CheckIfUnlocked();     
         SetDescriptionText();
         //DisplayConsole();
     }

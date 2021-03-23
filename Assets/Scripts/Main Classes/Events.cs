@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 
-public class RandomEvents : MonoBehaviour
+public class Events : MonoBehaviour
 {
     public float  animalAttack, villageUnderAttack, randomNumber;
     public TMP_Text txtHistoryLog, txtNotificationText;
@@ -12,6 +12,9 @@ public class RandomEvents : MonoBehaviour
 
     private float _timer = 0.1f;
     private readonly float maxValue = 0.01f;
+
+    private float Timer = 0.1f;
+    private readonly float MaxValue = 10f;
 
     private void StoneAgeEvents()
     {
@@ -36,6 +39,20 @@ public class RandomEvents : MonoBehaviour
         // If killed gets a random amount of food between generous values.
         // If the player can't kill the animal then a worker dies or multiple.
     }
+    private void GenerateWorkers()
+    {
+        if (Worker.AvailableWorkerCount < MakeshiftBed.SelfCount)
+        {
+            if ((Timer -= Time.deltaTime) <= 0)
+            {
+                Timer = MaxValue;
+
+                Worker.AvailableWorkerCount++;
+                Debug.Log(Worker.AvailableWorkerCount);
+                NotableEvent("A <span style='color:red'>worker</span> has arrived");          
+            }
+        }
+    }
 
     private void NotableEvent(string notableEventString)
     {
@@ -58,6 +75,7 @@ public class RandomEvents : MonoBehaviour
         {
             _timer = maxValue;
             StoneAgeEvents();
+            GenerateWorkers();
         }
     }
 }

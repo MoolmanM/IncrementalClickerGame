@@ -9,11 +9,14 @@ public class Woodlot : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
+        ResourceMultiplier = 0.12f;
+        CostMultiplier = 1.07f;
+        ResourceTypeToModify = ResourceType.Sticks;
         SetInitialValues();
     }
     private void Start()
     {
-        CheckIfUnlocked();
+        CheckIfUnlocked();      
         SetDescriptionText();
         //DisplayConsole();
     }

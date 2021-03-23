@@ -14,13 +14,12 @@ public class Paper : Researchable
     private void Start()
     {
         SetInitialValues();
+        CheckIfUnlocked();
         SetDescriptionText("Enables students to study and gain knowledge.");
     }
     protected override void Researched()
     {
         base.Researched();
-        Researchables[ResearchType.StoneTools].gameObject.SetActive(true);
-        Researchables[ResearchType.StoneTools].ObjSpacerBelow.SetActive(true);
     }
     private void Update()
     {

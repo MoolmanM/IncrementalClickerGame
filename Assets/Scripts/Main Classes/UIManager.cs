@@ -8,10 +8,12 @@ public class UIManager : MonoBehaviour
     public Swipe _Swipe;
     private uint _swipeCount = 0, _panelCount = 3;
     public GameObject BuildingPanel, CraftingPanel, WorkerPanel, ResearchPanel;
+    public TMP_Text txtAvailableWorkers;
 
     private void Start()
     {
         _swipeCount = 0;
+        BuildingPanelActive();
     }
     private void OnApplicationQuit()
     {
@@ -54,39 +56,67 @@ public class UIManager : MonoBehaviour
         #region Actual Swiping
         if (_Swipe.SwipeRight && (_swipeCount >= 1))
         {
-            _swipeCount--;
+            CheckIfUnlockedYet();
+            _swipeCount--;           
         }
         else if (_Swipe.SwipeLeft && (_swipeCount <= (_panelCount - 1)))
         {
-            _swipeCount++;
+            CheckIfUnlockedYet();
+            _swipeCount++;           
         }
         #endregion
 
         #region Sets Panels Active
-        if (_swipeCount == 0)
+        if (_Swipe.SwipeRight || _Swipe.SwipeLeft)
         {
-            BuildingPanelActive();
-        }
-        else if (_swipeCount == 1)
-        {
-            CraftingPanelActive();
-        }
-        else if (_swipeCount == 2)
-        {
-            WorkerPanelActive();
-        }
-        else if (_swipeCount == 3)
-        {
-            ResearchPanelActive();
-        }
-        else
-        {
-            Debug.LogError("This shouldn't happen");
-        }
+            if (_swipeCount == 0)
+            {
+                BuildingPanelActive();
+            }
+            else if (_swipeCount == 1)
+            {
+                CraftingPanelActive();
+            }
+            else if (_swipeCount == 2)
+            {
+                WorkerPanelActive();
+                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
+            }
+            else if (_swipeCount == 3)
+            {
+                ResearchPanelActive();
+            }
+            else
+            {
+                Debug.LogError("This shouldn't happen");
+            }
+        }    
         #endregion
+    }
+    private void CheckIfUnlockedYet()
+    {
+        foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftable.Craftables)
+        {
+            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
+
+            for (int i = 0; i < kvp.Value.resourceCost.Length; i++)
+            {
+                float[] amountsRequiredForUnlocking = new float[kvp.Value.resourceCost.Length];
+                amountsRequiredForUnlocking[i] = kvp.Value.resourceCost[i].CostAmount * 0.8f;
+                // Debug.Log(entry.Value + " " + entry.Value.resourceCost[i]._AssociatedType + " " + amountsRequiredForUnlocking[i]);
+
+                if (Resource._resources[kvp.Value.resourceCost[i]._AssociatedType].Amount >= amountsRequiredForUnlocking[i])
+                {
+                    kvp.Value.IsUnlocked = 1;
+                    kvp.Value.ObjMainPanel.SetActive(true);
+                    kvp.Value.ObjSpacerBelow.SetActive(true);
+                }
+            }
+        }
     }
     void Update()
     {       
         SwipeCountHandler();
+        // CheckIfUnlockedYet();
     }
 }

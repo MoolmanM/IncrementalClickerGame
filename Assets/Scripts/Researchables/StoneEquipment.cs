@@ -6,6 +6,7 @@ public class StoneEquipment : Researchable
 {
     private Researchable _researchable;
 
+    // Unlock after having 100 knowledge.
     private void Awake()
     {
         _researchable = GetComponent<Researchable>();
@@ -14,6 +15,7 @@ public class StoneEquipment : Researchable
     private void Start()
     {
         SetInitialValues();
+        CheckIfUnlocked();
         SetDescriptionText("Enables crafting of stone equipment.");
     }
     protected override void Researched()

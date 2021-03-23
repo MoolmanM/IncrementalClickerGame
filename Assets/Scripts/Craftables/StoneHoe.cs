@@ -15,6 +15,7 @@ public class StoneHoe : Craftable
     private void Start()
     {
         SetInitialValues();
+        CheckIfUnlocked();
         SetDescriptionText("Increases food production and worked speed perhaps.");
     }
     private void DisplayConsole()

@@ -10,11 +10,14 @@ public class WoodenPickaxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        BuildingTypesToModify = new BuildingType[1];
+        BuildingTypesToModify[0] = BuildingType.DigSite;
     }
     private void Start()
     {
         SetInitialValues();
-        SetDescriptionText("Enables building of the Dig Site.");
+        CheckIfUnlocked();
+        SetDescriptionText("Enables building of the Dig Site to start gathering stones.");
     }
     private void DisplayConsole()
     {

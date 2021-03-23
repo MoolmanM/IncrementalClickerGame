@@ -15,7 +15,9 @@ public class StonePickaxe : Craftable
     private void Start()
     {
         SetInitialValues();
+        CheckIfUnlocked();      
         // Maybe enables the mining of ore.
+        // Can start digging bronze ore at the dig site?
         SetDescriptionText("Increases stone production speed and worker speed perhaps?.");
     }
     private void DisplayConsole()

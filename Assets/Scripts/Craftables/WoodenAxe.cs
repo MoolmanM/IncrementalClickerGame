@@ -9,13 +9,16 @@ public class WoodenAxe : Craftable
     private void Awake()
     {
         _craftable = GetComponent<Craftable>();
-        Craftables.Add(Type, _craftable);        
+        Craftables.Add(Type, _craftable);
+        BuildingTypesToModify = new BuildingType[1];
+        BuildingTypesToModify[0] = BuildingType.Woodlot;
     }
 
     private void Start()
     {
         SetInitialValues();
-        SetDescriptionText("Enables building of the Wood-lot.");
+        CheckIfUnlocked();
+        SetDescriptionText("Enables building of the Wood-lot to automatically gather sticks.");
     }
     private void DisplayConsole()
     {

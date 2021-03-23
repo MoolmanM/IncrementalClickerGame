@@ -9,11 +9,14 @@ public class DigSite : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
+        ResourceMultiplier = 0.08f;
+        CostMultiplier = 1.10f;
+        ResourceTypeToModify = ResourceType.Stones;
         SetInitialValues();
     }
     private void Start()
     {
-        CheckIfUnlocked();
+        CheckIfUnlocked();     
         SetDescriptionText();
         //DisplayConsole();
     }

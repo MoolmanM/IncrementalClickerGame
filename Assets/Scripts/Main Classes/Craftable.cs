@@ -8,23 +8,28 @@ public enum CraftingType
     //I could maybe have different types here such as tools and then like refined crafting? For now it'll just be the name of each crafting option
     WoodenHoe,
     WoodenAxe,
-    WoodenPickaxe
+    WoodenPickaxe,
+    StoneHoe,
+    StoneAxe,
+    StonePickaxe
 }
 
 public abstract class Craftable : MonoBehaviour
 {
-    public Dictionary<CraftingType, Craftable> Craftables = new Dictionary<CraftingType, Craftable>();
+    public static Dictionary<CraftingType, Craftable> Craftables = new Dictionary<CraftingType, Craftable>();
 
     public CraftingType Type;
-    public ResourceCost[] ResourceCost;
-    public BuildingType[] BuildingTypesToModify;
-    public ResourceType[] ResourceTypesToModify;
-    public WorkerType[] WorkerTypesToModify;
+    public ResourceCost[] resourceCost;
     public GameObject ObjSpacerBelow;
     [System.NonSerialized] public int IsCrafted = 0;
+    [System.NonSerialized] public int IsUnlocked = 0;
+    [System.NonSerialized] public GameObject ObjMainPanel;
 
     private string _isCraftedString;
 
+    protected BuildingType[] BuildingTypesToModify;
+    protected ResourceType[] ResourceTypesToModify, resourcesRequiredForUnlocking;
+    protected WorkerType[] WorkerTypesToModify;
     protected float Timer = 0.1f;
     protected readonly float MaxValue = 0.1f;
     protected TMP_Text TxtDescription;
@@ -32,6 +37,10 @@ public abstract class Craftable : MonoBehaviour
     protected Image ImgProgressbar, ImgMain, ImgExpand, ImgCollapse;
     protected GameObject ObjProgressbarPanel, ObjBtnMain, ObjTxtHeader, ObjTxtHeaderUncraft;
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(_isCraftedString, IsCrafted);
+    }
     public void SetInitialValues()
     {
         InitializeObjects();
@@ -51,9 +60,18 @@ public abstract class Craftable : MonoBehaviour
             MakeCraftableAgain();
         }
     }
-    private void OnApplicationQuit()
+    protected void CheckIfUnlocked()
     {
-        PlayerPrefs.SetInt(_isCraftedString, IsCrafted);
+        if (IsUnlocked == 1)
+        {
+            ObjMainPanel.SetActive(true);
+            ObjSpacerBelow.SetActive(true);
+        }
+        else
+        {
+            ObjMainPanel.SetActive(false);
+            ObjSpacerBelow.SetActive(false);
+        }
     }
     public virtual void UpdateResourceCosts()
     {
@@ -61,23 +79,22 @@ public abstract class Craftable : MonoBehaviour
         {
             Timer = MaxValue;
 
-            for (int i = 0; i < ResourceCost.Length; i++)
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                Craftables[Type].ResourceCost[i].CurrentAmount = Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount;
-                Craftables[Type].ResourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].ResourceCost[i].CurrentAmount, Craftables[Type].ResourceCost[i].CostAmount);
-                Craftables[Type].ResourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", Craftables[Type].ResourceCost[i]._AssociatedType.ToString());              
+                Craftables[Type].resourceCost[i].CurrentAmount = Resource._resources[Craftables[Type].resourceCost[i]._AssociatedType].Amount;
+                Craftables[Type].resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].resourceCost[i].CurrentAmount, Craftables[Type].resourceCost[i].CostAmount);
+                Craftables[Type].resourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", Craftables[Type].resourceCost[i]._AssociatedType.ToString());              
             }
             GetCurrentFill();
         }
     }
-
-    public void Craft()
+    public void OnCraft()
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -88,14 +105,14 @@ public abstract class Craftable : MonoBehaviour
         {
             IsCrafted = 1;
             Crafted();
-            for (int i = 0; i < ResourceCost.Length; i++)
+            UnlockBuilding();
+            for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Craftables[Type].ResourceCost[i]._AssociatedType].Amount -= ResourceCost[i].CostAmount;
+                Resource._resources[resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
             }
 
         }
     }
-
     protected virtual void Crafted()
     {
         ObjBtnMain.GetComponent<Button>().interactable = false;
@@ -109,23 +126,15 @@ public abstract class Craftable : MonoBehaviour
         {
             ImgExpand.color = greyColor;
             ImgCollapse.color = greyColor;
-        }
-
+        }       
+    }
+    protected virtual void UnlockBuilding()
+    {
         foreach (var building in BuildingTypesToModify)
         {
             Building.Buildings[building].IsUnlocked = 1;
             Building.Buildings[building].ObjMainPanel.SetActive(true);
             Building.Buildings[building].ObjSpacerBelow.SetActive(true);
-        }    
-        foreach (var resource in ResourceTypesToModify)
-        {
-            Resource._resources[resource].IsUnlocked = 1;
-        }
-        foreach (var worker in WorkerTypesToModify)
-        {
-            Worker.Workers[worker].IsUnlocked = 1;
-            Worker.Workers[worker].objMainPanel.SetActive(true);
-            Worker.Workers[worker].objSpacerBelow.SetActive(true);
         }
     }
     private void InitializeObjects()
@@ -148,7 +157,11 @@ public abstract class Craftable : MonoBehaviour
         ImgExpand = TformExpand.GetComponent<Image>();
         ImgCollapse = TformCollapse.GetComponent<Image>();
 
+        ObjMainPanel = gameObject;
+
         _isCraftedString = Type.ToString() + "IsCrafted";
+
+        
     }
     private void MakeCraftableAgain()
     {
@@ -165,27 +178,25 @@ public abstract class Craftable : MonoBehaviour
             ImgCollapse.color = darkGreyColor;
         }
     }
-
     public void GetCurrentFill()
     {
         float add = 0;
         float div = 0;
         float fillAmount = 0;
 
-        for (int i = 0; i < ResourceCost.Length; i++)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            add = ResourceCost[i].CurrentAmount;
-            div = ResourceCost[i].CostAmount;
+            add = resourceCost[i].CurrentAmount;
+            div = resourceCost[i].CostAmount;
             if (add > div)
             {
                 add = div;
             }
             fillAmount += add / div;
         }
-        fillAmount /= ResourceCost.Length;
+        fillAmount /= resourceCost.Length;
         ImgProgressbar.fillAmount = fillAmount;
     }
-
     public void SetDescriptionText(string description)
     {
         Craftables[Type].TxtDescription.text = string.Format("{0}", description);
