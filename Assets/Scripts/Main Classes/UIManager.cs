@@ -6,8 +6,8 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     public Swipe _Swipe;
-    private uint _swipeCount = 0, _panelCount = 2;
-    public GameObject BuildingPanel, CraftingPanel, WorkerPanel;
+    private uint _swipeCount = 0, _panelCount = 3;
+    public GameObject BuildingPanel, CraftingPanel, WorkerPanel, ResearchPanel;
 
     private void Start()
     {
@@ -19,30 +19,36 @@ public class UIManager : MonoBehaviour
         BuildingPanel.SetActive(true);
         CraftingPanel.SetActive(true);
         WorkerPanel.SetActive(true);
-
+        ResearchPanel.SetActive(true);
     }
     private void BuildingPanelActive()
     {
         BuildingPanel.SetActive(true);
         CraftingPanel.SetActive(false);
         WorkerPanel.SetActive(false);
+        ResearchPanel.SetActive(false);
     }
-
     private void CraftingPanelActive()
     {
         BuildingPanel.SetActive(false);
         CraftingPanel.SetActive(true);
         WorkerPanel.SetActive(false);
+        ResearchPanel.SetActive(false);
     }
-
     private void WorkerPanelActive()
     {
         BuildingPanel.SetActive(false);
         CraftingPanel.SetActive(false);
         WorkerPanel.SetActive(true);
-
+        ResearchPanel.SetActive(false);
     }
-
+    private void ResearchPanelActive()
+    {
+        BuildingPanel.SetActive(false);
+        CraftingPanel.SetActive(false);
+        WorkerPanel.SetActive(false);
+        ResearchPanel.SetActive(true);
+    }
     private void SwipeCountHandler()
     {
         #region Actual Swiping
@@ -68,6 +74,10 @@ public class UIManager : MonoBehaviour
         else if (_swipeCount == 2)
         {
             WorkerPanelActive();
+        }
+        else if (_swipeCount == 3)
+        {
+            ResearchPanelActive();
         }
         else
         {

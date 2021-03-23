@@ -15,7 +15,8 @@ public enum ResourceType
 {
     Food,
     Sticks,
-    Stones
+    Stones,
+    Knowledge
 }
 
 public class Resource : MonoBehaviour
