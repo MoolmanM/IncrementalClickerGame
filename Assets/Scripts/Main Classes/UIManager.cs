@@ -8,7 +8,6 @@ public class UIManager : MonoBehaviour
     public Swipe _Swipe;
     private uint _swipeCount = 0, _panelCount = 3;
     public GameObject BuildingPanel, CraftingPanel, WorkerPanel, ResearchPanel;
-    public TMP_Text txtAvailableWorkers;
 
     private void Start()
     {
@@ -80,7 +79,7 @@ public class UIManager : MonoBehaviour
             else if (_swipeCount == 2)
             {
                 WorkerPanelActive();
-                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
+                
             }
             else if (_swipeCount == 3)
             {

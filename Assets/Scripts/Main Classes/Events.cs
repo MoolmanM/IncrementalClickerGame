@@ -9,6 +9,7 @@ public class Events : MonoBehaviour
     public float  animalAttack, villageUnderAttack, randomNumber;
     public TMP_Text txtHistoryLog, txtNotificationText;
     private string _currentHistoryLog;
+    public TMP_Text txtAvailableWorkers;
 
     private float _timer = 0.1f;
     private readonly float maxValue = 0.01f;
@@ -49,7 +50,8 @@ public class Events : MonoBehaviour
 
                 Worker.AvailableWorkerCount++;
                 Debug.Log(Worker.AvailableWorkerCount);
-                NotableEvent("A worker has arrived");          
+                NotableEvent("A worker has arrived");
+                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
             }
         }
     }
