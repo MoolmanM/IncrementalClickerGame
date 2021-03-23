@@ -71,7 +71,7 @@ public abstract class Craftable : MonoBehaviour
         }
     }
 
-    public  void Craft()
+    public void Craft()
     {
         bool canPurchase = true;
 
@@ -96,7 +96,7 @@ public abstract class Craftable : MonoBehaviour
         }
     }
 
-    protected void Crafted()
+    protected virtual void Crafted()
     {
         ObjBtnMain.GetComponent<Button>().interactable = false;
         ObjProgressbarPanel.SetActive(false);
@@ -130,7 +130,7 @@ public abstract class Craftable : MonoBehaviour
     }
     private void InitializeObjects()
     {
-        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
+        TformDescription = transform.Find("Body/Text_Description");
         TformTxtHeader = transform.Find("Header_Panel/Text_Header");
         TformBtnMain = transform.Find("Header_Panel/Button_Main");
         TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
