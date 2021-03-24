@@ -77,7 +77,9 @@ public class Events : MonoBehaviour
         {
             _timer = maxValue;
             StoneAgeEvents();
-            GenerateWorkers();
+            
         }
+
+        GenerateWorkers();
     }
 }
