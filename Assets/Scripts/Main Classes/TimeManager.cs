@@ -57,14 +57,14 @@ public class TimeManager : MonoBehaviour
     public void OnEnable()
     {
         SetLaunchValues();
-        if (hasPlayedBefore)
-        {
-            _welcomePanel.SetActive(true);         
-        }
-        else
-        {
-            _welcomePanel.SetActive(false);
-        }
+        //if (hasPlayedBefore)
+        //{
+        //    _welcomePanel.SetActive(true);         
+        //}
+        //else
+        //{
+        //    _welcomePanel.SetActive(false);
+        //}
     }
     void OnApplicationQuit()
     {

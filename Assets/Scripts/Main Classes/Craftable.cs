@@ -22,8 +22,9 @@ public abstract class Craftable : MonoBehaviour
     public ResourceCost[] resourceCost;
     public GameObject ObjSpacerBelow;
     [System.NonSerialized] public int IsCrafted = 0;
-    [System.NonSerialized] public int IsUnlocked = 0;
+    public int IsUnlocked = 0;
     [System.NonSerialized] public GameObject ObjMainPanel;
+    public float averageAmount;
 
     private string _isCraftedString;
 
@@ -48,6 +49,10 @@ public abstract class Craftable : MonoBehaviour
         if (TimeManager.hasPlayedBefore)
         {
             IsCrafted = PlayerPrefs.GetInt(_isCraftedString, IsCrafted);
+        }
+        else
+        {
+            IsCrafted = 0;
         }
         
 

@@ -10,12 +10,11 @@ public class StoneHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        SetInitialValues();
     }
 
     private void Start()
     {
-        SetInitialValues();
-        CheckIfUnlocked();
         SetDescriptionText("Increases food production and worked speed perhaps.");
     }
     private void DisplayConsole()

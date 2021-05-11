@@ -12,6 +12,7 @@ public class Sticks : Resource
         _resource = GetComponent<Resource>();
         _resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
+        IsUnlocked = 1;
         SetInitialValues();
         // DisplayConsole();
         
