@@ -719,6 +719,7 @@ GameObject:
   - component: {fileID: 15261106}
   - component: {fileID: 15261108}
   - component: {fileID: 15261107}
+  - component: {fileID: 15261109}
   m_Layer: 0
   m_Name: Stone_Pickaxe
   m_TagString: Untagged
@@ -800,6 +801,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &15261109
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15261105}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &17962495
 GameObject:
   m_ObjectHideFlags: 0
@@ -2263,6 +2276,7 @@ GameObject:
   - component: {fileID: 93094589}
   - component: {fileID: 93094591}
   - component: {fileID: 93094590}
+  - component: {fileID: 93094592}
   m_Layer: 0
   m_Name: Wooden_Axe
   m_TagString: Untagged
@@ -2339,6 +2353,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &93094592
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93094588}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &93348546
 GameObject:
   m_ObjectHideFlags: 0
@@ -3885,10 +3911,10 @@ RectTransform:
   m_Father: {fileID: 1317914065}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &151661805
 MonoBehaviour:
@@ -4680,6 +4706,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08eec63e8e4ef4540adce133b6920428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Swipe: {fileID: 1419882555}
+  BuildingPanel: {fileID: 1563744042}
+  CraftingPanel: {fileID: 495247131}
+  WorkerPanel: {fileID: 1890631401}
+  ResearchPanel: {fileID: 200106959}
 --- !u!4 &180168913
 Transform:
   m_ObjectHideFlags: 0
@@ -4992,10 +5023,10 @@ RectTransform:
   m_Father: {fileID: 1497916139}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &192593941
 MonoBehaviour:
@@ -5371,6 +5402,7 @@ GameObject:
   - component: {fileID: 200106960}
   - component: {fileID: 200106961}
   - component: {fileID: 200106962}
+  - component: {fileID: 200106963}
   m_Layer: 0
   m_Name: Research_Panel
   m_TagString: Untagged
@@ -5445,6 +5477,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!225 &200106963
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200106959}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &202165316
 GameObject:
   m_ObjectHideFlags: 0
@@ -6292,10 +6336,10 @@ RectTransform:
   m_Father: {fileID: 1198895067}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &273550310
 MonoBehaviour:
@@ -6835,10 +6879,10 @@ RectTransform:
   m_Father: {fileID: 288270329}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &308082875
 MonoBehaviour:
@@ -11277,6 +11321,7 @@ GameObject:
   - component: {fileID: 495247132}
   - component: {fileID: 495247133}
   - component: {fileID: 495247134}
+  - component: {fileID: 495247135}
   m_Layer: 0
   m_Name: Crafting_Panel
   m_TagString: Untagged
@@ -11357,6 +11402,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!225 &495247135
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495247131}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &498158312
 GameObject:
   m_ObjectHideFlags: 0
@@ -13630,10 +13687,10 @@ RectTransform:
   m_Father: {fileID: 1317914065}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &597015072
 MonoBehaviour:
@@ -13764,10 +13821,10 @@ RectTransform:
   m_Father: {fileID: 1317914065}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &601794865
 MonoBehaviour:
@@ -15983,6 +16040,7 @@ GameObject:
   - component: {fileID: 700285270}
   - component: {fileID: 700285272}
   - component: {fileID: 700285271}
+  - component: {fileID: 700285273}
   m_Layer: 0
   m_Name: Stone_Axe
   m_TagString: Untagged
@@ -16064,6 +16122,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &700285273
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700285269}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &708421696
 GameObject:
   m_ObjectHideFlags: 0
@@ -18537,10 +18607,10 @@ RectTransform:
   m_Father: {fileID: 1198895067}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &779477267
 MonoBehaviour:
@@ -18671,10 +18741,10 @@ RectTransform:
   m_Father: {fileID: 1198895067}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &781455488
 MonoBehaviour:
@@ -20285,10 +20355,10 @@ RectTransform:
   m_Father: {fileID: 1497916139}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &873896313
 MonoBehaviour:
@@ -20887,6 +20957,7 @@ GameObject:
   - component: {fileID: 908208571}
   - component: {fileID: 908208573}
   - component: {fileID: 908208572}
+  - component: {fileID: 908208574}
   m_Layer: 0
   m_Name: Stone_Hoe
   m_TagString: Untagged
@@ -20934,7 +21005,7 @@ MonoBehaviour:
     _UiForResourceCost:
       CostNameText: {fileID: 941382331}
       CostAmountText: {fileID: 2037671838}
-  - _AssociatedType: 1
+  - _AssociatedType: 2
     CostAmount: 80
     _UiForResourceCost:
       CostNameText: {fileID: 189186109}
@@ -20968,6 +21039,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &908208574
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908208570}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &908593302
 GameObject:
   m_ObjectHideFlags: 0
@@ -21113,10 +21196,10 @@ RectTransform:
   m_Father: {fileID: 1497916139}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &913913544
 MonoBehaviour:
@@ -24520,10 +24603,10 @@ RectTransform:
   m_Father: {fileID: 288270329}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068377048
 MonoBehaviour:
@@ -25824,10 +25907,10 @@ RectTransform:
   m_Father: {fileID: 288270329}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1137070703
 MonoBehaviour:
@@ -28326,10 +28409,10 @@ RectTransform:
   m_Father: {fileID: 288270329}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1263093180
 MonoBehaviour:
@@ -28922,6 +29005,7 @@ GameObject:
   - component: {fileID: 1300529651}
   - component: {fileID: 1300529652}
   - component: {fileID: 1300529653}
+  - component: {fileID: 1300529654}
   m_Layer: 0
   m_Name: Wooden_Hoe
   m_TagString: Untagged
@@ -28998,6 +29082,18 @@ MonoBehaviour:
   ObjSpacerBelow: {fileID: 2056910934}
   IsUnlocked: 0
   averageAmount: 0
+--- !u!225 &1300529654
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300529650}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &1300739287
 GameObject:
   m_ObjectHideFlags: 0
@@ -34569,6 +34665,7 @@ GameObject:
   - component: {fileID: 1563744043}
   - component: {fileID: 1563744044}
   - component: {fileID: 1563744045}
+  - component: {fileID: 1563744046}
   m_Layer: 0
   m_Name: Building_Panel
   m_TagString: Untagged
@@ -34649,6 +34746,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!225 &1563744046
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563744042}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &1566431645
 GameObject:
   m_ObjectHideFlags: 0
@@ -37661,10 +37770,10 @@ RectTransform:
   m_Father: {fileID: 1497916139}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -27.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1628672157
 MonoBehaviour:
@@ -41142,10 +41251,10 @@ RectTransform:
   m_Father: {fileID: 1317914065}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 236.98502, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1814857649
 MonoBehaviour:
@@ -42297,6 +42406,7 @@ GameObject:
   - component: {fileID: 1877009844}
   - component: {fileID: 1877009846}
   - component: {fileID: 1877009845}
+  - component: {fileID: 1877009847}
   m_Layer: 0
   m_Name: Wooden_Pickaxe
   m_TagString: Untagged
@@ -42373,6 +42483,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &1877009847
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1877009843}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &1879354509
 GameObject:
   m_ObjectHideFlags: 0
@@ -42609,6 +42731,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1890631403}
   - component: {fileID: 1890631402}
+  - component: {fileID: 1890631404}
   m_Layer: 5
   m_Name: Worker_Panel
   m_TagString: Untagged
@@ -42673,6 +42796,18 @@ RectTransform:
   m_AnchoredPosition: {x: 382.00006, y: -50}
   m_SizeDelta: {x: 764, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1890631404
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890631401}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &1906217660
 GameObject:
   m_ObjectHideFlags: 0
@@ -43322,10 +43457,10 @@ RectTransform:
   m_Father: {fileID: 1198895067}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.995, y: -82.5}
-  m_SizeDelta: {x: 157.99, y: 55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1948487351
 MonoBehaviour:

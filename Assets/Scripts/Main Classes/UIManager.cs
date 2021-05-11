@@ -5,6 +5,7 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    /*
     public Swipe _Swipe;
     private uint _swipeCount = 0;
     private readonly uint _panelCount = 3;
@@ -144,4 +145,5 @@ public class UIManager : MonoBehaviour
         SwipeCountHandler();
         // CheckIfUnlockedYet();
     }
+    */
 }

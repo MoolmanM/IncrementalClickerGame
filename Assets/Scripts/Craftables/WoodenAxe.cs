@@ -10,7 +10,6 @@ public class WoodenAxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
-        //IsUnlocked = 1;
         BuildingTypesToModify = new BuildingType[1];
         BuildingTypesToModify[0] = BuildingType.Woodlot;
         SetInitialValues();
