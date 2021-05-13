@@ -10,11 +10,10 @@ public class Paper : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
+        SetInitialValues();
     }
     private void Start()
-    {
-        SetInitialValues();
-        CheckIfUnlocked();
+    {     
         SetDescriptionText("Enables students to study and gain knowledge.");
     }
     protected override void Researched()

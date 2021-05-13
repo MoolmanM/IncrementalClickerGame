@@ -9,9 +9,9 @@ public class DigSite : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
-        ResourceMultiplier = 0.08f;
-        CostMultiplier = 1.10f;
-        ResourceTypeToModify = ResourceType.Stones;
+        _resourceMultiplier = 0.08f;
+        _costMultiplier = 1.10f;
+        _resourceTypeToModify = ResourceType.Stones;
         SetInitialValues();
     }
     private void Start()

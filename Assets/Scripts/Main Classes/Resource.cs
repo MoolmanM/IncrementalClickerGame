@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public struct UiForResource
 {
-    public TMP_Text TxtStorageAmount;
-    public TMP_Text TxtAmount;
-    public TMP_Text TxtAmountPerSecond;
+    public TMP_Text txtStorageAmount;
+    public TMP_Text txtAmount;
+    public TMP_Text txtAmountPerSecond;
 }
 
 public enum ResourceType
@@ -23,22 +23,22 @@ public class Resource : MonoBehaviour
 {
     public static Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
 
-    [System.NonSerialized] public float Amount, AmountPerSecond, AmountGainedWhileAfk;    
-    [System.NonSerialized] public int IsUnlocked;
-    [System.NonSerialized] public UiForResource _UiForResource;
+    [System.NonSerialized] public float amount, amountPerSecond, amountGainedWhileAfk;    
+    [System.NonSerialized] public int isUnlocked;
+    [System.NonSerialized] public UiForResource uiForResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
-    public float StorageAmount;
+    public float storageAmount;
     public ResourceType Type;
-    public TMP_Text TxtEarned;
-    public GameObject ObjSpacerBelow;
+    public TMP_Text txtEarned;
+    public GameObject objSpacerBelow;
 
     protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
 
-    protected Transform TformTxtAmount, TformTxtAmountPerSecond, TformTxtStorage, TformImgbar;
-    protected Image imgBar;
+    protected Transform _tformTxtAmount, _tformTxtAmountPerSecond, _tformTxtStorage, _tformImgbar;
+    protected Image _imgBar;
     protected float _timer = 0.1f;
-    protected readonly float maxValue = 0.1f;
+    protected readonly float _maxValue = 0.1f;
 
     public virtual void SetInitialValues()
     {
@@ -47,57 +47,59 @@ public class Resource : MonoBehaviour
         if (TimeManager.hasPlayedBefore)
         {
             //Need to make food and sticks 'unlocked' after this.
-            Amount = PlayerPrefs.GetFloat(_amountString, Amount);
-            AmountPerSecond = PlayerPrefs.GetFloat(_perSecondString, AmountPerSecond);
-            StorageAmount = PlayerPrefs.GetFloat(_storageAmountString, StorageAmount);
-            //IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
-            IsUnlocked = 1;
+            amount = PlayerPrefs.GetFloat(_amountString, amount);
+            amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
+            if (TimeManager.hasPlayedBefore)
+            {
+                storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
+            }
+            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
         }
 
-        if (IsUnlocked == 1)
+        if (isUnlocked == 1)
         {
             objMainPanel.SetActive(true);
-            ObjSpacerBelow.SetActive(true);
-            if (AmountPerSecond > 0f)
+            objSpacerBelow.SetActive(true);
+            if (amountPerSecond > 0f)
             {
                 TimeManager.GetAFKResource(Type);
-                _UiForResource.TxtStorageAmount.text = string.Format("{0}", StorageAmount);
+                uiForResource.txtStorageAmount.text = string.Format("{0}", storageAmount);
 
-                if (AmountPerSecond >= 0)
+                if (amountPerSecond >= 0)
                 {
-                    _resources[Type]._UiForResource.TxtAmountPerSecond.text = string.Format("+{0:0.00}/sec", _resources[Type].AmountPerSecond);
+                    uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", amountPerSecond);
                 }
                 else
                 {
-                    _resources[Type]._UiForResource.TxtAmountPerSecond.text = string.Format("-{0:0.00}/sec", _resources[Type].AmountPerSecond);
+                    uiForResource.txtAmountPerSecond.text = string.Format("-{0:0.00}/sec", amountPerSecond);
                 }
-                _resources[Type]._UiForResource.TxtAmount.text = string.Format("{0:0.00}", _resources[Type].Amount);
+                uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
             }
             else
             {
-                TxtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
+                txtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
             }
            
         }
         else
         {
             objMainPanel.SetActive(false);
-            ObjSpacerBelow.SetActive(false);
+            objSpacerBelow.SetActive(false);
             Debug.Log(Type + ": Resource doesn't exist yet.");
         }
         
     }
     private void InitializeObjects()
     {
-        TformTxtAmount = transform.Find("Header_Panel/Text_Amount");
-        TformTxtAmountPerSecond = transform.Find("Header_Panel/Text_AmountPerSecond");
-        TformTxtStorage = transform.Find("Header_Panel/Text_Storage");
-        TformImgbar = transform.Find("ProgressBar");
+        _tformTxtAmount = transform.Find("Header_Panel/Text_Amount");
+        _tformTxtAmountPerSecond = transform.Find("Header_Panel/Text_AmountPerSecond");
+        _tformTxtStorage = transform.Find("Header_Panel/Text_Storage");
+        _tformImgbar = transform.Find("ProgressBar");
 
-        imgBar = TformImgbar.GetComponent<Image>();
-        _UiForResource.TxtAmount = TformTxtAmount.GetComponent<TMP_Text>();
-        _UiForResource.TxtAmountPerSecond = TformTxtAmountPerSecond.GetComponent<TMP_Text>();
-        _UiForResource.TxtStorageAmount = TformTxtStorage.GetComponent<TMP_Text>();
+        _imgBar = _tformImgbar.GetComponent<Image>();
+        uiForResource.txtAmount = _tformTxtAmount.GetComponent<TMP_Text>();
+        uiForResource.txtAmountPerSecond = _tformTxtAmountPerSecond.GetComponent<TMP_Text>();
+        uiForResource.txtStorageAmount = _tformTxtStorage.GetComponent<TMP_Text>();
 
         objMainPanel = gameObject;
         objMainPanel.SetActive(false);
@@ -106,57 +108,59 @@ public class Resource : MonoBehaviour
         _amountString = Type.ToString() + "A";
         _storageAmountString = Type.ToString() + "Storage";
         _isUnlockedString = Type.ToString() + "Unlocked";
-    }
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetFloat(_amountString, Amount);
-        PlayerPrefs.SetFloat(_perSecondString, AmountPerSecond);
-        PlayerPrefs.SetFloat(_storageAmountString, StorageAmount);
-        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
-    }
+    }   
     public void GetCurrentFill()
     {
         float add = 0;
         float div = 0;
         float fillAmount = 0;
 
-        add = Amount;
-        div = StorageAmount;
+        add = amount;
+        div = storageAmount;
         if (add > div)
         {
             add = div;
         }
 
         fillAmount += add / div;
-        imgBar.fillAmount = fillAmount;
+        _imgBar.fillAmount = fillAmount;
     }
     public virtual void UpdateResources()
     {
 
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = maxValue;
+            _timer = _maxValue;
 
-            if (Amount >= (StorageAmount - AmountPerSecond))
+
+            if (amount >= (storageAmount - amountPerSecond))
             {
-                Amount = StorageAmount;
+                amount = storageAmount;
             }
             else
             {
-                _resources[Type].Amount += _resources[Type].AmountPerSecond;
+                amount += amountPerSecond;
             }
             
-            if (AmountPerSecond < 0)
+            if (amountPerSecond < 0)
             {
-                _resources[Type]._UiForResource.TxtAmountPerSecond.text = string.Format("-{0:0.00}/sec", _resources[Type].AmountPerSecond);
+                uiForResource.txtAmountPerSecond.text = string.Format("-{0:0.00}/sec", amountPerSecond);
             }
             else
             {
-                _resources[Type]._UiForResource.TxtAmountPerSecond.text = string.Format("+{0:0.00}/sec", _resources[Type].AmountPerSecond);
+                uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", amountPerSecond);
             }
-            _resources[Type]._UiForResource.TxtAmount.text = string.Format("{0:0.00}", _resources[Type].Amount);
+            uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
 
             GetCurrentFill();
+
         }
+    }
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat(_amountString, amount);
+        PlayerPrefs.SetFloat(_perSecondString, amountPerSecond);
+        PlayerPrefs.SetFloat(_storageAmountString, storageAmount);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
     }
 }

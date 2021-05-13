@@ -6,14 +6,14 @@ using TMPro;
 public class MakeshiftBed : Building
 {
     private Building _building; 
-    public static new uint SelfCount;
+    public static new uint _selfCount;
 
     private void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
         SetInitialValues();
-        SelfCount = 10;
+        _selfCount = 10;
     }
     private void Start()
     {       
@@ -34,7 +34,7 @@ public class MakeshiftBed : Building
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
             {
                 canPurchase = false;
                 break;
@@ -43,20 +43,20 @@ public class MakeshiftBed : Building
 
         if (canPurchase)
         {
-            SelfCount++;
+            _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
-                resourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);                
-                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount, resourceCost[i].CostAmount);              
+                Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);                
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
             }          
         }
 
-        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);
+        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
     public override void SetDescriptionText()
     {
-        TxtDescription.text = string.Format("Increases population by 1");
+        _txtDescription.text = string.Format("Increases population by 1");
     }
     private void Update()
     {

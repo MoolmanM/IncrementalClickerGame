@@ -11,8 +11,8 @@ public class WoodenHoe : Craftable
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
-        BuildingTypesToModify = new BuildingType[1];
-        BuildingTypesToModify[0] = BuildingType.PotatoField;
+        _buildingTypesToModify = new BuildingType[1];
+        _buildingTypesToModify[0] = BuildingType.PotatoField;
     }
     private void Start()
     {

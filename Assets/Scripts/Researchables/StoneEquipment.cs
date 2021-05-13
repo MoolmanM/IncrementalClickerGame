@@ -11,11 +11,11 @@ public class StoneEquipment : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
+        SetInitialValues();
     }
     private void Start()
     {
-        SetInitialValues();
-        CheckIfUnlocked();
+        
         SetDescriptionText("Enables crafting of stone equipment.");
     }
     protected override void Researched()

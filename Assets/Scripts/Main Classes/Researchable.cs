@@ -26,43 +26,41 @@ public enum ResearchType
 
 public abstract class Researchable : MonoBehaviour
 {
-    public Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
+    public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
 
     public ResearchType Type;
     public ResourceCost[] resourceCost;
-    
-    public GameObject ObjSpacerBelow;
-    [System.NonSerialized] public int IsResearched = 0;
-    [System.NonSerialized] public int IsUnlocked = 0;
+    public GameObject objMainPanel;
+
+    public GameObject objSpacerBelow;
+    [System.NonSerialized] public int isResearched = 0;
+    [System.NonSerialized] public int isUnlocked = 0;
 
     private string _IsResearchedString;
 
-    protected BuildingType[] BuildingTypesToModify;
-    protected ResourceType[] ResourceTypesToModify;
-    protected ResearchType[] ResearchTypesToModify;
-    protected WorkerType[] WorkerTypesToModify;
-    protected float Timer = 0.1f;
-    protected readonly float MaxValue = 0.1f;
-    protected TMP_Text TxtDescription;
-    protected Transform TformDescription, TformTxtHeader, TformBtnMain, TformProgressbar, TformProgressbarPanel, TformTxtHeaderUncraft, TformExpand, TformCollapse;
-    protected Image ImgProgressbar, ImgMain, ImgExpand, ImgCollapse;
-    protected GameObject ObjProgressbarPanel, ObjBtnMain, ObjTxtHeader, ObjTxtHeaderUncraft, ObjMainPanel;
+    protected BuildingType[] _buildingTypesToModify;
+    protected ResourceType[] _resourceTypesToModify;
+    protected ResearchType[] _researchTypesToModify;
+    protected WorkerType[] _workerTypesToModify;
+    protected float _timer = 0.1f;
+    protected readonly float _maxValue = 0.1f;
+    protected TMP_Text _txtDescription;
+    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain;
+    protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
+    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft;
 
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt(_IsResearchedString, IsResearched);
-    }
+    
     public void SetInitialValues()
     {
         InitializeObjects();
 
         if (TimeManager.hasPlayedBefore)
         {
-            IsResearched = PlayerPrefs.GetInt(_IsResearchedString, IsResearched);
+            isResearched = PlayerPrefs.GetInt(_IsResearchedString, isResearched);
         }
 
 
-        if (IsResearched == 1)
+        if (isResearched == 1)
         {
             Researched();
         }
@@ -73,30 +71,39 @@ public abstract class Researchable : MonoBehaviour
     }
     protected void CheckIfUnlocked()
     {
-        if (IsUnlocked == 1)
+        if (GetCurrentFill() == 1f)
         {
-            ObjMainPanel.SetActive(true);
-            ObjSpacerBelow.SetActive(true);
+            Purchaseable();
         }
         else
         {
-            ObjMainPanel.SetActive(false);
-            ObjSpacerBelow.SetActive(false);
+            UnPurchaseable();
+        }
+
+        if (isUnlocked == 0)
+        {
+            if (GetCurrentFill() >= 0.8f)
+            {
+                isUnlocked = 1;
+                Debug.Log("New crafting recipe unlocked");
+            }
         }
     }
     public virtual void UpdateResourceCosts()
     {
-        if ((Timer -= Time.deltaTime) <= 0)
+        if ((_timer -= Time.deltaTime) <= 0)
         {
-            Timer = MaxValue;
+            _timer = _maxValue;
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                resourceCost[i].CurrentAmount = Resource._resources[resourceCost[i]._AssociatedType].Amount;
-                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].CurrentAmount, resourceCost[i].CostAmount);
-                resourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i]._AssociatedType.ToString());
+                resourceCost[i].currentAmount = Resource._resources[resourceCost[i].associatedType].amount;
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
+                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
             }
-            GetCurrentFill();
+
+            _imgProgressbar.fillAmount = GetCurrentFill();
+            CheckIfUnlocked();
         }
     }
     public void OnResearch()
@@ -105,7 +112,7 @@ public abstract class Researchable : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
             {
                 canPurchase = false;
                 break;
@@ -114,70 +121,98 @@ public abstract class Researchable : MonoBehaviour
 
         if (canPurchase)
         {
-            IsResearched = 1;
+            isResearched = 1;
             Researched();
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
+                Resource._resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             }
 
         }
     }
     protected virtual void Researched()
     {
-        ObjBtnMain.GetComponent<Button>().interactable = false;
-        ObjProgressbarPanel.SetActive(false);
-        ObjTxtHeader.SetActive(false);
-        ObjTxtHeaderUncraft.SetActive(true);
+        _objBtnMain.GetComponent<Button>().interactable = false;
+        _objProgressbarPanel.SetActive(false);
+        _objTxtHeader.SetActive(false);
+        _objTxtHeaderUncraft.SetActive(true);
 
         string htmlValue = "#D4D4D4";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
         {
-            ImgExpand.color = greyColor;
-            ImgCollapse.color = greyColor;
+            _imgExpand.color = greyColor;
+            _imgCollapse.color = greyColor;
         }
-    }
-    private void InitializeObjects()
-    {
-        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
-        TformTxtHeader = transform.Find("Header_Panel/Text_Header");
-        TformBtnMain = transform.Find("Header_Panel/Button_Main");
-        TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
-        TformProgressbarPanel = transform.Find("Header_Panel/Progress_Circle_Panel");
-        TformTxtHeaderUncraft = transform.Find("Header_Panel/Text_Header_Done");
-        TformExpand = transform.Find("Header_Panel/Button_Expand");
-        TformCollapse = transform.Find("Header_Panel/Button_Collapse");
-
-        TxtDescription = TformDescription.GetComponent<TMP_Text>();
-        ObjTxtHeader = TformTxtHeader.gameObject;
-        ObjBtnMain = TformBtnMain.gameObject;
-        ImgProgressbar = TformProgressbar.GetComponent<Image>();
-        ObjProgressbarPanel = TformProgressbarPanel.gameObject;
-        ObjTxtHeaderUncraft = TformTxtHeaderUncraft.gameObject;
-        ImgExpand = TformExpand.GetComponent<Image>();
-        ImgCollapse = TformCollapse.GetComponent<Image>();
-
-        ObjMainPanel = gameObject;
-
-        _IsResearchedString = Type.ToString() + "IsCrafted";
-    }
+    } 
     private void MakeResearchableAgain()
     {
-        ObjBtnMain.GetComponent<Button>().interactable = true;
-        ObjProgressbarPanel.SetActive(true);
-        ObjTxtHeader.SetActive(true);
-        ObjTxtHeaderUncraft.SetActive(false);
+        _objBtnMain.GetComponent<Button>().interactable = true;
+        _objProgressbarPanel.SetActive(true);
+        _objTxtHeader.SetActive(true);
+        _objTxtHeaderUncraft.SetActive(false);
 
         string htmlValue = "#333333";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
         {
-            ImgExpand.color = darkGreyColor;
-            ImgCollapse.color = darkGreyColor;
+            _imgExpand.color = darkGreyColor;
+            _imgCollapse.color = darkGreyColor;
         }
     }
-    public void GetCurrentFill()
+    private void InitializeObjects()
+    {
+        _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
+        _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
+        _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
+        _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
+        _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Done");
+        _tformExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
+        _tformCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
+        _tformObjMain = transform.Find("Panel_Main");
+
+        _txtDescription = _tformDescription.GetComponent<TMP_Text>();
+        _objTxtHeader = _tformTxtHeader.gameObject;
+        _objBtnMain = _tformBtnMain.gameObject;
+        _imgProgressbar = _tformProgressbar.GetComponent<Image>();
+        _objProgressbarPanel = _tformProgressbarPanel.gameObject;
+        _objTxtHeaderUncraft = _tformTxtHeaderUncraft.gameObject;
+        _imgExpand = _tformExpand.GetComponent<Image>();
+        _imgCollapse = _tformCollapse.GetComponent<Image>();
+        objMainPanel = _tformObjMain.gameObject;
+
+        _IsResearchedString = Type.ToString() + "isCrafted";
+    }
+    private void Purchaseable()
+    {
+        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
+        cb.normalColor = new Color(0, 0, 0, 0);
+        _objBtnMain.GetComponent<Button>().colors = cb;
+        string htmlValue = "#333333";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
+        {
+            _objTxtHeader.GetComponent<TMP_Text>().color = darkGreyColor;
+        }
+    }
+    private void UnPurchaseable()
+    {
+        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
+        cb.normalColor = new Color(0, 0, 0, 0.25f);
+        cb.highlightedColor = new Color(0, 0, 0, 0.23f);
+        cb.pressedColor = new Color(0, 0, 0, 0.3f);
+        cb.selectedColor = new Color(0, 0, 0, 0.23f);
+        _objBtnMain.GetComponent<Button>().colors = cb;
+
+        string htmlValue = "#D71C2A";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color redColor))
+        {
+            _objTxtHeader.GetComponent<TMP_Text>().color = redColor;
+        }
+    }
+    public float GetCurrentFill()
     {
         float add = 0;
         float div = 0;
@@ -185,20 +220,23 @@ public abstract class Researchable : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            add = resourceCost[i].CurrentAmount;
-            div = resourceCost[i].CostAmount;
+            add = resourceCost[i].currentAmount;
+            div = resourceCost[i].costAmount;
             if (add > div)
             {
                 add = div;
             }
             fillAmount += add / div;
         }
-        fillAmount /= resourceCost.Length;
-        ImgProgressbar.fillAmount = fillAmount;
+        return fillAmount / resourceCost.Length;
     }
     public void SetDescriptionText(string description)
     {
-        TxtDescription.text = string.Format("{0}", description);
+        _txtDescription.text = string.Format("{0}", description);
+    }
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(_IsResearchedString, isResearched);
     }
 }
 

@@ -8,17 +8,17 @@ using UnityEngine.UI;
 [System.Serializable]
 public struct UiForResourceCost
 {
-    public TMP_Text CostNameText;
-    public TMP_Text CostAmountText;
+    public TMP_Text textCostName;
+    public TMP_Text textCostAmount;
 }
 
 [System.Serializable]
 public struct ResourceCost
 {
-    public ResourceType _AssociatedType;
-    [System.NonSerialized] public float CurrentAmount;
-    public float CostAmount;
-    public UiForResourceCost _UiForResourceCost;
+    public ResourceType associatedType;
+    [System.NonSerialized] public float currentAmount;
+    public float costAmount;
+    public UiForResourceCost uiForResourceCost;
 }
 
 public enum BuildingType
@@ -33,107 +33,117 @@ public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
     public BuildingType Type;
-    
-    
+
+
     public ResourceCost[] resourceCost;
-    public GameObject ObjSpacerBelow;
-    [NonSerialized] public int IsUnlocked = 0;
-    [NonSerialized] public GameObject ObjMainPanel;
+    public GameObject objSpacerBelow;
+    [NonSerialized] public int isUnlocked = 0;
+    public GameObject objMainPanel;
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
+    private GameObject _objBtnMain;
 
-    protected float ResourceMultiplier, CostMultiplier;
-    protected ResourceType ResourceTypeToModify;
-    protected Transform TformTxtHeader, TformDescription, TformProgressbar;
-    protected TMP_Text TxtHeader, TxtDescription;
-    protected Image ImgProgressbar;
-    protected string OriginalHeaderString;   
-    protected uint SelfCount;
-    protected float Timer = 0.1f;
-    protected readonly float MaxValue = 0.1f;
+    protected float _resourceMultiplier, _costMultiplier;
+    protected ResourceType _resourceTypeToModify;
+    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain;
+    protected TMP_Text _txtHeader, _txtDescription;
+    protected Image _imgProgressbar;
+    protected string _stringOriginalHeader;
+    protected uint _selfCount;
+    protected float _timer = 0.1f;
+    protected readonly float _maxValue = 0.1f;
 
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
-        PlayerPrefs.SetInt(_selfCountString, (int)SelfCount);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
+        PlayerPrefs.SetInt(_selfCountString, (int)_selfCount);
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].CostAmount);
+            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].costAmount);
         }
     }
     public void SetInitialValues()
     {
         InitializeObjects();
-      
+
         if (TimeManager.hasPlayedBefore)
         {
-            IsUnlocked = PlayerPrefs.GetInt(_isUnlockedString, IsUnlocked);
-            SelfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)SelfCount);
+            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
+            _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                resourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
+                resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
             }
         }
-
-        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);      
+        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
     protected void CheckIfUnlocked()
     {
-        if (IsUnlocked == 1)
+        if (GetCurrentFill() == 1f)
         {
-            ObjMainPanel.SetActive(true);
-            ObjSpacerBelow.SetActive(true);
+            Purchaseable();
         }
         else
         {
-            ObjMainPanel.SetActive(false);
-            ObjSpacerBelow.SetActive(false);
+            UnPurchaseable();
+        }
+
+        if (isUnlocked == 0)
+        {
+            if (GetCurrentFill() >= 0.8f)
+            {
+                isUnlocked = 1;
+                Debug.Log("New crafting recipe unlocked");
+            }
         }
     }
     private void InitializeObjects()
     {
-        TformDescription = transform.Find("Body/Description_Panel/Text_Description");
-        TformTxtHeader = transform.Find("Header_Panel/Text_Header");
-        TformProgressbar = transform.Find("Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
+        _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
+        _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
+        _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        _tformObjMain = transform.Find("Panel_Main");
 
-        TxtHeader = TformTxtHeader.GetComponent<TMP_Text>();
-        TxtDescription = TformDescription.GetComponent<TMP_Text>();
-        ImgProgressbar = TformProgressbar.GetComponent<Image>();
+        _txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
+        _txtDescription = _tformDescription.GetComponent<TMP_Text>();
+        _imgProgressbar = _tformProgressbar.GetComponent<Image>();
+        objMainPanel = _tformObjMain.gameObject;
+        _objBtnMain = _tformBtnMain.gameObject;
 
-        ObjMainPanel = gameObject;
+        _stringOriginalHeader = _txtHeader.text;
 
-        OriginalHeaderString = TxtHeader.text;
-        
-        _selfCountString = (Type.ToString() + "SelfCount");
-        _isUnlockedString = (Type.ToString() + "IsUnlocked");
+        _selfCountString = (Type.ToString() + "_selfCount");
+        _isUnlockedString = (Type.ToString() + "isUnlocked");
         _costString = new string[resourceCost.Length];
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
 
-            _costString[i] = Type.ToString() + resourceCost[i]._AssociatedType.ToString();
-            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
+            _costString[i] = Type.ToString() + resourceCost[i].associatedType.ToString();
+            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
         }
     }
     public virtual void UpdateResourceCosts()
     {
-        if ((Timer -= Time.deltaTime) <= 0)
+        if ((_timer -= Time.deltaTime) <= 0)
         {
-            Timer = MaxValue;
+            _timer = _maxValue;
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                resourceCost[i].CurrentAmount = Resource._resources[resourceCost[i]._AssociatedType].Amount;
-                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].CurrentAmount, resourceCost[i].CostAmount);
-                resourceCost[i]._UiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i]._AssociatedType.ToString());              
+                resourceCost[i].currentAmount = Resource._resources[resourceCost[i].associatedType].amount;
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
+                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());              
             }
-            GetCurrentFill();
+            _imgProgressbar.fillAmount = GetCurrentFill();
+            CheckIfUnlocked();
         }
     }
-    public void GetCurrentFill()
+    public float GetCurrentFill()
     {
         float add = 0;
         float div = 0;
@@ -141,16 +151,15 @@ public abstract class Building : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            add = resourceCost[i].CurrentAmount;
-            div = resourceCost[i].CostAmount;
+            add = resourceCost[i].currentAmount;
+            div = resourceCost[i].costAmount;
             if (add > div)
             {
                 add = div;
             }
             fillAmount += add / div;
         }
-        fillAmount /= resourceCost.Length;
-        ImgProgressbar.fillAmount = fillAmount;
+        return fillAmount / resourceCost.Length;
     }
     public virtual void OnBuild()
     {
@@ -158,7 +167,7 @@ public abstract class Building : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
             {
                 canPurchase = false;
                 break;
@@ -167,25 +176,54 @@ public abstract class Building : MonoBehaviour
 
         if (canPurchase)
         {
-            SelfCount++;
+            _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount -= resourceCost[i].CostAmount;
-                resourceCost[i].CostAmount *= Mathf.Pow(CostMultiplier, SelfCount);
-                resourceCost[i]._UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i]._AssociatedType].Amount, resourceCost[i].CostAmount);
+                Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
             }
             ModifyResource();
         }
 
-        TxtHeader.text = string.Format("{0} ({1})", OriginalHeaderString, SelfCount);   
+        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);   
+    }
+    private void Purchaseable()
+    {
+        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
+        cb.normalColor = new Color(0, 0, 0, 0);
+        _objBtnMain.GetComponent<Button>().colors = cb;
+
+        string htmlValue = "#333333";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
+        {
+            _txtHeader.color = darkGreyColor;
+        }
+    }
+    private void UnPurchaseable()
+    {
+        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
+        cb.normalColor = new Color(0, 0, 0, 0.25f);
+        cb.highlightedColor = new Color(0, 0, 0, 0.23f);
+        cb.pressedColor = new Color(0, 0, 0, 0.3f);
+        cb.selectedColor = new Color(0, 0, 0, 0.23f);
+        _objBtnMain.GetComponent<Button>().colors = cb;
+
+        string htmlValue = "#D71C2A";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color redColor))
+        {
+            _txtHeader.color = redColor;
+        }
     }
     public virtual void SetDescriptionText()
     {
-        Buildings[Type].TxtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[ResourceTypeToModify].Type.ToString(), ResourceMultiplier);
+        Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[_resourceTypeToModify].Type.ToString(), _resourceMultiplier);
     }  
     protected virtual void ModifyResource()
     {
-        Resource._resources[ResourceTypeToModify].AmountPerSecond += ResourceMultiplier;
+        Resource._resources[_resourceTypeToModify].amountPerSecond += _resourceMultiplier;
     }
 }
 

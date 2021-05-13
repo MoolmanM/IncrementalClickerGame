@@ -21,11 +21,11 @@ public class Worker : MonoBehaviour
     public uint ChangeAmount = 1;
     public uint WorkerCount;
     public WorkerType Type;
-    public TMP_Text TxtHeader, TxtAvailableWorkers;
-    public ResourceType ResourceTypeToModify;
-    public float ResourceMultiplier;
+    public TMP_Text _txtHeader, TxtAvailableWorkers;
+    public ResourceType _resourceTypeToModify;
+    public float _resourceMultiplier;
     public float AmountToIncreasePerSecondBy;
-    public uint IsUnlocked;
+    public uint isUnlocked;
     private string _workerString;
     public float tempAmount;
 
@@ -43,10 +43,10 @@ public class Worker : MonoBehaviour
         WorkerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)WorkerCount);
         AvailableWorkerCount = (uint)PlayerPrefs.GetInt("AvailableWorkerCount", (int)AvailableWorkerCount);
 
-        TxtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
+        _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
         TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
 
-        if (IsUnlocked == 1)
+        if (isUnlocked == 1)
         {
             objMainPanel.SetActive(true);
             objSpacerBelow.SetActive(true);
@@ -60,8 +60,8 @@ public class Worker : MonoBehaviour
     
     public void OnPlusButton()
     {
-        // AmountPerSecond = 0;
-        // AmountPerSecond += workermultiplier 
+        // amountPerSecond = 0;
+        // amountPerSecond += workermultiplier 
 
         if (AvailableWorkerCount > 0)
         {
@@ -97,11 +97,11 @@ public class Worker : MonoBehaviour
             }
             AvailableWorkerCount -= ChangeAmount;
             WorkerCount += ChangeAmount;
-            TxtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
+            _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
             TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
 
-            AmountToIncreasePerSecondBy = (ChangeAmount * ResourceMultiplier);
-            Resource._resources[ResourceTypeToModify].AmountPerSecond += AmountToIncreasePerSecondBy;
+            AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
+            Resource._resources[_resourceTypeToModify].amountPerSecond += AmountToIncreasePerSecondBy;
         }       
     }
 
@@ -141,11 +141,11 @@ public class Worker : MonoBehaviour
             }
             AvailableWorkerCount += ChangeAmount;
             WorkerCount -= ChangeAmount;
-            TxtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
+            _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
             TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
 
-            AmountToIncreasePerSecondBy = (ChangeAmount * ResourceMultiplier);
-            Resource._resources[ResourceTypeToModify].AmountPerSecond -= AmountToIncreasePerSecondBy;
+            AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
+            Resource._resources[_resourceTypeToModify].amountPerSecond -= AmountToIncreasePerSecondBy;
         }     
     }
     private void OnApplicationQuit()

@@ -1,66 +1,263 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+
 
 public class UIManager : MonoBehaviour
 {
-    /*
     public Swipe _Swipe;
     private uint _swipeCount = 0;
     private readonly uint _panelCount = 3;
-    public GameObject BuildingPanel, CraftingPanel, WorkerPanel, ResearchPanel;
-        
+    public GameObject[] buildingUI, craftUI, workerUI, researchUI;
+    public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
+
     private void Start()
     {
         _swipeCount = 0;
         BuildingPanelActive();
     }
-    private void OnApplicationQuit()
-    {
-        // Just before quitting it sets all objects active so everything can get saved to playerprefs or savefile.
-        BuildingPanel.SetActive(true);
-        CraftingPanel.SetActive(true);
-        WorkerPanel.SetActive(true);
-        ResearchPanel.SetActive(true);
-    }
     private void BuildingPanelActive()
     {
-        BuildingPanel.SetActive(true);
-        CraftingPanel.SetActive(false);
-        WorkerPanel.SetActive(false);
-        ResearchPanel.SetActive(false);
+        isBuildingVisible = true;
+        isCraftingVisible = false;
+        isResearchVisible = false;
+        isWorkerVisible = false;
+
+        foreach (var _buildingUI in buildingUI)
+        {
+            _buildingUI.SetActive(true);
+        }
+
+        foreach (var _workerUI in workerUI)
+        {
+            _workerUI.SetActive(false);
+        }
+        foreach (var _researchUI in researchUI)
+        {
+            _researchUI.SetActive(false);
+        }
+
+        foreach (var _craftUI in craftUI)
+        {
+            _craftUI.SetActive(false);
+        }
+
+        foreach (var craft in Craftable.Craftables)
+        {
+            craft.Value.objMainPanel.SetActive(false);
+            craft.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var researchable in Researchable.Researchables)
+        {
+            researchable.Value.objMainPanel.SetActive(false);
+            researchable.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var worker in Worker.Workers)
+        {
+            worker.Value.objMainPanel.SetActive(false);
+            worker.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var building in Building.Buildings)
+        {
+            if (building.Value.isUnlocked == 1)
+            {
+                building.Value.objMainPanel.SetActive(true);
+                building.Value.objSpacerBelow.SetActive(true);
+            }
+            else
+            {
+                building.Value.objMainPanel.SetActive(false);
+                building.Value.objSpacerBelow.SetActive(false);
+            }
+        }
     }
     private void CraftingPanelActive()
     {
-        BuildingPanel.SetActive(false);
-        CraftingPanel.SetActive(true);
-        WorkerPanel.SetActive(false);
-        ResearchPanel.SetActive(false);
+        isBuildingVisible = false;
+        isCraftingVisible = true;
+        isResearchVisible = false;
+        isWorkerVisible = false;
+
+        foreach (var _buildingUI in buildingUI)
+        {
+            _buildingUI.SetActive(false);
+        }
+
+        foreach (var _workerUI in workerUI)
+        {
+            _workerUI.SetActive(false);
+        }
+        foreach (var _researchUI in researchUI)
+        {
+            _researchUI.SetActive(false);
+        }
+
+        foreach (var _craftUI in craftUI)
+        {
+            _craftUI.SetActive(true);
+        }
+
+        foreach (var building in Building.Buildings)
+        {
+            building.Value.objMainPanel.SetActive(false);
+            building.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var researchable in Researchable.Researchables)
+        {
+            researchable.Value.objMainPanel.SetActive(false);
+            researchable.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var worker in Worker.Workers)
+        {
+            worker.Value.objMainPanel.SetActive(false);
+            worker.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var craft in Craftable.Craftables)
+        {
+            Debug.Log("Reached here");
+            if (craft.Value.isUnlocked == 1)
+            {
+                craft.Value.objMainPanel.SetActive(true);
+                craft.Value.objSpacerBelow.SetActive(true);
+            }
+            else
+            {
+                craft.Value.objMainPanel.SetActive(false);
+                craft.Value.objSpacerBelow.SetActive(false);
+            }
+        }
     }
     private void WorkerPanelActive()
     {
-        BuildingPanel.SetActive(false);
-        CraftingPanel.SetActive(false);
-        WorkerPanel.SetActive(true);
-        ResearchPanel.SetActive(false);
+        isBuildingVisible = false;
+        isCraftingVisible = false;
+        isResearchVisible = false;
+        isWorkerVisible = true;
+
+        foreach (var _buildingUI in buildingUI)
+        {
+            _buildingUI.SetActive(false);
+        }
+
+        foreach (var _workerUI in workerUI)
+        {
+            _workerUI.SetActive(true);
+        }
+        foreach (var _researchUI in researchUI)
+        {
+            _researchUI.SetActive(false);
+        }
+
+        foreach (var _craftUI in craftUI)
+        {
+            _craftUI.SetActive(false);
+        }
+
+        foreach (var building in Building.Buildings)
+        {
+            building.Value.objMainPanel.SetActive(false);
+            building.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var craft in Craftable.Craftables)
+        {
+            craft.Value.objMainPanel.SetActive(false);
+            craft.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var researchable in Researchable.Researchables)
+        {
+            researchable.Value.objMainPanel.SetActive(false);
+            researchable.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var worker in Worker.Workers)
+        {
+            if (worker.Value.isUnlocked == 1)
+            {
+                worker.Value.objMainPanel.SetActive(true);
+                worker.Value.objSpacerBelow.SetActive(true);
+            }
+            else
+            {
+                worker.Value.objMainPanel.SetActive(false);
+                worker.Value.objSpacerBelow.SetActive(false);
+            }
+        }
     }
     private void ResearchPanelActive()
     {
-        BuildingPanel.SetActive(false);
-        CraftingPanel.SetActive(false);
-        WorkerPanel.SetActive(false);
-        ResearchPanel.SetActive(true);
+        isBuildingVisible = false;
+        isCraftingVisible = false;
+        isResearchVisible = true;
+        isWorkerVisible = false;
+
+        foreach (var _buildingUI in buildingUI)
+        {
+            _buildingUI.SetActive(false);
+        }
+
+        foreach (var _workerUI in workerUI)
+        {
+            _workerUI.SetActive(false);
+        }
+        foreach (var _researchUI in researchUI)
+        {
+            _researchUI.SetActive(true);
+        }
+
+        foreach (var _craftUI in craftUI)
+        {
+            _craftUI.SetActive(false);
+        }
+
+        foreach (var craft in Craftable.Craftables)
+        {
+            craft.Value.objMainPanel.SetActive(false);
+            craft.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var building in Building.Buildings)
+        {
+            building.Value.objMainPanel.SetActive(false);
+            building.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var worker in Worker.Workers)
+        {
+            worker.Value.objMainPanel.SetActive(false);
+            worker.Value.objSpacerBelow.SetActive(false);
+        }
+
+        foreach (var researchable in Researchable.Researchables)
+        {
+            if (researchable.Value.isUnlocked == 1)
+            {
+                researchable.Value.objMainPanel.SetActive(true);
+                researchable.Value.objSpacerBelow.SetActive(true);
+            }
+            else
+            {
+                researchable.Value.objMainPanel.SetActive(false);
+                researchable.Value.objSpacerBelow.SetActive(false);
+            }
+        }
     }
     private void SwipeCountHandler()
     {
         #region Actual Swiping
         if (_Swipe.SwipeRight && (_swipeCount >= 1))
-        {         
+        {
             _swipeCount--;
         }
         else if (_Swipe.SwipeLeft && (_swipeCount <= (_panelCount - 1)))
-        {         
+        {
             _swipeCount++;
         }
         #endregion
@@ -79,7 +276,7 @@ public class UIManager : MonoBehaviour
             else if (_swipeCount == 2)
             {
                 WorkerPanelActive();
-                
+
             }
             else if (_swipeCount == 3)
             {
@@ -89,61 +286,11 @@ public class UIManager : MonoBehaviour
             {
                 Debug.LogError("This shouldn't happen");
             }
-        }    
+        }
         #endregion
     }
-    //private void CheckIfUnlockedYet()
-    //{
-    //    foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftable.Craftables)
-    //    {
-    //        //Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-
-    //        for (int i = 0; i < kvp.Value.resourceCost.Length; i++)
-    //        {
-    //            float[] amountsRequiredForUnlocking = new float[kvp.Value.resourceCost.Length];
-    //            amountsRequiredForUnlocking[i] = kvp.Value.resourceCost[i].CostAmount * 0.8f;
-    //            // Debug.Log(entry.Value + " " + entry.Value.resourceCost[i]._AssociatedType + " " + amountsRequiredForUnlocking[i]);
-
-    //            if (Resource._resources[kvp.Value.resourceCost[i]._AssociatedType].Amount >= amountsRequiredForUnlocking[i])
-    //            {
-    //                kvp.Value.IsUnlocked = 1;
-    //                kvp.Value.ObjMainPanel.SetActive(true);
-    //                kvp.Value.ObjSpacerBelow.SetActive(true);
-    //            }
-    //        }
-    //    }
-    //}
-
-    //private void SetAllActive()
-    //{
-    //    //foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftable.Craftables)
-    //    //{
-    //    //    //kvp.Value.IsUnlocked = 1;
-    //    //}
-
-    //    foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftable.Craftables)
-    //    {
-    //        //Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-
-    //        for (int i = 0; i < kvp.Value.resourceCost.Length; i++)
-    //        {
-    //            float[] amountsRequiredForUnlocking = new float[kvp.Value.resourceCost.Length];
-    //            amountsRequiredForUnlocking[i] = kvp.Value.resourceCost[i].CostAmount * 0.8f;
-    //            // Debug.Log(entry.Value + " " + entry.Value.resourceCost[i]._AssociatedType + " " + amountsRequiredForUnlocking[i]);
-
-    //            if (Resource._resources[kvp.Value.resourceCost[i]._AssociatedType].Amount >= amountsRequiredForUnlocking[i])
-    //            {
-    //                kvp.Value.IsUnlocked = 1;
-    //                //kvp.Value.ObjMainPanel.SetActive(true);
-    //                //kvp.Value.ObjSpacerBelow.SetActive(true);
-    //            }
-    //        }
-    //    }
-    //}
     void Update()
-    {       
+    {
         SwipeCountHandler();
-        // CheckIfUnlockedYet();
     }
-    */
 }

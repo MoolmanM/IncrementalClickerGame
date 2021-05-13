@@ -9,9 +9,9 @@ public class Woodlot : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
-        ResourceMultiplier = 0.12f;
-        CostMultiplier = 1.07f;
-        ResourceTypeToModify = ResourceType.Sticks;
+        _resourceMultiplier = 0.12f;
+        _costMultiplier = 1.07f;
+        _resourceTypeToModify = ResourceType.Sticks;
         SetInitialValues();
     }
     private void Start()

@@ -120,29 +120,29 @@ public class TimeManager : MonoBehaviour
     }
     public static void GetAFKResource(ResourceType type)
     {
-        float differenceAmount = (float)(difference.TotalSeconds * Resource._resources[type].AmountPerSecond);    
+        float differenceAmount = (float)(difference.TotalSeconds * Resource._resources[type].amountPerSecond);    
         
-        if (differenceAmount > Resource._resources[type].StorageAmount)
+        if (differenceAmount > Resource._resources[type].storageAmount)
         {
-            Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, Resource._resources[type].StorageAmount);
+            Resource._resources[type].txtEarned.text = string.Format("{0}: {1:0.00}", type, Resource._resources[type].storageAmount);
         }
         else
         {
-            Resource._resources[type].TxtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
+            Resource._resources[type].txtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
         }       
 
-        if ((differenceAmount + Resource._resources[type].Amount) > Resource._resources[type].StorageAmount)
+        if ((differenceAmount + Resource._resources[type].amount) > Resource._resources[type].storageAmount)
         {
-            Resource._resources[type].Amount = Resource._resources[type].StorageAmount;
+            Resource._resources[type].amount = Resource._resources[type].storageAmount;
 
             // I don't think I need to update the text because it updates every tick anyways.
-            // Resource._resources[type]._UiForResource.TxtAmount.text = string.Format("{0}", Resource._resources[type].Amount);
+            // Resource._resources[type].uiForResource.txtAmount.text = string.Format("{0}", Resource._resources[type].amount);
         }
         else
         {
-            Resource._resources[type].Amount += differenceAmount;
+            Resource._resources[type].amount += differenceAmount;
         }
-        //Resource._resources[type].uiForResource.amount.text = string.Format("{0}", Resource._resources[type].Amount);
+        //Resource._resources[type].uiForResource.amount.text = string.Format("{0}", Resource._resources[type].amount);
     }
     private void Update()
     {

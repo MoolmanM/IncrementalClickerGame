@@ -11,9 +11,9 @@ public class PotatoField : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
-        ResourceMultiplier = 0.10f;
-        CostMultiplier = 1.15f;
-        ResourceTypeToModify = ResourceType.Food;
+        _resourceMultiplier = 0.10f;
+        _costMultiplier = 1.15f;
+        _resourceTypeToModify = ResourceType.Food;
         SetInitialValues();
     }
     private void Start()

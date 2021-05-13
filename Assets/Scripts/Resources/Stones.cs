@@ -39,7 +39,7 @@ public class Stones : Resource
     //{
     //    ResourceData data = SaveSystem.LoadResource();
 
-    //    Amount = data.amount;
+    //    amount = data.amount;
     //}
 
 

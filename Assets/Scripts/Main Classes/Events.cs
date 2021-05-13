@@ -16,10 +16,9 @@ public class Events : MonoBehaviour
     public Animator animatorNotification;
 
     private float _timer = 0.1f;
+    private float timer = 0.1f;
     private readonly float maxValue = 0.01f;
-
-    private float Timer = 0.1f;
-    private readonly float MaxValue = 10f;
+    private readonly float _maxValue = 10f;
 
     private void StoneAgeEvents()
     {
@@ -44,18 +43,14 @@ public class Events : MonoBehaviour
             if (IsPlaying(animatorNotification, "Notification_Display"))
             {
                 animatorNotification.Play("Notification_Display" , -1, 0);
-                Debug.Log("Should Display");
             }
             else if (IsPlaying(animatorNotification, "Notification_Down"))
             {
                 animatorNotification.SetTrigger("Start_Notification");
-                Debug.Log("Interupted going down");
             }
             else
             {
                 animatorNotification.SetTrigger("Start_Notification");
-                //animatorNotification.Play("Notification_Up");
-                Debug.Log("Should go up");
             }
             eventHappened = false;
         }
@@ -91,11 +86,11 @@ public class Events : MonoBehaviour
     }
     private void GenerateWorkers()
     {
-        if (Worker.AvailableWorkerCount < MakeshiftBed.SelfCount)
+        if (Worker.AvailableWorkerCount < MakeshiftBed._selfCount)
         {
-            if ((Timer -= Time.deltaTime) <= 0)
+            if ((timer -= Time.deltaTime) <= 0)
             {
-                Timer = MaxValue;
+                timer = _maxValue;
 
                 Worker.AvailableWorkerCount++;
                 NotableEvent("A worker has arrived");
@@ -103,7 +98,6 @@ public class Events : MonoBehaviour
             }
         }
     }
-
     private void NotableEvent(string notableEventString)
     {
         // Write to a history log whenever something notable happens. 

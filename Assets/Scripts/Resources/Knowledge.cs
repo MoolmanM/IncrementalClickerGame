@@ -11,7 +11,7 @@ public class Knowledge : Resource
     {
         _resource = GetComponent<Resource>();
         _resources.Add(Type, _resource);
-        PlayerPrefs.SetInt(_isUnlockedString, IsUnlocked);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
         SetInitialValues();
         // DisplayConsole();
     }
