@@ -10,7 +10,7 @@ public class Food : Resource
     private void Awake()
     {
         _resource = GetComponent<Resource>();
-        _resources.Add(Type, _resource);
+        Resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
         isUnlocked = 1;
         SetInitialValues();       
@@ -19,7 +19,7 @@ public class Food : Resource
 
     private void DisplayConsole()
     {
-        foreach (KeyValuePair<ResourceType, Resource> kvp in _resources)
+        foreach (KeyValuePair<ResourceType, Resource> kvp in Resources)
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }

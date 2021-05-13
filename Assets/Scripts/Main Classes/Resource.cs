@@ -21,7 +21,7 @@ public enum ResourceType
 
 public class Resource : MonoBehaviour
 {
-    public static Dictionary<ResourceType, Resource> _resources = new Dictionary<ResourceType, Resource>();
+    public static Dictionary<ResourceType, Resource> Resources = new Dictionary<ResourceType, Resource>();
 
     [System.NonSerialized] public float amount, amountPerSecond, amountGainedWhileAfk;    
     [System.NonSerialized] public int isUnlocked;

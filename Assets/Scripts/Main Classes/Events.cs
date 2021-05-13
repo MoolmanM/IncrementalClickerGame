@@ -22,20 +22,27 @@ public class Events : MonoBehaviour
 
     private void StoneAgeEvents()
     {
-        animalAttack = 1f;
-        villageUnderAttack = 0.3f;
+        animalAttack = 1f; //1%
+        villageUnderAttack = 0.3f; //0.3%
         randomNumber = UnityEngine.Random.Range(0f, 100f);
 
-        if (randomNumber <= animalAttack)
-        {
-            AnimalAttack();
-            eventHappened = true;
-        }
-        if (randomNumber <= villageUnderAttack)
-        {
-            NotableEvent("Your village is under attack!");
-            eventHappened = true;
-        }
+        //if (randomNumber <= animalAttack)
+        //{
+        //    AnimalAttack();
+        //    eventHappened = true;
+        //}
+        //if (randomNumber <= villageUnderAttack)
+        //{
+        //    NotableEvent("Your village is under attack!");
+        //    eventHappened = true;
+        //}
+
+        // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
+        // Or if they reach a certain amount of a building such as potatoField.
+
+        NewCraftingRecipe();
+        NewResearchAvailable();
+        NewBuildingAvailable();
 
         if (eventHappened == true)
         {
@@ -83,6 +90,34 @@ public class Events : MonoBehaviour
         // Here we should roll another dice to see if the player can kill the animal or not.
         // If killed gets a random amount of food between generous values.
         // If the player can't kill the animal then a worker dies or multiple.
+    }
+    private void NewCraftingRecipe()
+    {
+        if (Craftable.isUnlockedEvent)
+        {
+            eventHappened = true;
+            NotableEvent("You've unlocked a new crafting recipe.");
+            Craftable.isUnlockedEvent = false;
+        }
+    }
+
+    private void NewResearchAvailable()
+    {
+        if (Craftable.isUnlockedEvent)
+        {
+            eventHappened = true;
+            NotableEvent("You've unlocked new research.");
+            Craftable.isUnlockedEvent = false;
+        }
+    }
+    private void NewBuildingAvailable()
+    {
+        if (Building.isUnlockedEvent)
+        {
+            eventHappened = true;
+            NotableEvent("You've unlocked a new building.");
+            Building.isUnlockedEvent = false;
+        }
     }
     private void GenerateWorkers()
     {

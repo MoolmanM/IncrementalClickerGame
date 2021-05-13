@@ -4715,16 +4715,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Swipe: {fileID: 1419882555}
-  researchUI: []
-  craftUI: []
-  workerUI:
-  - {fileID: 963938431}
-  - {fileID: 1142174512}
-  - {fileID: 311029746}
   buildingUI:
   - {fileID: 1438065449}
   - {fileID: 987391342}
   - {fileID: 718252819}
+  - {fileID: 882754135}
+  - {fileID: 202165316}
+  - {fileID: 316536812}
+  craftUI:
+  - {fileID: 1579002841}
+  - {fileID: 1972387760}
+  workerUI:
+  - {fileID: 963938431}
+  - {fileID: 1142174512}
+  - {fileID: 311029746}
+  - {fileID: 1611626485}
+  - {fileID: 142169870}
+  - {fileID: 768336738}
+  researchUI:
+  - {fileID: 1615513197}
+  - {fileID: 662831476}
 --- !u!4 &180168913
 Transform:
   m_ObjectHideFlags: 0
@@ -10753,8 +10763,6 @@ GameObject:
   - component: {fileID: 479791300}
   - component: {fileID: 479791299}
   - component: {fileID: 479791302}
-  - component: {fileID: 479791301}
-  - component: {fileID: 479791303}
   m_Layer: 5
   m_Name: Main_Panel
   m_TagString: Untagged
@@ -10825,25 +10833,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479791297}
   m_CullTransparentMesh: 0
---- !u!95 &479791301
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 479791297}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 41a126303d28db34eb9d32704226e6f5, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &479791302
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -10856,18 +10845,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &479791303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 479791297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf715ed44a60d554e93da7e6d7921df8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &479894134
 GameObject:
   m_ObjectHideFlags: 0
@@ -36974,7 +36951,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1606322857}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb0cc14b86b09ec448f52d8eae105d9c, type: 3}
   m_Name: 
@@ -42417,7 +42394,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.6666667, g: 0.6666667, b: 0.6666667, a: 0}
+    m_NormalColor: {r: 0.2, g: 0.2, b: 0.2, a: 0}
     m_HighlightedColor: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 0.05882353}
     m_PressedColor: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 0.19607843}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}

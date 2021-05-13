@@ -18,6 +18,7 @@ public abstract class Craftable : MonoBehaviour
 {
     public static Dictionary<CraftingType, Craftable> Craftables = new Dictionary<CraftingType, Craftable>();
 
+    public static bool isUnlockedEvent;
     public CraftingType Type;
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
@@ -29,7 +30,7 @@ public abstract class Craftable : MonoBehaviour
     private string _isCraftedString, _isUnlockedString;
 
     protected BuildingType[] _buildingTypesToModify;
-    protected ResourceType[] _resourceTypesToModify, _resourcesRequiredForUnlocking;
+    protected ResourceType[] _resourceTypesToModify;
     protected WorkerType[] _workerTypesToModify;
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
@@ -90,7 +91,7 @@ public abstract class Craftable : MonoBehaviour
                 }
                 else
                 {
-
+                    isUnlockedEvent = true;                    
                 }
             }
         }
@@ -103,7 +104,7 @@ public abstract class Craftable : MonoBehaviour
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Craftables[Type].resourceCost[i].currentAmount = Resource._resources[Craftables[Type].resourceCost[i].associatedType].amount;
+                Craftables[Type].resourceCost[i].currentAmount = Resource.Resources[Craftables[Type].resourceCost[i].associatedType].amount;
                 Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount);
                 Craftables[Type].resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", Craftables[Type].resourceCost[i].associatedType.ToString());              
             }
@@ -129,9 +130,10 @@ public abstract class Craftable : MonoBehaviour
             isCrafted = 1;
             Crafted();
             UnlockBuilding();
+            UnlockResource();
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             }
 
         }
@@ -168,11 +170,21 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
+        Debug.Log("Reached Here");
         foreach (var building in _buildingTypesToModify)
         {
             Building.Buildings[building].isUnlocked = 1;
-            //Building.Buildings[building].objMainPanel.SetActive(true);
-            Building.Buildings[building].objSpacerBelow.SetActive(true);
+            Building.isUnlockedEvent = true;
+        }
+    }
+    protected virtual void UnlockResource()
+    {
+        Debug.Log("Reached Here");
+        foreach (var resource in _resourceTypesToModify)
+        {
+            Resource.Resources[resource].isUnlocked = 1;
+            Resource.Resources[resource].objMainPanel.SetActive(true);
+            Resource.Resources[resource].objSpacerBelow.SetActive(true);
         }
     }
     private void InitializeObjects()

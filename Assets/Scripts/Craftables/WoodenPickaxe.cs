@@ -11,8 +11,12 @@ public class WoodenPickaxe : Craftable
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
+
         _buildingTypesToModify = new BuildingType[1];
         _buildingTypesToModify[0] = BuildingType.DigSite;
+
+        _resourceTypesToModify = new ResourceType[1];
+        _resourceTypesToModify[0] = ResourceType.Stones;
     }
     private void Start()
     {

@@ -120,7 +120,6 @@ public class UIManager : MonoBehaviour
 
         foreach (var craft in Craftable.Craftables)
         {
-            Debug.Log("Reached here");
             if (craft.Value.isUnlocked == 1)
             {
                 craft.Value.objMainPanel.SetActive(true);

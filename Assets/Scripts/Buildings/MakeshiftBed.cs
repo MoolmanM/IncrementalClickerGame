@@ -46,9 +46,9 @@ public class MakeshiftBed : Building
             _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);                
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
             }          
         }
 

@@ -32,13 +32,13 @@ public enum BuildingType
 public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
+
     public BuildingType Type;
-
-
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
     [NonSerialized] public int isUnlocked = 0;
     public GameObject objMainPanel;
+    public static bool isUnlockedEvent;
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
@@ -46,7 +46,7 @@ public abstract class Building : MonoBehaviour
 
     protected float _resourceMultiplier, _costMultiplier;
     protected ResourceType _resourceTypeToModify;
-    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain;
+    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain, tformBtnExpand;
     protected TMP_Text _txtHeader, _txtDescription;
     protected Image _imgProgressbar;
     protected string _stringOriginalHeader;
@@ -90,15 +90,6 @@ public abstract class Building : MonoBehaviour
         {
             UnPurchaseable();
         }
-
-        if (isUnlocked == 0)
-        {
-            if (GetCurrentFill() >= 0.8f)
-            {
-                isUnlocked = 1;
-                Debug.Log("New crafting recipe unlocked");
-            }
-        }
     }
     private void InitializeObjects()
     {
@@ -135,7 +126,7 @@ public abstract class Building : MonoBehaviour
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                resourceCost[i].currentAmount = Resource._resources[resourceCost[i].associatedType].amount;
+                resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());              
             }
@@ -179,9 +170,9 @@ public abstract class Building : MonoBehaviour
             _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource._resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
             }
             ModifyResource();
         }
@@ -191,7 +182,10 @@ public abstract class Building : MonoBehaviour
     private void Purchaseable()
     {
         ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
-        cb.normalColor = new Color(0, 0, 0, 0);
+        cb.normalColor = new Color(0.2f, 0.2f, 0.2f, 0);
+        cb.highlightedColor = new Color(0.2f, 0.2f, 0.2f, 0.05882353f);
+        cb.pressedColor = new Color(0.2f, 0.2f, 0.2f, 0.1960784f);
+        cb.selectedColor = new Color(0.2f, 0.2f, 0.2f, 0);
         _objBtnMain.GetComponent<Button>().colors = cb;
 
         string htmlValue = "#333333";
@@ -207,7 +201,7 @@ public abstract class Building : MonoBehaviour
         cb.normalColor = new Color(0, 0, 0, 0.25f);
         cb.highlightedColor = new Color(0, 0, 0, 0.23f);
         cb.pressedColor = new Color(0, 0, 0, 0.3f);
-        cb.selectedColor = new Color(0, 0, 0, 0.23f);
+        cb.selectedColor = new Color(0, 0, 0, 0.25f);
         _objBtnMain.GetComponent<Button>().colors = cb;
 
         string htmlValue = "#D71C2A";
@@ -219,11 +213,11 @@ public abstract class Building : MonoBehaviour
     }
     public virtual void SetDescriptionText()
     {
-        Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource._resources[_resourceTypeToModify].Type.ToString(), _resourceMultiplier);
+        Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[_resourceTypeToModify].Type.ToString(), _resourceMultiplier);
     }  
     protected virtual void ModifyResource()
     {
-        Resource._resources[_resourceTypeToModify].amountPerSecond += _resourceMultiplier;
+        Resource.Resources[_resourceTypeToModify].amountPerSecond += _resourceMultiplier;
     }
 }
 

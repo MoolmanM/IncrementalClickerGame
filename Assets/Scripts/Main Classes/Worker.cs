@@ -101,7 +101,7 @@ public class Worker : MonoBehaviour
             TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
 
             AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
-            Resource._resources[_resourceTypeToModify].amountPerSecond += AmountToIncreasePerSecondBy;
+            Resource.Resources[_resourceTypeToModify].amountPerSecond += AmountToIncreasePerSecondBy;
         }       
     }
 
@@ -145,7 +145,7 @@ public class Worker : MonoBehaviour
             TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
 
             AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
-            Resource._resources[_resourceTypeToModify].amountPerSecond -= AmountToIncreasePerSecondBy;
+            Resource.Resources[_resourceTypeToModify].amountPerSecond -= AmountToIncreasePerSecondBy;
         }     
     }
     private void OnApplicationQuit()

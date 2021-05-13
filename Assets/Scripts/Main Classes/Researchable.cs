@@ -28,6 +28,7 @@ public abstract class Researchable : MonoBehaviour
 {
     public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
 
+    public static bool isUnlockedEvent;
     public ResearchType Type;
     public ResourceCost[] resourceCost;
     public GameObject objMainPanel;
@@ -85,7 +86,15 @@ public abstract class Researchable : MonoBehaviour
             if (GetCurrentFill() >= 0.8f)
             {
                 isUnlocked = 1;
-                Debug.Log("New crafting recipe unlocked");
+                if (UIManager.isResearchVisible)
+                {
+                    objMainPanel.SetActive(true);
+                    objSpacerBelow.SetActive(true);
+                }
+                else
+                {
+                    isUnlockedEvent = true;
+                }
             }
         }
     }
@@ -97,7 +106,7 @@ public abstract class Researchable : MonoBehaviour
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                resourceCost[i].currentAmount = Resource._resources[resourceCost[i].associatedType].amount;
+                resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
             }
@@ -125,7 +134,7 @@ public abstract class Researchable : MonoBehaviour
             Researched();
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource._resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             }
 
         }
@@ -189,6 +198,7 @@ public abstract class Researchable : MonoBehaviour
         ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
         cb.normalColor = new Color(0, 0, 0, 0);
         _objBtnMain.GetComponent<Button>().colors = cb;
+
         string htmlValue = "#333333";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))

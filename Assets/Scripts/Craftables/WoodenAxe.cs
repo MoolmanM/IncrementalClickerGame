@@ -14,7 +14,6 @@ public class WoodenAxe : Craftable
         _buildingTypesToModify[0] = BuildingType.Woodlot;
         SetInitialValues();
     }
-
     private void Start()
     {
         SetDescriptionText("Enables building of the Wood-lot to automatically gather sticks.");
