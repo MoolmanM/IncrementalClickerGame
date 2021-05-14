@@ -170,7 +170,6 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
-        Debug.Log("Reached Here");
         foreach (var building in _buildingTypesToModify)
         {
             Building.Buildings[building].isUnlocked = 1;
@@ -179,7 +178,6 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockResource()
     {
-        Debug.Log("Reached Here");
         foreach (var resource in _resourceTypesToModify)
         {
             Resource.Resources[resource].isUnlocked = 1;

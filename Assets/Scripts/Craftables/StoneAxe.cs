@@ -26,6 +26,10 @@ public class StoneAxe : Craftable
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
+    protected override void UnlockResource()
+    {
+        // Do nothing.
+    }
     private void Update()
     {
         UpdateResourceCosts();
