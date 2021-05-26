@@ -35,9 +35,9 @@ public abstract class Craftable : MonoBehaviour
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain;      
+    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;      
     protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
-    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft;
+    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
     private void OnApplicationQuit()
     {
@@ -193,8 +193,9 @@ public abstract class Craftable : MonoBehaviour
         _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
         _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Uncraftable");
-        _tformExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
-        _tformCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
+        _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
+        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
+        _tformBody = transform.Find("Panel_Main/Body");
         _tformObjMain = transform.Find("Panel_Main");
 
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
@@ -203,9 +204,12 @@ public abstract class Craftable : MonoBehaviour
         _imgProgressbar = _tformProgressbar.GetComponent<Image>();
         _objProgressbarPanel = _tformProgressbarPanel.gameObject;
         _objTxtHeaderUncraft = _tformTxtHeaderUncraft.gameObject;
-        _imgExpand = _tformExpand.GetComponent<Image>();
-        _imgCollapse = _tformCollapse.GetComponent<Image>();
+        _imgExpand = _tformBtnExpand.GetComponent<Image>();
+        _imgCollapse = _tformBtnCollapse.GetComponent<Image>();
         objMainPanel = _tformObjMain.gameObject;
+        _objBtnExpand = _tformBtnExpand.gameObject;
+        _objBtnCollapse = _tformBtnCollapse.gameObject;
+        _objBody = _tformBody.gameObject;
 
         _isCraftedString = Type.ToString() + "isCrafted";
         _isUnlockedString = (Type.ToString() + "isUnlocked");
@@ -257,6 +261,19 @@ public abstract class Craftable : MonoBehaviour
             fillAmount += add / div;
         }
         return fillAmount / resourceCost.Length;
+    }
+    public void OnExpandCloseAll()
+    {
+        foreach (var obj in Craftables)
+        {
+            obj.Value._objBody.SetActive(false);
+            obj.Value._objBtnCollapse.SetActive(false);
+            obj.Value._objBtnExpand.SetActive(true);
+        }
+        _objBtnExpand.SetActive(false);
+        _objBody.SetActive(true);
+        _objBtnCollapse.SetActive(true);
+
     }
     public void SetDescriptionText(string description)
     {

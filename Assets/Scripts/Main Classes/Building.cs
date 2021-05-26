@@ -42,11 +42,11 @@ public abstract class Building : MonoBehaviour
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
-    private GameObject _objBtnMain;
+    private GameObject _objBtnMain, _objBtnExpand, _objBtnCollapse, _objBody;
 
     protected float _resourceMultiplier, _costMultiplier;
     protected ResourceType _resourceTypeToModify;
-    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain, tformBtnExpand;
+    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected TMP_Text _txtHeader, _txtDescription;
     protected Image _imgProgressbar;
     protected string _stringOriginalHeader;
@@ -98,12 +98,19 @@ public abstract class Building : MonoBehaviour
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformObjMain = transform.Find("Panel_Main");
+        _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
+        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
+        _tformBody = transform.Find("Panel_Main/Body");
 
         _txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _imgProgressbar = _tformProgressbar.GetComponent<Image>();
         objMainPanel = _tformObjMain.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
+        _objBtnExpand = _tformBtnExpand.gameObject;
+        _objBtnCollapse = _tformBtnCollapse.gameObject;
+        _objBody = _tformBody.gameObject;
+
 
         _stringOriginalHeader = _txtHeader.text;
 
@@ -214,7 +221,20 @@ public abstract class Building : MonoBehaviour
     public virtual void SetDescriptionText()
     {
         Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[_resourceTypeToModify].Type.ToString(), _resourceMultiplier);
-    }  
+    }
+    public void OnExpandCloseAll()
+    {
+        foreach (var obj in Buildings)
+        {
+            obj.Value._objBody.SetActive(false);
+            obj.Value._objBtnCollapse.SetActive(false);
+            obj.Value._objBtnExpand.SetActive(true);
+        }
+        _objBtnExpand.SetActive(false);
+        _objBody.SetActive(true);
+        _objBtnCollapse.SetActive(true);
+        
+    }
     protected virtual void ModifyResource()
     {
         Resource.Resources[_resourceTypeToModify].amountPerSecond += _resourceMultiplier;

@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -19,7 +20,7 @@ public enum ResearchType
     // And with that you'll gain knowledge.
     // Smelting
 
-    Paper,
+    //Paper,
     StoneEquipment
     
 }
@@ -36,30 +37,36 @@ public abstract class Researchable : MonoBehaviour
     public GameObject objSpacerBelow;
     [System.NonSerialized] public int isResearched = 0;
     [System.NonSerialized] public int isUnlocked = 0;
+    [System.NonSerialized] public int isResearchStarted = 0;
 
     private string _IsResearchedString;
+    private float _currentTimer;
 
+
+    protected float _timeToCompleteResearch;
     protected BuildingType[] _buildingTypesToModify;
     protected ResourceType[] _resourceTypesToModify;
     protected ResearchType[] _researchTypesToModify;
     protected WorkerType[] _workerTypesToModify;
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
+    private float timer = 0.1f;
+    private readonly float maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain;
-    protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
-    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft;
+    protected Transform _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
+    protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse, _imgResearchBar;
+    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
-    
+
     public void SetInitialValues()
     {
         InitializeObjects();
+        isUnlocked = 1;
 
         if (TimeManager.hasPlayedBefore)
         {
             isResearched = PlayerPrefs.GetInt(_IsResearchedString, isResearched);
         }
-
 
         if (isResearched == 1)
         {
@@ -70,34 +77,34 @@ public abstract class Researchable : MonoBehaviour
             MakeResearchableAgain();
         }
     }
-    protected void CheckIfUnlocked()
-    {
-        if (GetCurrentFill() == 1f)
-        {
-            Purchaseable();
-        }
-        else
-        {
-            UnPurchaseable();
-        }
+    //protected void CheckIfUnlocked()
+    //{
+    //    if (GetCurrentFill() == 1f)
+    //    {
+    //        Purchaseable();
+    //    }
+    //    else
+    //    {
+    //        UnPurchaseable();
+    //    }
 
-        if (isUnlocked == 0)
-        {
-            if (GetCurrentFill() >= 0.8f)
-            {
-                isUnlocked = 1;
-                if (UIManager.isResearchVisible)
-                {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                }
-                else
-                {
-                    isUnlockedEvent = true;
-                }
-            }
-        }
-    }
+    //    if (isUnlocked == 0)
+    //    {
+    //        if (GetCurrentFill() >= 0.8f)
+    //        {
+    //            isUnlocked = 1;
+    //            if (UIManager.isResearchVisible)
+    //            {
+    //                objMainPanel.SetActive(true);
+    //                objSpacerBelow.SetActive(true);
+    //            }
+    //            else
+    //            {
+    //                isUnlockedEvent = true;
+    //            }
+    //        }
+    //    }
+    //}
     public virtual void UpdateResourceCosts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
@@ -112,36 +119,92 @@ public abstract class Researchable : MonoBehaviour
             }
 
             _imgProgressbar.fillAmount = GetCurrentFill();
-            CheckIfUnlocked();
+            //CheckIfUnlocked();
+            
+        }     
+    }
+    public virtual void UpdateResearchTimer()
+    {
+        if (isResearchStarted == 1)
+        {
+            if ((timer -= Time.deltaTime) <= 0)
+            {
+                timer = maxValue;
+
+                _currentTimer += 0.1f;
+
+                _imgResearchBar.fillAmount = _currentTimer / _timeToCompleteResearch;
+                float timeRemaining = _timeToCompleteResearch - _currentTimer;  
+                TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(timeRemaining)));
+
+                if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
+                {
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%s}s</b>)", span.Duration());
+                }
+                else if (span.Days == 0 && span.Hours == 0)
+                {
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%m}m {0:%s}s</b>)", span.Duration());
+                }
+                else if (span.Days == 0)
+                {
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
+                }
+                else
+                {
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
+                }
+
+                if (_currentTimer >= _timeToCompleteResearch)
+                {
+                    isResearchStarted = 0;
+                    isResearched = 1;
+                }
+            }
         }
+        
     }
     public void OnResearch()
     {
-        bool canPurchase = true;
-
-        for (int i = 0; i < resourceCost.Length; i++)
+        if (isResearched == 1)
         {
-            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
-            {
-                canPurchase = false;
-                break;
-            }
+            ExpandResearchBar();
         }
-
-        if (canPurchase)
+        else
         {
-            isResearched = 1;
-            Researched();
+            bool canPurchase = true;
+
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+                {
+                    canPurchase = false;
+                    break;
+                }
             }
 
+            if (canPurchase)
+            {
+                isResearched = 1;
+                //Researched();
+                for (int i = 0; i < resourceCost.Length; i++)
+                {
+                    Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                }
+                StartResearch();
+            }
         }
+
+    }
+    private void ExpandResearchBar()
+    {
+        RectTransform rt = _imgResearchBar.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100);
+        _imgResearchBar.transform.localPosition = new Vector3(_imgResearchBar.transform.localPosition.x, 0, _imgResearchBar.transform.localPosition.y);
+        rt.ForceUpdateRectTransforms();
     }
     protected virtual void Researched()
     {
-        _objBtnMain.GetComponent<Button>().interactable = false;
+        //_objBtnMain.GetComponent<Button>().interactable = false;
         _objProgressbarPanel.SetActive(false);
         _objTxtHeader.SetActive(false);
         _objTxtHeaderUncraft.SetActive(true);
@@ -153,7 +216,7 @@ public abstract class Researchable : MonoBehaviour
             _imgExpand.color = greyColor;
             _imgCollapse.color = greyColor;
         }
-    } 
+    }
     private void MakeResearchableAgain()
     {
         _objBtnMain.GetComponent<Button>().interactable = true;
@@ -171,6 +234,7 @@ public abstract class Researchable : MonoBehaviour
     }
     private void InitializeObjects()
     {
+        _tformImgResearchBar = transform.Find("Panel_Main/Header_Panel/Research_FillBar");
         _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
@@ -180,7 +244,11 @@ public abstract class Researchable : MonoBehaviour
         _tformExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformObjMain = transform.Find("Panel_Main");
+        _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
+        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
+        _tformBody = transform.Find("Panel_Main/Body");
 
+        _imgResearchBar = _tformImgResearchBar.GetComponent<Image>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
@@ -190,6 +258,9 @@ public abstract class Researchable : MonoBehaviour
         _imgExpand = _tformExpand.GetComponent<Image>();
         _imgCollapse = _tformCollapse.GetComponent<Image>();
         objMainPanel = _tformObjMain.gameObject;
+        _objBtnExpand = _tformBtnExpand.gameObject;
+        _objBtnCollapse = _tformBtnCollapse.gameObject;
+        _objBody = _tformBody.gameObject;
 
         _IsResearchedString = Type.ToString() + "isCrafted";
     }
@@ -240,6 +311,36 @@ public abstract class Researchable : MonoBehaviour
         }
         return fillAmount / resourceCost.Length;
     }
+    public void GetTimeToCompleteResearch()
+    {
+        isResearchStarted = 1;
+        DateTime currentTime = DateTime.Now;
+        //Debug.Log(currentTime);
+        DateTime timeToCompletion = currentTime.AddSeconds(60);
+        //Debug.Log(timeToCompletion);
+        TimeSpan differenceAmount = timeToCompletion.Subtract(currentTime);
+        //Debug.Log(differenceAmount + " " + differenceAmount.Seconds);
+        _timeToCompleteResearch = differenceAmount.Seconds;
+    }
+    public void StartResearch()
+    {
+        isResearchStarted = 1;
+        _objProgressbarPanel.SetActive(false);
+        //GetTimeToCompleteResearch();       
+    }
+    public void OnExpandCloseAll()
+    {
+        foreach (var obj in Researchables)
+        {
+            obj.Value._objBody.SetActive(false);
+            obj.Value._objBtnCollapse.SetActive(false);
+            obj.Value._objBtnExpand.SetActive(true);
+        }
+        _objBtnExpand.SetActive(false);
+        _objBody.SetActive(true);
+        _objBtnCollapse.SetActive(true);
+
+    }
     public void SetDescriptionText(string description)
     {
         _txtDescription.text = string.Format("{0}", description);
@@ -249,4 +350,5 @@ public abstract class Researchable : MonoBehaviour
         PlayerPrefs.SetInt(_IsResearchedString, isResearched);
     }
 }
+
 

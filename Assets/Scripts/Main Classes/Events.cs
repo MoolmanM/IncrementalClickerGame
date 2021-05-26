@@ -62,7 +62,6 @@ public class Events : MonoBehaviour
             eventHappened = false;
         }
     }
-
     private bool IsPlaying(Animator anim, string stateName)
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
@@ -71,7 +70,6 @@ public class Events : MonoBehaviour
         else
             return false;
     }
-
     private void AnimalAttack()
     {
         
@@ -100,7 +98,6 @@ public class Events : MonoBehaviour
             Craftable.isUnlockedEvent = false;
         }
     }
-
     private void NewResearchAvailable()
     {
         if (Craftable.isUnlockedEvent)

@@ -16,6 +16,8 @@ public class TimeManager : MonoBehaviour
     private readonly float maxValue = 5f;
     private long temp;
 
+    private float testNumber;
+
     public void CalculateSeason()
     {
         day++;

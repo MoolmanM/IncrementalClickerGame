@@ -11,12 +11,13 @@ public class StoneEquipment : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
+        _timeToCompleteResearch = 600;
         SetInitialValues();
+        
     }
     private void Start()
-    {
-        
-        SetDescriptionText("Enables crafting of stone equipment.");
+    {      
+        SetDescriptionText("Enables crafting of stone tools.");
     }
     protected override void Researched()
     {
@@ -24,6 +25,7 @@ public class StoneEquipment : Researchable
     }
     private void Update()
     {
+        UpdateResearchTimer();
         UpdateResourceCosts();
     }
 }
