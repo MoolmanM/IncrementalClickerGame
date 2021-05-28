@@ -35,9 +35,9 @@ public abstract class Craftable : MonoBehaviour
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;      
+    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;      
     protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
-    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
+    protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
     private void OnApplicationQuit()
     {
@@ -141,7 +141,7 @@ public abstract class Craftable : MonoBehaviour
     protected virtual void Crafted()
     {
         _objBtnMain.GetComponent<Button>().interactable = false;
-        _objProgressbarPanel.SetActive(false);
+        _objProgressCircle.SetActive(false);
         _objTxtHeader.SetActive(false);
         _objTxtHeaderUncraft.SetActive(true);
 
@@ -156,7 +156,7 @@ public abstract class Craftable : MonoBehaviour
     private void MakeCraftableAgain()
     {
         _objBtnMain.GetComponent<Button>().interactable = true;
-        _objProgressbarPanel.SetActive(true);
+        _objProgressCircle.SetActive(true);
         _objTxtHeader.SetActive(true);
         _objTxtHeaderUncraft.SetActive(false);
 
@@ -190,7 +190,7 @@ public abstract class Craftable : MonoBehaviour
         _tformDescription = transform.Find("Panel_Main/Body/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
-        _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
         _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Uncraftable");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
@@ -201,8 +201,8 @@ public abstract class Craftable : MonoBehaviour
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
-        _imgProgressbar = _tformProgressbar.GetComponent<Image>();
-        _objProgressbarPanel = _tformProgressbarPanel.gameObject;
+        _imgProgressbar = _tformObjProgressCircle.GetComponent<Image>();
+        _objProgressCircle = _tformProgressbarPanel.gameObject;
         _objTxtHeaderUncraft = _tformTxtHeaderUncraft.gameObject;
         _imgExpand = _tformBtnExpand.GetComponent<Image>();
         _imgCollapse = _tformBtnCollapse.GetComponent<Image>();

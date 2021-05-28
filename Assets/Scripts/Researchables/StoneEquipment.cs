@@ -11,7 +11,12 @@ public class StoneEquipment : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 600;
+        _timeToCompleteResearch = 60;
+        _craftingTypesToModify = new CraftingType[3];
+        _craftingTypesToModify[0] = CraftingType.StoneAxe;
+        _craftingTypesToModify[1] = CraftingType.StoneHoe;
+        _craftingTypesToModify[2] = CraftingType.StonePickaxe;
+
         SetInitialValues();
         
     }
@@ -19,9 +24,14 @@ public class StoneEquipment : Researchable
     {      
         SetDescriptionText("Enables crafting of stone tools.");
     }
-    protected override void Researched()
+    protected override void UnlockBuilding()
     {
-        base.Researched();
+        // No building to unlock.
+    }
+
+    protected override void UnlockCrafting()
+    {
+        base.UnlockCrafting();
     }
     private void Update()
     {

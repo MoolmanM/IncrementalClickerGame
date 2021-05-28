@@ -39,23 +39,23 @@ public abstract class Researchable : MonoBehaviour
     [System.NonSerialized] public int isUnlocked = 0;
     [System.NonSerialized] public int isResearchStarted = 0;
 
-    private string _IsResearchedString;
-    private float _currentTimer;
-
+    private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
+    private float _currentTimer, _researchTimeRemaining;
 
     protected float _timeToCompleteResearch;
     protected BuildingType[] _buildingTypesToModify;
     protected ResourceType[] _resourceTypesToModify;
     protected ResearchType[] _researchTypesToModify;
+    protected CraftingType[] _craftingTypesToModify;
     protected WorkerType[] _workerTypesToModify;
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     private float timer = 0.1f;
     private readonly float maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformProgressbar, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
-    protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse, _imgResearchBar;
-    protected GameObject _objProgressbarPanel, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
+    protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
+    protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
+    protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
 
     public void SetInitialValues()
@@ -65,17 +65,28 @@ public abstract class Researchable : MonoBehaviour
 
         if (TimeManager.hasPlayedBefore)
         {
-            isResearched = PlayerPrefs.GetInt(_IsResearchedString, isResearched);
+            isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted, isResearchStarted);
+            isResearched = PlayerPrefs.GetInt(_stringIsResearched, isResearched);
+            _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
         }
 
-        if (isResearched == 1)
+        if (isResearched == 0 && isResearchStarted == 1)
         {
-            Researched();
+            if (_researchTimeRemaining <= TimeManager.difference.TotalSeconds)
+            {
+                isResearchStarted = 0;
+                isResearched = 1;
+                Debug.Log("Research was completed while you were gone");
+                Researched();
+            }
+            else
+            {
+                _timeToCompleteResearch = _researchTimeRemaining - (float)TimeManager.difference.TotalSeconds;
+                Debug.Log("You still have ongoing research");
+                _objProgressCircle.SetActive(false);
+            }
         }
-        else
-        {
-            MakeResearchableAgain();
-        }
+        
     }
     //protected void CheckIfUnlocked()
     //{
@@ -118,7 +129,7 @@ public abstract class Researchable : MonoBehaviour
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
             }
 
-            _imgProgressbar.fillAmount = GetCurrentFill();
+            _imgProgressCircle.fillAmount = GetCurrentFill();
             //CheckIfUnlocked();
             
         }     
@@ -134,8 +145,8 @@ public abstract class Researchable : MonoBehaviour
                 _currentTimer += 0.1f;
 
                 _imgResearchBar.fillAmount = _currentTimer / _timeToCompleteResearch;
-                float timeRemaining = _timeToCompleteResearch - _currentTimer;  
-                TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(timeRemaining)));
+                _researchTimeRemaining = _timeToCompleteResearch - _currentTimer;  
+                TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(_researchTimeRemaining)));
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
                 {
@@ -154,22 +165,14 @@ public abstract class Researchable : MonoBehaviour
                     _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
                 }
 
-                if (_currentTimer >= _timeToCompleteResearch)
-                {
-                    isResearchStarted = 0;
-                    isResearched = 1;
-                }
+                CheckIfResearchIsComplete();
             }
         }
         
     }
     public void OnResearch()
     {
-        if (isResearched == 1)
-        {
-            ExpandResearchBar();
-        }
-        else
+        if (isResearchStarted == 0)
         {
             bool canPurchase = true;
 
@@ -184,16 +187,40 @@ public abstract class Researchable : MonoBehaviour
 
             if (canPurchase)
             {
-                isResearched = 1;
-                //Researched();
                 for (int i = 0; i < resourceCost.Length; i++)
                 {
                     Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 }
-                StartResearch();
+                StartResearching();
             }
         }
 
+    }
+    private void CheckIfResearchIsComplete()
+    {
+        if (_currentTimer >= _timeToCompleteResearch)
+        {
+            isResearchStarted = 0;
+            isResearched = 1;
+        }
+    }
+    protected virtual void UnlockBuilding()
+    {
+        foreach (var building in _buildingTypesToModify)
+        {
+            Building.Buildings[building].isUnlocked = 1;
+            Building.isUnlockedEvent = true;
+        }
+    }
+
+    protected virtual void UnlockCrafting()
+    {
+        foreach (var craft in _craftingTypesToModify)
+        {
+            Craftable.Craftables[craft].isUnlocked = 1;
+            Craftable.isUnlockedEvent = true;
+            Debug.Log(craft);
+        }
     }
     private void ExpandResearchBar()
     {
@@ -204,8 +231,10 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void Researched()
     {
+        UnlockCrafting();
+        UnlockBuilding();
         //_objBtnMain.GetComponent<Button>().interactable = false;
-        _objProgressbarPanel.SetActive(false);
+        _objProgressCircle.SetActive(false);
         _objTxtHeader.SetActive(false);
         _objTxtHeaderUncraft.SetActive(true);
 
@@ -220,7 +249,7 @@ public abstract class Researchable : MonoBehaviour
     private void MakeResearchableAgain()
     {
         _objBtnMain.GetComponent<Button>().interactable = true;
-        _objProgressbarPanel.SetActive(true);
+        _objProgressCircle.SetActive(true);
         _objTxtHeader.SetActive(true);
         _objTxtHeaderUncraft.SetActive(false);
 
@@ -238,8 +267,8 @@ public abstract class Researchable : MonoBehaviour
         _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
-        _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
-        _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
+        _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
+        _tformImgProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Done");
         _tformExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
@@ -248,12 +277,12 @@ public abstract class Researchable : MonoBehaviour
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformBody = transform.Find("Panel_Main/Body");
 
+        _imgProgressCircle = _tformImgProgressCircle.GetComponent<Image>();
         _imgResearchBar = _tformImgResearchBar.GetComponent<Image>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
-        _imgProgressbar = _tformProgressbar.GetComponent<Image>();
-        _objProgressbarPanel = _tformProgressbarPanel.gameObject;
+        _objProgressCircle = _tformObjProgressCircle.gameObject;
         _objTxtHeaderUncraft = _tformTxtHeaderUncraft.gameObject;
         _imgExpand = _tformExpand.GetComponent<Image>();
         _imgCollapse = _tformCollapse.GetComponent<Image>();
@@ -262,7 +291,9 @@ public abstract class Researchable : MonoBehaviour
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
 
-        _IsResearchedString = Type.ToString() + "isCrafted";
+        _stringIsResearched = Type.ToString() + "isCrafted";
+        _stringResearchTimeRemaining = Type.ToString() + "ResearchTimeRemaining";
+        _stringIsResearchStarted = Type.ToString() + "IsResearchStarted";
     }
     private void Purchaseable()
     {
@@ -322,11 +353,10 @@ public abstract class Researchable : MonoBehaviour
         //Debug.Log(differenceAmount + " " + differenceAmount.Seconds);
         _timeToCompleteResearch = differenceAmount.Seconds;
     }
-    public void StartResearch()
+    public void StartResearching()
     {
         isResearchStarted = 1;
-        _objProgressbarPanel.SetActive(false);
-        //GetTimeToCompleteResearch();       
+        _objProgressCircle.SetActive(false);   
     }
     public void OnExpandCloseAll()
     {
@@ -347,7 +377,9 @@ public abstract class Researchable : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_IsResearchedString, isResearched);
+        PlayerPrefs.SetInt(_stringIsResearchStarted, isResearchStarted);
+        PlayerPrefs.SetInt(_stringIsResearched, isResearched);
+        PlayerPrefs.SetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
     }
 }
 

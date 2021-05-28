@@ -46,7 +46,7 @@ public abstract class Building : MonoBehaviour
 
     protected float _resourceMultiplier, _costMultiplier;
     protected ResourceType _resourceTypeToModify;
-    protected Transform _tformTxtHeader, _tformDescription, _tformProgressbar, _tformObjMain, _tformBtnMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
+    protected Transform _tformTxtHeader, _tformDescription, _tformObjProgressCircle, _tformObjMain, _tformBtnMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected TMP_Text _txtHeader, _txtDescription;
     protected Image _imgProgressbar;
     protected string _stringOriginalHeader;
@@ -96,7 +96,7 @@ public abstract class Building : MonoBehaviour
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
         _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
-        _tformProgressbar = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
+        _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformObjMain = transform.Find("Panel_Main");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
@@ -104,7 +104,7 @@ public abstract class Building : MonoBehaviour
 
         _txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
-        _imgProgressbar = _tformProgressbar.GetComponent<Image>();
+        _imgProgressbar = _tformObjProgressCircle.GetComponent<Image>();
         objMainPanel = _tformObjMain.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
         _objBtnExpand = _tformBtnExpand.gameObject;
