@@ -26,7 +26,8 @@ public enum BuildingType
     PotatoField,
     Woodlot,
     DigSite,
-    MakeshiftBed
+    MakeshiftBed,
+    Furnace
 }
 
 public abstract class Building : MonoBehaviour

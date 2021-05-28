@@ -21,24 +21,29 @@ public enum ResearchType
     // Smelting
 
     //Paper,
-    StoneEquipment
+    StoneEquipment,
+    Smelting
     
 }
 
 public abstract class Researchable : MonoBehaviour
 {
     public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
+    public static int researchSimulActive = 0, researchSimulAllowed = 1;
+    public static bool anotherResearchAllowed;
 
     public static bool isUnlockedEvent;
     public ResearchType Type;
     public ResourceCost[] resourceCost;
     public GameObject objMainPanel;
 
-    public GameObject objSpacerBelow;
-    [System.NonSerialized] public int isResearched = 0;
-    [System.NonSerialized] public int isUnlocked = 0;
-    [System.NonSerialized] public int isResearchStarted = 0;
 
+    public GameObject objSpacerBelow;
+    //[System.NonSerialized] public int isResearched = 0;
+    [System.NonSerialized] public int isUnlocked = 0;
+    //[System.NonSerialized] public int isResearchStarted = 0;
+
+    private int isResearched = 0, isResearchStarted = 0;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
 
@@ -164,7 +169,6 @@ public abstract class Researchable : MonoBehaviour
                 {
                     _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
                 }
-
                 CheckIfResearchIsComplete();
             }
         }
@@ -172,28 +176,38 @@ public abstract class Researchable : MonoBehaviour
     }
     public void OnResearch()
     {
-        if (isResearchStarted == 0)
+        if (researchSimulActive >= researchSimulAllowed)
         {
-            bool canPurchase = true;
-
-            for (int i = 0; i < resourceCost.Length; i++)
+            Debug.Log(string.Format("You can only have {0} research active at the same time", researchSimulAllowed));
+        }
+        else
+        {
+            if (isResearchStarted == 0 && isResearched == 0)
             {
-                if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
-                {
-                    canPurchase = false;
-                    break;
-                }
-            }
 
-            if (canPurchase)
-            {
+                bool canPurchase = true;
+
                 for (int i = 0; i < resourceCost.Length; i++)
                 {
-                    Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                    if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+                    {
+                        canPurchase = false;
+                        break;
+                    }
                 }
-                StartResearching();
+
+                if (canPurchase)
+                {
+                    for (int i = 0; i < resourceCost.Length; i++)
+                    {
+                        Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                    }
+                    StartResearching();
+                    Debug.Log("Is Research Started: " + Type + " " + isResearchStarted);
+                }
             }
         }
+            
 
     }
     private void CheckIfResearchIsComplete()
@@ -202,6 +216,7 @@ public abstract class Researchable : MonoBehaviour
         {
             isResearchStarted = 0;
             isResearched = 1;
+            Researched();
         }
     }
     protected virtual void UnlockBuilding()
@@ -212,14 +227,12 @@ public abstract class Researchable : MonoBehaviour
             Building.isUnlockedEvent = true;
         }
     }
-
     protected virtual void UnlockCrafting()
     {
         foreach (var craft in _craftingTypesToModify)
         {
             Craftable.Craftables[craft].isUnlocked = 1;
             Craftable.isUnlockedEvent = true;
-            Debug.Log(craft);
         }
     }
     private void ExpandResearchBar()
@@ -231,6 +244,7 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void Researched()
     {
+        researchSimulActive--;
         UnlockCrafting();
         UnlockBuilding();
         //_objBtnMain.GetComponent<Button>().interactable = false;
@@ -355,8 +369,9 @@ public abstract class Researchable : MonoBehaviour
     }
     public void StartResearching()
     {
+        researchSimulActive++;
         isResearchStarted = 1;
-        _objProgressCircle.SetActive(false);   
+        _objProgressCircle.SetActive(false);
     }
     public void OnExpandCloseAll()
     {
