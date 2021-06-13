@@ -39,11 +39,11 @@ public abstract class Researchable : MonoBehaviour
 
 
     public GameObject objSpacerBelow;
-    //[System.NonSerialized] public int isResearched = 0;
+    [System.NonSerialized] public int isResearched = 0;
     [System.NonSerialized] public int isUnlocked = 0;
     //[System.NonSerialized] public int isResearchStarted = 0;
 
-    private int isResearched = 0, isResearchStarted = 0;
+    private int isResearchStarted = 0;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
 
@@ -61,7 +61,7 @@ public abstract class Researchable : MonoBehaviour
     protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
     protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
-
+    private string _stringHeader;
 
     public void SetInitialValues()
     {
@@ -90,6 +90,11 @@ public abstract class Researchable : MonoBehaviour
                 Debug.Log("You still have ongoing research");
                 _objProgressCircle.SetActive(false);
             }
+        }
+
+        else if(isResearched == 1 && isResearchStarted == 0)
+        {
+            Researched();
         }
         
     }
@@ -155,19 +160,19 @@ public abstract class Researchable : MonoBehaviour
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%s}s</b>)", span.Duration());
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%s}s</b>)", _stringHeader, span.Duration());
                 }
                 else if (span.Days == 0 && span.Hours == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%m}m {0:%s}s</b>)", span.Duration());
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
                 }
                 else if (span.Days == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%h}h {1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
                 }
                 else
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("Stone Equipment (<b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>)", span.Duration());
+                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
                 }
                 CheckIfResearchIsComplete();
             }
@@ -203,7 +208,6 @@ public abstract class Researchable : MonoBehaviour
                         Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                     }
                     StartResearching();
-                    Debug.Log("Is Research Started: " + Type + " " + isResearchStarted);
                 }
             }
         }
@@ -231,6 +235,7 @@ public abstract class Researchable : MonoBehaviour
     {
         foreach (var craft in _craftingTypesToModify)
         {
+            //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);
             Craftable.Craftables[craft].isUnlocked = 1;
             Craftable.isUnlockedEvent = true;
         }
@@ -244,21 +249,46 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void Researched()
     {
-        researchSimulActive--;
-        UnlockCrafting();
-        UnlockBuilding();
-        //_objBtnMain.GetComponent<Button>().interactable = false;
-        _objProgressCircle.SetActive(false);
-        _objTxtHeader.SetActive(false);
-        _objTxtHeaderUncraft.SetActive(true);
-
-        string htmlValue = "#D4D4D4";
-
-        if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+        if (ToggleResearch.isResearchHidden == 1)
         {
-            _imgExpand.color = greyColor;
-            _imgCollapse.color = greyColor;
+            researchSimulActive--;
+            UnlockCrafting();
+            UnlockBuilding();
+            //_objBtnMain.GetComponent<Button>().interactable = false;
+            _objProgressCircle.SetActive(false);
+            _objTxtHeader.SetActive(false);
+            _objTxtHeaderUncraft.SetActive(true);
+
+            string htmlValue = "#D4D4D4";
+
+            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+            {
+                _imgExpand.color = greyColor;
+                _imgCollapse.color = greyColor;
+            }
+
+            objMainPanel.SetActive(false);
+            objSpacerBelow.SetActive(false);
         }
+        else
+        {
+            researchSimulActive--;
+            UnlockCrafting();
+            UnlockBuilding();
+            //_objBtnMain.GetComponent<Button>().interactable = false;
+            _objProgressCircle.SetActive(false);
+            _objTxtHeader.SetActive(false);
+            _objTxtHeaderUncraft.SetActive(true);
+
+            string htmlValue = "#D4D4D4";
+
+            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+            {
+                _imgExpand.color = greyColor;
+                _imgCollapse.color = greyColor;
+            }
+        }
+        
     }
     private void MakeResearchableAgain()
     {
@@ -304,6 +334,7 @@ public abstract class Researchable : MonoBehaviour
         _objBtnExpand = _tformBtnExpand.gameObject;
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
+        _stringHeader = _objTxtHeader.GetComponent<TMP_Text>().text;
 
         _stringIsResearched = Type.ToString() + "isCrafted";
         _stringResearchTimeRemaining = Type.ToString() + "ResearchTimeRemaining";
@@ -371,7 +402,7 @@ public abstract class Researchable : MonoBehaviour
     {
         researchSimulActive++;
         isResearchStarted = 1;
-        _objProgressCircle.SetActive(false);
+        _objProgressCircle.SetActive(false);     
     }
     public void OnExpandCloseAll()
     {

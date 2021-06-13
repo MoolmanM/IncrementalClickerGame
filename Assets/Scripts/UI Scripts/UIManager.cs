@@ -8,13 +8,16 @@ public class UIManager : MonoBehaviour
     public Swipe _Swipe;
     private uint _swipeCount = 0;
     private readonly uint _panelCount = 3;
+    public GameObject settingsMenu;
     public GameObject[] buildingUI, craftUI, workerUI, researchUI;
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
 
     private void Start()
     {
         _swipeCount = 0;
+        settingsMenu.SetActive(false);
         BuildingPanelActive();
+        HideCompletedResearch();
     }
     private void BuildingPanelActive()
     {
@@ -287,6 +290,13 @@ public class UIManager : MonoBehaviour
             }
         }
         #endregion
+    }
+    public void HideCompletedResearch()
+    {
+        foreach (var researchable in Researchable.Researchables)
+        {
+            Debug.Log(researchable);
+        }
     }
     void Update()
     {
