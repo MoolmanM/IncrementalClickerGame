@@ -8,14 +8,17 @@ public class UIManager : MonoBehaviour
     public Swipe _Swipe;
     private uint _swipeCount = 0;
     private readonly uint _panelCount = 3;
-    public GameObject settingsMenu;
-    public GameObject[] buildingUI, craftUI, workerUI, researchUI;
+    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI;
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
 
     private void Start()
     {
         _swipeCount = 0;
-        settingsMenu.SetActive(false);
+        foreach(var _settingsUI in settingsUI)
+        {
+            _settingsUI.SetActive(false);
+        }
+        
         BuildingPanelActive();
         HideCompletedResearch();
     }
