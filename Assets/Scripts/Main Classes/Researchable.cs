@@ -227,17 +227,35 @@ public abstract class Researchable : MonoBehaviour
     {
         foreach (var building in _buildingTypesToModify)
         {
-            Building.Buildings[building].isUnlocked = 1;
-            Building.isUnlockedEvent = true;
+            if(UIManager.isBuildingVisible)
+            {
+                Building.Buildings[building].isUnlocked = 1;
+                Building.Buildings[building].objMainPanel.SetActive(true);
+                Building.Buildings[building].objSpacerBelow.SetActive(true);
+            }   
+            else
+            {
+                Building.Buildings[building].isUnlocked = 1;
+                Building.isUnlockedEvent = true;
+            }         
         }
     }
     protected virtual void UnlockCrafting()
     {
         foreach (var craft in _craftingTypesToModify)
         {
-            //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);
-            Craftable.Craftables[craft].isUnlocked = 1;
-            Craftable.isUnlockedEvent = true;
+            if(UIManager.isCraftingVisible)
+            {
+                Craftable.Craftables[craft].isUnlocked = 1;
+                Craftable.Craftables[craft].objMainPanel.SetActive(true);
+                Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
+            }
+            else
+            {
+                Craftable.Craftables[craft].isUnlocked = 1;
+                Craftable.isUnlockedEvent = true;
+            }
+            //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);       
         }
     }
     private void ExpandResearchBar()

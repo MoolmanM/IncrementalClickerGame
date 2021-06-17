@@ -17,8 +17,7 @@ public class PotatoField : Building
         SetInitialValues();
     }
     private void Start()
-    {
-        CheckIfUnlocked();     
+    {  
         SetDescriptionText();
         //DisplayConsole();
     }

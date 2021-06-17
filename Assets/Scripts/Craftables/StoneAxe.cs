@@ -30,6 +30,12 @@ public class StoneAxe : Craftable
     {
         // Do nothing.
     }
+
+    protected override void UnlockBuilding()
+    {
+        // Do nothing.
+        // base.UnlockBuilding();
+    }
     private void Update()
     {
         UpdateResourceCosts();

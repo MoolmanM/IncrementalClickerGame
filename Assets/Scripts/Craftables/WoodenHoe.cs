@@ -10,6 +10,7 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        isUnlockableByResource = true;
         SetInitialValues();
         _buildingTypesToModify = new BuildingType[1];
         _buildingTypesToModify[0] = BuildingType.PotatoField;

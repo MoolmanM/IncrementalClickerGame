@@ -10,6 +10,7 @@ public class WoodenPickaxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        isUnlockableByResource = true;
         SetInitialValues();
 
         _buildingTypesToModify = new BuildingType[1];

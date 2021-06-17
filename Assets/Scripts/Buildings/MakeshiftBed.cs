@@ -16,8 +16,7 @@ public class MakeshiftBed : Building
         _selfCount = 10;
     }
     private void Start()
-    {       
-        CheckIfUnlocked();
+    {
         SetDescriptionText();
         // DisplayConsole();
     }

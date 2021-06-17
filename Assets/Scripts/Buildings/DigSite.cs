@@ -15,8 +15,7 @@ public class DigSite : Building
         SetInitialValues();
     }
     private void Start()
-    {
-        CheckIfUnlocked();     
+    {    
         SetDescriptionText();
         //DisplayConsole();
     }

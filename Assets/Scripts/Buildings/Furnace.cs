@@ -17,7 +17,6 @@ public class Furnace : Building
     }
     private void Start()
     {
-        CheckIfUnlocked();
         SetDescriptionText();
         //DisplayConsole();
     }

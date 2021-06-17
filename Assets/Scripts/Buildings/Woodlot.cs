@@ -15,8 +15,7 @@ public class Woodlot : Building
         SetInitialValues();
     }
     private void Start()
-    {
-        CheckIfUnlocked();      
+    {   
         SetDescriptionText();
         //DisplayConsole();
     }

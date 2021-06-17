@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonAnmOptions : ButtonAnimation
+public class ButtonAnimOptions : ButtonAnimation
 {
     public GameObject objSettingsPanel;
     public GameObject[] objOptionsElements;

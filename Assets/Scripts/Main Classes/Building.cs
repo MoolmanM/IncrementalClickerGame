@@ -81,7 +81,7 @@ public abstract class Building : MonoBehaviour
         }
         _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    protected void CheckIfUnlocked()
+    protected void CheckIfPurchaseable()
     {
         if (GetCurrentFill() == 1f)
         {
@@ -139,7 +139,7 @@ public abstract class Building : MonoBehaviour
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());              
             }
             _imgProgressbar.fillAmount = GetCurrentFill();
-            CheckIfUnlocked();
+            CheckIfPurchaseable();
         }
     }
     public float GetCurrentFill()

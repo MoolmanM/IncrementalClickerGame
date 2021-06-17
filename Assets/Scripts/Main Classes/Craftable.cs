@@ -29,6 +29,7 @@ public abstract class Craftable : MonoBehaviour
 
     private string _isCraftedString, _isUnlockedString;
 
+    protected bool isUnlockableByResource;
     protected BuildingType[] _buildingTypesToModify;
     protected ResourceType[] _resourceTypesToModify;
     protected WorkerType[] _workerTypesToModify;
@@ -69,6 +70,28 @@ public abstract class Craftable : MonoBehaviour
         }
     }
     protected void CheckIfUnlocked()
+    {    
+        if (isUnlocked == 0)
+        {
+            if (GetCurrentFill() >= 0.8f)
+            {
+                if (isUnlockableByResource)
+                {
+                    isUnlocked = 1;
+                    if (UIManager.isCraftingVisible)
+                    {
+                        objMainPanel.SetActive(true);
+                        objSpacerBelow.SetActive(true);
+                    }
+                    else
+                    {
+                        isUnlockedEvent = true;
+                    }
+                }                        
+            }
+        }
+    }
+    protected void CheckIfPurchaseable()
     {
         if (GetCurrentFill() == 1f)
         {
@@ -77,23 +100,6 @@ public abstract class Craftable : MonoBehaviour
         else
         {
             UnPurchaseable();
-        }
-
-        if (isUnlocked == 0)
-        {
-            if (GetCurrentFill() >= 0.8f)
-            {
-                isUnlocked = 1;
-                if(UIManager.isCraftingVisible)
-                {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                }
-                else
-                {
-                    isUnlockedEvent = true;                    
-                }
-            }
         }
     }
     public virtual void UpdateResourceCosts()
@@ -110,6 +116,7 @@ public abstract class Craftable : MonoBehaviour
             }
             _imgProgressbar.fillAmount =  GetCurrentFill();
             CheckIfUnlocked();
+            CheckIfPurchaseable();
         }
     }
     public void OnCraft()
