@@ -18,6 +18,9 @@ public class WoodenPickaxe : Craftable
 
         _resourceTypesToModify = new ResourceType[1];
         _resourceTypesToModify[0] = ResourceType.Stones;
+
+        _workerTypesToModify = new WorkerType[1];
+        _workerTypesToModify[0] = WorkerType.Miners;
     }
     private void Start()
     {

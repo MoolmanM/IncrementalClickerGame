@@ -6,7 +6,7 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
     public TMP_Text seasonText, goneForText;
-    public GameObject _welcomePanel;
+    public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
     private DateTime currentDate;
     public static bool hasPlayedBefore;
     public static TimeSpan difference;
@@ -24,18 +24,22 @@ public class TimeManager : MonoBehaviour
         if (seasonCount == 0)
         {
             seasonString = "Spring";
+            objSpringImage.SetActive(true);
         }
         else if (seasonCount == 1)
         {
             seasonString = "Summer";
+            objSummerImage.SetActive(true);
         }
         else if (seasonCount == 2)
         {
             seasonString = "Fall";
+            objFallImage.SetActive(true);
         }
         else if (seasonCount == 3)
         {
             seasonString = "Winter";
+            objWinterImage.SetActive(true);
         }
         else
         {
@@ -61,11 +65,11 @@ public class TimeManager : MonoBehaviour
         SetLaunchValues();
         //if (hasPlayedBefore)
         //{
-        //    _welcomePanel.SetActive(true);         
+        //    objWelcomePanel.SetActive(true);         
         //}
         //else
         //{
-        //    _welcomePanel.SetActive(false);
+        //    objWelcomePanel.SetActive(false);
         //}
     }
     void OnApplicationQuit()

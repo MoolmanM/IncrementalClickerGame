@@ -13,6 +13,9 @@ public class WoodenAxe : Craftable
         isUnlockableByResource = true;
         _buildingTypesToModify = new BuildingType[1];
         _buildingTypesToModify[0] = BuildingType.Woodlot;
+
+        _workerTypesToModify = new WorkerType[1];
+        _workerTypesToModify[0] = WorkerType.Woodcutters;
         SetInitialValues();
     }
     private void Start()

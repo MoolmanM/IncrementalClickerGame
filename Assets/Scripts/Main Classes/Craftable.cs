@@ -138,6 +138,7 @@ public abstract class Craftable : MonoBehaviour
             Crafted();
             UnlockBuilding();
             UnlockResource();
+            UnlockWorkerJob();
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
@@ -147,39 +148,27 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void Crafted()
     {
+        _objBtnMain.GetComponent<Button>().interactable = false;
+        _objProgressCircle.SetActive(false);
+        _objTxtHeader.SetActive(false);
+        _objTxtHeaderUncraft.SetActive(true);
+
+        string htmlValue = "#D4D4D4";
+
+        if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+        {
+            _imgExpand.color = greyColor;
+            _imgCollapse.color = greyColor;
+        }
+
         if (ToggleCrafting.isCraftingHidden == 1)
         {
-            _objBtnMain.GetComponent<Button>().interactable = false;
-            _objProgressCircle.SetActive(false);
-            _objTxtHeader.SetActive(false);
-            _objTxtHeaderUncraft.SetActive(true);
-
-            string htmlValue = "#D4D4D4";
-
-            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
-            {
-                _imgExpand.color = greyColor;
-                _imgCollapse.color = greyColor;
-            }
+            
 
             objMainPanel.SetActive(false);
             objSpacerBelow.SetActive(false);
         }
-        else
-        {
-            _objBtnMain.GetComponent<Button>().interactable = false;
-            _objProgressCircle.SetActive(false);
-            _objTxtHeader.SetActive(false);
-            _objTxtHeaderUncraft.SetActive(true);
 
-            string htmlValue = "#D4D4D4";
-
-            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
-            {
-                _imgExpand.color = greyColor;
-                _imgCollapse.color = greyColor;
-            }
-        }
     }
     private void MakeCraftableAgain()
     {
@@ -204,6 +193,15 @@ public abstract class Craftable : MonoBehaviour
             Building.isUnlockedEvent = true;
         }
     }
+    protected virtual void UnlockWorkerJob()
+    {
+        foreach (var worker in _workerTypesToModify)
+        {
+            Worker.Workers[worker].isUnlocked = 1;
+            Worker.isUnlockedEvent = true;
+            Worker.totalJobs++;
+        }
+    }
     protected virtual void UnlockResource()
     {
         foreach (var resource in _resourceTypesToModify)
@@ -211,15 +209,6 @@ public abstract class Craftable : MonoBehaviour
             Resource.Resources[resource].isUnlocked = 1;
             Resource.Resources[resource].objMainPanel.SetActive(true);
             Resource.Resources[resource].objSpacerBelow.SetActive(true);
-        }
-    }
-    protected virtual void UnlockWorker()
-    {
-        foreach (var worker in _workerTypesToModify)
-        {
-            Worker.Workers[worker].isUnlocked = 1;
-            Worker.Workers[worker].objMainPanel.SetActive(true);
-            Worker.Workers[worker].objSpacerBelow.SetActive(true);
         }
     }
     private void InitializeObjects()

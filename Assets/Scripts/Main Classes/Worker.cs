@@ -18,6 +18,7 @@ public class Worker : MonoBehaviour
 
     public GameObject objSpacerBelow;
     public static uint AvailableWorkerCount;
+    public static bool isUnlockedEvent;
     public uint ChangeAmount = 1;
     public uint WorkerCount;
     public WorkerType Type;
@@ -28,6 +29,8 @@ public class Worker : MonoBehaviour
     public uint isUnlocked;
     private string _workerString;
     public float tempAmount;
+
+    public static uint totalJobs;
 
 
     protected void SetInitialValues()
@@ -57,7 +60,6 @@ public class Worker : MonoBehaviour
             objSpacerBelow.SetActive(false);
         }
     }
-    
     public void OnPlusButton()
     {
         // amountPerSecond = 0;
@@ -104,7 +106,6 @@ public class Worker : MonoBehaviour
             Resource.Resources[_resourceTypeToModify].amountPerSecond += AmountToIncreasePerSecondBy;
         }       
     }
-
     public void OnMinusButton()
     {
         if (WorkerCount > 0)
@@ -148,9 +149,22 @@ public class Worker : MonoBehaviour
             Resource.Resources[_resourceTypeToModify].amountPerSecond -= AmountToIncreasePerSecondBy;
         }     
     }
+    private void AutoAssignWorkers()
+    {
+        if (isUnlocked == 1)
+        {
+
+        }
+        Debug.Log("Total Jobs: " + totalJobs);
+        // PlayerPrefs workers.
+    }
     private void OnApplicationQuit()
     {             
         PlayerPrefs.SetInt("AvailableWorkerCount", (int)AvailableWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)WorkerCount);
+    }
+    private void Update()
+    {
+        AutoAssignWorkers();
     }
 }

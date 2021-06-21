@@ -14,6 +14,9 @@ public class WoodenHoe : Craftable
         SetInitialValues();
         _buildingTypesToModify = new BuildingType[1];
         _buildingTypesToModify[0] = BuildingType.PotatoField;
+
+        _workerTypesToModify = new WorkerType[1];
+        _workerTypesToModify[0] = WorkerType.Farmers;
     }
     private void Start()
     {

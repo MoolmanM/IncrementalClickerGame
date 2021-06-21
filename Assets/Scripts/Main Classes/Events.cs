@@ -43,6 +43,7 @@ public class Events : MonoBehaviour
         NewCraftingRecipe();
         NewResearchAvailable();
         NewBuildingAvailable();
+        NewJobAvailable();
 
         if (eventHappened == true)
         {
@@ -114,6 +115,15 @@ public class Events : MonoBehaviour
             eventHappened = true;
             NotableEvent("You've unlocked a new building.");
             Building.isUnlockedEvent = false;
+        }
+    }
+    private void NewJobAvailable()
+    {
+        if (Worker.isUnlockedEvent)
+        {
+            eventHappened = true;
+            NotableEvent("You've unlocked a new job.");
+            Worker.isUnlockedEvent = false;
         }
     }
     private void GenerateWorkers()
