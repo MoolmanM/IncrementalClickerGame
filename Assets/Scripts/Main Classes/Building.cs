@@ -38,7 +38,7 @@ public abstract class Building : MonoBehaviour
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
     [NonSerialized] public int isUnlocked = 0;
-    public GameObject objMainPanel;
+    [NonSerialized] public GameObject objMainPanel;
     public static bool isUnlockedEvent;
 
     private string _selfCountString, _isUnlockedString;
@@ -46,7 +46,7 @@ public abstract class Building : MonoBehaviour
     private GameObject _objBtnMain, _objBtnExpand, _objBtnCollapse, _objBody;
 
     protected float _resourceMultiplier, _costMultiplier;
-    protected ResourceType _resourceTypeToModify;
+    protected ResourceType resourceTypeToModify;
     protected Transform _tformTxtHeader, _tformDescription, _tformObjProgressCircle, _tformObjMain, _tformBtnMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected TMP_Text _txtHeader, _txtDescription;
     protected Image _imgProgressbar;
@@ -221,7 +221,7 @@ public abstract class Building : MonoBehaviour
     }
     public virtual void SetDescriptionText()
     {
-        Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[_resourceTypeToModify].Type.ToString(), _resourceMultiplier);
+        Buildings[Type]._txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[resourceTypeToModify].Type.ToString(), _resourceMultiplier);
     }
     public void OnExpandCloseAll()
     {
@@ -238,7 +238,7 @@ public abstract class Building : MonoBehaviour
     }
     protected virtual void ModifyResource()
     {
-        Resource.Resources[_resourceTypeToModify].amountPerSecond += _resourceMultiplier;
+        Resource.Resources[resourceTypeToModify].amountPerSecond += _resourceMultiplier;
     }
 }
 

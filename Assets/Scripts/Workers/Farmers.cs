@@ -11,6 +11,8 @@ public class Farmers : Worker
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
         SetInitialValues();
+        resourceMultiplier = 0.12f;
+        resourceTypeToModify = ResourceType.Food;
         // DisplayConsole();
     }
 

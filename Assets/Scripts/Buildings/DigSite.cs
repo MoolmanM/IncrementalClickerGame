@@ -11,7 +11,7 @@ public class DigSite : Building
         Buildings.Add(Type, _building);
         _resourceMultiplier = 0.08f;
         _costMultiplier = 1.10f;
-        _resourceTypeToModify = ResourceType.Stones;
+        resourceTypeToModify = ResourceType.Stones;
         SetInitialValues();
     }
     private void Start()

@@ -11,7 +11,7 @@ public class Woodlot : Building
         Buildings.Add(Type, _building);
         _resourceMultiplier = 0.12f;
         _costMultiplier = 1.07f;
-        _resourceTypeToModify = ResourceType.Sticks;
+        resourceTypeToModify = ResourceType.Sticks;
         SetInitialValues();
     }
     private void Start()

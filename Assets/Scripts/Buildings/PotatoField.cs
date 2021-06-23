@@ -13,7 +13,7 @@ public class PotatoField : Building
         Buildings.Add(Type, _building);
         _resourceMultiplier = 0.10f;
         _costMultiplier = 1.15f;
-        _resourceTypeToModify = ResourceType.Food;
+        resourceTypeToModify = ResourceType.Food;
         SetInitialValues();
     }
     private void Start()

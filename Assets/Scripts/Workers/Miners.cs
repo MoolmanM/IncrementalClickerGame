@@ -11,6 +11,8 @@ public class Miners : Worker
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
         SetInitialValues();
+        resourceMultiplier = 0.10f;
+        resourceTypeToModify = ResourceType.Stones;
         // DisplayConsole();
     }
 

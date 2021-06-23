@@ -128,15 +128,21 @@ public class Events : MonoBehaviour
     }
     private void GenerateWorkers()
     {
-        if (Worker.AvailableWorkerCount < MakeshiftBed._selfCount)
+        if (Worker.TotalWorkerCount < MakeshiftBed._selfCount)
         {
             if ((timer -= Time.deltaTime) <= 0)
             {
                 timer = _maxValue;
 
-                Worker.AvailableWorkerCount++;
+                Worker.UnassignedWorkerCount++;
+                Worker.TotalWorkerCount++;
                 NotableEvent("A worker has arrived");
-                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.AvailableWorkerCount);
+                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+                AutoWorker.CalculateWorkers();
+                if (AutoToggle.isAutoWorkerOn == 1)
+                {
+                    AutoWorker.AutoAssignWorkers();
+                }
             }
         }
     }

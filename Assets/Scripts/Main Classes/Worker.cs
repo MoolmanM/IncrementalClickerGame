@@ -8,30 +8,32 @@ public enum WorkerType
     Farmers,
     Woodcutters,
     Miners
+    // Scholars.
 }
 
 public class Worker : MonoBehaviour
 {
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
-    [System.NonSerialized] public GameObject objMainPanel;
-
-    public GameObject objSpacerBelow;
-    public static uint AvailableWorkerCount;
+    public static uint TotalWorkerCount, UnassignedWorkerCount;
     public static bool isUnlockedEvent;
-    public uint ChangeAmount = 1;
-    public uint WorkerCount;
+
+    [System.NonSerialized] public ResourceType resourceTypeToModify;
+    [System.NonSerialized] public GameObject objMainPanel;
+    [System.NonSerialized] public TMP_Text txtHeader;
+    [System.NonSerialized] public uint isUnlocked;
+    [System.NonSerialized] public float resourceMultiplier, amountToIncreasePerSecondBy;
+
+    // Make workercount nonserialized eventually, for now will use for debugging.
+    public uint workerCount;
+
     public WorkerType Type;
-    public TMP_Text _txtHeader, TxtAvailableWorkers;
-    public ResourceType _resourceTypeToModify;
-    public float _resourceMultiplier;
-    public float AmountToIncreasePerSecondBy;
-    public uint isUnlocked;
+    public GameObject objSpacerBelow;
+    public TMP_Text txtAvailableWorkers;
+
+    private uint _changeAmount = 1;
+    private Transform _tformTxtHeader, _tformObjMainPanel;
     private string _workerString;
-    public float tempAmount;
-
-    public static uint totalJobs;
-
 
     protected void SetInitialValues()
     {
@@ -39,15 +41,21 @@ public class Worker : MonoBehaviour
     }
     protected void InitializeObjects()
     {
-        objMainPanel = gameObject;
+        _tformTxtHeader = transform.Find("Panel_Main/Text_Header");
+        _tformObjMainPanel = transform.Find("Panel_Main");
 
-        _workerString = (Type.ToString() + "WorkerCount");
+        txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
+        objMainPanel = _tformObjMainPanel.gameObject;
 
-        WorkerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)WorkerCount);
-        AvailableWorkerCount = (uint)PlayerPrefs.GetInt("AvailableWorkerCount", (int)AvailableWorkerCount);
+        _workerString = (Type.ToString() + "workerCount");
 
-        _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
-        TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
+        workerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)workerCount);
+        UnassignedWorkerCount = (uint)PlayerPrefs.GetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
+        TotalWorkerCount = (uint)PlayerPrefs.GetInt("TotalWorkerCount", (int)TotalWorkerCount);
+
+
+        txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
+        txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
         if (isUnlocked == 1)
         {
@@ -59,112 +67,107 @@ public class Worker : MonoBehaviour
             objMainPanel.SetActive(false);
             objSpacerBelow.SetActive(false);
         }
+        if (AutoToggle.isAutoWorkerOn == 1)
+        {
+            AutoWorker.CalculateWorkers();
+            AutoWorker.AutoAssignWorkers();
+        }      
     }
     public void OnPlusButton()
     {
         // amountPerSecond = 0;
         // amountPerSecond += workermultiplier 
 
-        if (AvailableWorkerCount > 0)
+        if (UnassignedWorkerCount > 0)
         {
             if (IncrementSelect.IsOneSelected)
             {
-                ChangeAmount = 1;
+                _changeAmount = 1;
             }
             if (IncrementSelect.IsTenSelected)
             {
-                if (AvailableWorkerCount < 10)
+                if (UnassignedWorkerCount < 10)
                 {
-                    ChangeAmount = AvailableWorkerCount;
+                    _changeAmount = UnassignedWorkerCount;
                 }
                 else
                 {
-                    ChangeAmount = 10;
+                    _changeAmount = 10;
                 }
             }
             if (IncrementSelect.IsHundredSelected)
             {
-                if (AvailableWorkerCount < 100)
+                if (UnassignedWorkerCount < 100)
                 {
-                    ChangeAmount = AvailableWorkerCount;
+                    _changeAmount = UnassignedWorkerCount;
                 }
                 else
                 {
-                    ChangeAmount = 100;
+                    _changeAmount = 100;
                 }
             }
             if (IncrementSelect.IsMaxSelected)
             {
-                ChangeAmount = AvailableWorkerCount;
+                _changeAmount = UnassignedWorkerCount;
             }
-            AvailableWorkerCount -= ChangeAmount;
-            WorkerCount += ChangeAmount;
-            _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
-            TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
+            UnassignedWorkerCount -= _changeAmount;
+            workerCount += _changeAmount;
+            txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
-            Resource.Resources[_resourceTypeToModify].amountPerSecond += AmountToIncreasePerSecondBy;
+            amountToIncreasePerSecondBy = (_changeAmount * resourceMultiplier);
+            Resource.Resources[resourceTypeToModify].amountPerSecond += amountToIncreasePerSecondBy;
+
+            Debug.Log("Change Amount: " + _changeAmount + " ,Worker Count: " + workerCount);
         }       
     }
     public void OnMinusButton()
     {
-        if (WorkerCount > 0)
+        if (workerCount > 0)
         {
             if (IncrementSelect.IsOneSelected)
             {
-                ChangeAmount = 1;
+                _changeAmount = 1;
             }
             if (IncrementSelect.IsTenSelected)
             {
-                if (WorkerCount < 10)
+                if (workerCount < 10)
                 {
-                    ChangeAmount = WorkerCount;
+                    _changeAmount = workerCount;
                 }
                 else
                 {
-                    ChangeAmount = 10;
+                    _changeAmount = 10;
                 }
             }
             if (IncrementSelect.IsHundredSelected)
             {
-                if (WorkerCount < 100)
+                if (workerCount < 100)
                 {
-                    ChangeAmount = WorkerCount;
+                    _changeAmount = workerCount;
                 }
                 else
                 {
-                    ChangeAmount = 100;
+                    _changeAmount = 100;
                 }
             }
             if (IncrementSelect.IsMaxSelected)
             {
-                ChangeAmount = WorkerCount;
+                _changeAmount = workerCount;
             }
-            AvailableWorkerCount += ChangeAmount;
-            WorkerCount -= ChangeAmount;
-            _txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), WorkerCount);
-            TxtAvailableWorkers.text = string.Format("Available Workers: [{0}]", AvailableWorkerCount);
+            UnassignedWorkerCount += _changeAmount;
+            workerCount -= _changeAmount;
+            txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            AmountToIncreasePerSecondBy = (ChangeAmount * _resourceMultiplier);
-            Resource.Resources[_resourceTypeToModify].amountPerSecond -= AmountToIncreasePerSecondBy;
+            amountToIncreasePerSecondBy = (_changeAmount * resourceMultiplier);
+            Resource.Resources[resourceTypeToModify].amountPerSecond -= amountToIncreasePerSecondBy;
         }     
-    }
-    private void AutoAssignWorkers()
-    {
-        if (isUnlocked == 1)
-        {
-
-        }
-        Debug.Log("Total Jobs: " + totalJobs);
-        // PlayerPrefs workers.
     }
     private void OnApplicationQuit()
     {             
-        PlayerPrefs.SetInt("AvailableWorkerCount", (int)AvailableWorkerCount);
-        PlayerPrefs.SetInt(_workerString, (int)WorkerCount);
-    }
-    private void Update()
-    {
-        AutoAssignWorkers();
+        PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
+        PlayerPrefs.SetInt(_workerString, (int)workerCount);
+        PlayerPrefs.SetInt("TotalWorkerCount", (int)TotalWorkerCount);
     }
 }

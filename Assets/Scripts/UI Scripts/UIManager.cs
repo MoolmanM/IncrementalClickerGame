@@ -298,7 +298,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var researchable in Researchable.Researchables)
         {
-            Debug.Log(researchable);
+            //Debug.Log(researchable);
         }
     }
     void Update()
