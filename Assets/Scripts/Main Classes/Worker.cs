@@ -22,7 +22,7 @@ public class Worker : MonoBehaviour
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public TMP_Text txtHeader;
     [System.NonSerialized] public uint isUnlocked;
-    [System.NonSerialized] public float resourceMultiplier, amountToIncreasePerSecondBy;
+    [System.NonSerialized] public float resourceMultiplier, incrementAmount;
 
     // Make workercount nonserialized eventually, for now will use for debugging.
     public uint workerCount;
@@ -115,10 +115,8 @@ public class Worker : MonoBehaviour
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            amountToIncreasePerSecondBy = (_changeAmount * resourceMultiplier);
-            Resource.Resources[resourceTypeToModify].amountPerSecond += amountToIncreasePerSecondBy;
-
-            Debug.Log("Change Amount: " + _changeAmount + " ,Worker Count: " + workerCount);
+            incrementAmount = (_changeAmount * resourceMultiplier);
+            Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
         }       
     }
     public void OnMinusButton()
@@ -160,8 +158,8 @@ public class Worker : MonoBehaviour
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            amountToIncreasePerSecondBy = (_changeAmount * resourceMultiplier);
-            Resource.Resources[resourceTypeToModify].amountPerSecond -= amountToIncreasePerSecondBy;
+            incrementAmount = (_changeAmount * resourceMultiplier);
+            Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
         }     
     }
     private void OnApplicationQuit()

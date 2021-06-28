@@ -200,9 +200,10 @@ public abstract class Craftable : MonoBehaviour
             Worker.Workers[worker].isUnlocked = 1;
             Worker.isUnlockedEvent = true;
             AutoWorker.TotalWorkerJobs++;
-            AutoWorker.CalculateWorkers();
+            
             if (AutoToggle.isAutoWorkerOn == 1)
             {
+                AutoWorker.CalculateWorkers();
                 AutoWorker.AutoAssignWorkers();
             }
         }

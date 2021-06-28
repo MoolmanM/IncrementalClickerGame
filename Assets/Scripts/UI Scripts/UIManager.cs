@@ -281,7 +281,6 @@ public class UIManager : MonoBehaviour
             else if (_swipeCount == 2)
             {
                 WorkerPanelActive();
-
             }
             else if (_swipeCount == 3)
             {

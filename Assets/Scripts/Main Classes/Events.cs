@@ -138,9 +138,10 @@ public class Events : MonoBehaviour
                 Worker.TotalWorkerCount++;
                 NotableEvent("A worker has arrived");
                 txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
-                AutoWorker.CalculateWorkers();
+                
                 if (AutoToggle.isAutoWorkerOn == 1)
                 {
+                    AutoWorker.CalculateWorkers();
                     AutoWorker.AutoAssignWorkers();
                 }
             }
@@ -148,6 +149,16 @@ public class Events : MonoBehaviour
     }
     private void NotableEvent(string notableEventString)
     {
+        //When event triggers, check to see on what panel you are currently.
+        //If the panel is not the panel where the event took place. 
+        //Point a dot towards that side of the panel.
+        //So if workerpanel is active and and event happened on the building panel.
+        //Have left dot be assigned to 1.
+        //Question is where should I have this code, I'm thinking I should have that code inside here.
+        //Currently events gets checked in update, which is completely wrong. It should only execute when an event occurs.
+        //Go study events/delegates tomorrow.
+        
+
         // Write to a history log whenever something notable happens. 
         _currentHistoryLog = txtHistoryLog.text;
         if (_currentHistoryLog == "")
