@@ -39,11 +39,10 @@ public abstract class Researchable : MonoBehaviour
 
 
     public GameObject objSpacerBelow;
-    [System.NonSerialized] public int isResearched = 0;
-    [System.NonSerialized] public int isUnlocked = 0;
+    [System.NonSerialized] public bool isUnlocked, isResearched;
     //[System.NonSerialized] public int isResearchStarted = 0;
 
-    private int isResearchStarted = 0;
+    private bool isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
 
@@ -66,21 +65,21 @@ public abstract class Researchable : MonoBehaviour
     public void SetInitialValues()
     {
         InitializeObjects();
-        isUnlocked = 1;
+        isUnlocked = true;
 
         if (TimeManager.hasPlayedBefore)
         {
-            isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted, isResearchStarted);
-            isResearched = PlayerPrefs.GetInt(_stringIsResearched, isResearched);
+            isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
+            isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
             _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
         }
 
-        if (isResearched == 0 && isResearchStarted == 1)
+        if (!isResearched && isResearchStarted)
         {
             if (_researchTimeRemaining <= TimeManager.difference.TotalSeconds)
             {
-                isResearchStarted = 0;
-                isResearched = 1;
+                isResearchStarted = false;
+                isResearched = true;
                 Debug.Log("Research was completed while you were gone");
                 Researched();
             }
@@ -92,7 +91,7 @@ public abstract class Researchable : MonoBehaviour
             }
         }
 
-        else if(isResearched == 1 && isResearchStarted == 0)
+        else if(isResearched && !isResearchStarted)
         {
             Researched();
         }
@@ -146,7 +145,7 @@ public abstract class Researchable : MonoBehaviour
     }
     public virtual void UpdateResearchTimer()
     {
-        if (isResearchStarted == 1)
+        if (isResearchStarted)
         {
             if ((timer -= Time.deltaTime) <= 0)
             {
@@ -187,7 +186,7 @@ public abstract class Researchable : MonoBehaviour
         }
         else
         {
-            if (isResearchStarted == 0 && isResearched == 0)
+            if (!isResearchStarted && !isResearched)
             {
 
                 bool canPurchase = true;
@@ -218,8 +217,8 @@ public abstract class Researchable : MonoBehaviour
     {
         if (_currentTimer >= _timeToCompleteResearch)
         {
-            isResearchStarted = 0;
-            isResearched = 1;
+            isResearchStarted = false;
+            isResearched = true;
             Researched();
         }
     }
@@ -229,13 +228,13 @@ public abstract class Researchable : MonoBehaviour
         {
             if(UIManager.isBuildingVisible)
             {
-                Building.Buildings[building].isUnlocked = 1;
+                Building.Buildings[building].isUnlocked = true;
                 Building.Buildings[building].objMainPanel.SetActive(true);
                 Building.Buildings[building].objSpacerBelow.SetActive(true);
             }   
             else
             {
-                Building.Buildings[building].isUnlocked = 1;
+                Building.Buildings[building].isUnlocked = true;
                 Building.isUnlockedEvent = true;
             }         
         }
@@ -246,13 +245,13 @@ public abstract class Researchable : MonoBehaviour
         {
             if(UIManager.isCraftingVisible)
             {
-                Craftable.Craftables[craft].isUnlocked = 1;
+                Craftable.Craftables[craft].isUnlocked = true;
                 Craftable.Craftables[craft].objMainPanel.SetActive(true);
                 Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
             }
             else
             {
-                Craftable.Craftables[craft].isUnlocked = 1;
+                Craftable.Craftables[craft].isUnlocked = true;
                 Craftable.isUnlockedEvent = true;
             }
             //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);       
@@ -407,7 +406,7 @@ public abstract class Researchable : MonoBehaviour
     }
     public void GetTimeToCompleteResearch()
     {
-        isResearchStarted = 1;
+        isResearchStarted = true;
         DateTime currentTime = DateTime.Now;
         //Debug.Log(currentTime);
         DateTime timeToCompletion = currentTime.AddSeconds(60);
@@ -419,7 +418,7 @@ public abstract class Researchable : MonoBehaviour
     public void StartResearching()
     {
         researchSimulActive++;
-        isResearchStarted = 1;
+        isResearchStarted = true;
         _objProgressCircle.SetActive(false);     
     }
     public void OnExpandCloseAll()
@@ -441,8 +440,8 @@ public abstract class Researchable : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_stringIsResearchStarted, isResearchStarted);
-        PlayerPrefs.SetInt(_stringIsResearched, isResearched);
+        PlayerPrefs.SetInt(_stringIsResearchStarted, isResearchStarted ? 1 : 0);
+        PlayerPrefs.SetInt(_stringIsResearched, isResearched ? 1 : 0);
         PlayerPrefs.SetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
     }
 }

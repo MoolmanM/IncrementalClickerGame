@@ -30,7 +30,7 @@ public class ToggleResearch : MonoBehaviour
 
         foreach (var research in Researchable.Researchables)
         {
-            if (research.Value.isUnlocked == 1)
+            if (research.Value.isUnlocked)
             {
                 research.Value.objMainPanel.SetActive(true);
                 research.Value.objSpacerBelow.SetActive(true);
@@ -46,7 +46,7 @@ public class ToggleResearch : MonoBehaviour
 
         foreach (var research in Researchable.Researchables)
         {
-            if (research.Value.isUnlocked == 1 && research.Value.isResearched == 1)
+            if (research.Value.isUnlocked && research.Value.isResearched)
             {
                 research.Value.objMainPanel.SetActive(false);
                 research.Value.objSpacerBelow.SetActive(false);

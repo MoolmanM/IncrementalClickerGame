@@ -37,7 +37,7 @@ public abstract class Building : MonoBehaviour
     public BuildingType Type;
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
-    [NonSerialized] public int isUnlocked = 0;
+    [NonSerialized] public bool isUnlocked;
     [NonSerialized] public GameObject objMainPanel;
     public static bool isUnlockedEvent;
 
@@ -57,7 +57,7 @@ public abstract class Building : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_selfCountString, (int)_selfCount);
 
         for (int i = 0; i < resourceCost.Length; i++)
@@ -71,7 +71,7 @@ public abstract class Building : MonoBehaviour
 
         if (TimeManager.hasPlayedBefore)
         {
-            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
+            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
             _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
 
             for (int i = 0; i < resourceCost.Length; i++)

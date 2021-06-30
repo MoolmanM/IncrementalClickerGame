@@ -34,7 +34,7 @@ public class ToggleCrafting : MonoBehaviour
         foreach (var craft in Craftable.Craftables)
         {
             Debug.Log("Reached here");
-            if (craft.Value.isUnlocked == 1)
+            if (craft.Value.isUnlocked)
             {
                 Debug.Log("Reached here after if");
                 craft.Value.objMainPanel.SetActive(true);
@@ -51,7 +51,7 @@ public class ToggleCrafting : MonoBehaviour
 
         foreach (var craft in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked == 1 && craft.Value.isCrafted == 1)
+            if (craft.Value.isUnlocked && craft.Value.isCrafted)
             {
                 craft.Value.objMainPanel.SetActive(false);
                 craft.Value.objSpacerBelow.SetActive(false);

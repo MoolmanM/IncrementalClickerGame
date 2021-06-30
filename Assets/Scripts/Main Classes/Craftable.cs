@@ -22,8 +22,7 @@ public abstract class Craftable : MonoBehaviour
     public CraftingType Type;
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
-    [System.NonSerialized] public int isCrafted = 0;
-    [System.NonSerialized] public int isUnlocked = 0;
+    [System.NonSerialized] public bool isUnlocked, isCrafted;
     [System.NonSerialized] public GameObject objMainPanel;
     public float averageAmount;
 
@@ -42,8 +41,8 @@ public abstract class Craftable : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isCraftedString, isCrafted);
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_isCraftedString, isCrafted ? 1 : 0);
     }
     public void SetInitialValues()
     {
@@ -51,16 +50,16 @@ public abstract class Craftable : MonoBehaviour
    
         if (TimeManager.hasPlayedBefore)
         {
-            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
-            isCrafted = PlayerPrefs.GetInt(_isCraftedString, isCrafted);
+            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+            isCrafted = PlayerPrefs.GetInt(_isCraftedString) == 1 ? true : false;
         }
         else
         {
-            isCrafted = 0;
+            isCrafted = false;
         }
         
 
-        if (isCrafted == 1)
+        if (isCrafted)
         {
             Crafted();
         }
@@ -71,13 +70,13 @@ public abstract class Craftable : MonoBehaviour
     }
     protected void CheckIfUnlocked()
     {    
-        if (isUnlocked == 0)
+        if (isUnlocked )
         {
             if (GetCurrentFill() >= 0.8f)
             {
                 if (isUnlockableByResource)
                 {
-                    isUnlocked = 1;
+                    isUnlocked = true;
                     if (UIManager.isCraftingVisible)
                     {
                         objMainPanel.SetActive(true);
@@ -134,7 +133,7 @@ public abstract class Craftable : MonoBehaviour
 
         if (canPurchase)
         {
-            isCrafted = 1;
+            isCrafted = true;
             Crafted();
             UnlockBuilding();
             UnlockResource();
@@ -189,7 +188,7 @@ public abstract class Craftable : MonoBehaviour
     {
         foreach (var building in _buildingTypesToModify)
         {
-            Building.Buildings[building].isUnlocked = 1;
+            Building.Buildings[building].isUnlocked = true;
             Building.isUnlockedEvent = true;
         }
     }

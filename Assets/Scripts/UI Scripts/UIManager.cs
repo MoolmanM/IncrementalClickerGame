@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked == 1)
+            if (building.Value.isUnlocked)
             {
                 building.Value.objMainPanel.SetActive(true);
                 building.Value.objSpacerBelow.SetActive(true);
@@ -126,7 +126,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var craft in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked == 1)
+            if (craft.Value.isUnlocked)
             {
                 craft.Value.objMainPanel.SetActive(true);
                 craft.Value.objSpacerBelow.SetActive(true);
@@ -242,7 +242,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var researchable in Researchable.Researchables)
         {
-            if (researchable.Value.isUnlocked == 1)
+            if (researchable.Value.isUnlocked)
             {
                 researchable.Value.objMainPanel.SetActive(true);
                 researchable.Value.objSpacerBelow.SetActive(true);
