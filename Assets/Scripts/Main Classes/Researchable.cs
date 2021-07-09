@@ -19,6 +19,7 @@ public enum ResearchType
     // to research paper, then after researching paper you can have students that study papers. 
     // And with that you'll gain knowledge.
     // Smelting
+    // Need to probably unlock researchables through the same formula as unlocking crafting stuff. Except based on knowledge.
 
     //Paper,
     StoneEquipment,
@@ -30,7 +31,6 @@ public abstract class Researchable : MonoBehaviour
 {
     public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
     public static int researchSimulActive = 0, researchSimulAllowed = 1;
-    public static bool anotherResearchAllowed;
 
     public static bool isUnlockedEvent;
     public ResearchType Type;
@@ -39,8 +39,7 @@ public abstract class Researchable : MonoBehaviour
 
 
     public GameObject objSpacerBelow;
-    [System.NonSerialized] public bool isUnlocked, isResearched;
-    //[System.NonSerialized] public int isResearchStarted = 0;
+    [System.NonSerialized] public bool isUnlocked, isResearched, hasSeen = true;
 
     private bool isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
@@ -224,45 +223,72 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
+        PointerNotification.leftAmount = 0;
         foreach (var building in _buildingTypesToModify)
-        {
-            if(UIManager.isBuildingVisible)
+        {           
+            if (UIManager.isBuildingVisible)
             {
                 Building.Buildings[building].isUnlocked = true;
                 Building.Buildings[building].objMainPanel.SetActive(true);
                 Building.Buildings[building].objSpacerBelow.SetActive(true);
+                Building.Buildings[building].hasSeen = true;
             }   
             else
             {
                 Building.Buildings[building].isUnlocked = true;
                 Building.isUnlockedEvent = true;
-            }         
+                Building.Buildings[building].hasSeen = false;
+            }
+        }
+
+        foreach (var buildingMain in Building.Buildings)
+        {
+            if (!buildingMain.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }
+        }
+
+        if (PointerNotification.leftAmount > 0)
+        {
+            PointerNotification.objLeftPointer.SetActive(true);
+            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
         }
     }
     protected virtual void UnlockCrafting()
     {
-        foreach (var craft in _craftingTypesToModify)
-        {
-            if(UIManager.isCraftingVisible)
+        PointerNotification.leftAmount = 0;
+        foreach (CraftingType craft in _craftingTypesToModify)
+        {           
+            if (UIManager.isCraftingVisible)
             {
                 Craftable.Craftables[craft].isUnlocked = true;
                 Craftable.Craftables[craft].objMainPanel.SetActive(true);
                 Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
+                Craftable.Craftables[craft].hasSeen = true;
             }
             else
             {
                 Craftable.Craftables[craft].isUnlocked = true;
                 Craftable.isUnlockedEvent = true;
+                Craftable.Craftables[craft].hasSeen = false;
             }
             //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);       
         }
-    }
-    private void ExpandResearchBar()
-    {
-        RectTransform rt = _imgResearchBar.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100);
-        _imgResearchBar.transform.localPosition = new Vector3(_imgResearchBar.transform.localPosition.x, 0, _imgResearchBar.transform.localPosition.y);
-        rt.ForceUpdateRectTransforms();
+
+        foreach (var craftMain in Craftable.Craftables)
+        {
+            if (!craftMain.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }
+        }
+
+        if (PointerNotification.leftAmount > 0)
+        {
+            PointerNotification.objLeftPointer.SetActive(true);
+            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
+        }
     }
     protected virtual void Researched()
     {
@@ -271,7 +297,6 @@ public abstract class Researchable : MonoBehaviour
             researchSimulActive--;
             UnlockCrafting();
             UnlockBuilding();
-            //_objBtnMain.GetComponent<Button>().interactable = false;
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);
@@ -292,7 +317,6 @@ public abstract class Researchable : MonoBehaviour
             researchSimulActive--;
             UnlockCrafting();
             UnlockBuilding();
-            //_objBtnMain.GetComponent<Button>().interactable = false;
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);
@@ -309,6 +333,7 @@ public abstract class Researchable : MonoBehaviour
     }
     private void MakeResearchableAgain()
     {
+        // This will probably only happen after prestige.
         _objBtnMain.GetComponent<Button>().interactable = true;
         _objProgressCircle.SetActive(true);
         _objTxtHeader.SetActive(true);

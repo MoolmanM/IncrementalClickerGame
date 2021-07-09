@@ -22,7 +22,7 @@ public abstract class Craftable : MonoBehaviour
     public CraftingType Type;
     public ResourceCost[] resourceCost;
     public GameObject objSpacerBelow;
-    [System.NonSerialized] public bool isUnlocked, isCrafted;
+    [System.NonSerialized] public bool isUnlocked, isCrafted, hasSeen = true;
     [System.NonSerialized] public GameObject objMainPanel;
     public float averageAmount;
 
@@ -70,7 +70,7 @@ public abstract class Craftable : MonoBehaviour
     }
     protected void CheckIfUnlocked()
     {    
-        if (isUnlocked )
+        if (!isUnlocked)
         {
             if (GetCurrentFill() >= 0.8f)
             {
@@ -111,7 +111,9 @@ public abstract class Craftable : MonoBehaviour
             {
                 Craftables[Type].resourceCost[i].currentAmount = Resource.Resources[Craftables[Type].resourceCost[i].associatedType].amount;
                 Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount);
-                Craftables[Type].resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", Craftables[Type].resourceCost[i].associatedType.ToString());              
+                Craftables[Type].resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", Craftables[Type].resourceCost[i].associatedType.ToString());
+
+                Building.ShowResourceCostTime(Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount, Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
             }
             _imgProgressbar.fillAmount =  GetCurrentFill();
             CheckIfUnlocked();
@@ -138,6 +140,7 @@ public abstract class Craftable : MonoBehaviour
             UnlockBuilding();
             UnlockResource();
             UnlockWorkerJob();
+            
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
@@ -186,18 +189,36 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
+        PointerNotification.leftAmount = 0;
         foreach (var building in _buildingTypesToModify)
         {
             Building.Buildings[building].isUnlocked = true;
             Building.isUnlockedEvent = true;
+            Building.Buildings[building].hasSeen = false;
         }
+
+        foreach (var buildingMain in Building.Buildings)
+        {
+            if (!buildingMain.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }         
+        }
+
+        if (PointerNotification.leftAmount > 0)
+        {
+            PointerNotification.objLeftPointer.SetActive(true);
+            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
+        }       
     }
     protected virtual void UnlockWorkerJob()
     {
+        PointerNotification.rightAmount = 0;
         foreach (var worker in _workerTypesToModify)
         {
-            Worker.Workers[worker].isUnlocked = 1;
+            Worker.Workers[worker].isUnlocked = true;
             Worker.isUnlockedEvent = true;
+            Worker.Workers[worker].hasSeen = false;
             AutoWorker.TotalWorkerJobs++;
             
             if (AutoToggle.isAutoWorkerOn == 1)
@@ -206,6 +227,20 @@ public abstract class Craftable : MonoBehaviour
                 AutoWorker.AutoAssignWorkers();
             }
         }
+
+        foreach (var workerMain in Worker.Workers)
+        {
+            if (!workerMain.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
+        }
+
+        if (PointerNotification.rightAmount > 0)
+        {
+            PointerNotification.objRightPointer.SetActive(true);
+            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
+        }       
     }
     protected virtual void UnlockResource()
     {

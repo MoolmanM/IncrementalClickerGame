@@ -61,7 +61,7 @@ public class Swipe : MonoBehaviour
             float y = swipeDelta.y;
             if(Mathf.Abs(x) > Mathf.Abs(y))
             {
-                // Left or Right
+                // objLeftPointer or objRightPointer
                 if (x < 0)
                     swipeLeft = true;
                 else

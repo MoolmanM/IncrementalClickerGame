@@ -7,6 +7,40 @@
       "dependencies": {},
       "hash": "ba3b80db7a2575a0b5c9a3aafb86ac1b75b3d9f5"
     },
+    "com.unity.2d.animation": {
+      "version": "6.0.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.2d.common": "5.0.0",
+        "com.unity.mathematics": "1.1.0",
+        "com.unity.2d.sprite": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.2d.common": {
+      "version": "5.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.2d.sprite": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.2d.psdimporter": {
+      "version": "5.0.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.2d.common": "5.0.0",
+        "com.unity.2d.animation": "6.0.4",
+        "com.unity.2d.sprite": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -39,7 +73,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.9",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -50,6 +84,13 @@
     "com.unity.ide.vscode": {
       "version": "1.2.3",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.mathematics": {
+      "version": "1.2.1",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

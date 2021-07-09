@@ -15,6 +15,16 @@ public class PotatoField : Building
         _costMultiplier = 1.15f;
         resourceTypeToModify = ResourceType.Food;
         SetInitialValues();
+
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    GameObject newObj = Instantiate(costPrefab, _tformBody);
+        //    Debug.Log("Spawned stuff");
+        //    _tformCostname = transform.Find("Panel_Main/Header_Panel/Button_Main");
+        //    //_tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
+        //    //resourceCost[i].uiForResourceCost.textCostAmount
+        //    // Okay so this works, but I need to assign the correct values to the texts.
+        //}
     }
     private void Start()
     {  

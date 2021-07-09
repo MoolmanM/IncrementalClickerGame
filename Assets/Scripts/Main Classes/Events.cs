@@ -15,10 +15,7 @@ public class Events : MonoBehaviour
     public GameObject scrollViewObject;
     public Animator animatorNotification;
 
-    private float _timer = 0.1f;
-    private float timer = 0.1f;
-    private readonly float maxValue = 0.01f;
-    private readonly float _maxValue = 10f;
+    private float _timer = 1f;
 
     private void StoneAgeEvents()
     {
@@ -40,17 +37,26 @@ public class Events : MonoBehaviour
         // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
         // Or if they reach a certain amount of a building such as potatoField.
 
-        NewCraftingRecipe();
-        NewResearchAvailable();
-        NewBuildingAvailable();
-        NewJobAvailable();
 
+
+
+
+    }
+    private bool IsPlaying(Animator anim, string stateName)
+    {
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+            return true;
+        else
+            return false;
+    }
+    private void AnimationHandler()
+    {
         if (eventHappened == true)
         {
-
             if (IsPlaying(animatorNotification, "Notification_Display"))
             {
-                animatorNotification.Play("Notification_Display" , -1, 0);
+                animatorNotification.Play("Notification_Display", -1, 0);
             }
             else if (IsPlaying(animatorNotification, "Notification_Down"))
             {
@@ -62,14 +68,6 @@ public class Events : MonoBehaviour
             }
             eventHappened = false;
         }
-    }
-    private bool IsPlaying(Animator anim, string stateName)
-    {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-            return true;
-        else
-            return false;
     }
     private void AnimalAttack()
     {
@@ -126,17 +124,24 @@ public class Events : MonoBehaviour
             Worker.isUnlockedEvent = false;
         }
     }
+    // When generating workers, display the current total amount of workers next to the notification.
+    // Need to rethink the different timers here, maybe have two seperate timers for stoneageevents and workers.
+    // Or there could be a more elegant solution.
+    // Maybe put the animation part in update without any timer.
+    // And then just do something to exit the animation completely after the idle duration perhaps.
+    // Then just make sure the animation starts again correctly.
     private void GenerateWorkers()
     {
         if (Worker.TotalWorkerCount < MakeshiftBed._selfCount)
         {
-            if ((timer -= Time.deltaTime) <= 0)
+            if ((_timer -= Time.deltaTime) <= 0)
             {
-                timer = _maxValue;
+                _timer = 10f;
 
+                eventHappened = true;
                 Worker.UnassignedWorkerCount++;
                 Worker.TotalWorkerCount++;
-                NotableEvent("A worker has arrived");
+                NotableEvent(string.Format("A worker has arrived [{0}]", Worker.TotalWorkerCount));
                 txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
                 
                 if (AutoToggle.isAutoWorkerOn == 1)
@@ -179,11 +184,11 @@ public class Events : MonoBehaviour
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = maxValue;
-            StoneAgeEvents();
-            
+            _timer = 0.1f;
+            StoneAgeEvents();           
         }
-
+       
         GenerateWorkers();
+        AnimationHandler();
     }
 }

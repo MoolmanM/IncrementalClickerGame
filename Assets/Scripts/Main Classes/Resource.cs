@@ -38,7 +38,6 @@ public class Resource : MonoBehaviour
     protected Transform _tformTxtAmount, _tformTxtAmountPerSecond, _tformTxtStorage, _tformImgbar;
     protected Image _imgBar;
     protected float _timer = 0.1f;
-    protected readonly float _maxValue = 0.1f;
 
     public virtual void SetInitialValues()
     {
@@ -127,10 +126,9 @@ public class Resource : MonoBehaviour
     }
     public virtual void UpdateResources()
     {
-
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            _timer = 0.1f;
 
 
             if (amount >= (storageAmount - amountPerSecond))
@@ -139,7 +137,7 @@ public class Resource : MonoBehaviour
             }
             else
             {
-                amount += amountPerSecond;
+                amount += amountPerSecond / 10;
             }
             
             if (amountPerSecond < 0)
