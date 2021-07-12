@@ -2,36 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Smelting : Researchable
+public class Cooking : Researchable
 {
     private Researchable _researchable;
 
     // Unlock after having 100 knowledge.
-    // Will get back to this later.
+    // Cooking will probably just increase the food production per second amount.
     void Awake()
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 90;
-        _buildingTypesToModify = new BuildingType[1];
-        _buildingTypesToModify[0] = BuildingType.Furnace;
-
+        _timeToCompleteResearch = 60;
 
         SetInitialValues();
-
     }
     void Start()
     {
-        SetDescriptionText("Enables smelting ores into metals.");
+        SetDescriptionText("Increases food production.");
     }
     protected override void UnlockBuilding()
     {
-        base.UnlockBuilding();
+        // No building to unlock.
     }
 
     protected override void UnlockCrafting()
     {
-        // No crafting to unlock
+        // No Crafting
     }
     void Update()
     {

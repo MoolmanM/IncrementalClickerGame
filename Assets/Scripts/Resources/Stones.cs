@@ -7,7 +7,7 @@ public class Stones : Resource
 {
     private Resource _resource;
 
-    private void Awake()
+    void Awake()
     {
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
@@ -25,7 +25,7 @@ public class Stones : Resource
         }
     }
 
-    private void Update()
+    void Update()
     {
         UpdateResources();
     }

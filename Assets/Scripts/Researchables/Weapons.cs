@@ -2,36 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Smelting : Researchable
+public class Weapons : Researchable
 {
     private Researchable _researchable;
 
-    // Unlock after having 100 knowledge.
-    // Will get back to this later.
     void Awake()
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 90;
-        _buildingTypesToModify = new BuildingType[1];
-        _buildingTypesToModify[0] = BuildingType.Furnace;
+        _timeToCompleteResearch = 60;
 
+        _craftingTypesToModify = new CraftingType[1];
+        _craftingTypesToModify[0] = CraftingType.WoodenSpear;
 
         SetInitialValues();
-
     }
     void Start()
     {
-        SetDescriptionText("Enables smelting ores into metals.");
+        SetDescriptionText("Unlocks spear for hunting.");
     }
     protected override void UnlockBuilding()
     {
-        base.UnlockBuilding();
+        // No building to unlock.
     }
-
-    protected override void UnlockCrafting()
+    protected override void UnlockResearchable()
     {
-        // No crafting to unlock
+        // No research to unlock.
     }
     void Update()
     {

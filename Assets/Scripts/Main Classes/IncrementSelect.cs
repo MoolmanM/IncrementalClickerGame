@@ -6,7 +6,7 @@ public class IncrementSelect : MonoBehaviour
 {
     public static bool IsOneSelected, IsTenSelected, IsHundredSelected, IsMaxSelected;
     public GameObject ImgOne, ImgTen, ImgHundred, ImgMax;
-    private void Start()
+    void Start()
     {
         ImgOne.SetActive(true);
         IsOneSelected = true;

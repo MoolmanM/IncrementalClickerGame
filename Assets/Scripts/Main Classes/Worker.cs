@@ -8,7 +8,33 @@ public enum WorkerType
     Farmers,
     Woodcutters,
     Miners,
+    Hunters,
     Scholars
+
+        // So do we want hunters, for start. maybe just do for every worker there would be hunts automatically conducted. 
+        // So every 500 seconds there's a hunt that lasts 500 seconds. When they leave it costs a certain amount of resources, depending on how many workers was assigned at that time.
+        // Maybe have a timer somewhere that your hunters are hunting, maybe in the worker tab.
+        // I can grey out the hunter main panel, Change text to "Hunting..." With a progress bar attached like I have in research panel.
+        // Maybe just make the progress bar a different color such as orange.
+        // And then when they come back you'll get a certain random amount of resources based on some sort of loot pool.
+        // food 500 - 1000
+        // Leather 0 - 2
+        // Bones/tusks?
+        // Pelts is the same thing as leather? Should I convert pelts to leather, can pelts be made into something else.
+        // Tanning Rack - That seperates the pelt into fur and leather.
+        // Should this just be in a new tab workshop where you refine your resources into resources a tier higher? or well in this case from pelt to - leater and fur
+        // For example 1 pelt ---> 3 fur and 1 leather.
+        // Maybe should have an animals killed variable on the hunts.
+        // For each animal 100 - 200 food or whatever and 0 - 2 pelts. Something like that.
+        // fur will of course be used for clothing
+        // leather can be used for tents as well as various other stuff.
+        // Hunter workerType should probably be unlocked when the player has crafted the Stone Spear? 
+        // Could have different weapon tiers For example:
+        // Wooden Spear - 100 - 200 0 - 2 pelts.
+        // Stone Spear 120 - 220 0 - 2 pelts. 
+        // Fire Hardended Spear 150 - 250, 0 - 2 pelts.
+        // Which is why we should maybe have a weapons tab, but for now lets just do it in the crafting panel.
+        // So unlock hunter workertype on the crafting of any weapon type. for in case the player decided to skip other weapon craftings.
 }
 
 public class Worker : MonoBehaviour
@@ -24,7 +50,7 @@ public class Worker : MonoBehaviour
     [System.NonSerialized] public bool isUnlocked, hasSeen = true;
     [System.NonSerialized] public float resourceMultiplier, incrementAmount;
 
-    // Make workercount nonserialized eventually, for now will use for debugging.
+    // Make workercount non serialized eventually, for now will use for debugging.
     public uint workerCount;
 
     public WorkerType Type;
@@ -162,7 +188,7 @@ public class Worker : MonoBehaviour
             Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
         }     
     }
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {             
         PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)workerCount);

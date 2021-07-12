@@ -22,28 +22,34 @@ public enum ResearchType
     // Need to probably unlock researchables through the same formula as unlocking crafting stuff. Except based on knowledge.
 
     //Paper,
+    Weapons,
     StoneEquipment,
-    Smelting
-    
+    Fire,
+    Cooking,
+    FireHardenedWeapons,
+    Smelting   
 }
 
 public abstract class Researchable : MonoBehaviour
 {
     public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
     public static int researchSimulActive = 0, researchSimulAllowed = 1;
-
     public static bool isUnlockedEvent;
+
     public ResearchType Type;
     public ResourceCost[] resourceCost;
-    public GameObject objMainPanel;
-
-
+    
     public GameObject objSpacerBelow;
+    [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public bool isUnlocked, isResearched, hasSeen = true;
+    public uint unlocksRequired = 1, unlocksAmount;
 
     private bool isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
+    private GameObject _prefabResourceCost, _prefabBodySpacer;
+    private float timer = 0.1f;
+    private readonly float maxValue = 0.1f;
 
     protected float _timeToCompleteResearch;
     protected BuildingType[] _buildingTypesToModify;
@@ -52,9 +58,7 @@ public abstract class Researchable : MonoBehaviour
     protected CraftingType[] _craftingTypesToModify;
     protected WorkerType[] _workerTypesToModify;
     protected float _timer = 0.1f;
-    protected readonly float _maxValue = 0.1f;
-    private float timer = 0.1f;
-    private readonly float maxValue = 0.1f;
+    protected readonly float _maxValue = 0.1f;   
     protected TMP_Text _txtDescription;
     protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
@@ -290,6 +294,56 @@ public abstract class Researchable : MonoBehaviour
             PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
         }
     }
+    protected virtual void UnlockResearchable()
+    {
+        // Need to check this code, might not be working very well. And might contain some bugs.
+        PointerNotification.leftAmount = 0;
+        PointerNotification.rightAmount = 0;
+
+        foreach (ResearchType research in _researchTypesToModify)
+        {
+            if (Researchables[research].unlocksAmount < Researchables[research].unlocksRequired)
+            {
+                Researchables[research].unlocksAmount++;
+            }
+            else
+            {
+                if (UIManager.isResearchVisible)
+                {
+                    Researchables[research].isUnlocked = true;
+                    Researchables[research].objMainPanel.SetActive(true);
+                    Researchables[research].objSpacerBelow.SetActive(true);
+                    Researchables[research].hasSeen = true;
+                }
+                else
+                {
+                    Researchables[research].isUnlocked = true;
+                    isUnlockedEvent = true;
+                    Researchables[research].hasSeen = false;
+                }
+
+            }
+        }
+
+        foreach (var researchMain in Researchables)
+        {
+            if (!researchMain.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
+        }
+
+        if (PointerNotification.leftAmount > 0)
+        {
+            PointerNotification.objLeftPointer.SetActive(true);
+            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
+        }
+        if (PointerNotification.rightAmount > 0)
+        {
+            PointerNotification.objRightPointer.SetActive(true);
+            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
+        }
+    }
     protected virtual void Researched()
     {
         if (ToggleResearch.isResearchHidden == 1)
@@ -347,8 +401,36 @@ public abstract class Researchable : MonoBehaviour
             _imgCollapse.color = darkGreyColor;
         }
     }
+
     private void InitializeObjects()
     {
+        _tformBody = transform.Find("Panel_Main/Body");
+
+        #region Prefab Initializion
+
+        _prefabResourceCost = Resources.Load<GameObject>("ResourceCost_Prefab/ResourceCost_Panel");
+        _prefabBodySpacer = Resources.Load<GameObject>("ResourceCost_Prefab/Body_Spacer");
+
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            GameObject newObj = Instantiate(_prefabResourceCost, _tformBody);
+
+            //This loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
+            for (int spacerI = i + 1; spacerI < resourceCost.Length; spacerI++)
+            {
+                Instantiate(_prefabBodySpacer, _tformBody);
+            }
+
+            Transform _tformNewObj = newObj.transform;
+            Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
+            Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
+
+            resourceCost[i].uiForResourceCost.textCostName = _tformCostName.GetComponent<TMP_Text>();
+            resourceCost[i].uiForResourceCost.textCostAmount = _tformCostAmount.GetComponent<TMP_Text>();
+        }
+
+        #endregion
+
         _tformImgResearchBar = transform.Find("Panel_Main/Header_Panel/Research_FillBar");
         _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
@@ -361,7 +443,6 @@ public abstract class Researchable : MonoBehaviour
         _tformObjMain = transform.Find("Panel_Main");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
-        _tformBody = transform.Find("Panel_Main/Body");
 
         _imgProgressCircle = _tformImgProgressCircle.GetComponent<Image>();
         _imgResearchBar = _tformImgResearchBar.GetComponent<Image>();

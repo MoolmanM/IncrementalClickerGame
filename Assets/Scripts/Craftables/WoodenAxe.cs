@@ -6,7 +6,7 @@ public class WoodenAxe : Craftable
 {
     private Craftable _craftable;
 
-    private void Awake()
+    void Awake()
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
@@ -18,7 +18,7 @@ public class WoodenAxe : Craftable
         _workerTypesToModify[0] = WorkerType.Woodcutters;
         SetInitialValues();
     }
-    private void Start()
+    void Start()
     {
         SetDescriptionText("Enables building of the Wood-lot to automatically gather sticks.");
     }
@@ -34,7 +34,7 @@ public class WoodenAxe : Craftable
         // Do nothing.
     }
 
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

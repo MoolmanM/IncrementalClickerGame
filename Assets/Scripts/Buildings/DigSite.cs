@@ -5,7 +5,7 @@ public class DigSite : Building
 {
     private Building _building;
 
-    private void Awake()
+    void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
@@ -14,7 +14,7 @@ public class DigSite : Building
         resourceTypeToModify = ResourceType.Stones;
         SetInitialValues();
     }
-    private void Start()
+    void Start()
     {    
         SetDescriptionText();
         //DisplayConsole();
@@ -28,7 +28,7 @@ public class DigSite : Building
         }
     }
 
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

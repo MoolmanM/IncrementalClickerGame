@@ -9,7 +9,7 @@ public class ToggleCrafting : MonoBehaviour
     public GameObject buttonOn, buttonOff;
 
     private string _stringIsCraftingHidden = "IsCraftingHidden";
-    private void Awake()
+    void Awake()
     {
         PlayerPrefs.GetInt(_stringIsCraftingHidden, isCraftingHidden);
         Debug.Log(isCraftingHidden);

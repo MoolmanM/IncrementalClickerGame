@@ -6,14 +6,14 @@ public class StoneHoe : Craftable
 {
     private Craftable _craftable;
 
-    private void Awake()
+    void Awake()
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
     }
 
-    private void Start()
+    void Start()
     {
         SetDescriptionText("Increases food production and worked speed perhaps.");
     }
@@ -34,7 +34,7 @@ public class StoneHoe : Craftable
         // Do nothing.
         // base.UnlockBuilding();
     }
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

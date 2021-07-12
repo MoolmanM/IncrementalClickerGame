@@ -10,7 +10,7 @@ namespace Krivodeling.UI.Effects.Examples
         #endregion
 
         #region Methods
-        private void Start()
+        void Start()
         {
             SetComponents();
 

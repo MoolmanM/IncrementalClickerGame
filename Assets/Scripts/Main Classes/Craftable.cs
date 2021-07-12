@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +10,12 @@ public enum CraftingType
     WoodenHoe,
     WoodenAxe,
     WoodenPickaxe,
+    WoodenSpear,
     StoneHoe,
     StoneAxe,
-    StonePickaxe
+    StonePickaxe,
+    StoneSpear,
+    FireHardenedSpear
 }
 
 public abstract class Craftable : MonoBehaviour
@@ -25,13 +29,16 @@ public abstract class Craftable : MonoBehaviour
     [System.NonSerialized] public bool isUnlocked, isCrafted, hasSeen = true;
     [System.NonSerialized] public GameObject objMainPanel;
     public float averageAmount;
+    public int unlocksRequired = 1, unlocksAmount;
 
     private string _isCraftedString, _isUnlockedString;
+    private GameObject _prefabResourceCost, _prefabBodySpacer;
 
     protected bool isUnlockableByResource;
     protected BuildingType[] _buildingTypesToModify;
     protected ResourceType[] _resourceTypesToModify;
     protected WorkerType[] _workerTypesToModify;
+    protected CraftingType[] _craftingTypesToModify;
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
@@ -39,7 +46,7 @@ public abstract class Craftable : MonoBehaviour
     protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
     protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_isCraftedString, isCrafted ? 1 : 0);
@@ -251,8 +258,50 @@ public abstract class Craftable : MonoBehaviour
             Resource.Resources[resource].objSpacerBelow.SetActive(true);
         }
     }
+    protected virtual void UnlockCrafting()
+    {
+        foreach (var craft in _craftingTypesToModify)
+        {
+            if (Craftables[craft].unlocksAmount < Craftables[craft].unlocksRequired)
+            {
+                Craftables[craft].unlocksAmount++;
+            }
+            else
+            {
+                Craftables[craft].isUnlocked = true;
+                Craftables[craft].hasSeen = true;
+            }      
+        }
+    }
     private void InitializeObjects()
     {
+        _tformBody = transform.Find("Panel_Main/Body");
+
+        #region Prefab Initializion
+
+        _prefabResourceCost = Resources.Load<GameObject>("ResourceCost_Prefab/ResourceCost_Panel");
+        _prefabBodySpacer = Resources.Load<GameObject>("ResourceCost_Prefab/Body_Spacer");
+
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            GameObject newObj = Instantiate(_prefabResourceCost, _tformBody);
+
+            //This loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
+            for (int spacerI = i + 1; spacerI < resourceCost.Length; spacerI++)
+                {
+                    Instantiate(_prefabBodySpacer, _tformBody);
+                }
+
+            Transform _tformNewObj = newObj.transform;
+            Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
+            Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
+
+            resourceCost[i].uiForResourceCost.textCostName = _tformCostName.GetComponent<TMP_Text>();
+            resourceCost[i].uiForResourceCost.textCostAmount = _tformCostAmount.GetComponent<TMP_Text>();
+        }
+
+        #endregion
+
         _tformDescription = transform.Find("Panel_Main/Body/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
@@ -260,8 +309,7 @@ public abstract class Craftable : MonoBehaviour
         _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
         _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Uncraftable");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
-        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
-        _tformBody = transform.Find("Panel_Main/Body");
+        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");      
         _tformObjMain = transform.Find("Panel_Main");
 
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();

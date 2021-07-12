@@ -16,8 +16,6 @@ public class TimeManager : MonoBehaviour
     private readonly float maxValue = 5f;
     private long temp;
 
-    private float testNumber;
-
     public void CalculateSeason()
     {
         day++;
@@ -60,7 +58,7 @@ public class TimeManager : MonoBehaviour
         }
         seasonText.text = string.Format("Year {0} - {1}, day {2}", year, seasonString, day);
     }  
-    public void OnEnable()
+    void OnEnable()
     {
         SetLaunchValues();
         //if (hasPlayedBefore)
@@ -150,7 +148,7 @@ public class TimeManager : MonoBehaviour
         }
         //Resource.Resources[type].uiForResource.amount.text = string.Format("{0}", Resource.Resources[type].amount);
     }
-    private void Update()
+    void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {

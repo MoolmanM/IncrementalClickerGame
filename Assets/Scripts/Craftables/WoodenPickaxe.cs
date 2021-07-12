@@ -6,7 +6,7 @@ public class WoodenPickaxe : Craftable
 {
     private Craftable _craftable;
 
-    private void Awake()
+    void Awake()
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
@@ -22,7 +22,7 @@ public class WoodenPickaxe : Craftable
         _workerTypesToModify = new WorkerType[1];
         _workerTypesToModify[0] = WorkerType.Miners;
     }
-    private void Start()
+    void Start()
     {
         SetDescriptionText("Enables building of the Dig Site to start gathering stones.");
     }
@@ -34,7 +34,7 @@ public class WoodenPickaxe : Craftable
         }
     }
 
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

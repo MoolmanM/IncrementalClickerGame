@@ -7,7 +7,7 @@ public class Food : Resource
 {
     private Resource _resource;
 
-    private void Awake()
+    void Awake()
     {
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
@@ -24,7 +24,7 @@ public class Food : Resource
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    private void Update()
+    void Update()
     {
         UpdateResources();
     }

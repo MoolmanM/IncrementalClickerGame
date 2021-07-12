@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI;
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
 
-    private void Start()
+    void Start()
     {
         _swipeCount = 0;
         foreach(var _settingsUI in settingsUI)

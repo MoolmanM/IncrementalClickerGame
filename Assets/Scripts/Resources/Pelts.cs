@@ -1,9 +1,8 @@
-﻿    using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-public class Sticks : Resource
+public class Pelts : Resource
 {
     private Resource _resource;
 
@@ -12,11 +11,9 @@ public class Sticks : Resource
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
-        isUnlocked = 1;
         SetInitialValues();
-        //amount = 500;
         // DisplayConsole();
-
+        // amount = 100;
     }
 
     private void DisplayConsole()
@@ -26,7 +23,6 @@ public class Sticks : Resource
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     void Update()
     {
         UpdateResources();

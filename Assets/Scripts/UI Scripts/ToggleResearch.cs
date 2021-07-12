@@ -9,7 +9,7 @@ public class ToggleResearch : MonoBehaviour
     public GameObject buttonOn, buttonOff;
 
     private string _stringIsResearchHidden = "IsResearchHidden";
-    private void Awake()
+    void Awake()
     {
         PlayerPrefs.GetInt(_stringIsResearchHidden, isResearchHidden);
         if (isResearchHidden == 1)

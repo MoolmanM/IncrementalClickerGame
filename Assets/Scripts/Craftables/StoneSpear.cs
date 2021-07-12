@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WoodenHoe : Craftable
+public class StoneSpear : Craftable
 {
     private Craftable _craftable;
 
@@ -10,17 +10,15 @@ public class WoodenHoe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
-        isUnlockableByResource = true;
         SetInitialValues();
-        _buildingTypesToModify = new BuildingType[1];
-        _buildingTypesToModify[0] = BuildingType.PotatoField;
 
-        _workerTypesToModify = new WorkerType[1];
-        _workerTypesToModify[0] = WorkerType.Farmers;
+        _craftingTypesToModify = new CraftingType[1];
+        _craftingTypesToModify[0] = CraftingType.FireHardenedSpear;
     }
+
     void Start()
     {
-        SetDescriptionText("Enables building of the Potato Field to automatically gather potatoes.");
+        SetDescriptionText("Increases your hunting efficiency.");
     }
     private void DisplayConsole()
     {
@@ -30,6 +28,10 @@ public class WoodenHoe : Craftable
         }
     }
     protected override void UnlockResource()
+    {
+        // Do nothing.
+    }
+    protected override void UnlockBuilding()
     {
         // Do nothing.
     }

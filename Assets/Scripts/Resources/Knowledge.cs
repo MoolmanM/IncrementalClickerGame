@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class Knowledge : Resource
 {
     private Resource _resource;
 
-    private void Awake()
+    void Awake()
     {
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
@@ -24,7 +23,7 @@ public class Knowledge : Resource
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    private void Update()
+    void Update()
     {
         UpdateResources();
     }

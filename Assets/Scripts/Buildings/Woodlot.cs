@@ -5,7 +5,7 @@ public class Woodlot : Building
 {
     private Building _building;
 
-    private void Awake()
+    void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
@@ -14,7 +14,7 @@ public class Woodlot : Building
         resourceTypeToModify = ResourceType.Sticks;
         SetInitialValues();
     }
-    private void Start()
+    void Start()
     {   
         SetDescriptionText();
         //DisplayConsole();
@@ -26,7 +26,7 @@ public class Woodlot : Building
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

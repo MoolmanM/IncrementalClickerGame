@@ -2,36 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Smelting : Researchable
+public class Fire : Researchable
 {
     private Researchable _researchable;
 
+    // Fire should unlock Cooking, Smelting and FireHardenedWeapons
+    // Fire Hardened Weapons should only be unlocked if weapons and fire has been researched.
     // Unlock after having 100 knowledge.
-    // Will get back to this later.
     void Awake()
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 90;
-        _buildingTypesToModify = new BuildingType[1];
-        _buildingTypesToModify[0] = BuildingType.Furnace;
+        _timeToCompleteResearch = 60;
 
+        _researchTypesToModify = new ResearchType[2];
+        _researchTypesToModify[0] = ResearchType.Cooking;
+        _researchTypesToModify[1] = ResearchType.FireHardenedWeapons;
 
         SetInitialValues();
-
     }
     void Start()
     {
-        SetDescriptionText("Enables smelting ores into metals.");
+        SetDescriptionText("Unlock new important technologies, such as cooking and more.");
     }
     protected override void UnlockBuilding()
     {
-        base.UnlockBuilding();
+        // No Building
     }
-
     protected override void UnlockCrafting()
     {
-        // No crafting to unlock
+        // No Crafting
     }
     void Update()
     {

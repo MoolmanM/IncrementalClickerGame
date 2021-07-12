@@ -39,7 +39,7 @@ namespace Krivodeling.UI.Effects
         #endregion
 
         #region Methods
-        private void Start()
+        void Start()
         {
             SetComponents();
             SetBlur(color, intensity, multiplier);

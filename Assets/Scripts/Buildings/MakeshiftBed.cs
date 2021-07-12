@@ -8,14 +8,14 @@ public class MakeshiftBed : Building
     private Building _building; 
     public static new uint _selfCount;
 
-    private void Awake()
+    void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
         SetInitialValues();
         _selfCount = 10;
     }
-    private void Start()
+    void Start()
     {
         SetDescriptionText();
         // DisplayConsole();
@@ -57,7 +57,7 @@ public class MakeshiftBed : Building
     {
         _txtDescription.text = string.Format("Increases population by 1");
     }
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

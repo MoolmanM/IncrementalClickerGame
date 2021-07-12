@@ -16,7 +16,8 @@ public enum ResourceType
     Food,
     Sticks,
     Stones,
-    Knowledge
+    Knowledge,
+    Pelts
 }
 
 public class Resource : MonoBehaviour
@@ -154,7 +155,7 @@ public class Resource : MonoBehaviour
 
         }
     }
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         PlayerPrefs.SetFloat(_amountString, amount);
         PlayerPrefs.SetFloat(_perSecondString, amountPerSecond);

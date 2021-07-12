@@ -8,7 +8,7 @@ public class Swipe : MonoBehaviour
     private bool isDragging = false;
     private Vector2 startTouch, swipeDelta;
 
-    private void Update()
+    void Update()
     {
         tap = swipeLeft = swipeRight = swipeUp = swipeDown = false;
 

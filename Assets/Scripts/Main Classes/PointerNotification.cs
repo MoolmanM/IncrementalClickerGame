@@ -9,7 +9,7 @@ public class PointerNotification : MonoBehaviour
     public static TMP_Text textLeft, textRight;
     public static uint leftAmount, rightAmount;
 
-    private void Awake()
+    void Awake()
     {
         objLeftPointer = GameObject.Find("Pointer_NotificationLeft");
         objRightPointer = GameObject.Find("Pointer_NotificationRight");

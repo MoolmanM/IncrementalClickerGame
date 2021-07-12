@@ -6,14 +6,14 @@ public class StonePickaxe : Craftable
 {
     private Craftable _craftable;
 
-    private void Awake()
+    void Awake()
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
     }
 
-    private void Start()
+    void Start()
     {
         // Maybe enables the mining of ore.
         // Can start digging bronze ore at the dig site?
@@ -35,7 +35,7 @@ public class StonePickaxe : Craftable
         // Do nothing.
         // base.UnlockBuilding();
     }
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }

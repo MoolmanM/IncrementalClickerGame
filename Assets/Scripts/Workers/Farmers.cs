@@ -6,7 +6,7 @@ public class Farmers : Worker
 {
     private Worker _worker;
 
-    private void Awake()
+    void Awake()
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);

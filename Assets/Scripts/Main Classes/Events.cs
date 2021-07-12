@@ -180,7 +180,7 @@ public class Events : MonoBehaviour
 
         txtNotificationText.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
     }
-    private void Update()
+    void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {

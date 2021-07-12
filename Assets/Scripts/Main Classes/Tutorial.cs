@@ -16,7 +16,7 @@ public class Tutorial : MonoBehaviour
 
     private float _timer = 0.1f;
 
-    public void Start()
+    void Start()
     {
         isTutActiveButtons = PlayerPrefs.GetInt("isTutActiveButtons") == 1 ? true : false;
 
@@ -117,7 +117,7 @@ public class Tutorial : MonoBehaviour
     }
     // PlayerPrefs.SetInt("Mute_FX", mute ? 1 : 0);
     // PlayerPrefs.GetInt("Mute_FX") == 1 ? true : false;
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("isTutActiveButtons", isTutActiveButtons ? 1 : 0);
         // Need to save the rest of the tutorial bools, to make sure when the player accidentally leaves the game, that they will then again be greeted with the same tutorial.
@@ -194,7 +194,7 @@ public class Tutorial : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
     }
-    private void Update()
+    void Update()
     {
         CheckFor30Sticks();
         CheckForCrafting();

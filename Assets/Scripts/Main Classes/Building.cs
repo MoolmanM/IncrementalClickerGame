@@ -5,7 +5,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-[System.Serializable]
 public struct UiForResourceCost
 {
     public TMP_Text textCostName;
@@ -43,7 +42,7 @@ public abstract class Building : MonoBehaviour
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
-    private GameObject _objBtnMain, _objBtnExpand, _objBtnCollapse, _objBody;
+    private GameObject _objBtnMain, _objBtnExpand, _objBtnCollapse, _objBody, _prefabResourceCost, _prefabBodySpacer;
 
     protected float _resourceMultiplier, _costMultiplier;
     protected ResourceType resourceTypeToModify;
@@ -55,10 +54,7 @@ public abstract class Building : MonoBehaviour
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
 
-    public GameObject costPrefab;
-    //public Transform transformParent;
-
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_selfCountString, (int)_selfCount);
@@ -95,9 +91,35 @@ public abstract class Building : MonoBehaviour
             UnPurchaseable();
         }
     }
-
     private void InitializeObjects()
     {
+        _tformBody = transform.Find("Panel_Main/Body");
+
+        #region Prefab Initializion
+
+        _prefabResourceCost = Resources.Load<GameObject>("ResourceCost_Prefab/ResourceCost_Panel");
+        _prefabBodySpacer = Resources.Load<GameObject>("ResourceCost_Prefab/Body_Spacer");
+
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            GameObject newObj = Instantiate(_prefabResourceCost, _tformBody);
+
+            // This for loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
+            for (int spacerI = i + 1;  spacerI < resourceCost.Length; spacerI++)
+            {
+                Instantiate(_prefabBodySpacer, _tformBody);
+            }
+            
+            Transform _tformNewObj = newObj.transform;
+            Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
+            Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
+
+            resourceCost[i].uiForResourceCost.textCostName = _tformCostName.GetComponent<TMP_Text>();
+            resourceCost[i].uiForResourceCost.textCostAmount = _tformCostAmount.GetComponent<TMP_Text>();
+        }
+
+        #endregion
+
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
         _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
@@ -105,8 +127,7 @@ public abstract class Building : MonoBehaviour
         _tformObjMain = transform.Find("Panel_Main");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
-        _tformBody = transform.Find("Panel_Main/Body");
-
+        
         _txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _imgProgressbar = _tformObjProgressCircle.GetComponent<Image>();
@@ -176,10 +197,6 @@ public abstract class Building : MonoBehaviour
             _imgProgressbar.fillAmount = GetCurrentFill();
             CheckIfPurchaseable();
         }
-    }
-    private void Start()
-    {
-        
     }
     public static void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond)
     {

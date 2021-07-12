@@ -6,14 +6,14 @@ public class StoneAxe : Craftable
 {
     private Craftable _craftable;
 
-    private void Awake()
+    void Awake()
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
     }
 
-    private void Start()
+    void Start()
     {
         // I think it's to early to unlock another building related to woodcutting.
         // Maybe make it so that for every woodcutter they can get 1 log per.... minute? 30 seconds? 1 second? need some more thinking on this.
@@ -36,7 +36,7 @@ public class StoneAxe : Craftable
         // Do nothing.
         // base.UnlockBuilding();
     }
-    private void Update()
+    void Update()
     {
         UpdateResourceCosts();
     }
