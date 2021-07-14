@@ -227,7 +227,6 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
-        //PointerNotification.leftAmount = 0;
         foreach (var building in _buildingTypesToModify)
         {           
             if (UIManager.isBuildingVisible)
@@ -246,16 +245,10 @@ public abstract class Researchable : MonoBehaviour
             }
         }
 
-        if (PointerNotification.leftAmount > 0)
-        {
-            PointerNotification.objLeftPointer.SetActive(true);
-            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
-        }
+        PointerNotification.HandleLeftAnim();
     }
     protected virtual void UnlockCrafting()
     {
-        //PointerNotification.leftAmount = 0;
-        //PointerNotification.rightAmount = 0;
         foreach (CraftingType craft in _craftingTypesToModify)
         {           
             if (UIManager.isCraftingVisible)
@@ -286,22 +279,11 @@ public abstract class Researchable : MonoBehaviour
             }
         }
 
-        if (PointerNotification.leftAmount > 0)
-        {
-            PointerNotification.objLeftPointer.SetActive(true);
-            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
-        }
-        if (PointerNotification.rightAmount > 0)
-        {
-            PointerNotification.objRightPointer.SetActive(true);
-            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
-        }
+        PointerNotification.HandleLeftAnim();
+        PointerNotification.HandleRightAnim();
     }
     protected virtual void UnlockResearchable()
     {
-        // Need to check this code, might not be working very well. And might contain some bugs.
-        //PointerNotification.rightAmount = 0;
-
         foreach (ResearchType research in _researchTypesToModify)
         {
             if (Researchables[research].unlocksAmount < Researchables[research].unlocksRequired)
@@ -327,11 +309,7 @@ public abstract class Researchable : MonoBehaviour
             }
         }
 
-        if (PointerNotification.rightAmount > 0)
-        {
-            PointerNotification.objRightPointer.SetActive(true);
-            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
-        }
+        PointerNotification.HandleRightAnim();
     }
     protected virtual void Researched()
     {
@@ -390,7 +368,6 @@ public abstract class Researchable : MonoBehaviour
             _imgCollapse.color = darkGreyColor;
         }
     }
-
     private void InitializeObjects()
     {
         _tformBody = transform.Find("Panel_Main/Body");

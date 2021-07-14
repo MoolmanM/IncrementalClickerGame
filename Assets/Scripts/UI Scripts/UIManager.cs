@@ -25,27 +25,20 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateNotificationPanel()
     {
-        PointerNotification.textLeft.text = PointerNotification.leftAmount.ToString();
-        PointerNotification.textRight.text = PointerNotification.rightAmount.ToString();
-        if (PointerNotification.leftAmount > 0)
-        {
-            PointerNotification.objLeftPointer.SetActive(true);
-        }
-        else
-        {
-            PointerNotification.objLeftPointer.SetActive(false);
-        }
-        if (PointerNotification.rightAmount > 0)
-        {
-            PointerNotification.objRightPointer.SetActive(true);
-        }
-        else
-        {
-            PointerNotification.objRightPointer.SetActive(false);
-        }
+        //PointerNotification.textLeft.text = PointerNotification.leftAmount.ToString();
+        //PointerNotification.textRight.text = PointerNotification.rightAmount.ToString();
+
+        PointerNotification.HandleLeftAnim();
+        PointerNotification.HandleRightAnim();
+
+        // I need to save a new variable such as 'lastRightAmount', that will save the previous right amount, and then everytime I swap tabs.
+        // It needs to check if the currentRightAmount is more than the lastRightAmount. And if that is true
+        // Then you play the displayAgain, otherwise you just keep playing display.
     }
     private void BuildingPanelActive()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
@@ -121,6 +114,8 @@ public class UIManager : MonoBehaviour
     }
     private void CraftingPanelActive()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
@@ -194,6 +189,8 @@ public class UIManager : MonoBehaviour
     }
     private void WorkerPanelActive()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
@@ -268,6 +265,8 @@ public class UIManager : MonoBehaviour
     }
     private void ResearchPanelActive()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
@@ -393,5 +392,8 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         SwipeCountHandler();
+        //Debug.Log(string.Format("last Left: {0}, left: {1}... last Right: {2}, Right: {3}", PointerNotification.lastLeftAmount,  PointerNotification.leftAmount, PointerNotification.lastRightAmount, PointerNotification.rightAmount));
+        //Debug.Log("Is playing: " + PointerNotification.IsPlaying(PointerNotification.AnimLeft, "Idle"));
+        //Debug.Log("Is looping: " + PointerNotification.IsLooping(PointerNotification.AnimLeft, "Idle"));
     }
 }

@@ -273,15 +273,15 @@ public class Hunters : Worker
                 }
             }
 
-            for (int i = 0; i < _resourcesToDecrement.Length; i++)
-            {
-                Debug.Log(_resourcesToDecrement[i].resourceTypeToModify + " " + _resourcesToDecrement[i].incrementAmount);
-            }
+            //for (int i = 0; i < _resourcesToDecrement.Length; i++)
+            //{
+            //    Debug.Log(_resourcesToDecrement[i].resourceTypeToModify + " " + _resourcesToDecrement[i].incrementAmount);
+            //}
 
-            for (int i = 0; i < _resourcesToIncrement.Length; i++)
-            {
-                Debug.Log(_resourcesToIncrement[i].resourceTypeToModify + " " + _resourcesToIncrement[i].incrementAmount);
-            }
+            //for (int i = 0; i < _resourcesToIncrement.Length; i++)
+            //{
+            //    Debug.Log(_resourcesToIncrement[i].resourceTypeToModify + " " + _resourcesToIncrement[i].incrementAmount);
+            //}
         }
     }
     void Update()

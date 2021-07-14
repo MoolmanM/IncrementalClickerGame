@@ -196,6 +196,8 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         foreach (var building in _buildingTypesToModify)
         {
@@ -212,14 +214,12 @@ public abstract class Craftable : MonoBehaviour
             }         
         }
 
-        if (PointerNotification.leftAmount > 0)
-        {
-            PointerNotification.objLeftPointer.SetActive(true);
-            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
-        }       
+        PointerNotification.HandleLeftAnim();
     }
     protected virtual void UnlockWorkerJob()
     {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.rightAmount = 0;
         foreach (var worker in _workerTypesToModify)
         {
@@ -243,11 +243,7 @@ public abstract class Craftable : MonoBehaviour
             }
         }
 
-        if (PointerNotification.rightAmount > 0)
-        {
-            PointerNotification.objRightPointer.SetActive(true);
-            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
-        }       
+        PointerNotification.HandleRightAnim();
     }
     protected virtual void UnlockResource()
     {
