@@ -10,9 +10,10 @@ public class FireHardenedSpear : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
+        unlocksRequired = 2;
         SetInitialValues();
 
-        unlocksRequired = 2;
+        
     }
     void Start()
     {
@@ -25,6 +26,14 @@ public class FireHardenedSpear : Craftable
     protected override void UnlockBuilding()
     {
         // Do nothing.
+    }
+    protected override void UnlockWorkerJob()
+    {
+        // Do nothing
+    }
+    protected override void UnlockCrafting()
+    {
+        // do nothing
     }
     private void DisplayConsole()
     {

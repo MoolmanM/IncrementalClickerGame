@@ -15,6 +15,8 @@ public class Fire : Researchable
         Researchables.Add(Type, _researchable);
         _timeToCompleteResearch = 60;
 
+        isUnlocked = true;
+
         _researchTypesToModify = new ResearchType[2];
         _researchTypesToModify[0] = ResearchType.Cooking;
         _researchTypesToModify[1] = ResearchType.FireHardenedWeapons;

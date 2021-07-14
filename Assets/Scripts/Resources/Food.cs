@@ -12,7 +12,6 @@ public class Food : Resource
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
-        isUnlocked = 1;
         SetInitialValues();       
         // DisplayConsole();
     }

@@ -13,7 +13,7 @@ public class StoneSpear : Craftable
         SetInitialValues();
 
         _craftingTypesToModify = new CraftingType[1];
-        _craftingTypesToModify[0] = CraftingType.FireHardenedSpear;
+        _craftingTypesToModify[0] = CraftingType.FireHardenedSpear;       
     }
 
     void Start()
@@ -34,6 +34,10 @@ public class StoneSpear : Craftable
     protected override void UnlockBuilding()
     {
         // Do nothing.
+    }
+    protected override void UnlockWorkerJob()
+    {
+        // do nothing
     }
     void Update()
     {

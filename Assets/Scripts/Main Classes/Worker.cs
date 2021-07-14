@@ -36,6 +36,13 @@ public enum WorkerType
         // Which is why we should maybe have a weapons tab, but for now lets just do it in the crafting panel.
         // So unlock hunter workertype on the crafting of any weapon type. for in case the player decided to skip other weapon craftings.
 }
+public struct ResourcesToModify
+{
+    [System.NonSerialized] public ResourceType resourceTypeToModify;
+    [System.NonSerialized] public float resourceMultiplier, incrementAmount, actualIncrementAmount;
+    [System.NonSerialized] public bool hasAssignedEnough, hasAssignedNotEnough;
+}
+
 
 public class Worker : MonoBehaviour
 {
@@ -44,22 +51,22 @@ public class Worker : MonoBehaviour
     public static uint TotalWorkerCount, UnassignedWorkerCount;
     public static bool isUnlockedEvent;
 
-    [System.NonSerialized] public ResourceType resourceTypeToModify;
+
+
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public TMP_Text txtHeader;
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true;
-    [System.NonSerialized] public float resourceMultiplier, incrementAmount;
-
+    [System.NonSerialized] public bool isUnlocked, hasSeen = true;   
     // Make workercount non serialized eventually, for now will use for debugging.
     public uint workerCount;
-
     public WorkerType Type;
     public GameObject objSpacerBelow;
     public TMP_Text txtAvailableWorkers;
 
-    private uint _changeAmount = 1;
     private Transform _tformTxtHeader, _tformObjMainPanel;
     private string _workerString;
+
+    [System.NonSerialized] public ResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
+    protected uint _changeAmount = 1;
 
     protected void SetInitialValues()
     {
@@ -99,11 +106,8 @@ public class Worker : MonoBehaviour
             AutoWorker.AutoAssignWorkers();
         }      
     }
-    public void OnPlusButton()
+    public virtual void OnPlusButton()
     {
-        // amountPerSecond = 0;
-        // amountPerSecond += workermultiplier 
-
         if (UnassignedWorkerCount > 0)
         {
             if (IncrementSelect.IsOneSelected)
@@ -141,11 +145,33 @@ public class Worker : MonoBehaviour
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            incrementAmount = (_changeAmount * resourceMultiplier);
-            Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
+            if (_resourcesToDecrement == null)
+            {
+                for (int i = 0; i < _resourcesToIncrement.Length; i++)
+                {
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _resourcesToIncrement.Length; i++)
+                {
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                }
+                for (int i = 0; i < _resourcesToDecrement.Length; i++)
+                {
+                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToDecrement[i].incrementAmount;
+                }
+            }
+
+            //incrementAmount = (_changeAmount * resourceMultiplier);
+            //Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
         }       
     }
-    public void OnMinusButton()
+    public virtual void OnMinusButton()
     {
         if (workerCount > 0)
         {
@@ -184,9 +210,31 @@ public class Worker : MonoBehaviour
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
 
-            incrementAmount = (_changeAmount * resourceMultiplier);
-            Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
-        }     
+            if (_resourcesToDecrement == null)
+            {
+                for (int i = 0; i < _resourcesToIncrement.Length; i++)
+                {
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _resourcesToIncrement.Length; i++)
+                {
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+                }
+                for (int i = 0; i < _resourcesToDecrement.Length; i++)
+                {
+                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                    Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond += _resourcesToDecrement[i].incrementAmount;
+                }
+            }
+
+            //incrementAmount = (_changeAmount * resourceMultiplier);
+            //Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
+        }
     }
     void OnApplicationQuit()
     {             

@@ -14,7 +14,7 @@ public class Sticks : Resource
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
         isUnlocked = 1;
         SetInitialValues();
-        //amount = 500;
+        amount = 100;
         // DisplayConsole();
 
     }

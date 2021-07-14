@@ -10,10 +10,15 @@ public class Weapons : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 60;
+        _timeToCompleteResearch = 10;
 
+        isUnlocked = true;
+        
         _craftingTypesToModify = new CraftingType[1];
         _craftingTypesToModify[0] = CraftingType.WoodenSpear;
+
+        _researchTypesToModify = new ResearchType[1];
+        _researchTypesToModify[0] = ResearchType.FireHardenedWeapons;
 
         SetInitialValues();
     }

@@ -40,6 +40,8 @@ public class Resource : MonoBehaviour
     protected Image _imgBar;
     protected float _timer = 0.1f;
 
+    public static bool hasWorkerEnoughResources;
+
     public virtual void SetInitialValues()
     {
         InitializeObjects();
@@ -56,6 +58,7 @@ public class Resource : MonoBehaviour
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
         }
 
+        isUnlocked = 1;
         if (isUnlocked == 1)
         {
             objMainPanel.SetActive(true);
@@ -77,7 +80,7 @@ public class Resource : MonoBehaviour
             }
             else
             {
-                txtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
+                //txtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
             }
            
         }
@@ -125,7 +128,31 @@ public class Resource : MonoBehaviour
         fillAmount += add / div;
         _imgBar.fillAmount = fillAmount;
     }
-    public virtual void UpdateResources()
+    private void HasEnoughResources()
+    {
+        //bool hasEnoughResources;
+        foreach(var worker in Worker.Workers)
+        {
+            ResourcesToModify[] _resourcesToDecrement = Worker.Workers[worker.Key]._resourcesToDecrement;
+
+            if (_resourcesToDecrement != null)
+            {
+                for (int i = 0; i < _resourcesToDecrement.Length; i++)
+                {
+                    if (Resources[_resourcesToDecrement[i].resourceTypeToModify].amount >= _resourcesToDecrement[i].resourceMultiplier)
+                    {
+                        hasWorkerEnoughResources = true;
+                    }
+                    else
+                    {
+                        hasWorkerEnoughResources = false;
+                    }
+                }
+            }
+        }
+        Debug.Log(hasWorkerEnoughResources);
+    }
+    protected virtual void UpdateResources()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
@@ -140,7 +167,6 @@ public class Resource : MonoBehaviour
             {
                 amount += amountPerSecond / 10;
             }
-            
             if (amountPerSecond < 0)
             {
                 uiForResource.txtAmountPerSecond.text = string.Format("-{0:0.00}/sec", amountPerSecond);
@@ -152,7 +178,6 @@ public class Resource : MonoBehaviour
             uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
 
             GetCurrentFill();
-
         }
     }
     void OnApplicationQuit()

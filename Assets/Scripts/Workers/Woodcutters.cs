@@ -11,9 +11,9 @@ public class Woodcutters : Worker
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
         SetInitialValues();
-        resourceMultiplier = 0.11f;
-        resourceTypeToModify = ResourceType.Sticks;
-        // DisplayConsole();
+        _resourcesToIncrement = new ResourcesToModify[1];
+        _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Sticks;
+        _resourcesToIncrement[0].resourceMultiplier = 0.11f;
     }
 
     private void DisplayConsole()

@@ -13,7 +13,7 @@ public class Knowledge : Resource
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
         SetInitialValues();
         // DisplayConsole();
-        amount = 100;
+        amount = 1000;
     }
 
     private void DisplayConsole()

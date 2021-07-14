@@ -12,8 +12,6 @@ public class Pelts : Resource
         Resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
         SetInitialValues();
-        // DisplayConsole();
-        // amount = 100;
     }
 
     private void DisplayConsole()

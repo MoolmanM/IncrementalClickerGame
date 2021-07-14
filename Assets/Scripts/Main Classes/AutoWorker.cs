@@ -50,14 +50,14 @@ public class AutoWorker : MonoBehaviour
             if (wantedWorkerCount > currentWorkerCount)
             {
                 uint differenceAmount = wantedWorkerCount - currentWorkerCount;
-                IncrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
-                Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond += IncrementAmount;
+                //IncrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
+                //Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond += IncrementAmount;
             }
             else if (wantedWorkerCount < currentWorkerCount)
             {
                 uint differenceAmount = currentWorkerCount - wantedWorkerCount;
-                DecrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
-                Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond -= IncrementAmount;
+                //DecrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
+                //Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond -= IncrementAmount;
             }
  
             Worker.UnassignedWorkerCount = 0;

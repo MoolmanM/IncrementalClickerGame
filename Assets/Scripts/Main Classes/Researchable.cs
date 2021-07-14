@@ -68,7 +68,7 @@ public abstract class Researchable : MonoBehaviour
     public void SetInitialValues()
     {
         InitializeObjects();
-        isUnlocked = true;
+        //isUnlocked = true;
 
         if (TimeManager.hasPlayedBefore)
         {
@@ -227,7 +227,7 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
-        PointerNotification.leftAmount = 0;
+        //PointerNotification.leftAmount = 0;
         foreach (var building in _buildingTypesToModify)
         {           
             if (UIManager.isBuildingVisible)
@@ -242,13 +242,6 @@ public abstract class Researchable : MonoBehaviour
                 Building.Buildings[building].isUnlocked = true;
                 Building.isUnlockedEvent = true;
                 Building.Buildings[building].hasSeen = false;
-            }
-        }
-
-        foreach (var buildingMain in Building.Buildings)
-        {
-            if (!buildingMain.Value.hasSeen)
-            {
                 PointerNotification.leftAmount++;
             }
         }
@@ -261,7 +254,8 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void UnlockCrafting()
     {
-        PointerNotification.leftAmount = 0;
+        //PointerNotification.leftAmount = 0;
+        //PointerNotification.rightAmount = 0;
         foreach (CraftingType craft in _craftingTypesToModify)
         {           
             if (UIManager.isCraftingVisible)
@@ -277,12 +271,16 @@ public abstract class Researchable : MonoBehaviour
                 Craftable.isUnlockedEvent = true;
                 Craftable.Craftables[craft].hasSeen = false;
             }
-            //Debug.Log(Craftable.Craftables[craft].Type + " " + Craftable.Craftables[craft].isUnlocked);       
-        }
-
-        foreach (var craftMain in Craftable.Craftables)
-        {
-            if (!craftMain.Value.hasSeen)
+ 
+            if (UIManager.isBuildingVisible)
+            {
+                PointerNotification.rightAmount++;
+            }
+            else if(UIManager.isResearchVisible)
+            {
+                PointerNotification.leftAmount++;
+            }
+            else if(UIManager.isWorkerVisible)
             {
                 PointerNotification.leftAmount++;
             }
@@ -293,12 +291,16 @@ public abstract class Researchable : MonoBehaviour
             PointerNotification.objLeftPointer.SetActive(true);
             PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
         }
+        if (PointerNotification.rightAmount > 0)
+        {
+            PointerNotification.objRightPointer.SetActive(true);
+            PointerNotification.textRight.GetComponent<TMP_Text>().text = PointerNotification.rightAmount.ToString();
+        }
     }
     protected virtual void UnlockResearchable()
     {
         // Need to check this code, might not be working very well. And might contain some bugs.
-        PointerNotification.leftAmount = 0;
-        PointerNotification.rightAmount = 0;
+        //PointerNotification.rightAmount = 0;
 
         foreach (ResearchType research in _researchTypesToModify)
         {
@@ -320,24 +322,11 @@ public abstract class Researchable : MonoBehaviour
                     Researchables[research].isUnlocked = true;
                     isUnlockedEvent = true;
                     Researchables[research].hasSeen = false;
+                    PointerNotification.rightAmount++;
                 }
-
             }
         }
 
-        foreach (var researchMain in Researchables)
-        {
-            if (!researchMain.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        if (PointerNotification.leftAmount > 0)
-        {
-            PointerNotification.objLeftPointer.SetActive(true);
-            PointerNotification.textLeft.GetComponent<TMP_Text>().text = PointerNotification.leftAmount.ToString();
-        }
         if (PointerNotification.rightAmount > 0)
         {
             PointerNotification.objRightPointer.SetActive(true);
