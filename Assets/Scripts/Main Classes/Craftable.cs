@@ -170,7 +170,7 @@ public abstract class Craftable : MonoBehaviour
             _imgCollapse.color = greyColor;
         }
 
-        if (ToggleCrafting.isCraftingHidden == 1)
+        if (SwitchHideCrafting.isCraftingHidden)
         {
             
 

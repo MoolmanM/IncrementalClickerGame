@@ -6,15 +6,20 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public Swipe _Swipe;
-    private uint _swipeCount = 0;
-    private readonly uint _panelCount = 3;
-    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI;
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
+    public static uint swipeCount = 0;
+
+    public Swipe _Swipe;
+    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI;
+    public Animator animMainPanel;
+
+    private readonly uint _panelCount = 3;
+
+    
 
     void Start()
     {
-        _swipeCount = 0;
+        swipeCount = 0;
         foreach(var _settingsUI in settingsUI)
         {
             _settingsUI.SetActive(false);
@@ -346,32 +351,61 @@ public class UIManager : MonoBehaviour
     private void SwipeCountHandler()
     {
         #region Actual Swiping
-        if (_Swipe.SwipeRight && (_swipeCount >= 1))
+        if (_Swipe.SwipeRight && (swipeCount >= 1))
         {
-            _swipeCount--;
+            //swipeCount--;
+            animMainPanel.SetTrigger("hasSwipedRight");
         }
-        else if (_Swipe.SwipeLeft && (_swipeCount <= (_panelCount - 1)))
+        else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
         {
-            _swipeCount++;
+            //swipeCount++;
+            animMainPanel.SetTrigger("hasSwipedLeft");
         }
         #endregion
 
+        //#region Sets Panels Active
+        //if (_Swipe.SwipeRight || _Swipe.SwipeLeft)
+        //{
+        //    if (swipeCount == 0)
+        //    {
+        //        BuildingPanelActive();
+        //    }
+        //    else if (swipeCount == 1)
+        //    {
+        //        CraftingPanelActive();
+        //    }
+        //    else if (swipeCount == 2)
+        //    {
+        //        WorkerPanelActive();
+        //    }
+        //    else if (swipeCount == 3)
+        //    {
+        //        ResearchPanelActive();
+        //    }
+        //    else
+        //    {
+        //        Debug.LogError("This shouldn't happen");
+        //    }
+        //}
+        //#endregion
+
+        // I'll keep this for now, but I'm not 100% sure about it, what if the phone lags or a lagspike happens, this seems very susceptible to that.
         #region Sets Panels Active
-        if (_Swipe.SwipeRight || _Swipe.SwipeLeft)
+        if (PointerNotification.IsPlaying(animMainPanel, "SwipeLeft") || PointerNotification.IsPlaying(animMainPanel, "SwipeRight"))
         {
-            if (_swipeCount == 0)
+            if (swipeCount == 0)
             {
                 BuildingPanelActive();
             }
-            else if (_swipeCount == 1)
+            else if (swipeCount == 1)
             {
                 CraftingPanelActive();
             }
-            else if (_swipeCount == 2)
+            else if (swipeCount == 2)
             {
                 WorkerPanelActive();
             }
-            else if (_swipeCount == 3)
+            else if (swipeCount == 3)
             {
                 ResearchPanelActive();
             }
@@ -392,8 +426,5 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         SwipeCountHandler();
-        //Debug.Log(string.Format("last Left: {0}, left: {1}... last Right: {2}, Right: {3}", PointerNotification.lastLeftAmount,  PointerNotification.leftAmount, PointerNotification.lastRightAmount, PointerNotification.rightAmount));
-        //Debug.Log("Is playing: " + PointerNotification.IsPlaying(PointerNotification.AnimLeft, "Idle"));
-        //Debug.Log("Is looping: " + PointerNotification.IsLooping(PointerNotification.AnimLeft, "Idle"));
     }
 }

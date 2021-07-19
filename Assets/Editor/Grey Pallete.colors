@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Presets:
   - m_Name: 
+    m_Color: {r: 0.099, g: 0.099, b: 0.099, a: 1}
+  - m_Name: 
     m_Color: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 1}
   - m_Name: 
     m_Color: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
