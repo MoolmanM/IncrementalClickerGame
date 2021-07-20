@@ -9,7 +9,8 @@ public enum WorkerType
     Woodcutters,
     Miners,
     Hunters,
-    Scholars
+    Scholars,
+    EnergyProducers
 
         // So do we want hunters, for start. maybe just do for every worker there would be hunts automatically conducted. 
         // So every 500 seconds there's a hunt that lasts 500 seconds. When they leave it costs a certain amount of resources, depending on how many workers was assigned at that time.

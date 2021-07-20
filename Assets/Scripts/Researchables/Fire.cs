@@ -13,7 +13,7 @@ public class Fire : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 60;
+        _timeToCompleteResearch = 10;
 
         isUnlocked = true;
 

@@ -15,7 +15,8 @@ public enum CraftingType
     StoneAxe,
     StonePickaxe,
     StoneSpear,
-    FireHardenedSpear
+    FireHardenedSpear,
+    HamsterWheel
 }
 
 public abstract class Craftable : MonoBehaviour
@@ -172,7 +173,6 @@ public abstract class Craftable : MonoBehaviour
 
         if (Menu.isCraftingHidden)
         {
-            Debug.Log("Reached here");
             objMainPanel.SetActive(false);
             objSpacerBelow.SetActive(false);
         }

@@ -27,7 +27,8 @@ public enum ResearchType
     Fire,
     Cooking,
     FireHardenedWeapons,
-    Smelting   
+    Smelting,
+    ManualEnergyProduction
 }
 
 public abstract class Researchable : MonoBehaviour
@@ -51,6 +52,7 @@ public abstract class Researchable : MonoBehaviour
     private float timer = 0.1f;
     private readonly float maxValue = 0.1f;
 
+    protected bool _isUnlockableByResource = false;
     protected float _timeToCompleteResearch;
     protected BuildingType[] _buildingTypesToModify;
     protected ResourceType[] _resourceTypesToModify;
@@ -142,7 +144,7 @@ public abstract class Researchable : MonoBehaviour
             }
 
             _imgProgressCircle.fillAmount = GetCurrentFill();
-            //CheckIfUnlocked();
+            CheckIfUnlocked();
             
         }     
     }
@@ -286,11 +288,9 @@ public abstract class Researchable : MonoBehaviour
     {
         foreach (ResearchType research in _researchTypesToModify)
         {
-            if (Researchables[research].unlocksAmount < Researchables[research].unlocksRequired)
-            {
-                Researchables[research].unlocksAmount++;
-            }
-            else
+            Researchables[research].unlocksAmount++;
+
+            if(Researchables[research].unlocksAmount == Researchables[research].unlocksRequired)
             {
                 if (UIManager.isResearchVisible)
                 {
@@ -311,6 +311,28 @@ public abstract class Researchable : MonoBehaviour
 
         PointerNotification.HandleRightAnim();
     }
+    protected void CheckIfUnlocked()
+    {
+        if (!isUnlocked)
+        {
+            if (GetCurrentFill() >= 0.8f)
+            {
+                if (_isUnlockableByResource)
+                {
+                    isUnlocked = true;
+                    if (UIManager.isResearchVisible)
+                    {
+                        objMainPanel.SetActive(true);
+                        objSpacerBelow.SetActive(true);
+                    }
+                    else
+                    {
+                        isUnlockedEvent = true;
+                    }
+                }
+            }
+        }
+    }
     protected virtual void Researched()
     {
         isResearched = true;
@@ -319,6 +341,7 @@ public abstract class Researchable : MonoBehaviour
             researchSimulActive--;
             UnlockCrafting();
             UnlockBuilding();
+            UnlockResearchable();
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);
@@ -339,6 +362,7 @@ public abstract class Researchable : MonoBehaviour
             researchSimulActive--;
             UnlockCrafting();
             UnlockBuilding();
+            UnlockResearchable();
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);

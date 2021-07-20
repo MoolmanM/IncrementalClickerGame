@@ -17,7 +17,8 @@ public enum ResourceType
     Sticks,
     Stones,
     Knowledge,
-    Pelts
+    Pelts,
+    Energy
 }
 
 public class Resource : MonoBehaviour
@@ -33,6 +34,7 @@ public class Resource : MonoBehaviour
     public ResourceType Type;
     public TMP_Text txtEarned;
     public GameObject objSpacerBelow;
+    public float globalMultiplier = 1f;
 
     protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
 
@@ -165,7 +167,7 @@ public class Resource : MonoBehaviour
             }
             else
             {
-                amount += amountPerSecond / 10;
+                amount += (amountPerSecond / 10) * globalMultiplier;
             }
             if (amountPerSecond < 0)
             {
