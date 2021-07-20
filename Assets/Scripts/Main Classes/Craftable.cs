@@ -170,10 +170,9 @@ public abstract class Craftable : MonoBehaviour
             _imgCollapse.color = greyColor;
         }
 
-        if (SwitchHideCrafting.isCraftingHidden)
+        if (Menu.isCraftingHidden)
         {
-            
-
+            Debug.Log("Reached here");
             objMainPanel.SetActive(false);
             objSpacerBelow.SetActive(false);
         }

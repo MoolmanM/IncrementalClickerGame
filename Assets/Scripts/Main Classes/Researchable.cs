@@ -313,7 +313,8 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void Researched()
     {
-        if (ToggleResearch.isResearchHidden == 1)
+        isResearched = true;
+        if (Menu.isResearchHidden)
         {
             researchSimulActive--;
             UnlockCrafting();

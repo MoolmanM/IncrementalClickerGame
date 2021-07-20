@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     public static uint swipeCount = 0;
 
     public Swipe _Swipe;
-    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI;
+    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI, gatheringUI;
     public Animator animMainPanel;
 
     private readonly uint _panelCount = 3;
@@ -26,19 +26,11 @@ public class UIManager : MonoBehaviour
         }
         
         BuildingPanelActive();
-        HideCompletedResearch();
     }
     private void UpdateNotificationPanel()
     {
-        //PointerNotification.textLeft.text = PointerNotification.leftAmount.ToString();
-        //PointerNotification.textRight.text = PointerNotification.rightAmount.ToString();
-
         PointerNotification.HandleLeftAnim();
         PointerNotification.HandleRightAnim();
-
-        // I need to save a new variable such as 'lastRightAmount', that will save the previous right amount, and then everytime I swap tabs.
-        // It needs to check if the currentRightAmount is more than the lastRightAmount. And if that is true
-        // Then you play the displayAgain, otherwise you just keep playing display.
     }
     private void BuildingPanelActive()
     {
@@ -52,11 +44,24 @@ public class UIManager : MonoBehaviour
         isResearchVisible = false;
         isWorkerVisible = false;
 
+
+
         foreach (var _buildingUI in buildingUI)
         {
             _buildingUI.SetActive(true);
         }
+        foreach (var _gatheringUI in gatheringUI)
+        {
+            if (Menu.isGatheringHidden)
+            {
+                _gatheringUI.SetActive(false);
+            }
+            else
+            {
+                _gatheringUI.SetActive(true);
+            }
 
+        }
         foreach (var _workerUI in workerUI)
         {
             _workerUI.SetActive(false);
@@ -179,12 +184,19 @@ public class UIManager : MonoBehaviour
         foreach (var craft in Craftable.Craftables)
         {
             craft.Value.hasSeen = true;
+
             if (craft.Value.isUnlocked)
             {
                 craft.Value.objMainPanel.SetActive(true);
                 craft.Value.objSpacerBelow.SetActive(true);
             }
             else
+            {
+                craft.Value.objMainPanel.SetActive(false);
+                craft.Value.objSpacerBelow.SetActive(false);
+            }
+
+            if (Menu.isCraftingHidden && craft.Value.isCrafted)
             {
                 craft.Value.objMainPanel.SetActive(false);
                 craft.Value.objSpacerBelow.SetActive(false);
@@ -345,6 +357,12 @@ public class UIManager : MonoBehaviour
                 researchable.Value.objMainPanel.SetActive(false);
                 researchable.Value.objSpacerBelow.SetActive(false);
             }
+
+            if (Menu.isResearchHidden && researchable.Value.isResearched)
+            {
+                researchable.Value.objMainPanel.SetActive(false);
+                researchable.Value.objSpacerBelow.SetActive(false);
+            }
         }
         UpdateNotificationPanel();
     }
@@ -390,6 +408,7 @@ public class UIManager : MonoBehaviour
         //#endregion
 
         // I'll keep this for now, but I'm not 100% sure about it, what if the phone lags or a lagspike happens, this seems very susceptible to that.
+        // One problem already with this is if you swipe excessively fast it just stays on the same panel.
         #region Sets Panels Active
         if (PointerNotification.IsPlaying(animMainPanel, "SwipeLeft") || PointerNotification.IsPlaying(animMainPanel, "SwipeRight"))
         {
@@ -415,13 +434,6 @@ public class UIManager : MonoBehaviour
             }
         }
         #endregion
-    }
-    public void HideCompletedResearch()
-    {
-        foreach (var researchable in Researchable.Researchables)
-        {
-            //Debug.Log(researchable);
-        }
     }
     void Update()
     {
