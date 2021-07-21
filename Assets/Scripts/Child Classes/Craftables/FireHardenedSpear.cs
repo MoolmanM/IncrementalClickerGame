@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WoodenPickaxe : Craftable
+public class FireHardenedSpear : Craftable
 {
     private Craftable _craftable;
 
@@ -10,21 +10,11 @@ public class WoodenPickaxe : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
-        isUnlockableByResource = true;
-        SetInitialValues();
-
-        _buildingTypesToModify = new BuildingType[1];
-        _buildingTypesToModify[0] = BuildingType.DigSite;
-
-        _resourceTypesToModify = new ResourceType[1];
-        _resourceTypesToModify[0] = ResourceType.Stones;
-
-        _workerTypesToModify = new WorkerType[1];
-        _workerTypesToModify[0] = WorkerType.Miners;
+        SetInitialValues();     
     }
     void Start()
     {
-        SetDescriptionText("Enables building of the Dig Site to start gathering stones.");
+        SetDescriptionText("Increases efficiency of hunting.");
     }
     private void DisplayConsole()
     {
@@ -33,7 +23,6 @@ public class WoodenPickaxe : Craftable
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     void Update()
     {
         UpdateResourceCosts();

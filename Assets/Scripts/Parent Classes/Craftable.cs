@@ -1,15 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
+
 public enum CraftingType
 {
     //I could maybe have different types here such as tools and then like refined crafting? For now it'll just be the name of each crafting option
     WoodenHoe,
     WoodenAxe,
     WoodenPickaxe,
+    Paper,
     WoodenSpear,
     StoneHoe,
     StoneAxe,
@@ -26,27 +26,70 @@ public abstract class Craftable : MonoBehaviour
     public static bool isUnlockedEvent;
     public CraftingType Type;
     public ResourceCost[] resourceCost;
+    public TypesToModify typesToModify;
     public GameObject objSpacerBelow;
     [System.NonSerialized] public bool isUnlocked, isCrafted, hasSeen = true;
     [System.NonSerialized] public GameObject objMainPanel;
-    public float averageAmount;
+    public bool isUnlockableByResource;
     public int unlocksRequired = 1, unlocksAmount;
 
     private string _isCraftedString, _isUnlockedString;
     private GameObject _prefabResourceCost, _prefabBodySpacer;
-
-    protected bool isUnlockableByResource;
-    protected BuildingType[] _buildingTypesToModify;
-    protected ResourceType[] _resourceTypesToModify;
-    protected WorkerType[] _workerTypesToModify;
-    protected CraftingType[] _craftingTypesToModify;
+    
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;      
+    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
     protected Image _imgProgressbar, _imgMain, _imgExpand, _imgCollapse;
     protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
 
+    void OnValidate()
+    {
+        if (typesToModify.buildingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingBuilding = true;
+        }
+        else
+        {
+            typesToModify.isModifyingBuilding = false;
+        }
+
+        if (typesToModify.craftingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingCrafting = true;
+        }
+        else
+        {
+            typesToModify.isModifyingCrafting = false;
+        }
+
+        if (typesToModify.researchTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResearch = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResearch = false;
+        }
+
+        if (typesToModify.workerTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingWorker = true;
+        }
+        else
+        {
+            typesToModify.isModifyingWorker = false;
+        }
+
+        if (typesToModify.resourceTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResource = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResource = false;
+        }
+    }
     void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
@@ -55,7 +98,7 @@ public abstract class Craftable : MonoBehaviour
     public void SetInitialValues()
     {
         InitializeObjects();
-   
+
         if (TimeManager.hasPlayedBefore)
         {
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
@@ -65,7 +108,7 @@ public abstract class Craftable : MonoBehaviour
         {
             isCrafted = false;
         }
-        
+
 
         if (isCrafted)
         {
@@ -77,7 +120,7 @@ public abstract class Craftable : MonoBehaviour
         }
     }
     protected void CheckIfUnlocked()
-    {    
+    {
         if (!isUnlocked)
         {
             if (GetCurrentFill() >= 0.8f)
@@ -94,7 +137,7 @@ public abstract class Craftable : MonoBehaviour
                     {
                         isUnlockedEvent = true;
                     }
-                }                        
+                }
             }
         }
     }
@@ -123,7 +166,7 @@ public abstract class Craftable : MonoBehaviour
 
                 Building.ShowResourceCostTime(Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount, Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
             }
-            _imgProgressbar.fillAmount =  GetCurrentFill();
+            _imgProgressbar.fillAmount = GetCurrentFill();
             CheckIfUnlocked();
             CheckIfPurchaseable();
         }
@@ -148,7 +191,7 @@ public abstract class Craftable : MonoBehaviour
             UnlockBuilding();
             UnlockResource();
             UnlockWorkerJob();
-            
+
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
@@ -195,78 +238,91 @@ public abstract class Craftable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
-        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
-        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
-        PointerNotification.leftAmount = 0;
-        foreach (var building in _buildingTypesToModify)
+        if (typesToModify.isModifyingBuilding)
         {
-            Building.Buildings[building].isUnlocked = true;
-            Building.isUnlockedEvent = true;
-            Building.Buildings[building].hasSeen = false;
-        }
-
-        foreach (var buildingMain in Building.Buildings)
-        {
-            if (!buildingMain.Value.hasSeen)
+            PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+            PointerNotification.lastRightAmount = PointerNotification.rightAmount;
+            PointerNotification.leftAmount = 0;
+            foreach (var building in typesToModify.buildingTypesToModify)
             {
-                PointerNotification.leftAmount++;
-            }         
-        }
+                Building.Buildings[building].isUnlocked = true;
+                Building.isUnlockedEvent = true;
+                Building.Buildings[building].hasSeen = false;
+            }
 
-        PointerNotification.HandleLeftAnim();
+            foreach (var buildingMain in Building.Buildings)
+            {
+                if (!buildingMain.Value.hasSeen)
+                {
+                    PointerNotification.leftAmount++;
+                }
+            }
+
+            PointerNotification.HandleLeftAnim();
+        }
     }
     protected virtual void UnlockWorkerJob()
     {
-        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
-        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
-        PointerNotification.rightAmount = 0;
-        foreach (var worker in _workerTypesToModify)
+        if (typesToModify.isModifyingWorker)
         {
-            Worker.Workers[worker].isUnlocked = true;
-            Worker.isUnlockedEvent = true;
-            Worker.Workers[worker].hasSeen = false;
-            AutoWorker.TotalWorkerJobs++;
-            
-            if (AutoToggle.isAutoWorkerOn == 1)
-            {
-                AutoWorker.CalculateWorkers();
-                AutoWorker.AutoAssignWorkers();
-            }
-        }
+            PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+            PointerNotification.lastRightAmount = PointerNotification.rightAmount;
+            PointerNotification.rightAmount = 0;
 
-        foreach (var workerMain in Worker.Workers)
-        {
-            if (!workerMain.Value.hasSeen)
+            foreach (var worker in typesToModify.workerTypesToModify)
             {
-                PointerNotification.rightAmount++;
-            }
-        }
+                Worker.Workers[worker].isUnlocked = true;
+                Worker.isUnlockedEvent = true;
+                Worker.Workers[worker].hasSeen = false;
+                AutoWorker.TotalWorkerJobs++;
 
-        PointerNotification.HandleRightAnim();
+                if (AutoToggle.isAutoWorkerOn == 1)
+                {
+                    AutoWorker.CalculateWorkers();
+                    AutoWorker.AutoAssignWorkers();
+                }
+            }
+
+            foreach (var workerMain in Worker.Workers)
+            {
+                if (!workerMain.Value.hasSeen)
+                {
+                    PointerNotification.rightAmount++;
+                }
+            }
+
+            PointerNotification.HandleRightAnim();
+        }
     }
     protected virtual void UnlockResource()
     {
-        foreach (var resource in _resourceTypesToModify)
+        if (typesToModify.isModifyingResource)
         {
-            Resource.Resources[resource].isUnlocked = 1;
-            Resource.Resources[resource].objMainPanel.SetActive(true);
-            Resource.Resources[resource].objSpacerBelow.SetActive(true);
+            foreach (var resource in typesToModify.resourceTypesToModify)
+            {
+                Resource.Resources[resource].isUnlocked = 1;
+                Resource.Resources[resource].objMainPanel.SetActive(true);
+                Resource.Resources[resource].objSpacerBelow.SetActive(true);
+            }
         }
     }
     protected virtual void UnlockCrafting()
     {
-        foreach (var craft in _craftingTypesToModify)
+        if (typesToModify.isModifyingCrafting)
         {
-            if (Craftables[craft].unlocksAmount < Craftables[craft].unlocksRequired)
+            foreach (var craft in typesToModify.craftingTypesToModify)
             {
-                Craftables[craft].unlocksAmount++;
+                if (Craftables[craft].unlocksAmount < Craftables[craft].unlocksRequired)
+                {
+                    Craftables[craft].unlocksAmount++;
+                }
+                else
+                {
+                    Craftables[craft].isUnlocked = true;
+                    Craftables[craft].hasSeen = true;
+                }
             }
-            else
-            {
-                Craftables[craft].isUnlocked = true;
-                Craftables[craft].hasSeen = true;
-            }      
-        }
+        }     
     }
     private void InitializeObjects()
     {
@@ -283,9 +339,9 @@ public abstract class Craftable : MonoBehaviour
 
             //This loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
             for (int spacerI = i + 1; spacerI < resourceCost.Length; spacerI++)
-                {
-                    Instantiate(_prefabBodySpacer, _tformBody);
-                }
+            {
+                Instantiate(_prefabBodySpacer, _tformBody);
+            }
 
             Transform _tformNewObj = newObj.transform;
             Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
@@ -304,7 +360,7 @@ public abstract class Craftable : MonoBehaviour
         _tformProgressbarPanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
         _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Uncraftable");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
-        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");      
+        _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformObjMain = transform.Find("Panel_Main");
 
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
@@ -322,6 +378,8 @@ public abstract class Craftable : MonoBehaviour
 
         _isCraftedString = Type.ToString() + "isCrafted";
         _isUnlockedString = (Type.ToString() + "isUnlocked");
+
+        _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
     }
     private void Purchaseable()
     {

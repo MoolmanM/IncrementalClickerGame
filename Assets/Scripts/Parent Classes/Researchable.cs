@@ -1,8 +1,7 @@
-using System.Collections;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public enum ResearchType
@@ -39,28 +38,24 @@ public abstract class Researchable : MonoBehaviour
 
     public ResearchType Type;
     public ResourceCost[] resourceCost;
-    
+    public TypesToModify typesToModify;
     public GameObject objSpacerBelow;
+    public uint unlocksRequired = 1, unlockAmount;
+    public float secondsToCompleteResearch;
+    public bool isUnlockableByResource;
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public bool isUnlocked, isResearched, hasSeen = true;
-    public uint unlocksRequired = 1, unlocksAmount;
 
-    private bool isResearchStarted;
+    private bool isResearchStarted, _isIncrementedViaResources;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
     private GameObject _prefabResourceCost, _prefabBodySpacer;
     private float timer = 0.1f;
     private readonly float maxValue = 0.1f;
 
-    protected bool _isUnlockableByResource = false;
-    protected float _timeToCompleteResearch;
-    protected BuildingType[] _buildingTypesToModify;
-    protected ResourceType[] _resourceTypesToModify;
-    protected ResearchType[] _researchTypesToModify;
-    protected CraftingType[] _craftingTypesToModify;
     protected WorkerType[] _workerTypesToModify;
     protected float _timer = 0.1f;
-    protected readonly float _maxValue = 0.1f;   
+    protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
     protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
@@ -90,46 +85,18 @@ public abstract class Researchable : MonoBehaviour
             }
             else
             {
-                _timeToCompleteResearch = _researchTimeRemaining - (float)TimeManager.difference.TotalSeconds;
+                secondsToCompleteResearch = _researchTimeRemaining - (float)TimeManager.difference.TotalSeconds;
                 Debug.Log("You still have ongoing research");
                 _objProgressCircle.SetActive(false);
             }
         }
 
-        else if(isResearched && !isResearchStarted)
+        else if (isResearched && !isResearchStarted)
         {
             Researched();
         }
-        
-    }
-    //protected void CheckIfUnlocked()
-    //{
-    //    if (GetCurrentFill() == 1f)
-    //    {
-    //        Purchaseable();
-    //    }
-    //    else
-    //    {
-    //        UnPurchaseable();
-    //    }
 
-    //    if (isUnlocked == 0)
-    //    {
-    //        if (GetCurrentFill() >= 0.8f)
-    //        {
-    //            isUnlocked = 1;
-    //            if (UIManager.isResearchVisible)
-    //            {
-    //                objMainPanel.SetActive(true);
-    //                objSpacerBelow.SetActive(true);
-    //            }
-    //            else
-    //            {
-    //                isUnlockedEvent = true;
-    //            }
-    //        }
-    //    }
-    //}
+    }
     public virtual void UpdateResourceCosts()
     {
         if ((_timer -= Time.deltaTime) <= 0)
@@ -144,9 +111,9 @@ public abstract class Researchable : MonoBehaviour
             }
 
             _imgProgressCircle.fillAmount = GetCurrentFill();
-            CheckIfUnlocked();
-            
-        }     
+            CheckIfUnlockedByResource();
+
+        }
     }
     public virtual void UpdateResearchTimer()
     {
@@ -158,8 +125,8 @@ public abstract class Researchable : MonoBehaviour
 
                 _currentTimer += 0.1f;
 
-                _imgResearchBar.fillAmount = _currentTimer / _timeToCompleteResearch;
-                _researchTimeRemaining = _timeToCompleteResearch - _currentTimer;  
+                _imgResearchBar.fillAmount = _currentTimer / secondsToCompleteResearch;
+                _researchTimeRemaining = secondsToCompleteResearch - _currentTimer;
                 TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(_researchTimeRemaining)));
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
@@ -181,7 +148,7 @@ public abstract class Researchable : MonoBehaviour
                 CheckIfResearchIsComplete();
             }
         }
-        
+
     }
     public void OnResearch()
     {
@@ -215,12 +182,12 @@ public abstract class Researchable : MonoBehaviour
                 }
             }
         }
-            
+
 
     }
     private void CheckIfResearchIsComplete()
     {
-        if (_currentTimer >= _timeToCompleteResearch)
+        if (_currentTimer >= secondsToCompleteResearch)
         {
             isResearchStarted = false;
             isResearched = true;
@@ -229,105 +196,129 @@ public abstract class Researchable : MonoBehaviour
     }
     protected virtual void UnlockBuilding()
     {
-        foreach (var building in _buildingTypesToModify)
-        {           
-            if (UIManager.isBuildingVisible)
-            {
-                Building.Buildings[building].isUnlocked = true;
-                Building.Buildings[building].objMainPanel.SetActive(true);
-                Building.Buildings[building].objSpacerBelow.SetActive(true);
-                Building.Buildings[building].hasSeen = true;
-            }   
-            else
-            {
-                Building.Buildings[building].isUnlocked = true;
-                Building.isUnlockedEvent = true;
-                Building.Buildings[building].hasSeen = false;
-                PointerNotification.leftAmount++;
-            }
-        }
-
-        PointerNotification.HandleLeftAnim();
-    }
-    protected virtual void UnlockCrafting()
-    {
-        foreach (CraftingType craft in _craftingTypesToModify)
-        {           
-            if (UIManager.isCraftingVisible)
-            {
-                Craftable.Craftables[craft].isUnlocked = true;
-                Craftable.Craftables[craft].objMainPanel.SetActive(true);
-                Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
-                Craftable.Craftables[craft].hasSeen = true;
-            }
-            else
-            {
-                Craftable.Craftables[craft].isUnlocked = true;
-                Craftable.isUnlockedEvent = true;
-                Craftable.Craftables[craft].hasSeen = false;
-            }
- 
-            if (UIManager.isBuildingVisible)
-            {
-                PointerNotification.rightAmount++;
-            }
-            else if(UIManager.isResearchVisible)
-            {
-                PointerNotification.leftAmount++;
-            }
-            else if(UIManager.isWorkerVisible)
-            {
-                PointerNotification.leftAmount++;
-            }
-        }
-
-        PointerNotification.HandleLeftAnim();
-        PointerNotification.HandleRightAnim();
-    }
-    protected virtual void UnlockResearchable()
-    {
-        foreach (ResearchType research in _researchTypesToModify)
+        if (typesToModify.isModifyingBuilding)
         {
-            Researchables[research].unlocksAmount++;
-
-            if(Researchables[research].unlocksAmount == Researchables[research].unlocksRequired)
+            foreach (var building in typesToModify.buildingTypesToModify)
             {
-                if (UIManager.isResearchVisible)
+                if (UIManager.isBuildingVisible)
                 {
-                    Researchables[research].isUnlocked = true;
-                    Researchables[research].objMainPanel.SetActive(true);
-                    Researchables[research].objSpacerBelow.SetActive(true);
-                    Researchables[research].hasSeen = true;
+                    Building.Buildings[building].isUnlocked = true;
+                    Building.Buildings[building].objMainPanel.SetActive(true);
+                    Building.Buildings[building].objSpacerBelow.SetActive(true);
+                    Building.Buildings[building].hasSeen = true;
                 }
                 else
                 {
-                    Researchables[research].isUnlocked = true;
-                    isUnlockedEvent = true;
-                    Researchables[research].hasSeen = false;
-                    PointerNotification.rightAmount++;
+                    Building.Buildings[building].isUnlocked = true;
+                    Building.isUnlockedEvent = true;
+                    Building.Buildings[building].hasSeen = false;
+                    PointerNotification.leftAmount++;
                 }
             }
+
+            PointerNotification.HandleLeftAnim();
         }
 
-        PointerNotification.HandleRightAnim();
     }
-    protected void CheckIfUnlocked()
+    protected virtual void UnlockCrafting()
+    {
+        if (typesToModify.isModifyingBuilding)
+        {
+            foreach (CraftingType craft in typesToModify.craftingTypesToModify)
+            {
+                if (UIManager.isCraftingVisible)
+                {
+                    Craftable.Craftables[craft].isUnlocked = true;
+                    Craftable.Craftables[craft].objMainPanel.SetActive(true);
+                    Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
+                    Craftable.Craftables[craft].hasSeen = true;
+                }
+                else
+                {
+                    Craftable.Craftables[craft].isUnlocked = true;
+                    Craftable.isUnlockedEvent = true;
+                    Craftable.Craftables[craft].hasSeen = false;
+                }
+
+                if (UIManager.isBuildingVisible)
+                {
+                    PointerNotification.rightAmount++;
+                }
+                else if (UIManager.isResearchVisible)
+                {
+                    PointerNotification.leftAmount++;
+                }
+                else if (UIManager.isWorkerVisible)
+                {
+                    PointerNotification.leftAmount++;
+                }
+            }
+
+            PointerNotification.HandleLeftAnim();
+            PointerNotification.HandleRightAnim();
+        }
+
+    }
+    protected virtual void UnlockResearchable()
+    {
+        if (typesToModify.isModifyingBuilding)
+        {
+            foreach (ResearchType research in typesToModify.researchTypesToModify)
+            {
+                Researchables[research].unlockAmount++;
+
+                if (Researchables[research].unlockAmount == Researchables[research].unlocksRequired)
+                {
+                    Researchables[research].isUnlocked = true;
+
+                    if (UIManager.isResearchVisible)
+                    {
+                        Researchables[research].objMainPanel.SetActive(true);
+                        Researchables[research].objSpacerBelow.SetActive(true);
+                        Researchables[research].hasSeen = true;
+                    }
+                    else
+                    {
+                        isUnlockedEvent = true;
+                        Researchables[research].hasSeen = false;
+                        PointerNotification.rightAmount++;
+                    }
+                }
+            }
+
+            PointerNotification.HandleRightAnim();
+        }
+
+    }
+    protected void CheckIfUnlockedByResource()
     {
         if (!isUnlocked)
         {
             if (GetCurrentFill() >= 0.8f)
             {
-                if (_isUnlockableByResource)
+                if (isUnlockableByResource && !_isIncrementedViaResources)
                 {
-                    isUnlocked = true;
-                    if (UIManager.isResearchVisible)
+                    unlockAmount++;
+                    _isIncrementedViaResources = true;
+
+                    if (unlockAmount == unlocksRequired)
                     {
-                        objMainPanel.SetActive(true);
-                        objSpacerBelow.SetActive(true);
-                    }
-                    else
-                    {
-                        isUnlockedEvent = true;
+                        isUnlocked = true;
+
+                        if (UIManager.isResearchVisible)
+                        {
+                            objMainPanel.SetActive(true);
+                            objSpacerBelow.SetActive(true);
+                            hasSeen = true;
+                        }
+                        else
+                        {
+                            isUnlockedEvent = true;
+                            hasSeen = false;
+                            PointerNotification.rightAmount++;
+                        }
+
+                        PointerNotification.HandleRightAnim();
                     }
                 }
             }
@@ -375,7 +366,7 @@ public abstract class Researchable : MonoBehaviour
                 _imgCollapse.color = greyColor;
             }
         }
-        
+
     }
     private void MakeResearchableAgain()
     {
@@ -450,6 +441,8 @@ public abstract class Researchable : MonoBehaviour
         _objBody = _tformBody.gameObject;
         _stringHeader = _objTxtHeader.GetComponent<TMP_Text>().text;
 
+        _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
+
         _stringIsResearched = Type.ToString() + "isCrafted";
         _stringResearchTimeRemaining = Type.ToString() + "ResearchTimeRemaining";
         _stringIsResearchStarted = Type.ToString() + "IsResearchStarted";
@@ -510,13 +503,13 @@ public abstract class Researchable : MonoBehaviour
         //Debug.Log(timeToCompletion);
         TimeSpan differenceAmount = timeToCompletion.Subtract(currentTime);
         //Debug.Log(differenceAmount + " " + differenceAmount.Seconds);
-        _timeToCompleteResearch = differenceAmount.Seconds;
+        secondsToCompleteResearch = differenceAmount.Seconds;
     }
     public void StartResearching()
     {
         researchSimulActive++;
         isResearchStarted = true;
-        _objProgressCircle.SetActive(false);     
+        _objProgressCircle.SetActive(false);
     }
     public void OnExpandCloseAll()
     {

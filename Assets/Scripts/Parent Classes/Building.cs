@@ -20,6 +20,17 @@ public struct ResourceCost
     public UiForResourceCost uiForResourceCost;
 }
 
+[System.Serializable]
+public struct TypesToModify
+{
+    public ResourceType[] resourceTypesToModify;
+    public BuildingType[] buildingTypesToModify;
+    public ResearchType[] researchTypesToModify;
+    public CraftingType[] craftingTypesToModify;
+    public WorkerType[] workerTypesToModify;
+    public bool isModifyingResource, isModifyingResearch, isModifyingCrafting, isModifyingBuilding, isModifyingWorker;
+}
+
 public enum BuildingType
 {
     PotatoField,
@@ -35,6 +46,7 @@ public abstract class Building : MonoBehaviour
 
     public BuildingType Type;
     public ResourceCost[] resourceCost;
+    public TypesToModify typesToModify;
     public GameObject objSpacerBelow;
     [NonSerialized] public bool isUnlocked, hasSeen = true;
     [NonSerialized] public GameObject objMainPanel;
@@ -54,6 +66,53 @@ public abstract class Building : MonoBehaviour
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
 
+    void OnValidate()
+    {
+        if (typesToModify.buildingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingBuilding = true;
+        }
+        else
+        {
+            typesToModify.isModifyingBuilding = false;
+        }
+
+        if (typesToModify.craftingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingCrafting = true;
+        }
+        else
+        {
+            typesToModify.isModifyingCrafting = false;
+        }
+
+        if (typesToModify.researchTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResearch = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResearch = false;
+        }
+
+        if (typesToModify.workerTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingWorker = true;
+        }
+        else
+        {
+            typesToModify.isModifyingWorker = false;
+        }
+
+        if (typesToModify.resourceTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResource = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResource = false;
+        }
+    }
     void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
@@ -127,16 +186,17 @@ public abstract class Building : MonoBehaviour
         _tformObjMain = transform.Find("Panel_Main");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
-        
+
+        objMainPanel = _tformObjMain.gameObject;
         _txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
         _imgProgressbar = _tformObjProgressCircle.GetComponent<Image>();
-        objMainPanel = _tformObjMain.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
         _objBtnExpand = _tformBtnExpand.gameObject;
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
 
+        _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
 
         _stringOriginalHeader = _txtHeader.text;
 
@@ -146,7 +206,6 @@ public abstract class Building : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-
             _costString[i] = Type.ToString() + resourceCost[i].associatedType.ToString();
             PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
         }
@@ -267,7 +326,7 @@ public abstract class Building : MonoBehaviour
                 resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
             }
-            ModifyResource();
+            ModifyAmountPerSecond();
         }
 
         _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);   
@@ -321,7 +380,7 @@ public abstract class Building : MonoBehaviour
         _objBtnCollapse.SetActive(true);
         
     }
-    protected virtual void ModifyResource()
+    protected virtual void ModifyAmountPerSecond()
     {
         Resource.Resources[resourceTypeToModify].amountPerSecond += _resourceMultiplier;
     }

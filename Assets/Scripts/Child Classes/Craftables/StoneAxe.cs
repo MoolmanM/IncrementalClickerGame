@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StonePickaxe : Craftable
+public class StoneAxe : Craftable
 {
     private Craftable _craftable;
 
@@ -15,12 +15,9 @@ public class StonePickaxe : Craftable
 
     void Start()
     {
-        // Maybe enables the mining of ore.
-        // Can start digging bronze ore at the dig site?
-        // So should either enable dig site to mine some ores, 
-        // Or unlock a new building responsible with mining ores.
-        // Lets go with unlocking a new building for now.
-        SetDescriptionText("");
+        // I think it's to early to unlock another building related to woodcutting.
+        // Maybe make it so that for every woodcutter they can get 1 log per.... minute? 30 seconds? 1 second? need some more thinking on this.
+        SetDescriptionText("Enables collection of logs after woodcutting, maybe even unlocks a new woodcutting related building.");
     }
     private void DisplayConsole()
     {
@@ -28,15 +25,6 @@ public class StonePickaxe : Craftable
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
-    }
-    protected override void UnlockResource()
-    {
-        // Do nothing.
-    }
-    protected override void UnlockBuilding()
-    {
-        // Do nothing.
-        // base.UnlockBuilding();
     }
     void Update()
     {

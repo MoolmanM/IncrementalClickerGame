@@ -13,27 +13,12 @@ public class Fire : Researchable
     {
         _researchable = GetComponent<Researchable>();
         Researchables.Add(Type, _researchable);
-        _timeToCompleteResearch = 10;
-
-        isUnlocked = true;
-
-        _researchTypesToModify = new ResearchType[2];
-        _researchTypesToModify[0] = ResearchType.Cooking;
-        _researchTypesToModify[1] = ResearchType.FireHardenedWeapons;
 
         SetInitialValues();
     }
     void Start()
     {
         SetDescriptionText("Unlock new important technologies, such as cooking and more.");
-    }
-    protected override void UnlockBuilding()
-    {
-        // No Building
-    }
-    protected override void UnlockCrafting()
-    {
-        // No Crafting
     }
     void Update()
     {

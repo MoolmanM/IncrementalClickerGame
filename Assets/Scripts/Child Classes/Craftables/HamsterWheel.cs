@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireHardenedSpear : Craftable
+public class HamsterWheel : Craftable
 {
     private Craftable _craftable;
 
@@ -10,30 +10,12 @@ public class FireHardenedSpear : Craftable
     {
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
-        unlocksRequired = 2;
-        SetInitialValues();
 
-        
+        SetInitialValues();
     }
     void Start()
     {
-        SetDescriptionText("Increases efficiency of hunting.");
-    }
-    protected override void UnlockResource()
-    {
-        // Do nothing.
-    }
-    protected override void UnlockBuilding()
-    {
-        // Do nothing.
-    }
-    protected override void UnlockWorkerJob()
-    {
-        // Do nothing
-    }
-    protected override void UnlockCrafting()
-    {
-        // do nothing
+        SetDescriptionText("Enables very inefficient production of energy via workers running on a hamster wheel.");
     }
     private void DisplayConsole()
     {
@@ -42,7 +24,6 @@ public class FireHardenedSpear : Craftable
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     void Update()
     {
         UpdateResourceCosts();

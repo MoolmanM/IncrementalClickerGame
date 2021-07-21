@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoneHoe : Craftable
+public class WoodenHoe : Craftable
 {
     private Craftable _craftable;
 
@@ -11,11 +11,11 @@ public class StoneHoe : Craftable
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
-    }
 
+    }
     void Start()
     {
-        SetDescriptionText("Increases food production and worked speed perhaps.");
+        SetDescriptionText("Enables building of the Potato Field to automatically gather potatoes.");
     }
     private void DisplayConsole()
     {
@@ -23,16 +23,6 @@ public class StoneHoe : Craftable
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
-    }
-    protected override void UnlockResource()
-    {
-        // Do nothing.
-    }
-
-    protected override void UnlockBuilding()
-    {
-        // Do nothing.
-        // base.UnlockBuilding();
     }
     void Update()
     {

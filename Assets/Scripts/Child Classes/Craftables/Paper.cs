@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WoodenSpear : Craftable
+public class Paper : Craftable
 {
     private Craftable _craftable;
 
@@ -12,23 +12,10 @@ public class WoodenSpear : Craftable
         Craftables.Add(Type, _craftable);
         SetInitialValues();
 
-        _workerTypesToModify = new WorkerType[1];
-        _workerTypesToModify[0] = WorkerType.Hunters;
-
-        _craftingTypesToModify = new CraftingType[1];
-        _craftingTypesToModify[0] = CraftingType.StoneSpear;
     }
     void Start()
     {
-        SetDescriptionText("Enables you to assign your workers to go hunting.");
-    }
-    protected override void UnlockResource()
-    {
-        // Do nothing.
-    }
-    protected override void UnlockBuilding()
-    {
-        // Do nothing.
+        SetDescriptionText("Enables you to start researching.");
     }
     private void DisplayConsole()
     {
@@ -37,7 +24,6 @@ public class WoodenSpear : Craftable
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
     void Update()
     {
         UpdateResourceCosts();
