@@ -10,10 +10,10 @@ public class Knowledge : Resource
     {
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         SetInitialValues();
         // DisplayConsole();
-        amount = 1000;
+        //amount = 1000;
     }
 
     private void DisplayConsole()

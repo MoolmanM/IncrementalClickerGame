@@ -14,8 +14,6 @@ public class PointerNotification : MonoBehaviour
 
     void Awake()
     {
-        
-
         objLeftPointer = GameObject.Find("Pointer_NotificationLeft");
         objRightPointer = GameObject.Find("Pointer_NotificationRight");
 
@@ -31,7 +29,6 @@ public class PointerNotification : MonoBehaviour
         //objLeftPointer.SetActive(false);
         //objRightPointer.SetActive(false);
     }
-
     public static bool IsPlaying(Animator anim, string stateName)
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
@@ -48,7 +45,6 @@ public class PointerNotification : MonoBehaviour
         else
             return false;
     }
-
     public static void HandleLeftAnim()
     {
         // The problem here is that the display again animation waits for one single loop to finish of the normal Display, where it should interupt it immediately.
@@ -62,10 +58,6 @@ public class PointerNotification : MonoBehaviour
             else if(!IsLooping(AnimLeft, "Display"))
             {
                 AnimLeft.SetTrigger("Up");
-            }
-            else
-            {
-                Debug.Log("This shouldn't happen");
             }
         }
         else
@@ -90,10 +82,6 @@ public class PointerNotification : MonoBehaviour
             else if(!IsLooping(AnimRight, "Display"))
             {
                 AnimRight.SetTrigger("Up");
-            }
-            else
-            {
-                Debug.Log("This shouldn't happen");
             }
         }
         else

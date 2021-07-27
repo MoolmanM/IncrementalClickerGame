@@ -31,7 +31,7 @@ public abstract class Craftable : MonoBehaviour
     [System.NonSerialized] public bool isUnlocked, isCrafted, hasSeen = true;
     [System.NonSerialized] public GameObject objMainPanel;
     public bool isUnlockableByResource;
-    public int unlocksRequired = 1, unlocksAmount;
+    public int unlocksRequired, unlockAmount;
 
     private string _isCraftedString, _isUnlockedString;
     private GameObject _prefabResourceCost, _prefabBodySpacer;
@@ -164,7 +164,7 @@ public abstract class Craftable : MonoBehaviour
                 Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount);
                 Craftables[Type].resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", Craftables[Type].resourceCost[i].associatedType.ToString());
 
-                Building.ShowResourceCostTime(Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount, Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
+                StaticMethods.ShowResourceCostTime(Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount, Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
             }
             _imgProgressbar.fillAmount = GetCurrentFill();
             CheckIfUnlocked();
@@ -188,9 +188,11 @@ public abstract class Craftable : MonoBehaviour
         {
             isCrafted = true;
             Crafted();
-            UnlockBuilding();
-            UnlockResource();
+            StaticMethods.UnlockCrafting(typesToModify.isModifyingCrafting, typesToModify.craftingTypesToModify);
+            StaticMethods.UnlockBuilding(typesToModify.isModifyingBuilding, typesToModify.buildingTypesToModify);
+            StaticMethods.UnlockResearchable(typesToModify.isModifyingResearch, typesToModify.researchTypesToModify);
             UnlockWorkerJob();
+            UnlockResource();
 
             for (int i = 0; i < resourceCost.Length; i++)
             {
@@ -236,32 +238,7 @@ public abstract class Craftable : MonoBehaviour
             _imgCollapse.color = darkGreyColor;
         }
     }
-    protected virtual void UnlockBuilding()
-    {
-        if (typesToModify.isModifyingBuilding)
-        {
-            PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
-            PointerNotification.lastRightAmount = PointerNotification.rightAmount;
-            PointerNotification.leftAmount = 0;
-            foreach (var building in typesToModify.buildingTypesToModify)
-            {
-                Building.Buildings[building].isUnlocked = true;
-                Building.isUnlockedEvent = true;
-                Building.Buildings[building].hasSeen = false;
-            }
-
-            foreach (var buildingMain in Building.Buildings)
-            {
-                if (!buildingMain.Value.hasSeen)
-                {
-                    PointerNotification.leftAmount++;
-                }
-            }
-
-            PointerNotification.HandleLeftAnim();
-        }
-    }
-    protected virtual void UnlockWorkerJob()
+    private void UnlockWorkerJob()
     {
         if (typesToModify.isModifyingWorker)
         {
@@ -294,35 +271,17 @@ public abstract class Craftable : MonoBehaviour
             PointerNotification.HandleRightAnim();
         }
     }
-    protected virtual void UnlockResource()
+    private void UnlockResource()
     {
         if (typesToModify.isModifyingResource)
         {
             foreach (var resource in typesToModify.resourceTypesToModify)
             {
-                Resource.Resources[resource].isUnlocked = 1;
+                Resource.Resources[resource].isUnlocked = true;
                 Resource.Resources[resource].objMainPanel.SetActive(true);
                 Resource.Resources[resource].objSpacerBelow.SetActive(true);
             }
         }
-    }
-    protected virtual void UnlockCrafting()
-    {
-        if (typesToModify.isModifyingCrafting)
-        {
-            foreach (var craft in typesToModify.craftingTypesToModify)
-            {
-                if (Craftables[craft].unlocksAmount < Craftables[craft].unlocksRequired)
-                {
-                    Craftables[craft].unlocksAmount++;
-                }
-                else
-                {
-                    Craftables[craft].isUnlocked = true;
-                    Craftables[craft].hasSeen = true;
-                }
-            }
-        }     
     }
     private void InitializeObjects()
     {

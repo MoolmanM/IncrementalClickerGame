@@ -40,7 +40,7 @@ public abstract class Researchable : MonoBehaviour
     public ResourceCost[] resourceCost;
     public TypesToModify typesToModify;
     public GameObject objSpacerBelow;
-    public uint unlocksRequired = 1, unlockAmount;
+    public uint unlocksRequired, unlockAmount, testAmount;
     public float secondsToCompleteResearch;
     public bool isUnlockableByResource;
     [System.NonSerialized] public GameObject objMainPanel;
@@ -62,6 +62,53 @@ public abstract class Researchable : MonoBehaviour
     protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
     private string _stringHeader;
 
+    void OnValidate()
+    {
+        if (typesToModify.buildingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingBuilding = true;
+        }
+        else
+        {
+            typesToModify.isModifyingBuilding = false;
+        }
+
+        if (typesToModify.craftingTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingCrafting = true;
+        }
+        else
+        {
+            typesToModify.isModifyingCrafting = false;
+        }
+
+        if (typesToModify.researchTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResearch = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResearch = false;
+        }
+
+        if (typesToModify.workerTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingWorker = true;
+        }
+        else
+        {
+            typesToModify.isModifyingWorker = false;
+        }
+
+        if (typesToModify.resourceTypesToModify.Length != 0)
+        {
+            typesToModify.isModifyingResource = true;
+        }
+        else
+        {
+            typesToModify.isModifyingResource = false;
+        }
+    }
     public void SetInitialValues()
     {
         InitializeObjects();
@@ -194,103 +241,7 @@ public abstract class Researchable : MonoBehaviour
             Researched();
         }
     }
-    protected virtual void UnlockBuilding()
-    {
-        if (typesToModify.isModifyingBuilding)
-        {
-            foreach (var building in typesToModify.buildingTypesToModify)
-            {
-                if (UIManager.isBuildingVisible)
-                {
-                    Building.Buildings[building].isUnlocked = true;
-                    Building.Buildings[building].objMainPanel.SetActive(true);
-                    Building.Buildings[building].objSpacerBelow.SetActive(true);
-                    Building.Buildings[building].hasSeen = true;
-                }
-                else
-                {
-                    Building.Buildings[building].isUnlocked = true;
-                    Building.isUnlockedEvent = true;
-                    Building.Buildings[building].hasSeen = false;
-                    PointerNotification.leftAmount++;
-                }
-            }
-
-            PointerNotification.HandleLeftAnim();
-        }
-
-    }
-    protected virtual void UnlockCrafting()
-    {
-        if (typesToModify.isModifyingBuilding)
-        {
-            foreach (CraftingType craft in typesToModify.craftingTypesToModify)
-            {
-                if (UIManager.isCraftingVisible)
-                {
-                    Craftable.Craftables[craft].isUnlocked = true;
-                    Craftable.Craftables[craft].objMainPanel.SetActive(true);
-                    Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
-                    Craftable.Craftables[craft].hasSeen = true;
-                }
-                else
-                {
-                    Craftable.Craftables[craft].isUnlocked = true;
-                    Craftable.isUnlockedEvent = true;
-                    Craftable.Craftables[craft].hasSeen = false;
-                }
-
-                if (UIManager.isBuildingVisible)
-                {
-                    PointerNotification.rightAmount++;
-                }
-                else if (UIManager.isResearchVisible)
-                {
-                    PointerNotification.leftAmount++;
-                }
-                else if (UIManager.isWorkerVisible)
-                {
-                    PointerNotification.leftAmount++;
-                }
-            }
-
-            PointerNotification.HandleLeftAnim();
-            PointerNotification.HandleRightAnim();
-        }
-
-    }
-    protected virtual void UnlockResearchable()
-    {
-        if (typesToModify.isModifyingBuilding)
-        {
-            foreach (ResearchType research in typesToModify.researchTypesToModify)
-            {
-                Researchables[research].unlockAmount++;
-
-                if (Researchables[research].unlockAmount == Researchables[research].unlocksRequired)
-                {
-                    Researchables[research].isUnlocked = true;
-
-                    if (UIManager.isResearchVisible)
-                    {
-                        Researchables[research].objMainPanel.SetActive(true);
-                        Researchables[research].objSpacerBelow.SetActive(true);
-                        Researchables[research].hasSeen = true;
-                    }
-                    else
-                    {
-                        isUnlockedEvent = true;
-                        Researchables[research].hasSeen = false;
-                        PointerNotification.rightAmount++;
-                    }
-                }
-            }
-
-            PointerNotification.HandleRightAnim();
-        }
-
-    }
-    protected void CheckIfUnlockedByResource()
+    private void CheckIfUnlockedByResource()
     {
         if (!isUnlocked)
         {
@@ -324,15 +275,15 @@ public abstract class Researchable : MonoBehaviour
             }
         }
     }
-    protected virtual void Researched()
+    private void Researched()
     {
         isResearched = true;
         if (Menu.isResearchHidden)
         {
             researchSimulActive--;
-            UnlockCrafting();
-            UnlockBuilding();
-            UnlockResearchable();
+            StaticMethods.UnlockCrafting(typesToModify.isModifyingCrafting, typesToModify.craftingTypesToModify);
+            StaticMethods.UnlockBuilding(typesToModify.isModifyingBuilding, typesToModify.buildingTypesToModify);
+            StaticMethods.UnlockResearchable(typesToModify.isModifyingResearch, typesToModify.researchTypesToModify);
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);
@@ -351,9 +302,9 @@ public abstract class Researchable : MonoBehaviour
         else
         {
             researchSimulActive--;
-            UnlockCrafting();
-            UnlockBuilding();
-            UnlockResearchable();
+            StaticMethods.UnlockCrafting(typesToModify.isModifyingCrafting, typesToModify.craftingTypesToModify);
+            StaticMethods.UnlockBuilding(typesToModify.isModifyingBuilding, typesToModify.buildingTypesToModify);
+            StaticMethods.UnlockResearchable(typesToModify.isModifyingResearch, typesToModify.researchTypesToModify);
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderUncraft.SetActive(true);

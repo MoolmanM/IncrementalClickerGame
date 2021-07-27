@@ -26,7 +26,7 @@ public class Resource : MonoBehaviour
     public static Dictionary<ResourceType, Resource> Resources = new Dictionary<ResourceType, Resource>();
 
     [System.NonSerialized] public float amount, amountPerSecond, amountGainedWhileAfk;    
-    [System.NonSerialized] public int isUnlocked;
+    [System.NonSerialized] public bool isUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
@@ -42,8 +42,10 @@ public class Resource : MonoBehaviour
     protected Image _imgBar;
     protected float _timer = 0.1f;
 
-    public static bool hasWorkerEnoughResources;
-
+    private void OnValidate()
+    {
+        globalMultiplier = 30f;
+    }
     public virtual void SetInitialValues()
     {
         InitializeObjects();
@@ -57,11 +59,11 @@ public class Resource : MonoBehaviour
             {
                 storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
             }
-            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString, isUnlocked);
+            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
         }
 
-        isUnlocked = 1;
-        if (isUnlocked == 1)
+        isUnlocked = true;
+        if (isUnlocked)
         {
             objMainPanel.SetActive(true);
             objSpacerBelow.SetActive(true);
@@ -130,30 +132,6 @@ public class Resource : MonoBehaviour
         fillAmount += add / div;
         _imgBar.fillAmount = fillAmount;
     }
-    private void HasEnoughResources()
-    {
-        //bool hasEnoughResources;
-        foreach(var worker in Worker.Workers)
-        {
-            ResourcesToModify[] _resourcesToDecrement = Worker.Workers[worker.Key]._resourcesToDecrement;
-
-            if (_resourcesToDecrement != null)
-            {
-                for (int i = 0; i < _resourcesToDecrement.Length; i++)
-                {
-                    if (Resources[_resourcesToDecrement[i].resourceTypeToModify].amount >= _resourcesToDecrement[i].resourceMultiplier)
-                    {
-                        hasWorkerEnoughResources = true;
-                    }
-                    else
-                    {
-                        hasWorkerEnoughResources = false;
-                    }
-                }
-            }
-        }
-        Debug.Log(hasWorkerEnoughResources);
-    }
     protected virtual void UpdateResources()
     {
         if ((_timer -= Time.deltaTime) <= 0)
@@ -171,7 +149,7 @@ public class Resource : MonoBehaviour
             }
             if (amountPerSecond < 0)
             {
-                uiForResource.txtAmountPerSecond.text = string.Format("-{0:0.00}/sec", amountPerSecond);
+                uiForResource.txtAmountPerSecond.text = string.Format("<color=#C63434>{0:0.00}/sec</color>", amountPerSecond);
             }
             else
             {
@@ -187,6 +165,6 @@ public class Resource : MonoBehaviour
         PlayerPrefs.SetFloat(_amountString, amount);
         PlayerPrefs.SetFloat(_perSecondString, amountPerSecond);
         PlayerPrefs.SetFloat(_storageAmountString, storageAmount);
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
     }
 }

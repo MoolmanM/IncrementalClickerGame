@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public struct UiForResourceCost
@@ -43,6 +42,7 @@ public enum BuildingType
 public abstract class Building : MonoBehaviour
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
+    public static bool isUnlockedEvent;
 
     public BuildingType Type;
     public ResourceCost[] resourceCost;
@@ -50,7 +50,8 @@ public abstract class Building : MonoBehaviour
     public GameObject objSpacerBelow;
     [NonSerialized] public bool isUnlocked, hasSeen = true;
     [NonSerialized] public GameObject objMainPanel;
-    public static bool isUnlockedEvent;
+    public int unlocksRequired, unlockAmount;
+    public bool isUnlockableByResource;
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
@@ -164,11 +165,11 @@ public abstract class Building : MonoBehaviour
             GameObject newObj = Instantiate(_prefabResourceCost, _tformBody);
 
             // This for loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
-            for (int spacerI = i + 1;  spacerI < resourceCost.Length; spacerI++)
+            for (int spacerI = i + 1; spacerI < resourceCost.Length; spacerI++)
             {
                 Instantiate(_prefabBodySpacer, _tformBody);
             }
-            
+
             Transform _tformNewObj = newObj.transform;
             Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
             Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
@@ -220,70 +221,12 @@ public abstract class Building : MonoBehaviour
             {
                 resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
-                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());    
-                
-                //if (Resource.Resources[resourceCost[i].associatedType].amountPerSecond > 0)
-                //{
-                    // 3 per second 
-                    // kort 60
-                    //float secondsLeft = (resourceCost[i].costAmount - resourceCost[i].currentAmount) / (Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
-                    //TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
+                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
 
-                    //if (resourceCost[i].currentAmount > resourceCost[i].costAmount)
-                    //{
-                    //    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
-                    //}
-                    //else if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
-                    //{
-                    //    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}({2:%s}s)", resourceCost[i].currentAmount, resourceCost[i].costAmount, span.Duration());
-                    //}
-                    //else if (span.Days == 0 && span.Hours == 0)
-                    //{
-                    //    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}({2:%m}m {2:%s}s)", resourceCost[i].currentAmount, resourceCost[i].costAmount, span.Duration());
-                    //}
-                    //else if (span.Days == 0)
-                    //{
-                    //    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}({0:%h}h {0:%m}m)", resourceCost[i].currentAmount, resourceCost[i].costAmount, span.Duration());
-                    //}
-                    //else
-                    //{
-                    //    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}({0:%d}d {0:%h}h)", resourceCost[i].currentAmount, resourceCost[i].costAmount, span.Duration());
-                    //}
-
-                    ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
-                //}
+                StaticMethods.ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
             }
             _imgProgressbar.fillAmount = GetCurrentFill();
             CheckIfPurchaseable();
-        }
-    }
-    public static void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond)
-    {
-        if (amountPerSecond > 0)
-        {
-            float secondsLeft = (cost - current) / (amountPerSecond);
-            TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
-
-            if (current >= cost)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
-            }
-            else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
-            }
-            else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m {2:%s}s</color>)", current, cost, timeSpan.Duration());
-            }
-            else if (timeSpan.Days == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{0:%h}h {0:%m}m</color>)", current, cost, timeSpan.Duration());
-            }
-            else
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{0:%d}d {0:%h}h</color>)", current, cost, timeSpan.Duration());
-            }
         }
     }
     public float GetCurrentFill()
@@ -329,7 +272,7 @@ public abstract class Building : MonoBehaviour
             ModifyAmountPerSecond();
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);   
+        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
     private void Purchaseable()
     {
@@ -378,7 +321,7 @@ public abstract class Building : MonoBehaviour
         _objBtnExpand.SetActive(false);
         _objBody.SetActive(true);
         _objBtnCollapse.SetActive(true);
-        
+
     }
     protected virtual void ModifyAmountPerSecond()
     {

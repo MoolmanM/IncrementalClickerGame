@@ -10,9 +10,6 @@ public class Furnace : Building
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
-        //ResourceMultiplier = 0.10f;
-        //_costMultiplier = 1.15f;
-        //resourceTypeToModify = ResourceType.Food;
         SetInitialValues();
     }
     void Start()

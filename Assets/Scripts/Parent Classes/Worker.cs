@@ -56,7 +56,9 @@ public class Worker : MonoBehaviour
 
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public TMP_Text txtHeader;
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true;   
+    [System.NonSerialized] public bool isUnlocked, hasSeen = true;
+    [System.NonSerialized] public ResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
+
     // Make workercount non serialized eventually, for now will use for debugging.
     public uint workerCount;
     public WorkerType Type;
@@ -65,8 +67,6 @@ public class Worker : MonoBehaviour
 
     private Transform _tformTxtHeader, _tformObjMainPanel;
     private string _workerString;
-
-    [System.NonSerialized] public ResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
     protected uint _changeAmount = 1;
 
     protected void SetInitialValues()
