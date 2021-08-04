@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StaticMethods : MonoBehaviour
+public class StaticMethods 
 {
     public static float _timer = 0.1f;
     public static float _maxValue = 0.1f;
