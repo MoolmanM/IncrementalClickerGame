@@ -119,56 +119,15 @@ public abstract class Craftable : MonoBehaviour
             MakeCraftableAgain();
         }
     }
-    protected void CheckIfUnlocked()
-    {
-        if (!isUnlocked)
-        {
-            if (GetCurrentFill() >= 0.8f)
-            {
-                if (isUnlockableByResource)
-                {
-                    isUnlocked = true;
-                    if (UIManager.isCraftingVisible)
-                    {
-                        objMainPanel.SetActive(true);
-                        objSpacerBelow.SetActive(true);
-                    }
-                    else
-                    {
-                        isUnlockedEvent = true;
-                    }
-                }
-            }
-        }
-    }
     protected void CheckIfPurchaseable()
     {
-        if (GetCurrentFill() == 1f)
+        if (StaticMethods.GetCurrentFill(resourceCost) == 1f)
         {
             Purchaseable();
         }
         else
         {
             UnPurchaseable();
-        }
-    }
-    public virtual void UpdateResourceCosts()
-    {
-        if ((_timer -= Time.deltaTime) <= 0)
-        {
-            _timer = _maxValue;
-
-            for (int i = 0; i < resourceCost.Length; i++)
-            {
-                Craftables[Type].resourceCost[i].currentAmount = Resource.Resources[Craftables[Type].resourceCost[i].associatedType].amount;
-                Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount);
-                Craftables[Type].resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", Craftables[Type].resourceCost[i].associatedType.ToString());
-
-                StaticMethods.ShowResourceCostTime(Craftables[Type].resourceCost[i].uiForResourceCost.textCostAmount, Craftables[Type].resourceCost[i].currentAmount, Craftables[Type].resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
-            }
-            _imgProgressbar.fillAmount = GetCurrentFill();
-            CheckIfUnlocked();
-            CheckIfPurchaseable();
         }
     }
     public void OnCraft()
@@ -368,24 +327,6 @@ public abstract class Craftable : MonoBehaviour
             _objTxtHeader.GetComponent<TMP_Text>().color = redColor;
         }
     }
-    public float GetCurrentFill()
-    {
-        float add = 0;
-        float div = 0;
-        float fillAmount = 0;
-
-        for (int i = 0; i < resourceCost.Length; i++)
-        {
-            add = resourceCost[i].currentAmount;
-            div = resourceCost[i].costAmount;
-            if (add > div)
-            {
-                add = div;
-            }
-            fillAmount += add / div;
-        }
-        return fillAmount / resourceCost.Length;
-    }
     public void OnExpandCloseAll()
     {
         foreach (var obj in Craftables)
@@ -402,5 +343,11 @@ public abstract class Craftable : MonoBehaviour
     public void SetDescriptionText(string description)
     {
         Craftables[Type]._txtDescription.text = string.Format("{0}", description);
+    }
+    private void Update()
+    {
+        StaticMethods.UpdateResourceCosts(resourceCost, _imgProgressbar);
+        StaticMethods.CheckIfUnlocked(isUnlocked, isUnlockableByResource, objMainPanel, objSpacerBelow, isUnlockedEvent, UIManager.isCraftingVisible, resourceCost);
+        CheckIfPurchaseable();
     }
 }

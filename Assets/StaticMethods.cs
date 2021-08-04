@@ -1,9 +1,13 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StaticMethods : MonoBehaviour
 {
+    public static float _timer = 0.1f;
+    public static float _maxValue = 0.1f;
+
     void Awake()
     {
         foreach (var kvp in Researchable.Researchables)
@@ -193,6 +197,79 @@ public class StaticMethods : MonoBehaviour
             }
         }
     }
+    public static void CheckIfUnlocked(bool isUnlocked, bool isUnlockableByResource, GameObject objMainPanel, GameObject objSpacerBelow, bool isUnlockedEvent, bool isVisible, ResourceCost[] costArray)
+    {
+        if (!isUnlocked)
+        {
+            if (GetCurrentFill(costArray) >= 0.8f)
+            {
+                if (isUnlockableByResource)
+                {
+                    isUnlocked = true;
+                    if (isVisible)
+                    {
+                        objMainPanel.SetActive(true);
+                        objSpacerBelow.SetActive(true);
+                    }
+                    else
+                    {
+                        isUnlockedEvent = true;
+                    }
+                }
+            }
+        }
+    }
+    public static void UpdateResourceCosts(ResourceCost[] costArray, Image imgProgressBar)
+    {
+        if ((_timer -= Time.deltaTime) <= 0)
+        {
+            _timer = _maxValue;
 
+            for (int i = 0; i < costArray.Length; i++)
+            {
+                costArray[i].currentAmount = Resource.Resources[costArray[i].associatedType].amount;
+                costArray[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", costArray[i].currentAmount, costArray[i].costAmount);
+                costArray[i].uiForResourceCost.textCostName.text = string.Format("{0}", costArray[i].associatedType.ToString());
+
+                ShowResourceCostTime(costArray[i].uiForResourceCost.textCostAmount, costArray[i].currentAmount, costArray[i].costAmount, Resource.Resources[costArray[i].associatedType].amountPerSecond);
+            }
+            imgProgressBar.fillAmount = GetCurrentFill(costArray);
+        }
+    }
+    public static float GetCurrentFill(ResourceCost[] costArray)
+    {
+        float add = 0;
+        float div = 0;
+        float fillAmount = 0;
+
+        for (int i = 0; i < costArray.Length; i++)
+        {
+            add = costArray[i].currentAmount;
+            div = costArray[i].costAmount;
+            if (add > div)
+            {
+                add = div;
+            }
+            fillAmount += add / div;
+        }
+        return fillAmount / costArray.Length;
+    }
+
+    private void Start()
+    {
+        //Debug.Log((Mathf.Log(10) * ((4 * 10e12) * 6)) / 10);
+        //Debug.Log((Mathf.Log10(20000000000000) - 6) /10); 
+
+        // This is the Kardashev formula
+        //This is earth's current point on the scale.
+    }
+    private void Update()
+    {
+        // This seems to work perfectly.
+        //if (Resource.Resources[ResourceType.Energy].amount > 0)
+        //{
+        //    Debug.Log("Kardashev Scale: " + (Mathf.Log10(Resource.Resources[ResourceType.Energy].amount) - 6) / 10);
+        //}        
+    }
 }
 
