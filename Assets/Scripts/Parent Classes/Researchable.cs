@@ -30,37 +30,24 @@ public enum ResearchType
     ManualEnergyProduction
 }
 
-public abstract class Researchable : MonoBehaviour
+public abstract class Researchable : SuperClass
 {
-    public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
+    
     public static int researchSimulActive = 0, researchSimulAllowed = 1;
-    public static bool isUnlockedEvent;
+   
 
     public ResearchType Type;
-    public ResourceCost[] resourceCost;
-    public TypesToModify typesToModify;
-    public GameObject objSpacerBelow;
-    public uint unlocksRequired, unlockAmount, testAmount;
+
     public float secondsToCompleteResearch;
-    public bool isUnlockableByResource;
-    [System.NonSerialized] public GameObject objMainPanel;
-    [System.NonSerialized] public bool isUnlocked, isResearched, hasSeen = true;
+
+    [System.NonSerialized] public bool isResearched;
 
     private bool isResearchStarted, _isIncrementedViaResources;
-    private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
+    private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted, _stringHeader;
     private float _currentTimer, _researchTimeRemaining;
-    private GameObject _prefabResourceCost, _prefabBodySpacer;
-    private float timer = 0.1f;
-    private readonly float maxValue = 0.1f;
-
+    protected Transform _tformImgResearchBar, _tformImgProgressCircle;
+    protected Image _imgProgressCircle, _imgResearchBar;
     protected WorkerType[] _workerTypesToModify;
-    protected float _timer = 0.1f;
-    protected readonly float _maxValue = 0.1f;
-    protected TMP_Text _txtDescription;
-    protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
-    protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
-    protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
-    private string _stringHeader;
 
     void OnValidate()
     {
@@ -144,31 +131,13 @@ public abstract class Researchable : MonoBehaviour
         }
 
     }
-    public virtual void UpdateResourceCosts()
-    {
-        if ((_timer -= Time.deltaTime) <= 0)
-        {
-            _timer = _maxValue;
-
-            for (int i = 0; i < resourceCost.Length; i++)
-            {
-                resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
-                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
-            }
-
-            _imgProgressCircle.fillAmount = GetCurrentFill();
-            CheckIfUnlockedByResource();
-
-        }
-    }
     public virtual void UpdateResearchTimer()
     {
         if (isResearchStarted)
         {
-            if ((timer -= Time.deltaTime) <= 0)
+            if ((_timer -= Time.deltaTime) <= 0)
             {
-                timer = maxValue;
+                _timer = _maxValue;
 
                 _currentTimer += 0.1f;
 
@@ -335,7 +304,7 @@ public abstract class Researchable : MonoBehaviour
             _imgCollapse.color = darkGreyColor;
         }
     }
-    private void InitializeObjects()
+    protected override void InitializeObjects()
     {
         _tformBody = transform.Find("Panel_Main/Body");
 
@@ -398,53 +367,6 @@ public abstract class Researchable : MonoBehaviour
         _stringResearchTimeRemaining = Type.ToString() + "ResearchTimeRemaining";
         _stringIsResearchStarted = Type.ToString() + "IsResearchStarted";
     }
-    private void Purchaseable()
-    {
-        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
-        cb.normalColor = new Color(0, 0, 0, 0);
-        _objBtnMain.GetComponent<Button>().colors = cb;
-
-        string htmlValue = "#333333";
-
-        if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
-        {
-            _objTxtHeader.GetComponent<TMP_Text>().color = darkGreyColor;
-        }
-    }
-    private void UnPurchaseable()
-    {
-        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
-        cb.normalColor = new Color(0, 0, 0, 0.25f);
-        cb.highlightedColor = new Color(0, 0, 0, 0.23f);
-        cb.pressedColor = new Color(0, 0, 0, 0.3f);
-        cb.selectedColor = new Color(0, 0, 0, 0.23f);
-        _objBtnMain.GetComponent<Button>().colors = cb;
-
-        string htmlValue = "#D71C2A";
-
-        if (ColorUtility.TryParseHtmlString(htmlValue, out Color redColor))
-        {
-            _objTxtHeader.GetComponent<TMP_Text>().color = redColor;
-        }
-    }
-    public float GetCurrentFill()
-    {
-        float add = 0;
-        float div = 0;
-        float fillAmount = 0;
-
-        for (int i = 0; i < resourceCost.Length; i++)
-        {
-            add = resourceCost[i].currentAmount;
-            div = resourceCost[i].costAmount;
-            if (add > div)
-            {
-                add = div;
-            }
-            fillAmount += add / div;
-        }
-        return fillAmount / resourceCost.Length;
-    }
     public void GetTimeToCompleteResearch()
     {
         isResearchStarted = true;
@@ -462,22 +384,9 @@ public abstract class Researchable : MonoBehaviour
         isResearchStarted = true;
         _objProgressCircle.SetActive(false);
     }
-    public void OnExpandCloseAll()
+    protected void SetDescriptionText(string description)
     {
-        foreach (var obj in Researchables)
-        {
-            obj.Value._objBody.SetActive(false);
-            obj.Value._objBtnCollapse.SetActive(false);
-            obj.Value._objBtnExpand.SetActive(true);
-        }
-        _objBtnExpand.SetActive(false);
-        _objBody.SetActive(true);
-        _objBtnCollapse.SetActive(true);
-
-    }
-    public void SetDescriptionText(string description)
-    {
-        _txtDescription.text = string.Format("{0}", description);
+        Researchables[Type]._txtDescription.text = string.Format("{0}", description);
     }
     private void OnApplicationQuit()
     {
