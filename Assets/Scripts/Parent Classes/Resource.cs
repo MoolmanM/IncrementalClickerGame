@@ -44,7 +44,8 @@ public class Resource : MonoBehaviour
 
     private void OnValidate()
     {
-        globalMultiplier = 30f;
+        globalMultiplier = 1f;
+        amount = storageAmount;
     }
     public virtual void SetInitialValues()
     {
