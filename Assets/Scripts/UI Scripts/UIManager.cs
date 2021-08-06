@@ -168,6 +168,10 @@ public class UIManager : MonoBehaviour
         {
             researchable.Value.objMainPanel.SetActive(false);
             researchable.Value.objSpacerBelow.SetActive(false);
+            if (!researchable.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
         }
 
         foreach (var worker in Worker.Workers)
@@ -202,6 +206,7 @@ public class UIManager : MonoBehaviour
                 craft.Value.objSpacerBelow.SetActive(false);
             }
         }
+
         UpdateNotificationPanel();
     }
     private void WorkerPanelActive()
@@ -262,6 +267,11 @@ public class UIManager : MonoBehaviour
         {
             researchable.Value.objMainPanel.SetActive(false);
             researchable.Value.objSpacerBelow.SetActive(false);
+
+            if (!researchable.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
         }
 
         foreach (var worker in Worker.Workers)
@@ -409,6 +419,7 @@ public class UIManager : MonoBehaviour
 
         // I'll keep this for now, but I'm not 100% sure about it, what if the phone lags or a lagspike happens, this seems very susceptible to that.
         // One problem already with this is if you swipe excessively fast it just stays on the same panel.
+
         #region Sets Panels Active
         if (PointerNotification.IsPlaying(animMainPanel, "SwipeLeft") || PointerNotification.IsPlaying(animMainPanel, "SwipeRight"))
         {

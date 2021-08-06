@@ -57,9 +57,9 @@ public abstract class Researchable : MonoBehaviour
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected TMP_Text _txtDescription;
-    protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressbarPanel, _tformTxtHeaderUncraft, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
+    protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformTxtHeaderDone, _tformExpand, _tformCollapse, _tformObjMain, _tformBtnExpand, _tformBtnCollapse, _tformBody;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgResearchBar, _imgProgressCircle;
-    protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderUncraft, _objBtnExpand, _objBtnCollapse, _objBody;
+    protected GameObject _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderDone, _objBtnExpand, _objBtnCollapse, _objBody;
     private string _stringHeader;
 
     void OnValidate()
@@ -286,7 +286,7 @@ public abstract class Researchable : MonoBehaviour
             StaticMethods.UnlockResearchable(typesToModify.isModifyingResearch, typesToModify.researchTypesToModify);
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
-            _objTxtHeaderUncraft.SetActive(true);
+            _objTxtHeaderDone.SetActive(true);
 
             string htmlValue = "#D4D4D4";
 
@@ -305,9 +305,10 @@ public abstract class Researchable : MonoBehaviour
             StaticMethods.UnlockCrafting(typesToModify.isModifyingCrafting, typesToModify.craftingTypesToModify);
             StaticMethods.UnlockBuilding(typesToModify.isModifyingBuilding, typesToModify.buildingTypesToModify);
             StaticMethods.UnlockResearchable(typesToModify.isModifyingResearch, typesToModify.researchTypesToModify);
+            _objBtnMain.GetComponent<Button>().interactable = false;
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
-            _objTxtHeaderUncraft.SetActive(true);
+            _objTxtHeaderDone.SetActive(true);
 
             string htmlValue = "#D4D4D4";
 
@@ -325,7 +326,7 @@ public abstract class Researchable : MonoBehaviour
         _objBtnMain.GetComponent<Button>().interactable = true;
         _objProgressCircle.SetActive(true);
         _objTxtHeader.SetActive(true);
-        _objTxtHeaderUncraft.SetActive(false);
+        _objTxtHeaderDone.SetActive(false);
 
         string htmlValue = "#333333";
 
@@ -370,7 +371,7 @@ public abstract class Researchable : MonoBehaviour
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
         _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
         _tformImgProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
-        _tformTxtHeaderUncraft = transform.Find("Panel_Main/Header_Panel/Text_Header_Done");
+        _tformTxtHeaderDone = transform.Find("Panel_Main/Header_Panel/Text_Header_Done");
         _tformExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformObjMain = transform.Find("Panel_Main");
@@ -383,7 +384,7 @@ public abstract class Researchable : MonoBehaviour
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
         _objProgressCircle = _tformObjProgressCircle.gameObject;
-        _objTxtHeaderUncraft = _tformTxtHeaderUncraft.gameObject;
+        _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
         _imgExpand = _tformExpand.GetComponent<Image>();
         _imgCollapse = _tformCollapse.GetComponent<Image>();
         objMainPanel = _tformObjMain.gameObject;
