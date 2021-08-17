@@ -51,14 +51,10 @@ public class MakeshiftBed : Building
             }          
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    public override void SetDescriptionText()
+    protected override void SetDescriptionText()
     {
         _txtDescription.text = string.Format("Increases population by 1");
-    }
-    void Update()
-    {
-        UpdateResourceCosts();
     }
 }

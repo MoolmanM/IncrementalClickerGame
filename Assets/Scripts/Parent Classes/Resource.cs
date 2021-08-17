@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public struct UiForResource
 {
@@ -44,8 +45,8 @@ public class Resource : MonoBehaviour
 
     private void OnValidate()
     {
-        globalMultiplier = 1f;
         amount = storageAmount;
+        globalMultiplier = 30f;
     }
     public virtual void SetInitialValues()
     {

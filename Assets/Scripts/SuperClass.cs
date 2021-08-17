@@ -2,7 +2,31 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+public struct UiForResourceCost
+{
+    public TMP_Text textCostName;
+    public TMP_Text textCostAmount;
+}
 
+[System.Serializable]
+public struct ResourceCost
+{
+    public ResourceType associatedType;
+    [System.NonSerialized] public float currentAmount;
+    public float costAmount;
+    public UiForResourceCost uiForResourceCost;
+}
+
+[System.Serializable]
+public struct TypesToModify
+{
+    public ResourceType[] resourceTypesToModify;
+    public BuildingType[] buildingTypesToModify;
+    public ResearchType[] researchTypesToModify;
+    public CraftingType[] craftingTypesToModify;
+    public WorkerType[] workerTypesToModify;
+    public bool isModifyingResource, isModifyingResearch, isModifyingCrafting, isModifyingBuilding, isModifyingWorker;
+}
 public abstract class SuperClass : MonoBehaviour
 {
     public static bool isUnlockedEvent;
@@ -12,17 +36,16 @@ public abstract class SuperClass : MonoBehaviour
     public bool isUnlockableByResource;
     public GameObject objSpacerBelow;
     
-    [System.NonSerialized] public int unlockAmount, unlocksRequired;
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true;
+    public int unlockAmount, unlocksRequired;
+    [System.NonSerialized] public bool isUnlocked, hasSeen = true, isUnlockedByResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
-    protected Image _imgProgressCircle;
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected GameObject _prefabResourceCost, _prefabBodySpacer, _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderDone, _objBtnExpand, _objBtnCollapse, _objBody;
     protected TMP_Text _txtDescription;
     protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformTxtHeaderDone, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
-    protected Image _imgMain, _imgExpand, _imgCollapse;
+    protected Image _imgMain, _imgExpand, _imgCollapse, _imgProgressCircle;
 
     void OnValidate()
     {
@@ -100,7 +123,7 @@ public abstract class SuperClass : MonoBehaviour
 
         #endregion
 
-        _tformDescription = transform.Find("Panel_Main/Body/Text_Description");
+        _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
         _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
@@ -116,7 +139,6 @@ public abstract class SuperClass : MonoBehaviour
         _imgExpand = _tformBtnExpand.GetComponent<Image>();
         _imgCollapse = _tformBtnCollapse.GetComponent<Image>();
         _objProgressCircle = _tformProgressCirclePanel.gameObject;
-        _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
         _objBtnExpand = _tformBtnExpand.gameObject;
@@ -228,9 +250,10 @@ public abstract class SuperClass : MonoBehaviour
     {
         if (!isUnlocked)
         {
-            if (GetCurrentFill() >= 0.8f && isUnlockableByResource)
+            if (GetCurrentFill() >= 0.8f && isUnlockableByResource && !isUnlockedByResource)
             {
                 unlockAmount++;
+                isUnlockedByResource = true;
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
@@ -274,7 +297,6 @@ public abstract class SuperClass : MonoBehaviour
     } 
     protected void UnlockWorkerJob()
     {
-        Debug.Log("Last " + PointerNotification.lastRightAmount + " Current: " + PointerNotification.rightAmount);
         if (typesToModify.isModifyingWorker)
         {
             foreach (var worker in typesToModify.workerTypesToModify)
@@ -424,7 +446,7 @@ public abstract class SuperClass : MonoBehaviour
             CheckIfUnlocked();
         }
     }
-    void Update()
+    protected virtual void Update()
     {
         UpdateResourceCosts();
         CheckIfPurchaseable();

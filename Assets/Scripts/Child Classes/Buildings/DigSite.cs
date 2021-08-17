@@ -27,9 +27,4 @@ public class DigSite : Building
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-
-    void Update()
-    {
-        UpdateResourceCosts();
-    }
 }

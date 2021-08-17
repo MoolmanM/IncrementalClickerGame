@@ -17,7 +17,6 @@ public class Woodlot : Building
     void Start()
     {   
         SetDescriptionText();
-        //DisplayConsole();
     }
     private void DisplayConsole()
     {
@@ -25,9 +24,5 @@ public class Woodlot : Building
         {
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
-    }
-    void Update()
-    {
-        UpdateResourceCosts();
     }
 }

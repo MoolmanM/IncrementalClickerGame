@@ -28,12 +28,6 @@ public class Craftable : SuperClass
 
     private string _isCraftedString, _isUnlockedString;
 
-   
-    void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
-        PlayerPrefs.SetInt(_isCraftedString, isCrafted ? 1 : 0);
-    }
     public void SetInitialValues()
     {
         InitializeObjects();
@@ -132,9 +126,16 @@ public class Craftable : SuperClass
 
         _isCraftedString = Type.ToString() + "isCrafted";
         _isUnlockedString = (Type.ToString() + "isUnlocked");
+
+        _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
     }
     protected void SetDescriptionText(string description)
     {
         Craftables[Type]._txtDescription.text = string.Format("{0}", description);
+    }
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_isCraftedString, isCrafted ? 1 : 0);
     }
 }

@@ -12,11 +12,11 @@ public class Hunters : Worker
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
-        SetInitialValues();
+        
         _resourcesToIncrement = new ResourcesToModify[2];
 
         _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Pelts;
-        _resourcesToIncrement[0].resourceMultiplier = 0.004f;
+        _resourcesToIncrement[0].resourceMultiplier = 0.01f;
 
         _resourcesToIncrement[1].resourceTypeToModify = ResourceType.Food;
         _resourcesToIncrement[1].resourceMultiplier = 0.04f;
@@ -45,6 +45,7 @@ public class Hunters : Worker
 
         // Will have to update all these values whenever I craft one of the associated weapons.
         // Shouldn't be that big of a problem, just create a new array for this and the rest should continue to work after that.
+        SetInitialValues();
     }
     public override void OnPlusButton()
     {

@@ -20,9 +20,9 @@ public class Fire : Researchable
     {
         SetDescriptionText("Unlock new important technologies, such as cooking and more.");
     }
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         UpdateResearchTimer();
-        UpdateResourceCosts();
     }
 }

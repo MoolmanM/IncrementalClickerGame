@@ -17,9 +17,9 @@ public class ManualEnergyProduction : Researchable
     {
         SetDescriptionText("Enables you to craft a hamster wheel for energy production.");
     }
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         UpdateResearchTimer();
-        UpdateResourceCosts();
     }
 }

@@ -10,11 +10,12 @@ public class EnergyProducers : Worker
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
-        SetInitialValues();
+        
 
         _resourcesToIncrement = new ResourcesToModify[1];
         _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Energy;
         _resourcesToIncrement[0].resourceMultiplier = 0.02f;
+        SetInitialValues();
     }
 
     private void DisplayConsole()

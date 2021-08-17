@@ -10,10 +10,11 @@ public class Woodcutters : Worker
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
-        SetInitialValues();
+
         _resourcesToIncrement = new ResourcesToModify[1];
         _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Sticks;
         _resourcesToIncrement[0].resourceMultiplier = 0.11f;
+        SetInitialValues();
     }
 
     private void DisplayConsole()

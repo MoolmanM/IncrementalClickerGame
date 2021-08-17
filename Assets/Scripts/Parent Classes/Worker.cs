@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum WorkerType
 {
@@ -12,30 +12,30 @@ public enum WorkerType
     Scholars,
     EnergyProducers
 
-        // So do we want hunters, for start. maybe just do for every worker there would be hunts automatically conducted. 
-        // So every 500 seconds there's a hunt that lasts 500 seconds. When they leave it costs a certain amount of resources, depending on how many workers was assigned at that time.
-        // Maybe have a timer somewhere that your hunters are hunting, maybe in the worker tab.
-        // I can grey out the hunter main panel, Change text to "Hunting..." With a progress bar attached like I have in research panel.
-        // Maybe just make the progress bar a different color such as orange.
-        // And then when they come back you'll get a certain random amount of resources based on some sort of loot pool.
-        // food 500 - 1000
-        // Leather 0 - 2
-        // Bones/tusks?
-        // Pelts is the same thing as leather? Should I convert pelts to leather, can pelts be made into something else.
-        // Tanning Rack - That seperates the pelt into fur and leather.
-        // Should this just be in a new tab workshop where you refine your resources into resources a tier higher? or well in this case from pelt to - leater and fur
-        // For example 1 pelt ---> 3 fur and 1 leather.
-        // Maybe should have an animals killed variable on the hunts.
-        // For each animal 100 - 200 food or whatever and 0 - 2 pelts. Something like that.
-        // fur will of course be used for clothing
-        // leather can be used for tents as well as various other stuff.
-        // Hunter workerType should probably be unlocked when the player has crafted the Stone Spear? 
-        // Could have different weapon tiers For example:
-        // Wooden Spear - 100 - 200 0 - 2 pelts.
-        // Stone Spear 120 - 220 0 - 2 pelts. 
-        // Fire Hardended Spear 150 - 250, 0 - 2 pelts.
-        // Which is why we should maybe have a weapons tab, but for now lets just do it in the crafting panel.
-        // So unlock hunter workertype on the crafting of any weapon type. for in case the player decided to skip other weapon craftings.
+    // So do we want hunters, for start. maybe just do for every worker there would be hunts automatically conducted. 
+    // So every 500 seconds there's a hunt that lasts 500 seconds. When they leave it costs a certain amount of resources, depending on how many workers was assigned at that time.
+    // Maybe have a timer somewhere that your hunters are hunting, maybe in the worker tab.
+    // I can grey out the hunter main panel, Change text to "Hunting..." With a progress bar attached like I have in research panel.
+    // Maybe just make the progress bar a different color such as orange.
+    // And then when they come back you'll get a certain random amount of resources based on some sort of loot pool.
+    // food 500 - 1000
+    // Leather 0 - 2
+    // Bones/tusks?
+    // Pelts is the same thing as leather? Should I convert pelts to leather, can pelts be made into something else.
+    // Tanning Rack - That seperates the pelt into fur and leather.
+    // Should this just be in a new tab workshop where you refine your resources into resources a tier higher? or well in this case from pelt to - leater and fur
+    // For example 1 pelt ---> 3 fur and 1 leather.
+    // Maybe should have an animals killed variable on the hunts.
+    // For each animal 100 - 200 food or whatever and 0 - 2 pelts. Something like that.
+    // fur will of course be used for clothing
+    // leather can be used for tents as well as various other stuff.
+    // Hunter workerType should probably be unlocked when the player has crafted the Stone Spear? 
+    // Could have different weapon tiers For example:
+    // Wooden Spear - 100 - 200 0 - 2 pelts.
+    // Stone Spear 120 - 220 0 - 2 pelts. 
+    // Fire Hardended Spear 150 - 250, 0 - 2 pelts.
+    // Which is why we should maybe have a weapons tab, but for now lets just do it in the crafting panel.
+    // So unlock hunter workertype on the crafting of any weapon type. for in case the player decided to skip other weapon craftings.
 }
 public struct ResourcesToModify
 {
@@ -45,14 +45,12 @@ public struct ResourcesToModify
 }
 
 
-public class Worker : MonoBehaviour
+public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
     public static uint TotalWorkerCount, UnassignedWorkerCount;
     public static bool isUnlockedEvent;
-
-
 
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public TMP_Text txtHeader;
@@ -65,21 +63,80 @@ public class Worker : MonoBehaviour
     public GameObject objSpacerBelow;
     public TMP_Text txtAvailableWorkers;
 
-    private Transform _tformTxtHeader, _tformObjMainPanel;
-    private string _workerString;
+    private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip;
+    private TMP_Text _txtDescriptionHeader, _txtDescriptionBody;
+    private GameObject _objTooltip;
+    private string _workerString, _previousText;
     protected uint _changeAmount = 1;
+    private bool buttonPressed;
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        buttonPressed = true;
+        _objTooltip.SetActive(true);
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        buttonPressed = false;
+        _objTooltip.SetActive(false);
+    }
+    private void SetDescriptionText()
+    {
+        _txtDescriptionHeader.text = string.Format("{0}", Type.ToString());
+        foreach (var resourcePlus in _resourcesToIncrement)
+        {
+            // If there is more than one. I need to make sure it goes to a new line.
+            // And if it is a decrement amount, change description text to "decreases"
+
+            _previousText = _txtDescriptionBody.text;
+
+            if (_previousText != "")
+            {
+                _txtDescriptionBody.text = string.Format("{0}\nIncreases {1} yield by: {2:0.00}", _previousText, resourcePlus.resourceTypeToModify.ToString(), resourcePlus.resourceMultiplier);
+            }
+            else
+            {
+                _txtDescriptionBody.text = string.Format("Increases {0} yield by: {1:0.00}", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.resourceMultiplier);
+            }           
+        }
+        if (_resourcesToDecrement != null)
+        {
+            foreach (var resourceMinus in _resourcesToDecrement)
+            {
+                _previousText = _txtDescriptionBody.text;
+
+                if (_previousText != "")
+                {
+                    _txtDescriptionBody.text = string.Format("{0}\nDecreases {1} yield by: {2:0.00}", _previousText, resourceMinus.resourceTypeToModify.ToString(), resourceMinus.resourceMultiplier);
+                }
+                else
+                {
+                    _txtDescriptionBody.text = string.Format("Decreases {0} yield by: {1:0.00}", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.resourceMultiplier);
+                }
+            }
+        }      
+    }
     protected void SetInitialValues()
     {
-        InitializeObjects();        
+        InitializeObjects();
     }
     protected void InitializeObjects()
     {
         _tformTxtHeader = transform.Find("Panel_Main/Text_Header");
         _tformObjMainPanel = transform.Find("Panel_Main");
+        _tformTxtDescriptionHeader = transform.Find("Worker_Tooltip/Header");
+        _tformTxtDescriptionBody = transform.Find("Worker_Tooltip/Body");
+        tformObjTooltip = transform.Find("Worker_Tooltip");
 
         txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         objMainPanel = _tformObjMainPanel.gameObject;
+        _txtDescriptionHeader = _tformTxtDescriptionHeader.GetComponent<TMP_Text>();
+        _txtDescriptionBody = _tformTxtDescriptionBody.GetComponent<TMP_Text>();
+        _objTooltip = tformObjTooltip.gameObject;
+
+        SetDescriptionText();
+
+        _objTooltip.SetActive(false);
 
         _workerString = (Type.ToString() + "workerCount");
 
@@ -105,7 +162,7 @@ public class Worker : MonoBehaviour
         {
             AutoWorker.CalculateWorkers();
             AutoWorker.AutoAssignWorkers();
-        }      
+        }
     }
     public virtual void OnPlusButton()
     {
@@ -170,7 +227,7 @@ public class Worker : MonoBehaviour
 
             //incrementAmount = (_changeAmount * resourceMultiplier);
             //Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
-        }       
+        }
     }
     public virtual void OnMinusButton()
     {
@@ -238,7 +295,7 @@ public class Worker : MonoBehaviour
         }
     }
     void OnApplicationQuit()
-    {             
+    {
         PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)workerCount);
         PlayerPrefs.SetInt("TotalWorkerCount", (int)TotalWorkerCount);
