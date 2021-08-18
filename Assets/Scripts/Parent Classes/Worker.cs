@@ -70,6 +70,10 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected uint _changeAmount = 1;
     private bool buttonPressed;
 
+    // This is just for testing
+    private bool hasInstantiated;
+    private float ContributionAPS;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         buttonPressed = true;
@@ -79,6 +83,52 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         buttonPressed = false;
         _objTooltip.SetActive(false);
+    }
+    private void UpdateResourceInfo()
+    {
+        foreach (var resource in Resource.Resources)
+        {
+            foreach (var resourceTypeToIncrement in _resourcesToIncrement)
+            {
+                if (resource.Key == resourceTypeToIncrement.resourceTypeToModify && !hasInstantiated)
+                {
+                    resource.Value.resourceInfoList = new List<ResourceInfo>()
+                    {
+                        new ResourceInfo(){ name = Type.ToString(), amountPerSecond=resourceTypeToIncrement.incrementAmount * workerCount }
+                    };
+
+                    hasInstantiated = true;
+
+                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
+                    {
+                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
+
+                        GameObject newObj = Instantiate(resource.Value.prefabResourceInfo, resource.Value.tformResourceTooltip);
+
+                        Transform _tformNewObj = newObj.transform;
+                        Transform _tformInfoName = _tformNewObj.Find("Text_Name");
+                        Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
+
+                        resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
+
+                        resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceTypeToIncrement.incrementAmount * workerCount);
+
+                        resource.Value.resourceInfoList[i] = resourceInfo;
+                    }
+                }
+                else if (resource.Key == resourceTypeToIncrement.resourceTypeToModify)
+                {
+                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
+                    {
+                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceTypeToIncrement.incrementAmount * workerCount);
+                        resource.Value.resourceInfoList[i] = resourceInfo;
+                    }
+                }
+            }
+        }
     }
     private void SetDescriptionText()
     {
@@ -97,7 +147,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             else
             {
                 _txtDescriptionBody.text = string.Format("Increases {0} yield by: {1:0.00}", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.resourceMultiplier);
-            }           
+            }
         }
         if (_resourcesToDecrement != null)
         {
@@ -114,7 +164,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     _txtDescriptionBody.text = string.Format("Decreases {0} yield by: {1:0.00}", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.resourceMultiplier);
                 }
             }
-        }      
+        }
     }
     protected void SetInitialValues()
     {
@@ -227,6 +277,8 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
             //incrementAmount = (_changeAmount * resourceMultiplier);
             //Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
+            //ContributionAPS = workerCount * _resourcesToIncrement[i].resourceMultiplier;
+            UpdateResourceInfo();
         }
     }
     public virtual void OnMinusButton()
@@ -292,6 +344,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
             //incrementAmount = (_changeAmount * resourceMultiplier);
             //Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
+            UpdateResourceInfo();
         }
     }
     void OnApplicationQuit()
