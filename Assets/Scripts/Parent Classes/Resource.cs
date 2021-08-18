@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public struct UiForResource
 {
@@ -22,10 +23,29 @@ public enum ResourceType
     Energy
 }
 
-public class Resource : MonoBehaviour
+public struct ResourceInfo
+{
+    // This is actually not at all needed I don't think, it's only needed for the ui.
+    public float amountPerSecond;
+    public string name;
+    public UiForResourceInfo uiForResourceInfo;
+}
+
+public struct UiForResourceInfo
+{
+    public TMP_Text textInfoName;
+    public TMP_Text textInfoAmountPerSecond;
+}
+
+public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<ResourceType, Resource> Resources = new Dictionary<ResourceType, Resource>();
+    public List<ResourceInfo> resourceInfoList = new List<ResourceInfo>();
 
+    [System.NonSerialized] public GameObject prefabResourceInfo;
+    [System.NonSerialized] public Transform tformResourceTooltip;
+    [System.NonSerialized] public GameObject objTooltip;  
+    
     [System.NonSerialized] public float amount, amountPerSecond, amountGainedWhileAfk;    
     [System.NonSerialized] public bool isUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
@@ -36,6 +56,7 @@ public class Resource : MonoBehaviour
     public TMP_Text txtEarned;
     public GameObject objSpacerBelow;
     public float globalMultiplier = 1f;
+    public bool buttonPressed;
 
     protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
 
@@ -47,6 +68,27 @@ public class Resource : MonoBehaviour
     {
         amount = storageAmount;
         globalMultiplier = 30f;
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (resourceInfoList != null && resourceInfoList.Any())
+        {
+            buttonPressed = true;
+            objTooltip.SetActive(true);
+        }       
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        buttonPressed = false;
+        objTooltip.SetActive(false);
+    }
+    private void InitializePrefab()
+    {
+        prefabResourceInfo = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/ResourceInfo_Panel");
+
+        tformResourceTooltip = transform.Find("Resource_Tooltip");
+
+        objTooltip = tformResourceTooltip.gameObject;
     }
     public virtual void SetInitialValues()
     {
@@ -117,6 +159,8 @@ public class Resource : MonoBehaviour
         _amountString = Type.ToString() + "A";
         _storageAmountString = Type.ToString() + "Storage";
         _isUnlockedString = Type.ToString() + "Unlocked";
+
+        InitializePrefab();
     }   
     public void GetCurrentFill()
     {
