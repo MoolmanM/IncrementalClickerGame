@@ -6,6 +6,6 @@ public class GatherSticks : MonoBehaviour
 {
     public void OnGatherSticks()
     {
-        Resource.Resources[ResourceType.Sticks].amount++;
+        Resource.Resources[ResourceType.Wood].amount++;
     }
 }

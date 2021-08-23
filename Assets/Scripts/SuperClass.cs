@@ -210,21 +210,25 @@ public abstract class SuperClass : MonoBehaviour
             {
                 txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
             }
+            else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
+            {
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%ms}ms</color>)", current, cost, timeSpan.Duration());
+            }
             else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
             {
                 txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
             }
             else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m {2:%s}s</color>)", current, cost, timeSpan.Duration());
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
             }
             else if (timeSpan.Days == 0)
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{0:%h}h {0:%m}m</color>)", current, cost, timeSpan.Duration());
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
             }
             else
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{0:%d}d {0:%h}h</color>)", current, cost, timeSpan.Duration());
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
             }
         }
     }

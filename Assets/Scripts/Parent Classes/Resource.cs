@@ -15,17 +15,28 @@ public struct UiForResource
 
 public enum ResourceType
 {
+    // Might make Energy it's own thing, that will display at the top of the screen.
+    // Reason being, energy doesn't really need storage, because there will never be a time where you don't use all of your energy.
+    // Or is there, need some more brainstorming.
+    // Maybe have another gather button, Gather Stones?
+    // How will I handle ores and metals and such?
+    // Do I want every single metal? Steel, Iron, Aluminum, Magnesium, Copper, Brass, Bronze, Zinc, Titanium, Tungsten, Adamantium, Nickel, Cobalt, Tin, Lead, Silicon
+
     Food,
-    Sticks,
+    Wood,
     Stones,
     Knowledge,
     Pelts,
-    Energy
+    Energy,
+    Copper,
+    Bronze,
+    Tin,
+    Iron
+
 }
 
 public struct ResourceInfo
 {
-    // This is actually not at all needed I don't think, it's only needed for the ui.
     public float amountPerSecond;
     public string name;
     public UiForResourceInfo uiForResourceInfo;
@@ -42,7 +53,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public static Dictionary<ResourceType, Resource> Resources = new Dictionary<ResourceType, Resource>();
     public List<ResourceInfo> resourceInfoList = new List<ResourceInfo>();
 
-    [System.NonSerialized] public GameObject prefabResourceInfo;
+    [System.NonSerialized] public GameObject prefabResourceInfoPanel, prefabResourceInfoSpacer;
     [System.NonSerialized] public Transform tformResourceTooltip;
     [System.NonSerialized] public GameObject objTooltip;  
     
@@ -67,7 +78,8 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void OnValidate()
     {
         amount = storageAmount;
-        globalMultiplier = 30f;
+        //globalMultiplier = 30f;
+        globalMultiplier = 1f;
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -84,7 +96,8 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void InitializePrefab()
     {
-        prefabResourceInfo = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/ResourceInfo_Panel");
+        prefabResourceInfoPanel = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/ResourceInfo_Panel");
+        prefabResourceInfoSpacer = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Spacer");
 
         tformResourceTooltip = transform.Find("Resource_Tooltip");
 

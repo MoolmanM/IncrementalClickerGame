@@ -259,6 +259,7 @@ public abstract class Researchable : SuperClass
         _stringResearchTimeRemaining = (Type.ToString() + "TimeRemaining");
         _stringIsResearchStarted = (Type.ToString() + "IsResearchStarted");
 
+        _stringHeader = _objTxtHeader.GetComponent<TMP_Text>().text; 
         _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
     }
     private void OnApplicationQuit()

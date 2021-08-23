@@ -43,7 +43,7 @@ public abstract class Building : SuperClass
                 {
                     ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
 
-                    GameObject newObj = Instantiate(resource.Value.prefabResourceInfo, resource.Value.tformResourceTooltip);
+                    GameObject newObj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
 
                     Transform _tformNewObj = newObj.transform;
                     Transform _tformInfoName = _tformNewObj.Find("Text_Name");
