@@ -28,7 +28,16 @@ public enum ResearchType
     Cooking,
     FireHardenedWeapons,
     Smelting,
-    ManualEnergyProduction
+    ManualEnergyProduction,
+    CopperMining,
+    TinMining,
+    IronMining,
+    BronzeAlloys,
+    TinEquipment,
+    CopperEquipment,
+    BronzeEquipment,
+    IronEquipment,
+    IronAlloys
 }
 
 public abstract class Researchable : SuperClass

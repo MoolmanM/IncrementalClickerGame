@@ -18,21 +18,21 @@ public struct ResourceCost
 }
 
 [System.Serializable]
-public struct TypesToModify
+public struct TypesToUnlock
 {
-    public ResourceType[] resourceTypesToModify;
-    public BuildingType[] buildingTypesToModify;
-    public ResearchType[] researchTypesToModify;
-    public CraftingType[] craftingTypesToModify;
-    public WorkerType[] workerTypesToModify;
-    public bool isModifyingResource, isModifyingResearch, isModifyingCrafting, isModifyingBuilding, isModifyingWorker;
+    public ResourceType[] resourceTypesToUnlock;
+    public BuildingType[] buildingTypesToUnlock;
+    public ResearchType[] researchTypesToUnlock;
+    public CraftingType[] craftingTypesToUnlock;
+    public WorkerType[] workerTypesToUnlock;
+    public bool isUnlockingResource, isUnlockingResearch, isUnlockingCrafting, isUnlockingBuilding, isUnlockingWorker;
 }
 public abstract class SuperClass : MonoBehaviour
 {
     public static bool isUnlockedEvent;
 
     public ResourceCost[] resourceCost;
-    public TypesToModify typesToModify;
+    public TypesToUnlock typesToUnlock;
     public bool isUnlockableByResource;
     public GameObject objSpacerBelow;
     
@@ -49,49 +49,49 @@ public abstract class SuperClass : MonoBehaviour
 
     void OnValidate()
     {
-        if (typesToModify.buildingTypesToModify.Length != 0)
+        if (typesToUnlock.buildingTypesToUnlock.Length != 0)
         {
-            typesToModify.isModifyingBuilding = true;
+            typesToUnlock.isUnlockingBuilding = true;
         }
         else
         {
-            typesToModify.isModifyingBuilding = false;
+            typesToUnlock.isUnlockingBuilding = false;
         }
 
-        if (typesToModify.craftingTypesToModify.Length != 0)
+        if (typesToUnlock.craftingTypesToUnlock.Length != 0)
         {
-            typesToModify.isModifyingCrafting = true;
+            typesToUnlock.isUnlockingCrafting = true;
         }
         else
         {
-            typesToModify.isModifyingCrafting = false;
+            typesToUnlock.isUnlockingCrafting = false;
         }
 
-        if (typesToModify.researchTypesToModify.Length != 0)
+        if (typesToUnlock.researchTypesToUnlock.Length != 0)
         {
-            typesToModify.isModifyingResearch = true;
+            typesToUnlock.isUnlockingResearch = true;
         }
         else
         {
-            typesToModify.isModifyingResearch = false;
+            typesToUnlock.isUnlockingResearch = false;
         }
 
-        if (typesToModify.workerTypesToModify.Length != 0)
+        if (typesToUnlock.workerTypesToUnlock.Length != 0)
         {
-            typesToModify.isModifyingWorker = true;
+            typesToUnlock.isUnlockingWorker = true;
         }
         else
         {
-            typesToModify.isModifyingWorker = false;
+            typesToUnlock.isUnlockingWorker = false;
         }
 
-        if (typesToModify.resourceTypesToModify.Length != 0)
+        if (typesToUnlock.resourceTypesToUnlock.Length != 0)
         {
-            typesToModify.isModifyingResource = true;
+            typesToUnlock.isUnlockingResource = true;
         }
         else
         {
-            typesToModify.isModifyingResource = false;
+            typesToUnlock.isUnlockingResource = false;
         }
     }
     protected virtual void InitializeObjects()
@@ -199,37 +199,45 @@ public abstract class SuperClass : MonoBehaviour
             UnPurchaseable();
         }
     }
-    protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond)
+    protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
     {
-        if (amountPerSecond > 0)
+        if (amountPerSecond > 0 && cost > current)
         {
             float secondsLeft = (cost - current) / (amountPerSecond);
             TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
+            Debug.Log(timeSpan);
 
-            if (current >= cost)
+            if (storageAmount < cost)
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
-            }
-            else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%ms}ms</color>)", current, cost, timeSpan.Duration());
-            }
-            else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
-            }
-            else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
-            }
-            else if (timeSpan.Days == 0)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", current, cost);
             }
             else
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
-            }
+                if (current >= cost)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", current, cost, timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
+                }
+                else
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
+                }
+            }        
         }
     }
     protected float GetCurrentFill()
@@ -289,9 +297,9 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UnlockResource()
     {
-        if (typesToModify.isModifyingResource)
+        if (typesToUnlock.isUnlockingResource)
         {
-            foreach (var resource in typesToModify.resourceTypesToModify)
+            foreach (var resource in typesToUnlock.resourceTypesToUnlock)
             {
                 Resource.Resources[resource].isUnlocked = true;
                 Resource.Resources[resource].objMainPanel.SetActive(true);
@@ -301,9 +309,9 @@ public abstract class SuperClass : MonoBehaviour
     } 
     protected void UnlockWorkerJob()
     {
-        if (typesToModify.isModifyingWorker)
+        if (typesToUnlock.isUnlockingWorker)
         {
-            foreach (var worker in typesToModify.workerTypesToModify)
+            foreach (var worker in typesToUnlock.workerTypesToUnlock)
             {
                 Worker.Workers[worker].isUnlocked = true;
 
@@ -340,9 +348,9 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UnlockCrafting()
     {
-        if (typesToModify.isModifyingCrafting)
+        if (typesToUnlock.isUnlockingCrafting)
         {
-            foreach (CraftingType craft in typesToModify.craftingTypesToModify)
+            foreach (CraftingType craft in typesToUnlock.craftingTypesToUnlock)
             {
                 Craftable.Craftables[craft].unlockAmount++;
 
@@ -376,9 +384,9 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UnlockBuilding()
     {
-        if (typesToModify.isModifyingBuilding)
+        if (typesToUnlock.isUnlockingBuilding)
         {
-            foreach (BuildingType building in typesToModify.buildingTypesToModify)
+            foreach (BuildingType building in typesToUnlock.buildingTypesToUnlock)
             {
                 Building.Buildings[building].unlockAmount++;
 
@@ -405,9 +413,9 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UnlockResearchable()
     {
-        if (typesToModify.isModifyingResearch)
+        if (typesToUnlock.isUnlockingResearch)
         {
-            foreach (ResearchType research in typesToModify.researchTypesToModify)
+            foreach (ResearchType research in typesToUnlock.researchTypesToUnlock)
             {
                 Researchable.Researchables[research].unlockAmount++;
 
@@ -444,7 +452,7 @@ public abstract class SuperClass : MonoBehaviour
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
 
-                ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond);
+                ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
             }
             _imgProgressCircle.fillAmount = GetCurrentFill();
             CheckIfUnlocked();

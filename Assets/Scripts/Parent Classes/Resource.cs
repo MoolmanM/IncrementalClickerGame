@@ -27,10 +27,9 @@ public enum ResourceType
     Stones,
     Knowledge,
     Pelts,
-    Energy,
     Copper,
-    Bronze,
     Tin,
+    Bronze,  
     Iron
 
 }
@@ -79,7 +78,6 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         amount = storageAmount;
         //globalMultiplier = 30f;
-        globalMultiplier = 1f;
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -206,7 +204,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 amount += (amountPerSecond / 10) * globalMultiplier;
             }
-            if (amountPerSecond < 0)
+            if (amountPerSecond <= -0.01)
             {
                 uiForResource.txtAmountPerSecond.text = string.Format("<color=#C63434>{0:0.00}/sec</color>", amountPerSecond);
             }

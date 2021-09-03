@@ -47,7 +47,7 @@ public class Hunters : Worker
         // Shouldn't be that big of a problem, just create a new array for this and the rest should continue to work after that.
         SetInitialValues();
     }
-    public override void OnPlusButton()
+    protected override void OnPlusButton()
     {
         if (UnassignedWorkerCount > 0)
         {
@@ -117,7 +117,7 @@ public class Hunters : Worker
         }
         UpdateResourceInfo();
     }
-    public override void OnMinusButton()
+    protected override void OnMinusButton()
     {
         if (workerCount > 0)
         {

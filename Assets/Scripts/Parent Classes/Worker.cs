@@ -322,7 +322,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             AutoWorker.AutoAssignWorkers();
         }
     }
-    public virtual void OnPlusButton()
+    protected virtual void OnPlusButton()
     {
         if (UnassignedWorkerCount > 0)
         {
@@ -389,7 +389,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             UpdateResourceInfo();
         }
     }
-    public virtual void OnMinusButton()
+    protected virtual void OnMinusButton()
     {
         if (workerCount > 0)
         {

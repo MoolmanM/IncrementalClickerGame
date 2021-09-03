@@ -16,7 +16,25 @@ public enum CraftingType
     StonePickaxe,
     StoneSpear,
     FireHardenedSpear,
-    HamsterWheel
+    HamsterWheel,
+    TinHoe,
+    TinAxe,
+    TinPickaxe,
+    TinSpear,
+    CopperHoe,
+    CopperAxe,
+    CopperPickaxe,
+    CopperSpear,
+    BronzeHoe,
+    BronzeAxe,
+    BronzePickaxe,
+    BronzeSpear,
+    IronAxe,
+    IronHoe,
+    IronPickaxe,
+    IronSpear,
+
+
 }
 
 public class Craftable : SuperClass

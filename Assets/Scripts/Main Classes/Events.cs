@@ -19,28 +19,24 @@ public class Events : MonoBehaviour
 
     private void StoneAgeEvents()
     {
-        animalAttack = 1f; //1%
+        animalAttack = 1f; //1% Probably need to lower this or lower the amount of time we generate random numbers
+        // Probably need to generate a random number once every day?
         villageUnderAttack = 0.3f; //0.3%
         randomNumber = UnityEngine.Random.Range(0f, 100f);
 
-        //if (randomNumber <= animalAttack)
-        //{
-        //    AnimalAttack();
-        //    eventHappened = true;
-        //}
-        //if (randomNumber <= villageUnderAttack)
-        //{
-        //    NotableEvent("Your village is under attack!");
-        //    eventHappened = true;
-        //}
+        if (randomNumber <= animalAttack)
+        {
+            AnimalAttack();
+            eventHappened = true;
+        }
+        if (randomNumber <= villageUnderAttack)
+        {
+            VillageAttack();
+            eventHappened = true;
+        }
 
         // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
         // Or if they reach a certain amount of a building such as potatoField.
-
-
-
-
-
     }
     private bool IsPlaying(Animator anim, string stateName)
     {
@@ -76,17 +72,65 @@ public class Events : MonoBehaviour
         float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
         if (randomNumberGenerated <= victoryChance)
         {
-            NotableEvent("You've been attacked by an animal. But your people managed to kill it! You've gained # Food");
+            float randomFoodAmount = UnityEngine.Random.Range(0f, 500f);
+            if (randomFoodAmount + Resource.Resources[ResourceType.Food].amount > Resource.Resources[ResourceType.Food].storageAmount)
+            {
+                Resource.Resources[ResourceType.Food].amount = Resource.Resources[ResourceType.Food].storageAmount;
+            }
+            else
+            {
+                Resource.Resources[ResourceType.Food].amount += randomFoodAmount;
+
+            }
+            NotableEvent(string.Format("You've been attacked by an animal. But your people managed to kill it! You've gained {0:0.00} Food", randomFoodAmount));
         }
         else
         {
-            NotableEvent("You've been attacked by an animal. One of your people has been killed.");
+            uint randomWorkerAmount = (uint)UnityEngine.Random.Range(0, 5);
+            
+            if (Worker.TotalWorkerCount - randomWorkerAmount <= 0)
+            {
+                Worker.TotalWorkerCount = 0;
+            }
+            else
+            {
+                Worker.TotalWorkerCount -= randomWorkerAmount;
+            }
+            NotableEvent(string.Format("You've been attacked by an animal. {0} of your people has been killed.", randomWorkerAmount));
         }
         
 
         // Here we should roll another dice to see if the player can kill the animal or not.
         // If killed gets a random amount of food between generous values.
         // If the player can't kill the animal then a worker dies or multiple.
+    }
+    private void VillageAttack()
+    {
+
+        float victoryChance = 40f;
+        float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
+        if (randomNumberGenerated <= victoryChance)
+        {
+            NotableEvent("Your civilization was attacked by a neighboring civilization but you manage to defeat the attackers");
+        }
+        else
+        {
+            uint randomWorkerAmount = (uint)UnityEngine.Random.Range(0, 5);
+
+            if (Worker.TotalWorkerCount - randomWorkerAmount <= 0)
+            {
+                Worker.TotalWorkerCount = 0;
+            }
+            else
+            {
+                Worker.TotalWorkerCount -= randomWorkerAmount;
+            }
+            NotableEvent(string.Format("Your civilization was attacked by a neighboring civilization, {0} of your people has been killed.", randomWorkerAmount));
+        }
+
+
+        // Then display everything that has been stolen and also display how many people have been killed and/or injured if we want a injuring system which
+        // mioght just be too much effort.
     }
     private void NewCraftingRecipe()
     {
@@ -99,11 +143,11 @@ public class Events : MonoBehaviour
     }
     private void NewResearchAvailable()
     {
-        if (Craftable.isUnlockedEvent)
+        if (Researchable.isUnlockedEvent)
         {
             eventHappened = true;
             NotableEvent("You've unlocked new research.");
-            Craftable.isUnlockedEvent = false;
+            Researchable.isUnlockedEvent = false;
         }
     }
     private void NewBuildingAvailable()
@@ -115,7 +159,7 @@ public class Events : MonoBehaviour
             Building.isUnlockedEvent = false;
         }
     }
-    private void NewJobAvailable()
+    private void NewWorkerJobAvailable()
     {
         if (Worker.isUnlockedEvent)
         {
@@ -184,11 +228,15 @@ public class Events : MonoBehaviour
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = 0.1f;
+            _timer = 1f;
             StoneAgeEvents();           
         }
        
         GenerateWorkers();
+        NewCraftingRecipe();
+        NewResearchAvailable();
+        NewBuildingAvailable();
+        NewWorkerJobAvailable();
         AnimationHandler();
     }
 }

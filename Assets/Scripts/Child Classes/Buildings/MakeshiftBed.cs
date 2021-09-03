@@ -27,7 +27,7 @@ public class MakeshiftBed : Building
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    public override void OnBuild()
+    protected override void OnBuild()
     {
         bool canPurchase = true;
 
@@ -46,7 +46,7 @@ public class MakeshiftBed : Building
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);                
+                resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);                
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
             }          
         }

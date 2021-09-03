@@ -5,7 +5,7 @@ using UnityEngine;
 public class Swipe : MonoBehaviour
 {
     private bool tap, swipeLeft, swipeRight, swipeUp, swipeDown;
-    private bool isDragging = false;
+    public bool isDragging = false;
     private Vector2 startTouch, swipeDelta;
 
     void Update()

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public enum BuildingType
@@ -9,21 +10,35 @@ public enum BuildingType
     Woodlot,
     DigSite,
     MakeshiftBed,
-    Furnace
+    Smelter,
+    StoragePile, // For Stone, Lumber, maybe other materials
+    //StorageTent, // For food, and more delicate stuff.
+    //StorageHouse
+    MineShaft,
+    WoodGenerator
+
+
+}
+
+[System.Serializable]
+public struct ResourceTypesToModify
+{
+    public ResourceType resourceTypeToModify;
+    public float resourceMulitplier;
 }
 
 public abstract class Building : SuperClass
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
     public float buildingContributionAPS;
+    public List<ResourceTypesToModify> resourcesToIncrement = new List<ResourceTypesToModify>();
+    public List<ResourceTypesToModify> resourcesToDecrement = new List<ResourceTypesToModify>();
 
     public BuildingType Type;
+    public float costMultiplier;
 
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
-
-    protected float _resourceMultiplier, _costMultiplier;
-    protected ResourceType resourceTypeToModify;
 
     protected string _stringOriginalHeader;
     protected uint _selfCount;
@@ -32,7 +47,7 @@ public abstract class Building : SuperClass
     {
         foreach (var resource in Resource.Resources)
         {
-            if (resource.Key == typesToModify.resourceTypesToModify[0] && _selfCount == 1)
+            if (resource.Key == typesToUnlock.resourceTypesToUnlock[0] && _selfCount == 1)
             {
                 resource.Value.resourceInfoList = new List<ResourceInfo>()
                 {
@@ -58,7 +73,7 @@ public abstract class Building : SuperClass
                     resource.Value.resourceInfoList[i] = resourceInfo;
                 }
             }
-            else if (resource.Key == typesToModify.resourceTypesToModify[0] && _selfCount != 1)
+            else if (resource.Key == typesToUnlock.resourceTypesToUnlock[0] && _selfCount != 1)
             {
                 for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
                 {
@@ -85,7 +100,7 @@ public abstract class Building : SuperClass
         }
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    public virtual void OnBuild()
+    protected virtual void OnBuild()
     {
         bool canPurchase = true;
 
@@ -104,29 +119,34 @@ public abstract class Building : SuperClass
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                resourceCost[i].costAmount *= Mathf.Pow(_costMultiplier, _selfCount);
+                resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
             }
             ModifyAmountPerSecond();
-            buildingContributionAPS = 0;
-            buildingContributionAPS = _selfCount * _resourceMultiplier;
-            UpdateResourceInfo();
+            //buildingContributionAPS = 0;
+            //buildingContributionAPS = _selfCount * _resourceMultiplier;
+            //UpdateResourceInfo();
         }
 
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
     protected virtual void SetDescriptionText()
     {
-        _txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[resourceTypeToModify].Type.ToString(), _resourceMultiplier);
+        // Need to do a for loop here and most likely instantiate new gameobjects, depending on how many there are just the way I do it in fthe resourceinfo, with resources and also how I do it with ResourcePanels.
+        //_txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[resourceTypeToModify].Type.ToString(), _resourceMultiplier);
     }
     protected virtual void ModifyAmountPerSecond()
     {
-        Resource.Resources[resourceTypeToModify].amountPerSecond += _resourceMultiplier;
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amount += resourcesToIncrement[i].resourceMulitplier;
+        }
     }
     protected override void InitializeObjects()
     {
         base.InitializeObjects();
 
+        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnBuild);
 
         _stringOriginalHeader = _objTxtHeader.GetComponent<TMP_Text>().text;
 
