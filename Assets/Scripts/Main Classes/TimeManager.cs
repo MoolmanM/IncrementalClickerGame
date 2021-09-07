@@ -122,32 +122,6 @@ public class TimeManager : MonoBehaviour
 
         
     }
-    public static void GetAFKResource(ResourceType type)
-    {
-        float differenceAmount = (float)(difference.TotalSeconds * Resource.Resources[type].amountPerSecond);    
-        
-        if (differenceAmount > Resource.Resources[type].storageAmount)
-        {
-            Resource.Resources[type].txtEarned.text = string.Format("{0}: {1:0.00}", type, Resource.Resources[type].storageAmount);
-        }
-        else
-        {
-            Resource.Resources[type].txtEarned.text = string.Format("{0}: {1:0.00}", type, differenceAmount);
-        }       
-
-        if ((differenceAmount + Resource.Resources[type].amount) > Resource.Resources[type].storageAmount)
-        {
-            Resource.Resources[type].amount = Resource.Resources[type].storageAmount;
-
-            // I don't think I need to update the text because it updates every tick anyways.
-            // Resource.Resources[type].uiForResource.txtAmount.text = string.Format("{0}", Resource.Resources[type].amount);
-        }
-        else
-        {
-            Resource.Resources[type].amount += differenceAmount;
-        }
-        //Resource.Resources[type].uiForResource.amount.text = string.Format("{0}", Resource.Resources[type].amount);
-    }
     void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)

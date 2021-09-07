@@ -132,7 +132,7 @@ public class Tutorial : MonoBehaviour
 
             if (isTutGathering30Sticks)
             {
-                if (Resource.Resources[ResourceType.Wood].amount >= 30)
+                if (Resource.Resources[ResourceType.Lumber].amount >= 30)
                 {
                     objSkipTutorial.SetActive(true);
                     objGathering.SetActive(true);

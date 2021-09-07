@@ -23,7 +23,7 @@ public enum ResourceType
     // Do I want every single metal? Steel, Iron, Aluminum, Magnesium, Copper, Brass, Bronze, Zinc, Titanium, Tungsten, Adamantium, Nickel, Cobalt, Tin, Lead, Silicon
 
     Food,
-    Wood,
+    Lumber,
     Stones,
     Knowledge,
     Pelts,
@@ -56,14 +56,13 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [System.NonSerialized] public Transform tformResourceTooltip;
     [System.NonSerialized] public GameObject objTooltip;  
     
-    [System.NonSerialized] public float amount, amountPerSecond, amountGainedWhileAfk;    
+    [System.NonSerialized] public float amount, amountPerSecond;    
     [System.NonSerialized] public bool isUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
     public float storageAmount;
     public ResourceType Type;
-    public TMP_Text txtEarned;
     public GameObject objSpacerBelow;
     public float globalMultiplier = 1f;
     public bool buttonPressed;
@@ -76,7 +75,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void OnValidate()
     {
-        amount = storageAmount;
+        //amount = storageAmount;
         //globalMultiplier = 30f;
     }
     public void OnPointerDown(PointerEventData eventData)
@@ -124,7 +123,6 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             objSpacerBelow.SetActive(true);
             if (amountPerSecond > 0f)
             {
-                TimeManager.GetAFKResource(Type);
                 uiForResource.txtStorageAmount.text = string.Format("{0}", storageAmount);
 
                 if (amountPerSecond >= 0)

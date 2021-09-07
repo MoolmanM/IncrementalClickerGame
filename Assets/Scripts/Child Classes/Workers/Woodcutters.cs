@@ -12,7 +12,7 @@ public class Woodcutters : Worker
         Workers.Add(Type, _worker);
 
         _resourcesToIncrement = new ResourcesToModify[1];
-        _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Wood;
+        _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Lumber;
         _resourcesToIncrement[0].resourceMultiplier = 0.11f;
         SetInitialValues();
     }

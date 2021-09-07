@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Drawing;
 using TMPro;
-using UnityEditor.iOS;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.TextCore;
 
 public enum WorkerType
 {

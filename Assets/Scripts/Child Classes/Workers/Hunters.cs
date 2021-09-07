@@ -24,19 +24,19 @@ public class Hunters : Worker
         // This is only temporary, need to check the conditions and refresh this array whenever I craft woodenspear or stone spear etc.
         // Or any weapon for that matter.
         _resourcesToDecrement = new ResourcesToModify[1];
-        _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Wood;
+        _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Lumber;
         _resourcesToDecrement[0].resourceMultiplier = 0.1f;
 
         if (Craftable.Craftables[CraftingType.WoodenSpear].isUnlocked)
         {
             _resourcesToDecrement = new ResourcesToModify[1];
-            _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Wood;
+            _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Lumber;
             _resourcesToDecrement[0].resourceMultiplier = 0.1f;
         }
         else if (Craftable.Craftables[CraftingType.StoneSpear].isUnlocked)
         {
             _resourcesToDecrement = new ResourcesToModify[2];
-            _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Wood;
+            _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Lumber;
             _resourcesToDecrement[0].resourceMultiplier = 0.1f;
 
             _resourcesToDecrement[1].resourceTypeToModify = ResourceType.Stones;

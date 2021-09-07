@@ -27,7 +27,7 @@ public class MakeshiftBed : Building
             Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
         }
     }
-    protected override void OnBuild()
+    public override void OnBuild()
     {
         bool canPurchase = true;
 

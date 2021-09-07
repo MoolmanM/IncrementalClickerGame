@@ -270,6 +270,8 @@ public abstract class Researchable : SuperClass
 
         _stringHeader = _objTxtHeader.GetComponent<TMP_Text>().text; 
         _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
+
+        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnResearch);
     }
     private void OnApplicationQuit()
     {

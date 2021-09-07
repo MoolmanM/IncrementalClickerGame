@@ -100,7 +100,7 @@ public abstract class Building : SuperClass
         }
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    protected virtual void OnBuild()
+    public virtual void OnBuild()
     {
         bool canPurchase = true;
 
@@ -139,7 +139,7 @@ public abstract class Building : SuperClass
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
-            Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amount += resourcesToIncrement[i].resourceMulitplier;
+            Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].resourceMulitplier;
         }
     }
     protected override void InitializeObjects()

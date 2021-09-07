@@ -112,7 +112,7 @@ public class Power : Building
         swipe.isDragging = false;
         _txtHandleAmount.text = _objSlider.GetComponent<Slider>().value.ToString();
     }
-    protected override void OnBuild()
+    public override void OnBuild()
     {
         bool canPurchase = true;
 
@@ -167,7 +167,5 @@ public class Power : Building
                 Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= resourcesToDecrement[i].resourceMulitplier * sliderValue;
             }
         }
-        
-        // This might be fine, except needs to be slightly calculated differently, in onpointerup.
     }
 }

@@ -146,6 +146,8 @@ public class Craftable : SuperClass
         _isUnlockedString = (Type.ToString() + "isUnlocked");
 
         _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
+
+        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnCraft);
     }
     protected void SetDescriptionText(string description)
     {

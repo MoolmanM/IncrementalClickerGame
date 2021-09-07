@@ -146,6 +146,7 @@ public abstract class SuperClass : MonoBehaviour
         _objBody = _tformBody.gameObject;
       
         _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
+        _objBtnCollapse.GetComponent<Button>().onClick.AddListener(OnCollapse);
     }
     protected void OnExpandCloseAll()
     {
@@ -158,6 +159,13 @@ public abstract class SuperClass : MonoBehaviour
         _objBtnExpand.SetActive(false);
         _objBody.SetActive(true);
         _objBtnCollapse.SetActive(true);
+
+    }
+    protected void OnCollapse()
+    {
+        _objBtnExpand.SetActive(true);
+        _objBody.SetActive(false);
+        _objBtnCollapse.SetActive(false);
 
     }
     protected void Purchaseable()
@@ -201,44 +209,48 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
     {
-        if (amountPerSecond > 0 && cost > current)
+        if (isUnlocked)
         {
-            float secondsLeft = (cost - current) / (amountPerSecond);
-            TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
-            Debug.Log(timeSpan);
+            if (amountPerSecond > 0 && cost > current)
+            {
+                float secondsLeft = (cost - current) / (amountPerSecond);
+                TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
+                //Debug.Log(timeSpan);
 
-            if (storageAmount < cost)
-            {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", current, cost);
-            }
-            else
-            {
-                if (current >= cost)
+                if (storageAmount < cost)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
-                }
-                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
-                {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", current, cost, timeSpan.Duration());
-                }
-                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
-                {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
-                }
-                else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
-                {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
-                }
-                else if (timeSpan.Days == 0)
-                {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", current, cost);
                 }
                 else
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
+                    if (current >= cost)
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
+                    }
+                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", current, cost, timeSpan.Duration());
+                    }
+                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                    }
+                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                    }
+                    else if (timeSpan.Days == 0)
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
+                    }
+                    else
+                    {
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
+                    }
                 }
-            }        
+            }
         }
+        
     }
     protected float GetCurrentFill()
     {
