@@ -44,6 +44,7 @@ public abstract class Researchable : SuperClass
 {
     public static Dictionary<ResearchType, Researchable> Researchables = new Dictionary<ResearchType, Researchable>();
     public static int researchSimulActive = 0, researchSimulAllowed = 1;
+    public static bool hasReachedMaxSimulResearch, isResearchableUnlockedEvent;
 
     public ResearchType Type;
     public uint testAmount;
@@ -135,7 +136,8 @@ public abstract class Researchable : SuperClass
     {
         if (researchSimulActive >= researchSimulAllowed)
         {
-            Debug.Log(string.Format("You can only have {0} research active at the same time", researchSimulAllowed));
+            //Debug.Log(string.Format("You can only have {0} research active at the same time", researchSimulAllowed));
+            hasReachedMaxSimulResearch = true;
         }
         else
         {

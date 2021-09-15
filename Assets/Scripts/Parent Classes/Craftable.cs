@@ -40,6 +40,7 @@ public enum CraftingType
 public class Craftable : SuperClass
 {
     public static Dictionary<CraftingType, Craftable> Craftables = new Dictionary<CraftingType, Craftable>();
+    public static bool isCraftableUnlockedEvent;
 
     public CraftingType Type;
     [System.NonSerialized] public bool isCrafted;

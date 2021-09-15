@@ -50,7 +50,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
     public static uint TotalWorkerCount, UnassignedWorkerCount;
-    public static bool isUnlockedEvent;
+    public static bool isWorkerUnlockedEvent;
 
     [System.NonSerialized] public GameObject objMainPanel;
     [System.NonSerialized] public TMP_Text txtHeader;

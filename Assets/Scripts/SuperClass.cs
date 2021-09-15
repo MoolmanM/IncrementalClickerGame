@@ -29,8 +29,6 @@ public struct TypesToUnlock
 }
 public abstract class SuperClass : MonoBehaviour
 {
-    public static bool isUnlockedEvent;
-
     public ResourceCost[] resourceCost;
     public TypesToUnlock typesToUnlock;
     public bool isUnlockableByResource;
@@ -270,6 +268,126 @@ public abstract class SuperClass : MonoBehaviour
         }
         return fillAmount / resourceCost.Length;
     }
+    protected void CheckIfBuildingUnlocked()
+    {
+        foreach (var building in Building.Buildings)
+        {
+            if (building.Value.isUnlocked)
+            {
+                if (UIManager.isBuildingVisible)
+                {
+                    objMainPanel.SetActive(true);
+                    objSpacerBelow.SetActive(true);
+                    hasSeen = true;
+                }
+                else
+                {
+                    Building.isBuildingUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+            }
+        }
+    }
+    protected void CheckIfCraftingUnlocked()
+    {
+        foreach (var craft in Craftable.Craftables)
+        {
+            if (craft.Value.isUnlocked)
+            {
+                if (UIManager.isBuildingVisible)
+                {
+                    Craftable.isCraftableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.rightAmount++;
+                }
+                else if (UIManager.isCraftingVisible)
+                {
+                    objMainPanel.SetActive(true);
+                    objSpacerBelow.SetActive(true);
+                    hasSeen = true;
+                }
+                else if (UIManager.isWorkerVisible)
+                {
+                    Craftable.isCraftableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+                else
+                {
+                    Craftable.isCraftableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }                             
+            }
+        }
+    }
+    protected void CheckIfWorkerUnlocked()
+    {
+        foreach (var worker in Worker.Workers)
+        {
+            if (worker.Value.isUnlocked)
+            {
+                if (UIManager.isBuildingVisible)
+                {
+                    Worker.isWorkerUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.rightAmount++;
+                }
+                else if (UIManager.isCraftingVisible)
+                {
+                    Worker.isWorkerUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.rightAmount++;
+                }
+                else if (UIManager.isWorkerVisible)
+                {
+                    objMainPanel.SetActive(true);
+                    objSpacerBelow.SetActive(true);
+                    hasSeen = true;
+                }
+                else
+                {
+                    Worker.isWorkerUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+            }
+        }
+    }
+    protected void CheckIfResearchUnlocked()
+    {
+        foreach (var research in Researchable.Researchables)
+        {
+            if (research.Value.isUnlocked)
+            {
+                if (UIManager.isBuildingVisible)
+                {
+                    Researchable.isResearchableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+                else if (UIManager.isCraftingVisible)
+                {
+                    Researchable.isResearchableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+                else if (UIManager.isWorkerVisible)
+                {
+                    Researchable.isResearchableUnlockedEvent = true;
+                    hasSeen = false;
+                    PointerNotification.leftAmount++;
+                }
+                else
+                {
+                    objMainPanel.SetActive(true);
+                    objSpacerBelow.SetActive(true);
+                    hasSeen = true;
+                }
+            }
+        }
+    }
     protected void CheckIfUnlocked()
     {
         if (!isUnlocked)
@@ -281,26 +399,30 @@ public abstract class SuperClass : MonoBehaviour
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
-                    if (UIManager.isCraftingVisible)
-                    {
-                        objMainPanel.SetActive(true);
-                        objSpacerBelow.SetActive(true);
-                        hasSeen = true;
-                    }
-                    else if (UIManager.isBuildingVisible)
-                    {
-                        isUnlockedEvent = true;
-                        hasSeen = false;
-                        PointerNotification.rightAmount++;
-                        
-                    }
-                    else
-                    {
-                        isUnlockedEvent = true;
-                        hasSeen = false;
-                        PointerNotification.leftAmount++;
-                        
-                    }
+                    //if (UIManager.isCraftingVisible)
+                    //{
+                    //    objMainPanel.SetActive(true);
+                    //    objSpacerBelow.SetActive(true);
+                    //    hasSeen = true;
+                    //}
+                    //else if (UIManager.isBuildingVisible)
+                    //{
+                    //    isUnlockedEvent = true;
+                    //    hasSeen = false;
+                    //    PointerNotification.rightAmount++;
+
+                    //}
+                    //else
+                    //{
+                    //    isUnlockedEvent = true;
+                    //    hasSeen = false;
+                    //    PointerNotification.leftAmount++;
+
+                    //}
+                    CheckIfBuildingUnlocked();
+                    CheckIfCraftingUnlocked();
+                    //CheckIfWorkerUnlocked();
+                    CheckIfResearchUnlocked();
                     PointerNotification.HandleRightAnim();
                     PointerNotification.HandleLeftAnim();
                 }
@@ -335,14 +457,14 @@ public abstract class SuperClass : MonoBehaviour
                 }
                 else if (UIManager.isResearchVisible)
                 {
-                    isUnlockedEvent = true;
+                    Worker.isWorkerUnlockedEvent = true;
                     Worker.Workers[worker].hasSeen = false;
                     PointerNotification.leftAmount++;
                     PointerNotification.HandleLeftAnim();
                 }
                 else
                 {
-                    isUnlockedEvent = true;
+                    Worker.isWorkerUnlockedEvent = true;
                     Worker.Workers[worker].hasSeen = false;
                     PointerNotification.rightAmount++;
                     PointerNotification.HandleRightAnim();
@@ -372,14 +494,14 @@ public abstract class SuperClass : MonoBehaviour
 
                     if (UIManager.isBuildingVisible)
                     {
-                        isUnlockedEvent = true;
+                        Craftable.isCraftableUnlockedEvent = true;
                         Craftable.Craftables[craft].hasSeen = false;
                         PointerNotification.rightAmount++;
                         PointerNotification.HandleRightAnim();
                     }
                     else if (!UIManager.isCraftingVisible)
                     {
-                        isUnlockedEvent = true;
+                        Craftable.isCraftableUnlockedEvent = true;
                         Craftable.Craftables[craft].hasSeen = false;
                         PointerNotification.leftAmount++;
                         PointerNotification.HandleLeftAnim();
@@ -408,7 +530,7 @@ public abstract class SuperClass : MonoBehaviour
 
                     if (!UIManager.isBuildingVisible)
                     {
-                        Building.isUnlockedEvent = true;
+                        Building.isBuildingUnlockedEvent = true;
                         Building.Buildings[building].hasSeen = false;
                         PointerNotification.leftAmount++;
                         PointerNotification.HandleLeftAnim();
@@ -443,7 +565,7 @@ public abstract class SuperClass : MonoBehaviour
                     }
                     else
                     {
-                        Researchable.isUnlockedEvent = true;
+                        Researchable.isResearchableUnlockedEvent = true;
                         Researchable.Researchables[research].hasSeen = false;
                         PointerNotification.rightAmount++;
                         PointerNotification.HandleRightAnim();

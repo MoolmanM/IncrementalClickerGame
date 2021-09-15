@@ -29,17 +29,20 @@ public class WelcomeScript : MonoBehaviour
 
                     if (resource.Value.amountPerSecond > 0)
                     {
-                        if (resource.Value.amount == resource.Value.storageAmount)
+                        if (resource.Value.amount >= resource.Value.storageAmount)
                         {
                             txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", 0, amountEarnedWhileAFK);
                         }
-                        else if (amountEarnedWhileAFK <= resource.Value.storageAmount - resource.Value.amount)
-                        {
-                            txtAmount.text = string.Format("{0:0.00}", differenceAmount);
-                        }
                         else
                         {
-                            txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", differenceAmount, amountEarnedWhileAFK);
+                            if (amountEarnedWhileAFK <= resource.Value.storageAmount - resource.Value.amount)
+                            {
+                                txtAmount.text = string.Format("{0:0.00}", differenceAmount);
+                            }
+                            else
+                            {
+                                txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", differenceAmount, amountEarnedWhileAFK);
+                            }
                         }
                     }
                     else

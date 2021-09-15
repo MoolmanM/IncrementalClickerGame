@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-
 public class Events : MonoBehaviour
 {
+    public static bool eventGood, eventBad, eventInfo, eventError, eventHappened;
     public float  animalAttack, villageUnderAttack, randomNumber;
-    public TMP_Text txtHistoryLog, txtNotificationText;
+    public TMP_Text txtHistoryLog;
     private string _currentHistoryLog;
     public TMP_Text txtAvailableWorkers;
-    private bool eventHappened;
 
     public GameObject scrollViewObject;
-    public Animator animatorNotification;
 
     private float _timer = 1f;
 
@@ -28,43 +26,18 @@ public class Events : MonoBehaviour
         {
             AnimalAttack();
             eventHappened = true;
+            eventBad = true;
         }
         if (randomNumber <= villageUnderAttack)
         {
             VillageAttack();
             eventHappened = true;
+            eventBad = true;
         }
 
         // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
         // Or if they reach a certain amount of a building such as potatoField.
-    }
-    private bool IsPlaying(Animator anim, string stateName)
-    {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-            return true;
-        else
-            return false;
-    }
-    private void AnimationHandler()
-    {
-        if (eventHappened == true)
-        {
-            if (IsPlaying(animatorNotification, "Notification_Display"))
-            {
-                animatorNotification.Play("Notification_Display", -1, 0);
-            }
-            else if (IsPlaying(animatorNotification, "Notification_Down"))
-            {
-                animatorNotification.SetTrigger("Start_Notification");
-            }
-            else
-            {
-                animatorNotification.SetTrigger("Start_Notification");
-            }
-            eventHappened = false;
-        }
-    }
+    } 
     private void AnimalAttack()
     {
         
@@ -132,40 +105,55 @@ public class Events : MonoBehaviour
         // Then display everything that has been stolen and also display how many people have been killed and/or injured if we want a injuring system which
         // mioght just be too much effort.
     }
-    private void NewCraftingRecipe()
+    private void HasResearchMaxSimulResearch()
     {
-        if (Craftable.isUnlockedEvent)
+        if (Researchable.hasReachedMaxSimulResearch)
         {
             eventHappened = true;
+            eventError = true;
+            NotableEvent("You've reached your max amount of simultaneous researches");
+            Researchable.hasReachedMaxSimulResearch = false;
+        }
+    }
+    private void NewCraftingRecipe()
+    {
+        if (Craftable.isCraftableUnlockedEvent)
+        {
+            Debug.Log(Craftable.isCraftableUnlockedEvent + " " + Researchable.isResearchableUnlockedEvent + " " + Building.isBuildingUnlockedEvent + " " + Worker.isWorkerUnlockedEvent);
+            eventHappened = true;
+            eventGood = true;
             NotableEvent("You've unlocked a new crafting recipe.");
-            Craftable.isUnlockedEvent = false;
+            Craftable.isCraftableUnlockedEvent = false;
         }
     }
     private void NewResearchAvailable()
     {
-        if (Researchable.isUnlockedEvent)
+        if (Researchable.isResearchableUnlockedEvent)
         {
             eventHappened = true;
+            eventGood = true;
             NotableEvent("You've unlocked new research.");
-            Researchable.isUnlockedEvent = false;
+            Researchable.isResearchableUnlockedEvent = false;
         }
     }
     private void NewBuildingAvailable()
     {
-        if (Building.isUnlockedEvent)
+        if (Building.isBuildingUnlockedEvent)
         {
             eventHappened = true;
+            eventGood = true;
             NotableEvent("You've unlocked a new building.");
-            Building.isUnlockedEvent = false;
+            Building.isBuildingUnlockedEvent = false;
         }
     }
     private void NewWorkerJobAvailable()
     {
-        if (Worker.isUnlockedEvent)
+        if (Worker.isWorkerUnlockedEvent)
         {
             eventHappened = true;
+            eventGood = true;
             NotableEvent("You've unlocked a new job.");
-            Worker.isUnlockedEvent = false;
+            Worker.isWorkerUnlockedEvent = false;
         }
     }
     // When generating workers, display the current total amount of workers next to the notification.
@@ -183,6 +171,7 @@ public class Events : MonoBehaviour
                 _timer = 10f;
 
                 eventHappened = true;
+                eventGood = true;
                 Worker.UnassignedWorkerCount++;
                 Worker.TotalWorkerCount++;
                 NotableEvent(string.Format("A worker has arrived [{0}]", Worker.TotalWorkerCount));
@@ -222,7 +211,11 @@ public class Events : MonoBehaviour
 
         }
 
-        txtNotificationText.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
+        PopUpNotification.txtBad.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
+        PopUpNotification.txtInfo.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
+        PopUpNotification.txtGood.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
+        PopUpNotification.txtError.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
+        //txtNotificationText.text = string.Format("<b>{0:t}</b> {1}", DateTime.Now, notableEventString);
     }
     void Update()
     {
@@ -237,6 +230,7 @@ public class Events : MonoBehaviour
         NewResearchAvailable();
         NewBuildingAvailable();
         NewWorkerJobAvailable();
-        AnimationHandler();
+        HasResearchMaxSimulResearch();
+        PopUpNotification.HandleAnim();
     }
 }

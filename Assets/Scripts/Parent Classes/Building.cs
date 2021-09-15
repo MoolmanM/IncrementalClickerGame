@@ -30,9 +30,12 @@ public struct ResourceTypesToModify
 public abstract class Building : SuperClass
 {
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
+    public static bool isBuildingUnlockedEvent;
+
     public float buildingContributionAPS;
     public List<ResourceTypesToModify> resourcesToIncrement = new List<ResourceTypesToModify>();
     public List<ResourceTypesToModify> resourcesToDecrement = new List<ResourceTypesToModify>();
+    
 
     public BuildingType Type;
     public float costMultiplier;
