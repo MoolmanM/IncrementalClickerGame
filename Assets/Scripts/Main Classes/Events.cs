@@ -14,7 +14,7 @@ public class Events : MonoBehaviour
     public GameObject scrollViewObject;
 
     private float _timer = 1f;
-
+    // Use the Info event to display stuff like: "You've entered the bronze age"
     private void StoneAgeEvents()
     {
         animalAttack = 1f; //1% Probably need to lower this or lower the amount of time we generate random numbers
@@ -105,21 +105,20 @@ public class Events : MonoBehaviour
         // Then display everything that has been stolen and also display how many people have been killed and/or injured if we want a injuring system which
         // mioght just be too much effort.
     }
-    private void HasResearchMaxSimulResearch()
+    private void HasReachedMaxSimulResearch()
     {
         if (Researchable.hasReachedMaxSimulResearch)
         {
             eventHappened = true;
             eventError = true;
-            NotableEvent("You've reached your max amount of simultaneous researches");
+            NotableEvent("You can't research any more simultaneously.");
             Researchable.hasReachedMaxSimulResearch = false;
         }
     }
     private void NewCraftingRecipe()
     {
         if (Craftable.isCraftableUnlockedEvent)
-        {
-            Debug.Log(Craftable.isCraftableUnlockedEvent + " " + Researchable.isResearchableUnlockedEvent + " " + Building.isBuildingUnlockedEvent + " " + Worker.isWorkerUnlockedEvent);
+        {       
             eventHappened = true;
             eventGood = true;
             NotableEvent("You've unlocked a new crafting recipe.");
@@ -132,7 +131,7 @@ public class Events : MonoBehaviour
         {
             eventHappened = true;
             eventGood = true;
-            NotableEvent("You've unlocked new research.");
+            NotableEvent("You've unlocked a new research.");
             Researchable.isResearchableUnlockedEvent = false;
         }
     }
@@ -230,7 +229,7 @@ public class Events : MonoBehaviour
         NewResearchAvailable();
         NewBuildingAvailable();
         NewWorkerJobAvailable();
-        HasResearchMaxSimulResearch();
+        HasReachedMaxSimulResearch();
         PopUpNotification.HandleAnim();
     }
 }

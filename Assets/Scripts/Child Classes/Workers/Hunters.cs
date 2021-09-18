@@ -12,20 +12,8 @@ public class Hunters : Worker
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
-        
-        _resourcesToIncrement = new ResourcesToModify[2];
-
-        _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Pelts;
-        _resourcesToIncrement[0].resourceMultiplier = 0.01f;
-
-        _resourcesToIncrement[1].resourceTypeToModify = ResourceType.Food;
-        _resourcesToIncrement[1].resourceMultiplier = 0.04f;
-
         // This is only temporary, need to check the conditions and refresh this array whenever I craft woodenspear or stone spear etc.
         // Or any weapon for that matter.
-        _resourcesToDecrement = new ResourcesToModify[1];
-        _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Lumber;
-        _resourcesToDecrement[0].resourceMultiplier = 0.1f;
 
         if (Craftable.Craftables[CraftingType.WoodenSpear].isUnlocked)
         {
@@ -290,12 +278,5 @@ public class Hunters : Worker
     void Update()
     {
         HasEnoughResources();
-    }
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<WorkerType, Worker> kvp in Workers)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
     }
 }

@@ -22,11 +22,4 @@ public class StonePickaxe : Craftable
         // Lets go with unlocking a new building for now.
         SetDescriptionText("");
     }
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<CraftingType, Craftable> kvp in Craftables)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
-    }
 }

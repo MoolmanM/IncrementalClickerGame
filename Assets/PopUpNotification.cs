@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Sirenix.OdinInspector;
 
 public class PopUpNotification : MonoBehaviour
 {
@@ -101,7 +102,8 @@ public class PopUpNotification : MonoBehaviour
             HandleActivePopUp();
             if (IsPlaying(animator, "Display"))
             {
-                animator.SetTrigger("DisplayAgain");
+                animator.Play("DisplayAgain", -1, 0);
+                //animator.SetTrigger("DisplayAgain");
             }
             else if (IsPlaying(animator, "PopDown"))
             {

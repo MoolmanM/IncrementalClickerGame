@@ -16,7 +16,6 @@ public enum CraftingType
     StonePickaxe,
     StoneSpear,
     FireHardenedSpear,
-    HamsterWheel,
     TinHoe,
     TinAxe,
     TinPickaxe,

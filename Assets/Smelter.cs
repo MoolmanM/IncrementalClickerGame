@@ -27,11 +27,4 @@ public class Smelter : Power
         SetDescriptionText();
         //DisplayConsole();
     }
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<BuildingType, Building> kvp in Buildings)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
-    }
 }

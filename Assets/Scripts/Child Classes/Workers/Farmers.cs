@@ -10,18 +10,6 @@ public class Farmers : Worker
     {
         _worker = GetComponent<Worker>();
         Workers.Add(Type, _worker);
-
-        _resourcesToIncrement = new ResourcesToModify[1];
-        _resourcesToIncrement[0].resourceTypeToModify = ResourceType.Food;
-        _resourcesToIncrement[0].resourceMultiplier = 0.12f;
         SetInitialValues();
-    }
-
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<WorkerType, Worker> kvp in Workers)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
     }
 }

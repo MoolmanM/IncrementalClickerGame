@@ -148,23 +148,50 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void OnExpandCloseAll()
     {
-        foreach (var obj in Craftable.Craftables)
+        if (UIManager.isCraftingVisible)
         {
-            obj.Value._objBody.SetActive(false);
-            obj.Value._objBtnCollapse.SetActive(false);
-            obj.Value._objBtnExpand.SetActive(true);
+            foreach (var craft in Craftable.Craftables)
+            {
+                craft.Value._objBody.SetActive(false);
+                craft.Value._objBtnCollapse.SetActive(false);
+                craft.Value._objBtnExpand.SetActive(true);
+            }
+            _objBtnExpand.SetActive(false);
+            _objBody.SetActive(true);
+            _objBtnCollapse.SetActive(true);
         }
-        _objBtnExpand.SetActive(false);
-        _objBody.SetActive(true);
-        _objBtnCollapse.SetActive(true);
 
+        if (UIManager.isBuildingVisible)
+        {
+            foreach (var building in Building.Buildings)
+            {
+                building.Value._objBody.SetActive(false);
+                building.Value._objBtnCollapse.SetActive(false);
+                building.Value._objBtnExpand.SetActive(true);
+            }
+            _objBtnExpand.SetActive(false);
+            _objBody.SetActive(true);
+            _objBtnCollapse.SetActive(true);
+        }
+
+        if (UIManager.isResearchVisible)
+        {
+            foreach (var research in Researchable.Researchables)
+            {
+                research.Value._objBody.SetActive(false);
+                research.Value._objBtnCollapse.SetActive(false);
+                research.Value._objBtnExpand.SetActive(true);
+            }
+            _objBtnExpand.SetActive(false);
+            _objBody.SetActive(true);
+            _objBtnCollapse.SetActive(true);
+        }
     }
     protected void OnCollapse()
     {
         _objBtnExpand.SetActive(true);
         _objBody.SetActive(false);
         _objBtnCollapse.SetActive(false);
-
     }
     protected void Purchaseable()
     {

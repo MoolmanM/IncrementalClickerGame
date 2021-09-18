@@ -23,20 +23,32 @@ public class TimeManager : MonoBehaviour
         {
             seasonString = "Spring";
             objSpringImage.SetActive(true);
+            objSummerImage.SetActive(false);
+            objFallImage.SetActive(false);
+            objWinterImage.SetActive(false);
         }
         else if (seasonCount == 1)
         {
             seasonString = "Summer";
+            objSpringImage.SetActive(false);
             objSummerImage.SetActive(true);
+            objFallImage.SetActive(false);
+            objWinterImage.SetActive(false);
         }
         else if (seasonCount == 2)
         {
             seasonString = "Fall";
+            objSpringImage.SetActive(false);
+            objSummerImage.SetActive(false);
             objFallImage.SetActive(true);
+            objWinterImage.SetActive(false);
         }
         else if (seasonCount == 3)
         {
             seasonString = "Winter";
+            objSpringImage.SetActive(false);
+            objSummerImage.SetActive(false);
+            objFallImage.SetActive(false);
             objWinterImage.SetActive(true);
         }
         else

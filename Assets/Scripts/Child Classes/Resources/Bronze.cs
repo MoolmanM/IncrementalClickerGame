@@ -13,13 +13,6 @@ public class Bronze : Resource
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         SetInitialValues();
     }
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<ResourceType, Resource> kvp in Resources)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
-    }
     void Update()
     {
         UpdateResources();

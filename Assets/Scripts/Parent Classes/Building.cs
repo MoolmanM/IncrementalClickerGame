@@ -35,7 +35,7 @@ public abstract class Building : SuperClass
     public float buildingContributionAPS;
     public List<ResourceTypesToModify> resourcesToIncrement = new List<ResourceTypesToModify>();
     public List<ResourceTypesToModify> resourcesToDecrement = new List<ResourceTypesToModify>();
-    
+
 
     public BuildingType Type;
     public float costMultiplier;
@@ -46,10 +46,12 @@ public abstract class Building : SuperClass
     protected string _stringOriginalHeader;
     protected uint _selfCount;
 
-    private void UpdateResourceInfo()
+    private void DeprecatedUpdateResourceInfo()
     {
         foreach (var resource in Resource.Resources)
         {
+            // Why am I checking types to unlock here
+            // Shouldn't it be types to modify.
             if (resource.Key == typesToUnlock.resourceTypesToUnlock[0] && _selfCount == 1)
             {
                 resource.Value.resourceInfoList = new List<ResourceInfo>()
@@ -85,6 +87,55 @@ public abstract class Building : SuperClass
                     resource.Value.resourceInfoList[i] = resourceInfo;
                 }
             }
+        }
+    }
+    private void UpdateResourceInfo()
+    {
+        foreach (var resource in Resource.Resources)
+        {
+            // Why am I checking types to unlock here
+            // Shouldn't it be types to modify.
+            foreach (var resourceToIncrement in resourcesToIncrement)
+            {
+                buildingContributionAPS = 0;
+                buildingContributionAPS = _selfCount * resourceToIncrement.resourceMulitplier;
+                if (resource.Key == resourceToIncrement.resourceTypeToModify && _selfCount == 1)
+                {
+                    resource.Value.resourceInfoList = new List<ResourceInfo>()
+                    {
+                        new ResourceInfo(){ name = Type.ToString(), amountPerSecond=buildingContributionAPS }
+                    };
+
+                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
+                    {
+                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
+
+                        GameObject newObj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
+
+                        Transform _tformNewObj = newObj.transform;
+                        Transform _tformInfoName = _tformNewObj.Find("Text_Name");
+                        Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
+
+                        resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
+
+                        resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
+
+                        resource.Value.resourceInfoList[i] = resourceInfo;
+                    }
+                }
+                else if (resource.Key == resourceToIncrement.resourceTypeToModify && _selfCount != 1)
+                {
+                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
+                    {
+                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
+                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
+                        resource.Value.resourceInfoList[i] = resourceInfo;
+                    }
+                }
+            }
+
         }
     }
     protected void SetInitialValues()
@@ -128,7 +179,7 @@ public abstract class Building : SuperClass
             ModifyAmountPerSecond();
             //buildingContributionAPS = 0;
             //buildingContributionAPS = _selfCount * _resourceMultiplier;
-            //UpdateResourceInfo();
+            UpdateResourceInfo();
         }
 
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);

@@ -13,35 +13,9 @@ public class Stones : Resource
         Resources.Add(Type, _resource);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         SetInitialValues();
-        //MainResourcePanel.SetActive(false);
-        
-        //DisplayConsole();
     }
-
-    private void DisplayConsole()
-    {
-        foreach (KeyValuePair<ResourceType, Resource> kvp in Resources)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value));
-        }
-    }
-
     void Update()
     {
         UpdateResources();
     }
-
-    //public void SaveResource()
-    //{
-    //    SaveSystem.SaveResource(_resource);
-    //}
-
-    //public void LoadResource()
-    //{
-    //    ResourceData data = SaveSystem.LoadResource();
-
-    //    amount = data.amount;
-    //}
-
-
 }

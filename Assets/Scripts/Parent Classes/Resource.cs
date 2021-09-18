@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
+using Sirenix.OdinInspector;
 
 public struct UiForResource
 {
@@ -73,6 +74,13 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected Image _imgBar;
     protected float _timer = 0.1f;
 
+    public float debugAmountToIncrease;
+
+    [Button(ButtonSizes.Small)]
+    private void DebugIncreaseResource()
+    {
+        amount += debugAmountToIncrease;
+    }
     private void OnValidate()
     {
         //amount = storageAmount;
@@ -80,8 +88,10 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.Log("Pointer Down");
         if (resourceInfoList != null && resourceInfoList.Any())
         {
+            Debug.Log("Reaches here under if");
             buttonPressed = true;
             objTooltip.SetActive(true);
         }       
