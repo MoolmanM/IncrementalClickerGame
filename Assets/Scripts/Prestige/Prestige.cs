@@ -1,7 +1,11 @@
 using Sirenix.OdinInspector;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 [System.Serializable]
 public struct PassivePair
@@ -9,13 +13,6 @@ public struct PassivePair
     public RarityType Type;
     public float randomChance;
     public float passiveCost;
-}
-
-[System.Serializable]
-public struct Common
-{
-    public string passiveDescription;
-    public float randomChance;
 }
 
 public enum RarityType
@@ -37,38 +34,72 @@ public class Prestige : MonoBehaviour
     public GameObject prefabLegendary, prefabEpic, prefabRare, prefabUncommon, prefabCommon;
     public GameObject[] nodes;
     public PassivePair[] passivePair;
-    public Common[] commonPassives;
     public static TMP_Text txtPoints;
     private Transform tformTxtPoints;
+    public GameObject objPrestige;
 
     // Underneath is just for simulation.
     private int p;
     public int amountOfSimulations;
 
     public int amountCommon, amountUncommon, amountEpic, amountLegendary;
-    private int commonAmount0, commonAmount1, commonAmount2, commonAmount3, commonAmount4;
+    private int commonAmount1, commonAmount2, commonAmount3, commonAmount4, commonAmount5;
 
-    private void Start()
+    public IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
     {
-        commonPassives = new Common[5];
-
-        // If I really want to do it this way, I'll have to only enable passives that has an effect on the player.
-        // Like it would be weird if they could for example increase production of a resource that they won't discover for at least a couple
-        // of runs in the future.
-        float incrementAmount = 100 / commonPassives.Length;
-        commonPassives[0].passiveDescription = "Passive 1";
-        commonPassives[0].randomChance = 100 / commonPassives.Length;
-        commonPassives[1].passiveDescription = "Passive 2";
-        commonPassives[1].randomChance = (100 / commonPassives.Length) + incrementAmount;
-        commonPassives[2].passiveDescription = "Passive 3";
-        commonPassives[2].randomChance = (100 / commonPassives.Length) + incrementAmount * 2;
-        commonPassives[3].passiveDescription = "Passive 4";
-        commonPassives[3].randomChance = (100 / commonPassives.Length) + incrementAmount * 3;
-        commonPassives[4].passiveDescription = "Passive 5";
-        commonPassives[4].randomChance = (100 / commonPassives.Length) + incrementAmount * 4;
-
-        // Surely there has to be an easier way to check if the randomness meets the requirements.
-
+        List<TValue> values = Enumerable.ToList(dict.Values);
+        int size = dict.Count;
+        while (true)
+        {
+            yield return values[UnityEngine.Random.Range(0, size)];
+        }
+    }
+    private void GenerateRandomCommonPassive(TMP_Text txtDescription, GameObject objExpand)
+    {
+        foreach (var value in RandomValues(CommonPassive.CommonPassives).Take(1))
+        {
+            txtDescription.text = string.Format("{0}", value.description);
+            objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+        }
+    }
+    private void GenerateRandomUncommonPassive(TMP_Text txtDescription, GameObject objExpand)
+    {
+        // Modifying the 'take' amount is just how many values you want to randomize.
+        foreach (var value in RandomValues(UncommonPassive.UncommonPassives).Take(1))
+        {
+            txtDescription.text = string.Format("{0}", value.description);
+            objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+        }
+    }
+    private void GenerateRandomRarePassive(TMP_Text txtDescription, GameObject objExpand)
+    {
+        // Modifying the 'take' amount is just how many values you want to randomize.
+        foreach (var value in RandomValues(RarePassive.RarePassives).Take(1))
+        {
+            txtDescription.text = string.Format("{0}", value.description);
+            objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+        }
+    }
+    private void GenerateRandomEpicPassive(TMP_Text txtDescription, GameObject objExpand)
+    {
+        // Modifying the 'take' amount is just how many values you want to randomize.
+        foreach (var value in RandomValues(EpicPassive.EpicPassives).Take(1))
+        {
+            txtDescription.text = string.Format("{0}", value.description);
+            objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+        }
+    }
+    private void GenerateRandomLegendaryPassive(TMP_Text txtDescription, GameObject objExpand)
+    {
+        // Modifying the 'take' amount is just how many values you want to randomize.
+        foreach (var value in RandomValues(LegendaryPassive.LegendaryPassives).Take(1))
+        {
+            txtDescription.text = string.Format("{0}", value.description);
+            objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+        }
+    }
+    private void Start()
+    {      
         tformTxtPoints = transform.Find("txtPoints");
         txtPoints = tformTxtPoints.gameObject.GetComponent<TMP_Text>();
         txtPoints.text = string.Format("Prestige Points: {0}", prestigePoints);
@@ -97,9 +128,10 @@ public class Prestige : MonoBehaviour
 
         InitializePassiveTree();
     }
-    [Button(ButtonSizes.Small)]
+    [Button]
     private void InitializePassiveTree()
     {
+        objPrestige.SetActive(true);
         // These colors will all of course be replaced with actual graphics/animations.
         // I'm thinking legendary needs to have this moving rainbow animation on it.
 
@@ -123,6 +155,8 @@ public class Prestige : MonoBehaviour
                     node.Value.associatedRarityType = RarityType.Legendary;
                     node.Value.passiveCost = passivePair[0].passiveCost;
                     imgNode.color = legendaryColor;
+
+                    GenerateRandomLegendaryPassive(node.Value.txtDescription, node.Value.objExpand);
                     // Execute selecting legendary passives
                     break;
                 }
@@ -131,6 +165,8 @@ public class Prestige : MonoBehaviour
                     node.Value.associatedRarityType = RarityType.Epic;
                     node.Value.passiveCost = passivePair[1].passiveCost;
                     imgNode.color = epicColor;
+
+                    GenerateRandomEpicPassive(node.Value.txtDescription, node.Value.objExpand);
                     break;
                 }
                 else if (randomNumberGenerated <= passivePair[2].randomChance)
@@ -138,6 +174,8 @@ public class Prestige : MonoBehaviour
                     node.Value.associatedRarityType = RarityType.Rare;
                     node.Value.passiveCost = passivePair[2].passiveCost;
                     imgNode.color = rareColor;
+
+                    GenerateRandomRarePassive(node.Value.txtDescription, node.Value.objExpand);
                     break;
                 }
                 else if (randomNumberGenerated <= passivePair[3].randomChance)
@@ -145,6 +183,8 @@ public class Prestige : MonoBehaviour
                     node.Value.associatedRarityType = RarityType.Uncommon;
                     node.Value.passiveCost = passivePair[3].passiveCost;
                     imgNode.color = uncommonColor;
+
+                    GenerateRandomUncommonPassive(node.Value.txtDescription, node.Value.objExpand);
                     break;
                 }
                 else if (randomNumberGenerated <= passivePair[4].randomChance)
@@ -153,50 +193,20 @@ public class Prestige : MonoBehaviour
                     node.Value.passiveCost = passivePair[4].passiveCost;
                     imgNode.color = commonColor;
 
-                    CommonPassive(node.Value.txtDescription, node.Value.txtCost, node.Value.passiveCost);
+                    GenerateRandomCommonPassive(node.Value.txtDescription, node.Value.objExpand);
+                    //CommonPassive(node.Value.txtDescription, node.Value.txtCost, node.Value.passiveCost);
                     // Execute randomizing common passives. 
                     // Then execute the function asociated with that passive.
                     // Need to give some thought about how I want to execute the function for each passive.
                     // Because it seems a bit silly having a single function for every single passive.
                     // My first thought is having a class for passives and using inheritance.
+                   
                     break;
                 }
             }
 
         }
     }
-    private void CommonPassive(TMP_Text txtDescription, TMP_Text txtCost, float passiveCost)
-    {
-        float randomNumber = Random.Range(0f, 100f);
-
-        if (randomNumber <= commonPassives[0].randomChance)
-        {
-            txtDescription.text = commonPassives[0].passiveDescription;
-            txtCost.text = string.Format("Cost: {0}", passiveCost);
-            //commonPassives[0].passive.Passive0();
-        }
-        else if (randomNumber <= commonPassives[1].randomChance)
-        {
-            txtDescription.text = commonPassives[1].passiveDescription;
-            txtCost.text = string.Format("Cost: {0}", passiveCost);
-        }
-        else if (randomNumber <= commonPassives[2].randomChance)
-        {
-            txtDescription.text = commonPassives[2].passiveDescription;
-            txtCost.text = string.Format("Cost: {0}", passiveCost);
-        }
-        else if (randomNumber <= commonPassives[3].randomChance)
-        {
-            txtDescription.text = commonPassives[3].passiveDescription;
-            txtCost.text = string.Format("Cost: {0}", passiveCost);
-        }
-        else
-        {
-            txtDescription.text = commonPassives[4].passiveDescription;
-            txtCost.text = string.Format("Cost: {0}", passiveCost);
-        }
-    }
-    [Button(ButtonSizes.Small)]
     private void SimulateRandomPassives()
     {
         amountCommon = 0;
@@ -258,8 +268,6 @@ public class Prestige : MonoBehaviour
         // And just like a placeholder gameobject for every node.
         Debug.Log("Legendary Percentage: " + ((float)amountLegendary / (float)amountOfSimulations * 100f) + " Epic Percentage: " + ((float)amountEpic / (float)amountOfSimulations * 100f) + " Uncommon Percentage: " + ((float)amountUncommon / (float)amountOfSimulations * 100f) + " Common Percentage: " + ((float)amountCommon / (float)amountOfSimulations * 100f));
     }
-
-    [Button(ButtonSizes.Small)]
     private void SimulateCommonPassive()
     {
         for (int i = 0; i < amountOfSimulations; i++)
@@ -270,57 +278,34 @@ public class Prestige : MonoBehaviour
             bool common3 = false;
             bool common4 = false;
 
-            float randomNumber = Random.Range(0f, 100f);
+            float randomNumber = UnityEngine.Random.Range(0f, 100f);
 
-            for (int u = 0; u < commonPassives.Length; u++)
-            {
-                if (randomNumber <= commonPassives[0].randomChance)
-                {
-                    common0 = true;
-                }
-                else if (randomNumber <= commonPassives[1].randomChance)
-                {
-                    common1 = true;
-                }
-                else if (randomNumber <= commonPassives[2].randomChance)
-                {
-                    common2 = true;
-                }
-                else if (randomNumber <= commonPassives[3].randomChance)
-                {
-                    common3 = true;
-                }
-                else
-                {
-                    common4 = true;
-                }
-            }
             if (common0)
-            {
-                commonAmount0++;
-            }
-            else if (common1)
             {
                 commonAmount1++;
             }
-            else if (common2)
+            else if (common1)
             {
                 commonAmount2++;
             }
-            else if (common3)
+            else if (common2)
             {
                 commonAmount3++;
             }
-            else if (common4)
+            else if (common3)
             {
                 commonAmount4++;
             }
+            else if (common4)
+            {
+                commonAmount5++;
+            }
         }
 
-        Debug.Log(string.Format("Percentage of 0: {0:0.00}%, ({1})", (float)commonAmount0 / (float)amountOfSimulations * 100, commonAmount0));
         Debug.Log(string.Format("Percentage of 1: {0:0.00}%, ({1})", (float)commonAmount1 / (float)amountOfSimulations * 100, commonAmount1));
         Debug.Log(string.Format("Percentage of 2: {0:0.00}%, ({1})", (float)commonAmount2 / (float)amountOfSimulations * 100, commonAmount2));
         Debug.Log(string.Format("Percentage of 3: {0:0.00}%, ({1})", (float)commonAmount3 / (float)amountOfSimulations * 100, commonAmount3));
         Debug.Log(string.Format("Percentage of 4: {0:0.00}%, ({1})", (float)commonAmount4 / (float)amountOfSimulations * 100, commonAmount4));
+        Debug.Log(string.Format("Percentage of 5: {0:0.00}%, ({1})", (float)commonAmount5 / (float)amountOfSimulations * 100, commonAmount5));
     }
 }

@@ -1,14 +1,14 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class NodeClass : MonoBehaviour
 {
     public static Dictionary<GameObject, NodeClass> Nodes = new Dictionary<GameObject, NodeClass>();
 
     private Button _btnMain;
-    private bool _isUnlocked, _isClickable, _isExpanded;
+    private bool _isUnlocked, _isClickable;
     public GameObject[] neighbours;
     public RarityType associatedRarityType;
 
@@ -19,10 +19,9 @@ public class NodeClass : MonoBehaviour
 
     private Transform tformTxtDescription, tformTxtCost, tformObjExpand;
     public TMP_Text txtDescription, txtCost;
-    private GameObject objExpand;
+    [System.NonSerialized] public GameObject objExpand;
     protected void InitializeObjects()
     {
-        _isExpanded = false;
         tformTxtDescription = transform.Find("Rarity/ExpandedButton/DescriptionPanel/txtDescription");
         tformTxtCost = transform.Find("Rarity/ExpandedButton/CostPanel/txtCost");
         tformObjExpand = transform.Find("Rarity/ExpandedButton");
@@ -46,25 +45,14 @@ public class NodeClass : MonoBehaviour
     }
     private void OnExpand()
     {
-        foreach (var node in Nodes)
+        if (!_isUnlocked && Prestige.prestigePoints >= passiveCost)
         {
-            if (node.Value._isExpanded)
+            foreach (var node in Nodes)
             {
                 node.Value.objExpand.SetActive(false);
-                node.Value._isExpanded = false;
-            }         
-        }
-        if (_isExpanded)
-        {
-            objExpand.SetActive(false);
-            _isExpanded = false;          
-        }
-        else
-        {
+            }
             objExpand.SetActive(true);
-            _isExpanded = true;
         }
-        
     }
     private void OnBuy()
     {
