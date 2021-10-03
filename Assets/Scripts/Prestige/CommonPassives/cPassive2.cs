@@ -13,6 +13,6 @@ public class cPassive2 : CommonPassive
     public override void ExecutePassive()
     {
         base.ExecutePassive();
-        Debug.Log("This for for Common 2 specifically");
+       // Debug.Log("This for for Common 2 specifically");
     }
 }

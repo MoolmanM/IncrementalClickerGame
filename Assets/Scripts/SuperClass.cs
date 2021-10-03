@@ -14,6 +14,7 @@ public struct ResourceCost
     public ResourceType associatedType;
     [System.NonSerialized] public float currentAmount;
     public float costAmount;
+    public float initialCostAmount;
     public UiForResourceCost uiForResourceCost;
 }
 
@@ -33,14 +34,14 @@ public abstract class SuperClass : MonoBehaviour
     public TypesToUnlock typesToUnlock;
     public bool isUnlockableByResource;
     public GameObject objSpacerBelow;
-    
+
     public int unlockAmount, unlocksRequired;
     [System.NonSerialized] public bool isUnlocked, hasSeen = true, isUnlockedByResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
-    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objProgressCircle, _objBtnMain, _objTxtHeader, _objTxtHeaderDone, _objBtnExpand, _objBtnCollapse, _objBody;
+    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objProgressCircle, _objBtnMain, _objTxtHeaderDone, _objTxtHeader, _objBtnExpand, _objBtnCollapse, _objBody;
     protected TMP_Text _txtDescription;
     protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformTxtHeaderDone, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgProgressCircle;
@@ -142,7 +143,7 @@ public abstract class SuperClass : MonoBehaviour
         _objBtnExpand = _tformBtnExpand.gameObject;
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
-      
+
         _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
         _objBtnCollapse.GetComponent<Button>().onClick.AddListener(OnCollapse);
     }
@@ -240,42 +241,41 @@ public abstract class SuperClass : MonoBehaviour
             {
                 float secondsLeft = (cost - current) / (amountPerSecond);
                 TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
-                //Debug.Log(timeSpan);
 
                 if (storageAmount < cost)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", current, cost);
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
                 }
                 else
                 {
                     if (current >= cost)
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}", current, cost);
+                        txt.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
                     }
                     else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", current, cost, timeSpan.Duration());
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                     }
                     else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                     }
                     else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", current, cost, timeSpan.Duration());
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                     }
                     else if (timeSpan.Days == 0)
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", current, cost, timeSpan.Duration());
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                     }
                     else
                     {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", current, cost, timeSpan.Duration());
+                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                     }
                 }
             }
         }
-        
+
     }
     protected float GetCurrentFill()
     {
@@ -303,51 +303,52 @@ public abstract class SuperClass : MonoBehaviour
             {
                 if (UIManager.isBuildingVisible)
                 {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                    hasSeen = true;
+                    building.Value.objMainPanel.SetActive(true);
+                    building.Value.objSpacerBelow.SetActive(true);
+                    building.Value.hasSeen = true;
                 }
-                else
+                else if (building.Value.hasSeen)
                 {
                     Building.isBuildingUnlockedEvent = true;
-                    hasSeen = false;
+                    building.Value.hasSeen = false;
                     PointerNotification.leftAmount++;
                 }
             }
-        }
+        }      
     }
     protected void CheckIfCraftingUnlocked()
     {
-        foreach (var craft in Craftable.Craftables)
+        foreach (var craftable in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked)
+            if (craftable.Value.isUnlocked)
             {
-                if (UIManager.isBuildingVisible)
+                if (UIManager.isBuildingVisible && craftable.Value.hasSeen)
                 {
                     Craftable.isCraftableUnlockedEvent = true;
-                    hasSeen = false;
+                    craftable.Value.hasSeen = false;
                     PointerNotification.rightAmount++;
                 }
                 else if (UIManager.isCraftingVisible)
                 {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                    hasSeen = true;
+                    // This does run more than once each, but isn't a big deal
+                    craftable.Value.objMainPanel.SetActive(true);
+                    craftable.Value.objSpacerBelow.SetActive(true);
+                    craftable.Value.hasSeen = true;
                 }
-                else if (UIManager.isWorkerVisible)
+                else if (UIManager.isWorkerVisible && craftable.Value.hasSeen)
                 {
                     Craftable.isCraftableUnlockedEvent = true;
-                    hasSeen = false;
+                    craftable.Value.hasSeen = false;
                     PointerNotification.leftAmount++;
                 }
-                else
+                else if (UIManager.isResearchVisible && craftable.Value.hasSeen)
                 {
                     Craftable.isCraftableUnlockedEvent = true;
-                    hasSeen = false;
+                    craftable.Value.hasSeen = false;
                     PointerNotification.leftAmount++;
-                }                             
+                }
             }
-        }
+        }    
     }
     protected void CheckIfWorkerUnlocked()
     {
@@ -355,101 +356,70 @@ public abstract class SuperClass : MonoBehaviour
         {
             if (worker.Value.isUnlocked)
             {
-                if (UIManager.isBuildingVisible)
+                if (UIManager.isBuildingVisible && worker.Value.hasSeen)
                 {
                     Worker.isWorkerUnlockedEvent = true;
-                    hasSeen = false;
+                    worker.Value.hasSeen = false;
                     PointerNotification.rightAmount++;
                 }
-                else if (UIManager.isCraftingVisible)
+                else if (UIManager.isCraftingVisible && worker.Value.hasSeen)
                 {
                     Worker.isWorkerUnlockedEvent = true;
-                    hasSeen = false;
+                    worker.Value.hasSeen = false;
                     PointerNotification.rightAmount++;
                 }
                 else if (UIManager.isWorkerVisible)
                 {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                    hasSeen = true;
+                    worker.Value.objMainPanel.SetActive(true);
+                    worker.Value.objSpacerBelow.SetActive(true);
+                    worker.Value.hasSeen = true;
                 }
-                else
+                else if (UIManager.isResearchVisible && worker.Value.hasSeen)
                 {
                     Worker.isWorkerUnlockedEvent = true;
-                    hasSeen = false;
+                    worker.Value.hasSeen = false;
                     PointerNotification.leftAmount++;
                 }
             }
-        }
+        }     
     }
     protected void CheckIfResearchUnlocked()
     {
-        foreach (var research in Researchable.Researchables)
+        foreach (var researchable in Researchable.Researchables)
         {
-            if (research.Value.isUnlocked)
+            if (researchable.Value.isUnlocked)
             {
-                if (UIManager.isBuildingVisible)
+                if (UIManager.isResearchVisible)
+                {
+                    researchable.Value.objMainPanel.SetActive(true);
+                    researchable.Value.objSpacerBelow.SetActive(true);
+                    researchable.Value.hasSeen = true;
+                }
+                else if(researchable.Value.hasSeen)
                 {
                     Researchable.isResearchableUnlockedEvent = true;
-                    hasSeen = false;
-                    PointerNotification.leftAmount++;
-                }
-                else if (UIManager.isCraftingVisible)
-                {
-                    Researchable.isResearchableUnlockedEvent = true;
-                    hasSeen = false;
-                    PointerNotification.leftAmount++;
-                }
-                else if (UIManager.isWorkerVisible)
-                {
-                    Researchable.isResearchableUnlockedEvent = true;
-                    hasSeen = false;
-                    PointerNotification.leftAmount++;
-                }
-                else
-                {
-                    objMainPanel.SetActive(true);
-                    objSpacerBelow.SetActive(true);
-                    hasSeen = true;
+                    researchable.Value.hasSeen = false;
+                    PointerNotification.rightAmount++;
                 }
             }
-        }
+        }      
     }
     protected void CheckIfUnlocked()
     {
         if (!isUnlocked)
         {
-            if (GetCurrentFill() >= 0.8f && isUnlockableByResource && !isUnlockedByResource)
+            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
             {
-                unlockAmount++;
                 isUnlockedByResource = true;
+                unlockAmount++;
+
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
-                    //if (UIManager.isCraftingVisible)
-                    //{
-                    //    objMainPanel.SetActive(true);
-                    //    objSpacerBelow.SetActive(true);
-                    //    hasSeen = true;
-                    //}
-                    //else if (UIManager.isBuildingVisible)
-                    //{
-                    //    isUnlockedEvent = true;
-                    //    hasSeen = false;
-                    //    PointerNotification.rightAmount++;
-
-                    //}
-                    //else
-                    //{
-                    //    isUnlockedEvent = true;
-                    //    hasSeen = false;
-                    //    PointerNotification.leftAmount++;
-
-                    //}
-                    CheckIfBuildingUnlocked();
-                    CheckIfCraftingUnlocked();
-                    //CheckIfWorkerUnlocked();
                     CheckIfResearchUnlocked();
+                    CheckIfCraftingUnlocked();
+                    CheckIfWorkerUnlocked();
+                    CheckIfBuildingUnlocked();
                     PointerNotification.HandleRightAnim();
                     PointerNotification.HandleLeftAnim();
                 }
@@ -467,7 +437,7 @@ public abstract class SuperClass : MonoBehaviour
                 Resource.Resources[resource].objSpacerBelow.SetActive(true);
             }
         }
-    } 
+    }
     protected void UnlockWorkerJob()
     {
         if (typesToUnlock.isUnlockingWorker)
@@ -504,7 +474,7 @@ public abstract class SuperClass : MonoBehaviour
                     AutoWorker.CalculateWorkers();
                     AutoWorker.AutoAssignWorkers();
                 }
-            }                    
+            }
         }
     }
     protected void UnlockCrafting()
@@ -518,7 +488,7 @@ public abstract class SuperClass : MonoBehaviour
                 if (Craftable.Craftables[craft].unlockAmount == Craftable.Craftables[craft].unlocksRequired)
                 {
                     Craftable.Craftables[craft].isUnlocked = true;
-
+                    
                     if (UIManager.isBuildingVisible)
                     {
                         Craftable.isCraftableUnlockedEvent = true;
@@ -540,7 +510,7 @@ public abstract class SuperClass : MonoBehaviour
                         Craftable.Craftables[craft].hasSeen = true;
                     }
                 }
-            }                     
+            }
         }
     }
     protected void UnlockBuilding()
@@ -598,7 +568,7 @@ public abstract class SuperClass : MonoBehaviour
                         PointerNotification.HandleRightAnim();
                     }
                 }
-            }           
+            }
         }
     }
     protected void UpdateResourceCosts()
@@ -610,7 +580,7 @@ public abstract class SuperClass : MonoBehaviour
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", resourceCost[i].currentAmount, resourceCost[i].costAmount);
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
 
                 ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);

@@ -41,7 +41,7 @@ namespace RotaryHeart.Lib
             if (string.IsNullOrEmpty(define))
                 return;
 
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, define);
+            //PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, define);
         }
     }
     

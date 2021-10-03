@@ -13,8 +13,10 @@ public class Food : Resource
     {
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
+        isUnlocked = true;
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         SetInitialValues();
+        isUnlocked = true;
     }
     void Update()
     {

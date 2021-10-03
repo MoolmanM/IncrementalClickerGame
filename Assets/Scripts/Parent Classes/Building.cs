@@ -40,12 +40,27 @@ public abstract class Building : SuperClass
     public BuildingType Type;
     public float costMultiplier;
 
+    protected uint _selfCount;
+    protected string _stringOriginalHeader;
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
 
-    protected string _stringOriginalHeader;
-    protected uint _selfCount;
-
+    
+    public void ResetBuilding()
+    {
+        isUnlocked = false;
+        objMainPanel.SetActive(false);
+        objSpacerBelow.SetActive(false);
+        unlockAmount = 0;
+        _selfCount = 0;
+        hasSeen = true;
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = resourceCost[i].initialCostAmount;
+            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+        }
+        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+    }
     private void DeprecatedUpdateResourceInfo()
     {
         foreach (var resource in Resource.Resources)
@@ -174,7 +189,7 @@ public abstract class Building : SuperClass
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
             }
             ModifyAmountPerSecond();
             //buildingContributionAPS = 0;

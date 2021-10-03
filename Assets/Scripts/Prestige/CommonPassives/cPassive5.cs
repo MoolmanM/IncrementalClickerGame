@@ -14,6 +14,6 @@ public class cPassive5 : CommonPassive
     public override void ExecutePassive()
     {
         base.ExecutePassive();
-        Debug.Log("This for for Common 5 specifically");
+      //  Debug.Log("This for for Common 5 specifically");
     }
 }

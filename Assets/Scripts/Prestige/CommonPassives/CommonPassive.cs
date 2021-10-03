@@ -24,7 +24,7 @@ public class CommonPassive : MonoBehaviour
         // Before I work on these functions I need to first make sure that they only execute after I've pressed the buy buttons,
         // Or I can store all the functions in a sort of cache, and then execute them all after I've pressed the done button
 
-        Debug.Log("This is for all the commons");
+        //Debug.Log("This is for all the commons");
         //Resource.Resources[resourceTypeToModify].amountPerSecond += 
     }
 }

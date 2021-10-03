@@ -13,7 +13,6 @@ public class MakeshiftBed : Building
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
         SetInitialValues();
-        _selfCount = 10;
     }
     void Start()
     {

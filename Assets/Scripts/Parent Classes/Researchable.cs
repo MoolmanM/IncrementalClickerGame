@@ -51,7 +51,7 @@ public abstract class Researchable : SuperClass
     public float secondsToCompleteResearch;
     [System.NonSerialized] public bool isResearched;
 
-    private bool isResearchStarted;
+    private bool _isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
     private float _currentTimer, _researchTimeRemaining;
     private float timer = 0.1f;
@@ -62,6 +62,22 @@ public abstract class Researchable : SuperClass
     protected Image _imgResearchBar;
     private string _stringHeader;
 
+    public void ResetResearchable()
+    {
+        isUnlocked = false;
+        objMainPanel.SetActive(false);
+        objSpacerBelow.SetActive(false);
+        unlockAmount = 0;
+        isUnlockedByResource = false;
+        isResearched = false;
+        _isResearchStarted = false;
+        hasSeen = true;
+        _currentTimer = 0f;
+        _imgResearchBar.fillAmount = 0;
+        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}", _stringHeader);
+
+        MakeResearchableAgain();
+    }
     public void SetInitialValues()
     {
         InitializeObjects();
@@ -69,16 +85,16 @@ public abstract class Researchable : SuperClass
 
         if (TimeManager.hasPlayedBefore)
         {
-            isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
+            _isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
             isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
             _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
         }
 
-        if (!isResearched && isResearchStarted)
+        if (!isResearched && _isResearchStarted)
         {
             if (_researchTimeRemaining <= TimeManager.difference.TotalSeconds)
             {
-                isResearchStarted = false;
+                _isResearchStarted = false;
                 isResearched = true;
                 Debug.Log("Research was completed while you were gone");
                 Researched();
@@ -91,7 +107,7 @@ public abstract class Researchable : SuperClass
             }
         }
 
-        else if (isResearched && !isResearchStarted)
+        else if (isResearched && !_isResearchStarted)
         {
             Researched();
         }
@@ -99,7 +115,7 @@ public abstract class Researchable : SuperClass
     }
     public virtual void UpdateResearchTimer()
     {
-        if (isResearchStarted)
+        if (_isResearchStarted)
         {
             if ((timer -= Time.deltaTime) <= 0)
             {
@@ -141,7 +157,7 @@ public abstract class Researchable : SuperClass
         }
         else
         {
-            if (!isResearchStarted && !isResearched)
+            if (!_isResearchStarted && !isResearched)
             {
 
                 bool canPurchase = true;
@@ -172,7 +188,7 @@ public abstract class Researchable : SuperClass
     {
         if (_currentTimer >= secondsToCompleteResearch)
         {
-            isResearchStarted = false;
+            _isResearchStarted = false;
             isResearched = true;
             Researched();
         }
@@ -186,6 +202,8 @@ public abstract class Researchable : SuperClass
             UnlockCrafting();
             UnlockBuilding();
             UnlockResearchable();
+            UnlockWorkerJob();
+            UnlockResource();
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderDone.SetActive(true);
@@ -207,6 +225,8 @@ public abstract class Researchable : SuperClass
             UnlockCrafting();
             UnlockBuilding();
             UnlockResearchable();
+            UnlockWorkerJob();
+            UnlockResource();
             _objProgressCircle.SetActive(false);
             _objTxtHeader.SetActive(false);
             _objTxtHeaderDone.SetActive(true);
@@ -221,7 +241,7 @@ public abstract class Researchable : SuperClass
         }
 
     }
-    private void MakeResearchableAgain()
+    public void MakeResearchableAgain()
     {
         // This will probably only happen after prestige.
         _objBtnMain.GetComponent<Button>().interactable = true;
@@ -239,7 +259,7 @@ public abstract class Researchable : SuperClass
     }
     public void GetTimeToCompleteResearch()
     {
-        isResearchStarted = true;
+        _isResearchStarted = true;
         DateTime currentTime = DateTime.Now;
         //Debug.Log(currentTime);
         DateTime timeToCompletion = currentTime.AddSeconds(60);
@@ -251,7 +271,7 @@ public abstract class Researchable : SuperClass
     public void StartResearching()
     {
         researchSimulActive++;
-        isResearchStarted = true;
+        _isResearchStarted = true;
         _objProgressCircle.SetActive(false);
     }
     public void SetDescriptionText(string description)
@@ -277,7 +297,7 @@ public abstract class Researchable : SuperClass
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_stringIsResearchStarted, isResearchStarted ? 1 : 0);
+        PlayerPrefs.SetInt(_stringIsResearchStarted, _isResearchStarted ? 1 : 0);
         PlayerPrefs.SetInt(_stringIsResearched, isResearched ? 1 : 0);
         PlayerPrefs.SetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
     }

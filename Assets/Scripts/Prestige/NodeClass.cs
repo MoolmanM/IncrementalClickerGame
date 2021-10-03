@@ -3,6 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
+public struct Connections
+{
+    public GameObject objConnection;
+    public bool isHighlighted;
+}
+
 public class NodeClass : MonoBehaviour
 {
     public static Dictionary<GameObject, NodeClass> Nodes = new Dictionary<GameObject, NodeClass>();
@@ -10,18 +17,24 @@ public class NodeClass : MonoBehaviour
     private Button _btnMain;
     private bool _isUnlocked, _isClickable;
     public GameObject[] neighbours;
-    public RarityType associatedRarityType;
+    [System.NonSerialized] public RarityType associatedRarityType;
+    public Connections[] connections;
+    public static List<GameObject> connectionCache = new List<GameObject>();
 
     public static bool isFirstPurchase = true;
     public static List<GameObject> neighbourCache = new List<GameObject>();
 
     public float passiveCost;
-
+    private Color colHighlight, colUnhighlight;
     private Transform tformTxtDescription, tformTxtCost, tformObjExpand;
     public TMP_Text txtDescription, txtCost;
     [System.NonSerialized] public GameObject objExpand;
+
     protected void InitializeObjects()
     {
+
+        colHighlight = new Color(1, 1, 1, 1);
+        colUnhighlight = new Color(0.5137255f, 0.5137255f, 0.5137255f, 1);
         tformTxtDescription = transform.Find("Rarity/ExpandedButton/DescriptionPanel/txtDescription");
         tformTxtCost = transform.Find("Rarity/ExpandedButton/CostPanel/txtCost");
         tformObjExpand = transform.Find("Rarity/ExpandedButton");
@@ -40,7 +53,7 @@ public class NodeClass : MonoBehaviour
         // Same with randomizing the rarities and such.
         if (isFirstPurchase && passiveCost <= Prestige.prestigePoints)
         {
-            GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            GetComponent<Image>().color = colHighlight;
         }
     }
     private void OnExpand()
@@ -63,7 +76,7 @@ public class NodeClass : MonoBehaviour
         {
             foreach (var node in Nodes)
             {
-                node.Key.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+                node.Key.GetComponent<Image>().color = colUnhighlight;
             }
         }
 
@@ -73,7 +86,7 @@ public class NodeClass : MonoBehaviour
 
             Prestige.prestigePoints -= passiveCost;
             _isUnlocked = true;
-            GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+            GetComponent<Image>().color = colUnhighlight;
 
             foreach (var node in Nodes)
             {
@@ -83,20 +96,41 @@ public class NodeClass : MonoBehaviour
                     {
                         if (neighbourCache.Contains(gameObject))
                         {
-                            neighbourCache.Remove(gameObject);
+                            //neighbourCache.Remove(gameObject);
                         }
                         foreach (var neighbourCached in neighbourCache)
                         {
                             if (node.Key == neighbourCached && Prestige.prestigePoints < node.Value.passiveCost)
                             {
-                                node.Key.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+                                node.Key.GetComponent<Image>().color = colUnhighlight;
                             }
                         }
                     }
 
                     if (node.Key == neighbour && !node.Value._isUnlocked && Prestige.prestigePoints >= node.Value.passiveCost)
                     {
-                        node.Key.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                        //Debug.Log("How many times does this happen");
+                        #region Connections
+                        foreach (var connection in connections)
+                        {
+                            foreach (var nodeConnect in node.Value.connections)
+                            {
+                                if (connection.objConnection == nodeConnect.objConnection)
+                                {
+                                    if (!connectionCache.Contains(connection.objConnection))
+                                    {
+                                        connection.objConnection.GetComponent<Image>().color = colHighlight;
+                                        connectionCache.Add(connection.objConnection);
+                                    }
+                                    else
+                                    {
+                                        connection.objConnection.GetComponent<Image>().color = colUnhighlight;
+                                    }
+                                }
+                            }
+                        }
+                        #endregion
+                        node.Key.GetComponent<Image>().color = colHighlight;
                         neighbourCache.Add(node.Key);
                     }
                 }
@@ -112,7 +146,7 @@ public class NodeClass : MonoBehaviour
 
             Prestige.prestigePoints -= passiveCost;
             _isUnlocked = true;
-            GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+            GetComponent<Image>().color = colUnhighlight;
 
             foreach (var node in Nodes)
             {
@@ -122,22 +156,42 @@ public class NodeClass : MonoBehaviour
                     {
                         if (neighbourCache.Contains(gameObject))
                         {
-                            neighbourCache.Remove(gameObject);
+                            //neighbourCache.Remove(gameObject);
                         }
                         foreach (var neighbourCached in neighbourCache)
                         {
                             if (node.Key == neighbourCached && Prestige.prestigePoints < node.Value.passiveCost)
                             {
-                                node.Key.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+                                node.Key.GetComponent<Image>().color = colUnhighlight;
                             }
                         }
                     }
 
                     if (node.Key == neighbour && !node.Value._isUnlocked && Prestige.prestigePoints >= node.Value.passiveCost)
                     {
-                        node.Key.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                        node.Key.GetComponent<Image>().color = colHighlight;
                         neighbourCache.Add(node.Key);
                     }
+                    #region Connections
+                    foreach (var connection in connections)
+                    {
+                        foreach (var nodeConnect in node.Value.connections)
+                        {
+                            if (connection.objConnection == nodeConnect.objConnection)
+                            {
+                                if (!connectionCache.Contains(connection.objConnection))
+                                {
+                                    connection.objConnection.GetComponent<Image>().color = colHighlight;
+                                    connectionCache.Add(connection.objConnection);
+                                }
+                                else
+                                {
+                                    connection.objConnection.GetComponent<Image>().color = colUnhighlight;
+                                }
+                            }
+                        }
+                    }
+                    #endregion
                 }
             }
 
@@ -146,3 +200,22 @@ public class NodeClass : MonoBehaviour
         }
     }
 }
+/*
+#region Connections
+foreach (var connection in connections)
+{
+    foreach (var nodeConnect in node.Value.connections)
+    {
+        if (connection.objConnection == nodeConnect.objConnection)
+        {
+            connection.objConnection.GetComponent<Image>().color = colHighlight;
+            // Then maybe add that connection to a new cache list
+            // Check if the the connection == nodeconnect again
+            // And if they do anddddd the connection is in the cache list, then unhighlight that connection.
+        }
+
+    }
+
+}
+#endregion
+*/

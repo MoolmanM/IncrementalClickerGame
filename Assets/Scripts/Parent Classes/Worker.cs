@@ -46,6 +46,14 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected uint _changeAmount = 1;
     private bool buttonPressed;
 
+    public void ResetWorker()
+    {
+        isUnlocked = false;
+        objMainPanel.SetActive(false);
+        objSpacerBelow.SetActive(false);
+        workerCount = 0;
+        hasSeen = true;
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
         buttonPressed = true;

@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Linq;
-using Sirenix.OdinInspector;
+using TMPro;
+using UnityEditor.iOS;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public struct UiForResource
 {
@@ -30,7 +30,7 @@ public enum ResourceType
     Pelts,
     Copper,
     Tin,
-    Bronze,  
+    Bronze,
     Iron
 
 }
@@ -55,9 +55,9 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [System.NonSerialized] public GameObject prefabResourceInfoPanel, prefabResourceInfoSpacer;
     [System.NonSerialized] public Transform tformResourceTooltip;
-    [System.NonSerialized] public GameObject objTooltip;  
-    
-    [System.NonSerialized] public float amount, amountPerSecond;    
+    [System.NonSerialized] public GameObject objTooltip;
+
+    [System.NonSerialized] public float amount, amountPerSecond;
     [System.NonSerialized] public bool isUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
     [System.NonSerialized] public GameObject objMainPanel;
@@ -76,6 +76,16 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public float debugAmountToIncrease;
 
+    public void ResetResource()
+{
+        amount = 0;
+        amountPerSecond = 0;
+        objMainPanel.SetActive(false);
+        objSpacerBelow.SetActive(false);
+        isUnlocked = false;
+        // Set storage amount back to original storage amount
+        // Remove the resourceinfo prefabs?
+    }
     [Button(ButtonSizes.Small)]
     private void DebugIncreaseResource()
     {
@@ -94,7 +104,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             Debug.Log("Reaches here under if");
             buttonPressed = true;
             objTooltip.SetActive(true);
-        }       
+        }
     }
     public void OnPointerUp(PointerEventData eventData)
     {
@@ -119,14 +129,10 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             //Need to make food and sticks 'unlocked' after this.
             amount = PlayerPrefs.GetFloat(_amountString, amount);
             amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
-            if (TimeManager.hasPlayedBefore)
-            {
-                storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
-            }
+            storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
         }
 
-        isUnlocked = true;
         if (isUnlocked)
         {
             objMainPanel.SetActive(true);
@@ -149,15 +155,15 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 //txtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
             }
-           
+
         }
         else
         {
             objMainPanel.SetActive(false);
             objSpacerBelow.SetActive(false);
-            Debug.Log(Type + ": Resource doesn't exist yet.");
+            // Debug.Log(Type + ": Resource doesn't exist yet.");
         }
-        
+
     }
     private void InitializeObjects()
     {
@@ -180,7 +186,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _isUnlockedString = Type.ToString() + "Unlocked";
 
         InitializePrefab();
-    }   
+    }
     public void GetCurrentFill()
     {
         float add = 0;

@@ -46,6 +46,17 @@ public class Craftable : SuperClass
 
     private string _isCraftedString, _isUnlockedString;
 
+    public void ResetCraftable()
+    {
+        isUnlocked = false;
+        objMainPanel.SetActive(false);
+        objSpacerBelow.SetActive(false);
+        unlockAmount = 0;
+        isUnlockedByResource = false;
+        isCrafted = false;
+        hasSeen = true;
+        MakeCraftableAgain();
+    }
     public void SetInitialValues()
     {
         InitializeObjects();
@@ -87,12 +98,7 @@ public class Craftable : SuperClass
         {
             isCrafted = true;
             Crafted();
-            UnlockCrafting();
-            UnlockBuilding();
-            UnlockResearchable();
-            UnlockWorkerJob();
-            UnlockResource();
-
+            
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
@@ -121,8 +127,13 @@ public class Craftable : SuperClass
             objSpacerBelow.SetActive(false);
         }
 
+        UnlockCrafting();
+        UnlockBuilding();
+        UnlockResearchable();
+        UnlockWorkerJob();
+        UnlockResource();
     }
-    private void MakeCraftableAgain()
+    public void MakeCraftableAgain()
     {
         // I don't think this is really needed, not until the player prestige at least.
         _objBtnMain.GetComponent<Button>().interactable = true;
