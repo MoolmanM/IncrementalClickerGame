@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Smelter : Power
+public class WoodGenerator : Power
 {
     private Building _building;
 
@@ -20,11 +22,5 @@ public class Smelter : Power
         Buildings.Add(Type, _building);
         InitializePower();
         SetInitialValues();
-
-    }
-    void Start()
-    {
-        SetDescriptionText();
-        //DisplayConsole();
     }
 }

@@ -432,6 +432,7 @@ public abstract class SuperClass : MonoBehaviour
         {
             foreach (var resource in typesToUnlock.resourceTypesToUnlock)
             {
+                Resource.Resources[resource].InitializeAmount();
                 Resource.Resources[resource].isUnlocked = true;
                 Resource.Resources[resource].objMainPanel.SetActive(true);
                 Resource.Resources[resource].objSpacerBelow.SetActive(true);
@@ -517,26 +518,33 @@ public abstract class SuperClass : MonoBehaviour
     {
         if (typesToUnlock.isUnlockingBuilding)
         {
-            foreach (BuildingType building in typesToUnlock.buildingTypesToUnlock)
+            foreach (BuildingType buildingType in typesToUnlock.buildingTypesToUnlock)
             {
-                Building.Buildings[building].unlockAmount++;
-
-                if (Building.Buildings[building].unlockAmount == Building.Buildings[building].unlocksRequired)
+                Building.Buildings[buildingType].unlockAmount++;
+                
+                if (Building.Buildings[buildingType].unlockAmount == Building.Buildings[buildingType].unlocksRequired)
                 {
-                    Building.Buildings[building].isUnlocked = true;
+                    #region This is new and for testing
+                    if (cPassive4.buildingTypesSelfCountToModify.Contains(buildingType))
+                    {
+                        Building.Buildings[buildingType].SetInitialAmountPerSecond();
+                    }
+                    #endregion
+
+                    Building.Buildings[buildingType].isUnlocked = true;
 
                     if (!UIManager.isBuildingVisible)
                     {
                         Building.isBuildingUnlockedEvent = true;
-                        Building.Buildings[building].hasSeen = false;
+                        Building.Buildings[buildingType].hasSeen = false;
                         PointerNotification.leftAmount++;
                         PointerNotification.HandleLeftAnim();
                     }
                     else
                     {
-                        Building.Buildings[building].objMainPanel.SetActive(true);
-                        Building.Buildings[building].objSpacerBelow.SetActive(true);
-                        Building.Buildings[building].hasSeen = true;
+                        Building.Buildings[buildingType].objMainPanel.SetActive(true);
+                        Building.Buildings[buildingType].objSpacerBelow.SetActive(true);
+                        Building.Buildings[buildingType].hasSeen = true;
                     }
                 }
             }

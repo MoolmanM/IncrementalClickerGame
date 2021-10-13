@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManualEnergyProduction : Researchable
+public class MinorStorage : Researchable
 {
     private Researchable _researchable;
 
@@ -15,7 +15,7 @@ public class ManualEnergyProduction : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Enables you to craft a hamster wheel for energy production.");
+        SetDescriptionText("Unlocks building minor storage facilities.");
     }
     protected override void Update()
     {

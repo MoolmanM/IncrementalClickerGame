@@ -5,23 +5,31 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    public TMP_Text seasonText, goneForText;
-    public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
-    private DateTime currentDate;
     public static bool hasPlayedBefore;
     public static TimeSpan difference;
-    private string seasonString;
-    private int day, year, seasonCount;
-    private float _timer = 0.1f;
-    private readonly float maxValue = 5f;
-    private long temp;
+    public static int day, year, seasonCount;
 
-    public void CalculateSeason()
+    public TMP_Text seasonText, goneForText;
+    public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
+    
+    private DateTime _currentDate;   
+    private string _seasonString;
+    private float _timer = 0.1f;
+    private readonly float _maxValue = 5f;
+    private long _temp;
+
+    public static void ResetSeason()
+    {
+        day = 0;
+        seasonCount = 0;
+        year = 0;
+    }
+    private void CalculateSeason()
     {
         day++;
         if (seasonCount == 0)
         {
-            seasonString = "Spring";
+            _seasonString = "Spring";
             objSpringImage.SetActive(true);
             objSummerImage.SetActive(false);
             objFallImage.SetActive(false);
@@ -29,7 +37,7 @@ public class TimeManager : MonoBehaviour
         }
         else if (seasonCount == 1)
         {
-            seasonString = "Summer";
+            _seasonString = "Summer";
             objSpringImage.SetActive(false);
             objSummerImage.SetActive(true);
             objFallImage.SetActive(false);
@@ -37,7 +45,7 @@ public class TimeManager : MonoBehaviour
         }
         else if (seasonCount == 2)
         {
-            seasonString = "Fall";
+            _seasonString = "Fall";
             objSpringImage.SetActive(false);
             objSummerImage.SetActive(false);
             objFallImage.SetActive(true);
@@ -45,7 +53,7 @@ public class TimeManager : MonoBehaviour
         }
         else if (seasonCount == 3)
         {
-            seasonString = "Winter";
+            _seasonString = "Winter";
             objSpringImage.SetActive(false);
             objSummerImage.SetActive(false);
             objFallImage.SetActive(false);
@@ -68,7 +76,7 @@ public class TimeManager : MonoBehaviour
             seasonCount++;
             day = 0;
         }
-        seasonText.text = string.Format("Year {0} - {1}, day {2}", year, seasonString, day);
+        seasonText.text = string.Format("Year {0} - {1}, day {2}", year, _seasonString, day);
     }  
     void OnEnable()
     {
@@ -92,7 +100,7 @@ public class TimeManager : MonoBehaviour
     private void SetLaunchValues()
     {
         //Store the current time when it stardifference
-        currentDate = DateTime.Now;
+        _currentDate = DateTime.Now;
 
         //Grab the old time from the player prefs as a long
         if (PlayerPrefs.GetString("sysString") == "")
@@ -103,15 +111,15 @@ public class TimeManager : MonoBehaviour
         else
         {
             hasPlayedBefore = true;
-            temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
+            _temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
         }
 
         //Convert the old time from binary to a DataTime variable
-        DateTime oldDate = DateTime.FromBinary(temp);
+        DateTime oldDate = DateTime.FromBinary(_temp);
         //print("oldDate: " + oldDate);
 
         //Use the Subtract method and store the result as a timespan variable
-        difference = currentDate.Subtract(oldDate);
+        difference = _currentDate.Subtract(oldDate);
         //print("Difference: " + difference);
 
         //Make the parts where the time is bold?
@@ -138,7 +146,7 @@ public class TimeManager : MonoBehaviour
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
-            _timer = maxValue;
+            _timer = _maxValue;
             CalculateSeason();
         }
     }

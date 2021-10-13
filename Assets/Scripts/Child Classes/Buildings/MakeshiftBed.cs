@@ -14,10 +14,6 @@ public class MakeshiftBed : Building
         Buildings.Add(Type, _building);
         SetInitialValues();
     }
-    void Start()
-    {
-        SetDescriptionText();
-    }
     public override void OnBuild()
     {
         bool canPurchase = true;
@@ -44,7 +40,7 @@ public class MakeshiftBed : Building
 
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    protected override void SetDescriptionText()
+    protected override void ModifyDescriptionText()
     {
         _txtDescription.text = string.Format("Increases population by 1");
     }

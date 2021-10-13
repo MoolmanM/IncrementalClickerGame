@@ -11,8 +11,4 @@ public class DigSite : Building
         Buildings.Add(Type, _building);
         SetInitialValues();
     }
-    void Start()
-    {    
-        SetDescriptionText();
-    }
 }

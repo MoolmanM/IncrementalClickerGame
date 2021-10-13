@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Sirenix.OdinInspector;
 
 public class PotatoField : Building
 {
@@ -12,9 +13,5 @@ public class PotatoField : Building
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
         SetInitialValues();
-    }
-    void Start()
-    {  
-        SetDescriptionText();
     }
 }

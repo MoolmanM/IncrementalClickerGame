@@ -21,8 +21,4 @@ public class MineShaft : Building
         Buildings.Add(Type, _building);
         SetInitialValues();
     }
-    void Start()
-    {
-        SetDescriptionText();
-    }
 }

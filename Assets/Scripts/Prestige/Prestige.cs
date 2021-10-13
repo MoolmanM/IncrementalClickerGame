@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TMPro;
+using UnityEditor.iOS;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
@@ -35,7 +36,8 @@ public class Prestige : MonoBehaviour
 
     public double testNumber, debugAmount;
 
-
+    public static List<ResourceType> resourcesUnlockedInPreviousRun = new List<ResourceType>();
+    public static List<BuildingType> buildingsUnlockedInPreviousRun = new List<BuildingType>();
 
     public IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
     {
@@ -50,6 +52,8 @@ public class Prestige : MonoBehaviour
     {
         foreach (var value in RandomValues(CommonPassive.CommonPassives).Take(1))
         {
+            value.GenerateRandomResource();
+            value.GenerateRandomBuilding();
             txtDescription.text = string.Format("{0}", value.description);
             objExpand.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
         }
@@ -209,7 +213,12 @@ public class Prestige : MonoBehaviour
     private void ResetGame()
     {
         foreach (var building in Building.Buildings)
-        {
+{
+            if (building.Value.isUnlocked)
+            {
+                buildingsUnlockedInPreviousRun.Add(building.Key);
+            }
+
             building.Value.ResetBuilding();
         }
         foreach (var craftable in Craftable.Craftables)
@@ -226,6 +235,11 @@ public class Prestige : MonoBehaviour
         }
         foreach (var resource in Resource.Resources)
         {
+            if (resource.Value.isUnlocked)
+            {
+                resourcesUnlockedInPreviousRun.Add(resource.Key);
+            }
+
             resource.Value.ResetResource();
         }
         Worker.TotalWorkerCount = 0;
@@ -249,6 +263,8 @@ public class Prestige : MonoBehaviour
         PointerNotification.lastRightAmount = 0;
         PointerNotification.HandleLeftAnim();
         PointerNotification.HandleRightAnim();
+
+        TimeManager.ResetSeason();
         //Cancel any ongoing research.
 
     }
@@ -258,5 +274,12 @@ public class Prestige : MonoBehaviour
         testNumber += debugAmount;
 
         Debug.Log(string.Format("{0} is: {1}",testNumber, NumberToLetter.FormatNumber(testNumber)));
+    }
+    public void OnDone()
+    {
+        objPrestige.SetActive(false);
+        NodeClass.isFirstPurchase = true;
+        NodeClass.neighbourCache = null;
+        NodeClass.connectionCache = null;
     }
 }

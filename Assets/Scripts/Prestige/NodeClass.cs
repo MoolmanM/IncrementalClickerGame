@@ -15,7 +15,7 @@ public class NodeClass : MonoBehaviour
     public static Dictionary<GameObject, NodeClass> Nodes = new Dictionary<GameObject, NodeClass>();
 
     private Button _btnMain;
-    private bool _isUnlocked, _isClickable;
+    private bool _isUnlocked;
     public GameObject[] neighbours;
     [System.NonSerialized] public RarityType associatedRarityType;
     public Connections[] connections;
@@ -29,10 +29,11 @@ public class NodeClass : MonoBehaviour
     private Transform tformTxtDescription, tformTxtCost, tformObjExpand;
     public TMP_Text txtDescription, txtCost;
     [System.NonSerialized] public GameObject objExpand;
+    private GameObject _objPrestigeTree;
 
     protected void InitializeObjects()
     {
-
+        _objPrestigeTree = gameObject;
         colHighlight = new Color(1, 1, 1, 1);
         colUnhighlight = new Color(0.5137255f, 0.5137255f, 0.5137255f, 1);
         tformTxtDescription = transform.Find("Rarity/ExpandedButton/DescriptionPanel/txtDescription");
@@ -58,7 +59,16 @@ public class NodeClass : MonoBehaviour
     }
     private void OnExpand()
     {
-        if (!_isUnlocked && Prestige.prestigePoints >= passiveCost)
+        // I feel this code and the onbuy code can still be omptimized.
+        if (isFirstPurchase)
+        {
+            foreach (var node in Nodes)
+            {
+                node.Value.objExpand.SetActive(false);
+            }
+            objExpand.SetActive(true);
+        }
+        else if (!_isUnlocked && Prestige.prestigePoints >= passiveCost && neighbourCache.Contains(gameObject))
         {
             foreach (var node in Nodes)
             {
@@ -94,10 +104,6 @@ public class NodeClass : MonoBehaviour
                 {
                     if (neighbourCache != null)
                     {
-                        if (neighbourCache.Contains(gameObject))
-                        {
-                            //neighbourCache.Remove(gameObject);
-                        }
                         foreach (var neighbourCached in neighbourCache)
                         {
                             if (node.Key == neighbourCached && Prestige.prestigePoints < node.Value.passiveCost)
@@ -200,22 +206,3 @@ public class NodeClass : MonoBehaviour
         }
     }
 }
-/*
-#region Connections
-foreach (var connection in connections)
-{
-    foreach (var nodeConnect in node.Value.connections)
-    {
-        if (connection.objConnection == nodeConnect.objConnection)
-        {
-            connection.objConnection.GetComponent<Image>().color = colHighlight;
-            // Then maybe add that connection to a new cache list
-            // Check if the the connection == nodeconnect again
-            // And if they do anddddd the connection is in the cache list, then unhighlight that connection.
-        }
-
-    }
-
-}
-#endregion
-*/

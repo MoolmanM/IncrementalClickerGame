@@ -11,8 +11,4 @@ public class Woodlot : Building
         Buildings.Add(Type, _building);
         SetInitialValues();
     }
-    void Start()
-    {   
-        SetDescriptionText();
-    }
 }

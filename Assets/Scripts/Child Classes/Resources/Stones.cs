@@ -12,7 +12,6 @@ public class Stones : Resource
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
         SetInitialValues();
-        isUnlocked = true;
     }
     void Update()
     {

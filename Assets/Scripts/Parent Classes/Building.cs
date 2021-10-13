@@ -12,8 +12,10 @@ public enum BuildingType
     MakeshiftBed,
     Smelter,
     StoragePile, // For Stone, Lumber, maybe other materials
-    //StorageTent, // For food, and more delicate stuff.
+    //StorageTent, For food, and more delicate stuff.
     //StorageHouse
+    //Storage Facility
+    //Transformer maybe transformer should be something that you craft or research, for a once of boost to energy
     MineShaft,
     WoodGenerator
 
@@ -25,6 +27,7 @@ public struct ResourceTypesToModify
 {
     public ResourceType resourceTypeToModify;
     public float resourceMulitplier;
+    public float contributionAmount;
 }
 
 public abstract class Building : SuperClass
@@ -32,7 +35,6 @@ public abstract class Building : SuperClass
     public static Dictionary<BuildingType, Building> Buildings = new Dictionary<BuildingType, Building>();
     public static bool isBuildingUnlockedEvent;
 
-    public float buildingContributionAPS;
     public List<ResourceTypesToModify> resourcesToIncrement = new List<ResourceTypesToModify>();
     public List<ResourceTypesToModify> resourcesToDecrement = new List<ResourceTypesToModify>();
 
@@ -45,7 +47,8 @@ public abstract class Building : SuperClass
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
 
-    
+    //private TMP_Text 
+
     public void ResetBuilding()
     {
         isUnlocked = false;
@@ -61,96 +64,30 @@ public abstract class Building : SuperClass
         }
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    private void DeprecatedUpdateResourceInfo()
+    public void SetSelfCount(uint selfCountAmount)
     {
-        foreach (var resource in Resource.Resources)
-        {
-            // Why am I checking types to unlock here
-            // Shouldn't it be types to modify.
-            if (resource.Key == typesToUnlock.resourceTypesToUnlock[0] && _selfCount == 1)
-            {
-                resource.Value.resourceInfoList = new List<ResourceInfo>()
-                {
-                    new ResourceInfo(){ name = Type.ToString(), amountPerSecond=buildingContributionAPS }
-                };
-
-                for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
-                {
-                    ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-
-                    GameObject newObj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-
-                    Transform _tformNewObj = newObj.transform;
-                    Transform _tformInfoName = _tformNewObj.Find("Text_Name");
-                    Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
-
-                    resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
-                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-
-                    resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
-                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
-
-                    resource.Value.resourceInfoList[i] = resourceInfo;
-                }
-            }
-            else if (resource.Key == typesToUnlock.resourceTypesToUnlock[0] && _selfCount != 1)
-            {
-                for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
-                {
-                    ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
-                    resource.Value.resourceInfoList[i] = resourceInfo;
-                }
-            }
-        }
+        _selfCount += selfCountAmount;
     }
-    private void UpdateResourceInfo()
+    public void SetInitialAmountPerSecond()
     {
-        foreach (var resource in Resource.Resources)
+        // So this is going to loop through every building inside the prestige 
+        // Building list for buildings to calculate
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
-            // Why am I checking types to unlock here
-            // Shouldn't it be types to modify.
-            foreach (var resourceToIncrement in resourcesToIncrement)
-            {
-                buildingContributionAPS = 0;
-                buildingContributionAPS = _selfCount * resourceToIncrement.resourceMulitplier;
-                if (resource.Key == resourceToIncrement.resourceTypeToModify && _selfCount == 1)
-                {
-                    resource.Value.resourceInfoList = new List<ResourceInfo>()
-                    {
-                        new ResourceInfo(){ name = Type.ToString(), amountPerSecond=buildingContributionAPS }
-                    };
+            float amountToIncreaseBy = resourcesToIncrement[i].resourceMulitplier * _selfCount;
+            Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += amountToIncreaseBy;
+        }
 
-                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
-                    {
-                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
+        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
 
-                        GameObject newObj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-
-                        Transform _tformNewObj = newObj.transform;
-                        Transform _tformInfoName = _tformNewObj.Find("Text_Name");
-                        Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
-
-                        resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
-                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-
-                        resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
-                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
-
-                        resource.Value.resourceInfoList[i] = resourceInfo;
-                    }
-                }
-                else if (resource.Key == resourceToIncrement.resourceTypeToModify && _selfCount != 1)
-                {
-                    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
-                    {
-                        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-                        resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", buildingContributionAPS);
-                        resource.Value.resourceInfoList[i] = resourceInfo;
-                    }
-                }
-            }
-
+        // This seems to do everything that I want.
+    }
+    protected void UpdateResourceInfo()
+    {
+        foreach (var resourceToIncrement in resourcesToIncrement)
+        {
+            Debug.Log("Type: " + Type);
+            Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(Type, _selfCount, resourceToIncrement.resourceMulitplier, resourceToIncrement.resourceTypeToModify);
         }
     }
     protected void SetInitialValues()
@@ -192,17 +129,38 @@ public abstract class Building : SuperClass
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
             }
             ModifyAmountPerSecond();
-            //buildingContributionAPS = 0;
-            //buildingContributionAPS = _selfCount * _resourceMultiplier;
             UpdateResourceInfo();
         }
 
         _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
     }
-    protected virtual void SetDescriptionText()
+    protected virtual void ModifyDescriptionText()
     {
-        // Need to do a for loop here and most likely instantiate new gameobjects, depending on how many there are just the way I do it in fthe resourceinfo, with resources and also how I do it with ResourcePanels.
-        //_txtDescription.text = string.Format("Increases {0} yield by: {1:0.00}", Resource.Resources[resourceTypeToModify].Type.ToString(), _resourceMultiplier);
+        string oldString;
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            if (i > 0)
+            {
+                oldString = _txtDescription.text;
+                _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2}</color>", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].resourceMulitplier);
+            }
+            else
+            {
+                _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].resourceMulitplier);
+            }
+        }
+        for (int i = 0; i < resourcesToDecrement.Count; i++)
+        {
+            if (i > 0)
+            {
+                oldString = _txtDescription.text;
+                _txtDescription.text = string.Format("{0} \nDecrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2}</color>", oldString, resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].resourceMulitplier);
+            }
+            else
+            {
+                _txtDescription.text = string.Format("Decrease <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].resourceMulitplier);
+            }
+        }
     }
     protected virtual void ModifyAmountPerSecond()
     {
@@ -228,6 +186,8 @@ public abstract class Building : SuperClass
             _costString[i] = Type.ToString() + resourceCost[i].associatedType.ToString();
             PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
         }
+
+        ModifyDescriptionText();
     }
     void OnApplicationQuit()
     {

@@ -27,7 +27,7 @@ public class Hunters : Worker
             _resourcesToDecrement[0].resourceTypeToModify = ResourceType.Lumber;
             _resourcesToDecrement[0].resourceMultiplier = 0.1f;
 
-            _resourcesToDecrement[1].resourceTypeToModify = ResourceType.Stones;
+            _resourcesToDecrement[1].resourceTypeToModify = ResourceType.Stone;
             _resourcesToDecrement[1].resourceMultiplier = 0.1f;
         }
 
