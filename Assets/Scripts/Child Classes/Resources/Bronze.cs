@@ -12,8 +12,4 @@ public class Bronze : Resource
         Resources.Add(Type, _resource);
         SetInitialValues();
     }
-    void Update()
-    {
-        UpdateResources();
-    }
 }

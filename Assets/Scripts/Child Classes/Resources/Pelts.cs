@@ -12,8 +12,4 @@ public class Pelts : Resource
         Resources.Add(Type, _resource);
         SetInitialValues();
     }
-    void Update()
-    {
-        UpdateResources();
-    }
 }

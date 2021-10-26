@@ -1,14 +1,9 @@
-using BreakInfinity;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using TMPro;
-using UnityEditor.iOS;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
 
 [System.Serializable]
 public struct Rarity

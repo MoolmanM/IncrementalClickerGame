@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using System.IO;
+
 public class Events : MonoBehaviour
 {
     public static bool eventGood, eventBad, eventInfo, eventError, eventHappened;
@@ -17,7 +19,7 @@ public class Events : MonoBehaviour
     // Use the Info event to display stuff like: "You've entered the bronze age"
     private void StoneAgeEvents()
     {
-        animalAttack = 1f; //1% Probably need to lower this or lower the amount of time we generate random numbers
+        animalAttack = 50f; //1% Probably need to lower this or lower the amount of time we generate random numbers
         // Probably need to generate a random number once every day?
         villageUnderAttack = 0.3f; //0.3%
         randomNumber = UnityEngine.Random.Range(0f, 100f);
@@ -25,14 +27,10 @@ public class Events : MonoBehaviour
         if (randomNumber <= animalAttack)
         {
             AnimalAttack();
-            eventHappened = true;
-            eventBad = true;
         }
         if (randomNumber <= villageUnderAttack)
         {
             VillageAttack();
-            eventHappened = true;
-            eventBad = true;
         }
 
         // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
@@ -40,68 +38,110 @@ public class Events : MonoBehaviour
     } 
     private void AnimalAttack()
     {
-        
-        float victoryChance = 50f;
-        float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
-        if (randomNumberGenerated <= victoryChance)
+        if (Worker.TotalWorkerCount > 0)
         {
-            float randomFoodAmount = UnityEngine.Random.Range(0f, 500f);
-            if (randomFoodAmount + Resource.Resources[ResourceType.Food].amount > Resource.Resources[ResourceType.Food].storageAmount)
-            {
-                Resource.Resources[ResourceType.Food].amount = Resource.Resources[ResourceType.Food].storageAmount;
-            }
-            else
-            {
-                Resource.Resources[ResourceType.Food].amount += randomFoodAmount;
+            float victoryChance = 50f;
+            float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
 
-            }
-            NotableEvent(string.Format("You've been attacked by an animal. But your people managed to kill it! You've gained {0:0.00} Food", randomFoodAmount));
-        }
-        else
-        {
-            uint randomWorkerAmount = (uint)UnityEngine.Random.Range(0, 5);
-            
-            if (Worker.TotalWorkerCount - randomWorkerAmount <= 0)
+            // if I upgrade weapons in the future, I can always increase the victory chance percentage, or decrease.
+            // Or I can generate the random number and then increment it with a certain value,
+            // Call it a modifier, and this modifier will initially be 0%, but with other weapons
+            // It might go up. 5%, 10%, 15%. etc.
+
+            if (randomNumberGenerated <= victoryChance)
             {
-                Worker.TotalWorkerCount = 0;
+                eventHappened = true;
+                eventGood = true;
+
+                float randomFoodAmount = UnityEngine.Random.Range(0f, 50f);
+                randomFoodAmount *= Worker.TotalWorkerCount;
+                if (randomFoodAmount + Resource.Resources[ResourceType.Food].amount > Resource.Resources[ResourceType.Food].storageAmount)
+                {
+                    Resource.Resources[ResourceType.Food].amount = Resource.Resources[ResourceType.Food].storageAmount;
+                }
+                else
+                {
+                    Resource.Resources[ResourceType.Food].amount += randomFoodAmount;
+
+                }
+
+                NotableEvent(string.Format("You've been attacked by an animal. But your people managed to kill it! You've gained {0:0.00} Food", randomFoodAmount));
             }
             else
             {
+                // Should this only affect workers that are assigned to hunters?
+                eventHappened = true;
+                eventBad = true;
+                // if you have no workers home, the animal then eats some of your food?
+                // But you should almost always have a worker alive, so I think that's irrelevant
+                uint randomWorkerAmount = (uint)UnityEngine.Random.Range(1, Worker.TotalWorkerCount + 1);
+                Debug.Log(randomWorkerAmount);
+                NotableEvent(string.Format("You've been attacked by an animal. {0} of your people has been killed.", randomWorkerAmount));
+
+                if (Worker.UnassignedWorkerCount - randomWorkerAmount <= 0)
+                {
+                    Debug.Log(Worker.UnassignedWorkerCount);
+                    randomWorkerAmount -= Worker.UnassignedWorkerCount;
+                    Worker.UnassignedWorkerCount = 0;
+                    txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+                    foreach (var worker in Worker.Workers)
+                    {
+                        while (randomWorkerAmount != 0)
+                        {
+                            if (worker.Value.workerCount > 0)
+                            {
+                                worker.Value.workerCount--;
+                                randomWorkerAmount--;
+                                worker.Value.txtHeader.text = string.Format("{0} [{1}]", worker.Key, worker.Value.workerCount);                              
+                            }
+                            Debug.Log("Random worker amount: " + randomWorkerAmount + " Unassigned workers: " + Worker.UnassignedWorkerCount);
+                        }                       
+                    }                   
+                }
+                else
+                {
+                    Worker.UnassignedWorkerCount -= randomWorkerAmount;
+                    txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+                }
+
                 Worker.TotalWorkerCount -= randomWorkerAmount;
             }
-            NotableEvent(string.Format("You've been attacked by an animal. {0} of your people has been killed.", randomWorkerAmount));
         }
-        
-
+              
         // Here we should roll another dice to see if the player can kill the animal or not.
         // If killed gets a random amount of food between generous values.
         // If the player can't kill the animal then a worker dies or multiple.
     }
     private void VillageAttack()
     {
-
-        float victoryChance = 40f;
-        float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
-        if (randomNumberGenerated <= victoryChance)
+        if (Worker.TotalWorkerCount > 0)
         {
-            NotableEvent("Your civilization was attacked by a neighboring civilization but you manage to defeat the attackers");
-        }
-        else
-        {
-            uint randomWorkerAmount = (uint)UnityEngine.Random.Range(0, 5);
-
-            if (Worker.TotalWorkerCount - randomWorkerAmount <= 0)
+            float victoryChance = 40f;
+            float randomNumberGenerated = UnityEngine.Random.Range(0f, 100f);
+            if (randomNumberGenerated <= victoryChance)
             {
-                Worker.TotalWorkerCount = 0;
+                eventHappened = true;
+                eventGood = true;
+                NotableEvent("Your civilization was attacked by a neighboring civilization but you manage to defeat the attackers");
             }
             else
             {
-                Worker.TotalWorkerCount -= randomWorkerAmount;
+                eventHappened = true;
+                eventBad = true;
+
+                uint randomWorkerAmount = (uint)UnityEngine.Random.Range(0, 5);
+
+                if (Worker.TotalWorkerCount - randomWorkerAmount <= 0)
+                {
+                    Worker.TotalWorkerCount = 0;
+                }
+                else
+                {
+                    Worker.TotalWorkerCount -= randomWorkerAmount;
+                }
+                NotableEvent(string.Format("Your civilization was attacked by a neighboring civilization, {0} of your people has been killed.", randomWorkerAmount));
             }
-            NotableEvent(string.Format("Your civilization was attacked by a neighboring civilization, {0} of your people has been killed.", randomWorkerAmount));
         }
-
-
         // Then display everything that has been stolen and also display how many people have been killed and/or injured if we want a injuring system which
         // mioght just be too much effort.
     }
@@ -131,7 +171,7 @@ public class Events : MonoBehaviour
         {
             eventHappened = true;
             eventGood = true;
-            NotableEvent("You've unlocked a new research.");
+            NotableEvent("You've unlocked a new research option.");
             Researchable.isResearchableUnlockedEvent = false;
         }
     }
@@ -163,7 +203,7 @@ public class Events : MonoBehaviour
     // Then just make sure the animation starts again correctly.
     private void GenerateWorkers()
     {
-        if (Worker.TotalWorkerCount < MakeshiftBed._selfCount)
+        if (Worker.TotalWorkerCount < MakeshiftBed._selfCount && MakeshiftBed._selfCount != 0)
         {
             if ((_timer -= Time.deltaTime) <= 0)
             {

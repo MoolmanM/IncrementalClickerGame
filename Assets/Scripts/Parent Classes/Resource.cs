@@ -38,8 +38,9 @@ public struct ResourceInfo
 {
     public float amountPerSecond;
     public string name;
-    public BuildingType buildingAssociated;
-    public WorkerType workerAssociated;
+    public GameObject objModifiedBy;
+    //public BuildingType buildingAssociated;
+    //public WorkerType workerAssociated;
     public UiForResourceInfo uiForResourceInfo;
 }
 
@@ -91,64 +92,38 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // Set storage amount back to original storage amount
         // Remove the resourceinfo prefabs?
     }
-    private void InitializeResourceInfo()
+    public void UpdateResourceInfo(GameObject obj, float amountPerSecond, ResourceType resourceTypeToModify)
     {
-
-        foreach (var building in Building.Buildings)
+        for (int i = 0; i < resourceInfoList.Count; i++)
         {
-            Debug.Log(Type + " " + building.Key);
-            foreach (var resourceToIncrement in building.Value.resourcesToIncrement)
+            ResourceInfo resourceInfo = resourceInfoList[i];
+
+            if (resourceTypeToModify == Type && resourceInfo.objModifiedBy == obj)
             {
-                if (resourceToIncrement.resourceTypeToModify == Type)
+                resourceInfo.amountPerSecond = amountPerSecond;
+
+                if (amountPerSecond == 0)
                 {
-                    resourceInfoList.Add(new ResourceInfo() { name = building.Value.name.ToString() });
+                    resourceInfo.uiForResourceInfo.objMainPanel.SetActive(false);
+                    resourceInfo.uiForResourceInfo.objSpacer.SetActive(false);
                 }
-            }
-        }
+                else
+                {
+                    resourceInfo.uiForResourceInfo.objMainPanel.SetActive(true);
+                    resourceInfo.uiForResourceInfo.objSpacer.SetActive(true);
+                }
 
-        for (int i = 0; i < resourceInfoList.Count; i++)
-        {
-            ResourceInfo resourceInfo = resourceInfoList[i];
-
-            resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(prefabResourceInfoPanel, tformResourceTooltip);
-
-            Instantiate(prefabResourceInfoSpacer, tformResourceTooltip);
-
-            resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.objMainPanel.transform;
-            resourceInfo.uiForResourceInfo.tformInfoName = resourceInfo.uiForResourceInfo.tformNewObj.Find("Text_Name");
-            resourceInfo.uiForResourceInfo.tformInfoAmountPerSecond = resourceInfo.uiForResourceInfo.tformNewObj.Find("Text_AmountPerSecond");
-
-            resourceInfo.uiForResourceInfo.textInfoName = resourceInfo.uiForResourceInfo.tformInfoName.GetComponent<TMP_Text>();
-            resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = resourceInfo.uiForResourceInfo.tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-
-            resourceInfo.uiForResourceInfo.textInfoName.text = resourceInfo.name;
-            resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
-
-            resourceInfoList[i] = resourceInfo;
-
-            // Okay so now I ONLY want to update the amount per second
-            // And if it reaches zero. Or at least when the workercount reaches zero, I need to setactive(false)
-            // BUT the problem is, how to know which amount per second to modify.
-        }
-    }
-    public void UpdateResourceInfo(BuildingType buildingType, uint buildingCount, float buildingMultiplier, ResourceType resourceTypeToModify)
-    {
-        for (int i = 0; i < resourceInfoList.Count; i++)
-        {
-            ResourceInfo resourceInfo = resourceInfoList[i];
-
-            //Debug.Log("resourceTypeToModify: " + resourceTypeToModify);
-            //Debug.Log("Type: " + Type);
-            //Debug.Log("resourceInfo.buildingAssociated: " + resourceInfo.buildingAssociated);
-            //Debug.Log("buildingType: " + buildingType);
-
-            if (resourceTypeToModify == Type && resourceInfo.buildingAssociated == buildingType)
-            {
-                resourceInfo.amountPerSecond = buildingCount * buildingMultiplier;
-                resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
+                if (amountPerSecond < 0)
+                {
+                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("<color=#C63434>{0:0.00}/sec</color>", resourceInfo.amountPerSecond);
+                }
+                else
+                {
+                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
+                }
 
                 resourceInfoList[i] = resourceInfo;
-            }         
+            }
         }
     }
     public void SetInitialAmount(float percentageAmount)
@@ -176,7 +151,6 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (resourceInfoList != null && resourceInfoList.Any())
         {
-            Debug.Log("Pressed");
             buttonPressed = true;
             objTooltip.SetActive(true);
         }
@@ -280,33 +254,34 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         fillAmount += add / div;
         _imgBar.fillAmount = fillAmount;
     }
-    protected virtual void UpdateResources()
+    protected virtual void UpdateResource()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if (isUnlocked)
         {
-            _timer = 0.1f;
+            if ((_timer -= Time.deltaTime) <= 0)
+            {
+                _timer = 0.1f;
 
 
-            if (amount >= (storageAmount - amountPerSecond))
-            {
-                amount = storageAmount;
-            }
-            else
-            {
-                amount += (amountPerSecond / 10) * globalMultiplier;
-            }
-            if (amountPerSecond <= -0.01)
-            {
-                uiForResource.txtAmountPerSecond.text = string.Format("<color=#C63434>{0:0.00}/sec</color>", amountPerSecond);
-            }
-            else
-            {
-                uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", amountPerSecond);
-            }
-            uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+                if (amount >= (storageAmount - amountPerSecond))
+                {
+                    amount = storageAmount;
+                }
+                else
+                {
+                    amount += (amountPerSecond / 10) * globalMultiplier;
+                }
 
-            GetCurrentFill();
+                uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+
+                GetCurrentFill();
+            }
         }
+
+    }
+    private void Update()
+    {
+        UpdateResource();
     }
     void OnApplicationQuit()
     {
@@ -314,13 +289,5 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         PlayerPrefs.SetFloat(_perSecondString, amountPerSecond);
         PlayerPrefs.SetFloat(_storageAmountString, storageAmount);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
-    }
-    [Button]
-    private void DebugList()
-    {
-        foreach (var infoItem in resourceInfoList)
-        {
-            Debug.Log(infoItem.name);
-        }
     }
 }

@@ -40,8 +40,8 @@ public class Power : Building
         _objFillArea.SetActive(false);
         _objPanel.GetComponent<CanvasGroup>().alpha = 0;
 
-        PointerDownHandler.OnPointerDownEvent.AddListener(OnPointerDown);
-        PointerUpHandler.OnPointerUpEvent.AddListener(OnPointerUp);
+        //PointerDownHandler.OnPointerDownEvent.AddListener(OnPointerDown);
+        //PointerUpHandler.OnPointerUpEvent.AddListener(OnPointerUp);
     }
     public void OnPointerDown(PointerEventData data)
     {
@@ -139,7 +139,7 @@ public class Power : Building
             //UpdateResourceInfo();
         }
 
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
     }
     private void ModifyAmountPerSecond(int sliderValue)
     {

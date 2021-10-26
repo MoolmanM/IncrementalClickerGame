@@ -18,10 +18,6 @@ public class Food : Resource
         SetInitialValues();
         isUnlocked = true;
     }
-    void Update()
-    {
-        UpdateResources();
-    }
 }
 
 

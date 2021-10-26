@@ -6,13 +6,8 @@ using UnityEngine;
 
 public static class NumberToLetter
 {
-
-    //static CultureInfo ci = new CultureInfo("en-us");
-
     public static string FormatNumber(double num)
     {
-        //Console.WriteLine("E: {0}", floating.ToString("E03", ci));
-
         if (num >= 1e66)
             return num.ToString("0.00e0", CultureInfo.InvariantCulture);
 
@@ -98,6 +93,9 @@ public static class NumberToLetter
 
         if (num >= 1000)
             return (num / 1000D).ToString("0.#") + "K";
+
+        if (num >= 0)
+            return num.ToString("0.00");
 
         return num.ToString("#,0");
     }

@@ -132,7 +132,6 @@ public abstract class Researchable : SuperClass
 
                 _imgResearchBar.fillAmount = _currentTimer / secondsToCompleteResearch;
                 _researchTimeRemaining = secondsToCompleteResearch - _currentTimer;
-                Debug.Log(_researchTimeRemaining);
                 TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(_researchTimeRemaining)));
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)

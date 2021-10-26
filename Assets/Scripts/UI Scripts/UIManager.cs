@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 
 public class UIManager : MonoBehaviour
 {
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
-    public static uint swipeCount = 0;
+    public uint swipeCount = 0;
 
     public Swipe _Swipe;
     public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI, gatheringUI;
@@ -15,16 +12,30 @@ public class UIManager : MonoBehaviour
 
     private readonly uint _panelCount = 3;
 
-    
+    private static UIManager _instance;
 
+    public static UIManager Instance { get { return _instance; } }
+
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
     void Start()
     {
         swipeCount = 0;
-        foreach(var _settingsUI in settingsUI)
+        foreach (var _settingsUI in settingsUI)
         {
             _settingsUI.SetActive(false);
         }
-        
+
         BuildingPanelActive();
     }
     private void UpdateNotificationPanel()
@@ -32,23 +43,20 @@ public class UIManager : MonoBehaviour
         PointerNotification.HandleLeftAnim();
         PointerNotification.HandleRightAnim();
     }
-    private void BuildingPanelActive()
+    public void BuildingPanelActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        isBuildingVisible = true;
-        isCraftingVisible = false;
-        isResearchVisible = false;
-        isWorkerVisible = false;
-
-
-
         foreach (var _buildingUI in buildingUI)
         {
-            _buildingUI.SetActive(true);
+            if (!_buildingUI.activeSelf)
+            {
+                _buildingUI.SetActive(true);
+            }
+
         }
         foreach (var _gatheringUI in gatheringUI)
         {
@@ -64,23 +72,38 @@ public class UIManager : MonoBehaviour
         }
         foreach (var _workerUI in workerUI)
         {
-            _workerUI.SetActive(false);
+            if (_workerUI.activeSelf)
+            {
+                _workerUI.SetActive(false);
+            }
         }
         foreach (var _researchUI in researchUI)
         {
-            _researchUI.SetActive(false);
+            if (_researchUI.activeSelf)
+            {
+                _researchUI.SetActive(false);
+            }
         }
 
         foreach (var _craftUI in craftUI)
         {
-            _craftUI.SetActive(false);
+            if (_craftUI.activeSelf)
+            {
+                _craftUI.SetActive(false);
+            }
         }
 
         foreach (var craft in Craftable.Craftables)
         {
-            craft.Value.objMainPanel.SetActive(false);
-            craft.Value.objSpacerBelow.SetActive(false);
-            if(!craft.Value.hasSeen)
+            if (craft.Value.objMainPanel.activeSelf)
+            {
+                craft.Value.objMainPanel.SetActive(false);
+            }
+            if (craft.Value.objSpacerBelow.activeSelf)
+            {
+                craft.Value.objSpacerBelow.SetActive(false);
+            }
+            if (!craft.Value.hasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -88,8 +111,15 @@ public class UIManager : MonoBehaviour
 
         foreach (var researchable in Researchable.Researchables)
         {
-            researchable.Value.objMainPanel.SetActive(false);
-            researchable.Value.objSpacerBelow.SetActive(false);
+            if (researchable.Value.objMainPanel.activeSelf)
+            {
+                researchable.Value.objMainPanel.SetActive(false);
+            }
+            if (researchable.Value.objSpacerBelow.activeSelf)
+            {
+                researchable.Value.objSpacerBelow.SetActive(false);
+            }
+
             if (!researchable.Value.hasSeen)
             {
                 PointerNotification.rightAmount++;
@@ -98,8 +128,15 @@ public class UIManager : MonoBehaviour
 
         foreach (var worker in Worker.Workers)
         {
-            worker.Value.objMainPanel.SetActive(false);
-            worker.Value.objSpacerBelow.SetActive(false);
+            if (worker.Value.objMainPanel.activeSelf)
+            {
+                worker.Value.objMainPanel.SetActive(false);
+            }
+            if (worker.Value.objSpacerBelow.activeSelf)
+            {
+                worker.Value.objSpacerBelow.SetActive(false);
+            }
+
             if (!worker.Value.hasSeen)
             {
                 PointerNotification.rightAmount++;
@@ -109,12 +146,12 @@ public class UIManager : MonoBehaviour
         foreach (var building in Building.Buildings)
         {
             building.Value.hasSeen = true;
-            if (building.Value.isUnlocked)
+            if (building.Value.isUnlocked && !building.Value.objMainPanel.activeSelf)
             {
                 building.Value.objMainPanel.SetActive(true);
                 building.Value.objSpacerBelow.SetActive(true);
             }
-            else
+            else if (!building.Value.isUnlocked && building.Value.objMainPanel.activeSelf)
             {
                 building.Value.objMainPanel.SetActive(false);
                 building.Value.objSpacerBelow.SetActive(false);
@@ -122,41 +159,52 @@ public class UIManager : MonoBehaviour
         }
         UpdateNotificationPanel();
     }
-    private void CraftingPanelActive()
+    public void CraftingPanelActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        isBuildingVisible = false;
-        isCraftingVisible = true;
-        isResearchVisible = false;
-        isWorkerVisible = false;
-
         foreach (var _buildingUI in buildingUI)
         {
-            _buildingUI.SetActive(false);
+            if (_buildingUI.activeSelf)
+            {
+                _buildingUI.SetActive(false);
+            }
         }
 
         foreach (var _workerUI in workerUI)
         {
-            _workerUI.SetActive(false);
+            if (_workerUI.activeSelf)
+            {
+                _workerUI.SetActive(false);
+            }
         }
         foreach (var _researchUI in researchUI)
         {
-            _researchUI.SetActive(false);
+            if (_researchUI.activeSelf)
+            {
+                _researchUI.SetActive(false);
+            }
         }
 
         foreach (var _craftUI in craftUI)
         {
-            _craftUI.SetActive(true);
+            if (!_craftUI.activeSelf)
+            {
+                _craftUI.SetActive(true);
+            }
+
         }
 
         foreach (var building in Building.Buildings)
         {
-            building.Value.objMainPanel.SetActive(false);
-            building.Value.objSpacerBelow.SetActive(false);
+            if (building.Value.objMainPanel.activeSelf)
+            {
+                building.Value.objMainPanel.SetActive(false);
+                building.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!building.Value.hasSeen)
             {
@@ -166,8 +214,12 @@ public class UIManager : MonoBehaviour
 
         foreach (var researchable in Researchable.Researchables)
         {
-            researchable.Value.objMainPanel.SetActive(false);
-            researchable.Value.objSpacerBelow.SetActive(false);
+            if (researchable.Value.objMainPanel.activeSelf)
+            {
+                researchable.Value.objMainPanel.SetActive(false);
+                researchable.Value.objSpacerBelow.SetActive(false);
+            }
+
             if (!researchable.Value.hasSeen)
             {
                 PointerNotification.rightAmount++;
@@ -176,8 +228,11 @@ public class UIManager : MonoBehaviour
 
         foreach (var worker in Worker.Workers)
         {
-            worker.Value.objMainPanel.SetActive(false);
-            worker.Value.objSpacerBelow.SetActive(false);
+            if (worker.Value.objMainPanel.activeSelf)
+            {
+                worker.Value.objMainPanel.SetActive(false);
+                worker.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!worker.Value.hasSeen)
             {
@@ -189,18 +244,20 @@ public class UIManager : MonoBehaviour
         {
             craft.Value.hasSeen = true;
 
-            if (craft.Value.isUnlocked)
+            if (craft.Value.isUnlocked && !craft.Value.objMainPanel.activeSelf)
             {
                 craft.Value.objMainPanel.SetActive(true);
                 craft.Value.objSpacerBelow.SetActive(true);
             }
-            else
+            else if (!craft.Value.isUnlocked && craft.Value.objMainPanel.activeSelf)
             {
                 craft.Value.objMainPanel.SetActive(false);
                 craft.Value.objSpacerBelow.SetActive(false);
             }
 
-            if (Menu.isCraftingHidden && craft.Value.isCrafted)
+            // I can probably include this in the above if, and just make it the first if to check. 
+            // So that it will overwrite the rest.
+            if (Menu.isCraftingHidden && craft.Value.isCrafted && !craft.Value.objMainPanel.activeSelf)
             {
                 craft.Value.objMainPanel.SetActive(false);
                 craft.Value.objSpacerBelow.SetActive(false);
@@ -209,53 +266,66 @@ public class UIManager : MonoBehaviour
 
         UpdateNotificationPanel();
     }
-    private void WorkerPanelActive()
+    public void WorkerPanelActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        isBuildingVisible = false;
-        isCraftingVisible = false;
-        isResearchVisible = false;
-        isWorkerVisible = true;
-
         foreach (var _buildingUI in buildingUI)
         {
-            _buildingUI.SetActive(false);
+            if (_buildingUI.activeSelf)
+            {
+                _buildingUI.SetActive(false);
+            }
         }
 
         foreach (var _workerUI in workerUI)
         {
-            _workerUI.SetActive(true);
+            if (!_workerUI.activeSelf)
+            {
+                _workerUI.SetActive(true);
+            }
         }
         foreach (var _researchUI in researchUI)
         {
-            _researchUI.SetActive(false);
+            if (_researchUI.activeSelf)
+            {
+                _researchUI.SetActive(false);
+            }
         }
 
         foreach (var _craftUI in craftUI)
         {
-            _craftUI.SetActive(false);
+            if (_craftUI.activeSelf)
+            {
+                _craftUI.SetActive(false);
+            }
         }
 
         foreach (var building in Building.Buildings)
         {
-            building.Value.objMainPanel.SetActive(false);
-            building.Value.objSpacerBelow.SetActive(false);
+            if (building.Value.objMainPanel.activeSelf)
+            {
+                building.Value.objMainPanel.SetActive(false);
+                building.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!building.Value.hasSeen)
             {
                 PointerNotification.leftAmount++;
             }
-            
+
         }
 
         foreach (var craft in Craftable.Craftables)
         {
-            craft.Value.objMainPanel.SetActive(false);
-            craft.Value.objSpacerBelow.SetActive(false);
+            if (craft.Value.objMainPanel.activeSelf)
+            {
+                craft.Value.objMainPanel.SetActive(false);
+                craft.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!craft.Value.hasSeen)
             {
@@ -265,8 +335,11 @@ public class UIManager : MonoBehaviour
 
         foreach (var researchable in Researchable.Researchables)
         {
-            researchable.Value.objMainPanel.SetActive(false);
-            researchable.Value.objSpacerBelow.SetActive(false);
+            if (researchable.Value.objMainPanel.activeSelf)
+            {
+                researchable.Value.objMainPanel.SetActive(false);
+                researchable.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!researchable.Value.hasSeen)
             {
@@ -277,54 +350,62 @@ public class UIManager : MonoBehaviour
         foreach (var worker in Worker.Workers)
         {
             worker.Value.hasSeen = true;
-            if (worker.Value.isUnlocked)
+            if (worker.Value.isUnlocked && !worker.Value.objMainPanel.activeSelf)
             {
                 worker.Value.objMainPanel.SetActive(true);
                 worker.Value.objSpacerBelow.SetActive(true);
             }
-            else
-            {
+            else if (!worker.Value.isUnlocked && worker.Value.objMainPanel.activeSelf)
+            { 
                 worker.Value.objMainPanel.SetActive(false);
                 worker.Value.objSpacerBelow.SetActive(false);
             }
         }
         UpdateNotificationPanel();
     }
-    private void ResearchPanelActive()
+    public void ResearchPanelActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        isBuildingVisible = false;
-        isCraftingVisible = false;
-        isResearchVisible = true;
-        isWorkerVisible = false;
-
         foreach (var _buildingUI in buildingUI)
         {
-            _buildingUI.SetActive(false);
+            if (_buildingUI.activeSelf)
+            {
+                _buildingUI.SetActive(false);
+            }
         }
-
         foreach (var _workerUI in workerUI)
         {
-            _workerUI.SetActive(false);
+            if (_workerUI.activeSelf)
+            {
+                _workerUI.SetActive(false);
+            }
         }
         foreach (var _researchUI in researchUI)
         {
-            _researchUI.SetActive(true);
+            if (!_researchUI.activeSelf)
+            {
+                _researchUI.SetActive(true);
+            }
         }
-
         foreach (var _craftUI in craftUI)
         {
-            _craftUI.SetActive(false);
+            if (_craftUI.activeSelf)
+            {
+                _craftUI.SetActive(false);
+            }
         }
 
         foreach (var craft in Craftable.Craftables)
         {
-            craft.Value.objMainPanel.SetActive(false);
-            craft.Value.objSpacerBelow.SetActive(false);
+            if (craft.Value.objMainPanel.activeSelf)
+            {
+                craft.Value.objMainPanel.SetActive(false);
+                craft.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!craft.Value.hasSeen)
             {
@@ -334,8 +415,11 @@ public class UIManager : MonoBehaviour
 
         foreach (var building in Building.Buildings)
         {
-            building.Value.objMainPanel.SetActive(false);
-            building.Value.objSpacerBelow.SetActive(false);
+            if (building.Value.objMainPanel.activeSelf)
+            {
+                building.Value.objMainPanel.SetActive(false);
+                building.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!building.Value.hasSeen)
             {
@@ -345,8 +429,11 @@ public class UIManager : MonoBehaviour
 
         foreach (var worker in Worker.Workers)
         {
-            worker.Value.objMainPanel.SetActive(false);
-            worker.Value.objSpacerBelow.SetActive(false);
+            if (worker.Value.objMainPanel.activeSelf)
+            {
+                worker.Value.objMainPanel.SetActive(false);
+                worker.Value.objSpacerBelow.SetActive(false);
+            }
 
             if (!worker.Value.hasSeen)
             {
@@ -357,12 +444,12 @@ public class UIManager : MonoBehaviour
         foreach (var researchable in Researchable.Researchables)
         {
             researchable.Value.hasSeen = true;
-            if (researchable.Value.isUnlocked)
+            if (researchable.Value.isUnlocked && !researchable.Value.objMainPanel.activeSelf)
             {
                 researchable.Value.objMainPanel.SetActive(true);
                 researchable.Value.objSpacerBelow.SetActive(true);
             }
-            else
+            else if (!researchable.Value.isUnlocked && researchable.Value.objMainPanel.activeSelf)
             {
                 researchable.Value.objMainPanel.SetActive(false);
                 researchable.Value.objSpacerBelow.SetActive(false);
@@ -370,15 +457,18 @@ public class UIManager : MonoBehaviour
 
             if (Menu.isResearchHidden && researchable.Value.isResearched)
             {
-                researchable.Value.objMainPanel.SetActive(false);
-                researchable.Value.objSpacerBelow.SetActive(false);
+                if (researchable.Value.objMainPanel.activeSelf)
+                {
+
+                    researchable.Value.objMainPanel.SetActive(false);
+                    researchable.Value.objSpacerBelow.SetActive(false);
+                }
             }
         }
         UpdateNotificationPanel();
     }
     private void SwipeCountHandler()
     {
-        #region Actual Swiping
         if (_Swipe.SwipeRight && (swipeCount >= 1))
         {
             //swipeCount--;
@@ -387,6 +477,23 @@ public class UIManager : MonoBehaviour
         else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
         {
             //swipeCount++;
+            animMainPanel.SetTrigger("hasSwipedLeft");
+        }
+    }
+    private void SwipeCountHandlerWorking()
+    {
+        #region Actual Swiping
+        if (_Swipe.SwipeRight && (swipeCount >= 1))
+        {
+            //swipeCount--;
+            animMainPanel.SetTrigger("hasSwipedRight");
+            Debug.Log("Check");
+
+        }
+        else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
+        {
+            //swipeCount++;
+            Debug.Log("Check");
             animMainPanel.SetTrigger("hasSwipedLeft");
         }
         #endregion
@@ -419,32 +526,111 @@ public class UIManager : MonoBehaviour
 
         // I'll keep this for now, but I'm not 100% sure about it, what if the phone lags or a lagspike happens, this seems very susceptible to that.
         // One problem already with this is if you swipe excessively fast it just stays on the same panel.
-
         #region Sets Panels Active
         if (PointerNotification.IsPlaying(animMainPanel, "SwipeLeft") || PointerNotification.IsPlaying(animMainPanel, "SwipeRight"))
         {
             if (swipeCount == 0)
             {
-                BuildingPanelActive();
+                isBuildingVisible = true;
+                isCraftingVisible = false;
+                isResearchVisible = false;
+                isWorkerVisible = false;
             }
             else if (swipeCount == 1)
             {
-                CraftingPanelActive();
+                isBuildingVisible = false;
+                isCraftingVisible = true;
+                isResearchVisible = false;
+                isWorkerVisible = false;
             }
             else if (swipeCount == 2)
             {
-                WorkerPanelActive();
+                isBuildingVisible = false;
+                isCraftingVisible = false;
+                isResearchVisible = false;
+                isWorkerVisible = true;
             }
             else if (swipeCount == 3)
             {
+                isBuildingVisible = false;
+                isCraftingVisible = false;
+                isResearchVisible = true;
+                isWorkerVisible = false;
+            }
+
+            if (isBuildingVisible)
+            {
+                Debug.Log("How many times");
+                BuildingPanelActive();
+            }
+            if (isCraftingVisible)
+            {
+                Debug.Log("How many times");
+                CraftingPanelActive();
+            }
+            if (isWorkerVisible)
+            {
+                Debug.Log("How many times");
+                WorkerPanelActive();
+            }
+            if (isResearchVisible)
+            {
+                Debug.Log("How many times");
                 ResearchPanelActive();
             }
-            else
-            {
-                Debug.LogError("This shouldn't happen");
-            }
+            //Debug.Log("Building : " + isBuildingVisible + " Crafting " + isCraftingVisible + " Worker: " + isWorkerVisible + " Research: " + isResearchVisible);
         }
         #endregion
+
+
+    }
+    public void PanelHandler()
+    {
+        if (swipeCount == 0)
+        {
+            isBuildingVisible = true;
+            isCraftingVisible = false;
+            isResearchVisible = false;
+            isWorkerVisible = false;
+        }
+        else if (swipeCount == 1)
+        {
+            isBuildingVisible = false;
+            isCraftingVisible = true;
+            isResearchVisible = false;
+            isWorkerVisible = false;
+        }
+        else if (swipeCount == 2)
+        {
+            isBuildingVisible = false;
+            isCraftingVisible = false;
+            isResearchVisible = false;
+            isWorkerVisible = true;
+        }
+        else if (swipeCount == 3)
+        {
+            isBuildingVisible = false;
+            isCraftingVisible = false;
+            isResearchVisible = true;
+            isWorkerVisible = false;
+        }
+
+        if (isBuildingVisible)
+        {
+            BuildingPanelActive();
+        }
+        if (isCraftingVisible)
+        {
+            CraftingPanelActive();
+        }
+        if (isWorkerVisible)
+        {
+            WorkerPanelActive();
+        }
+        if (isResearchVisible)
+        {
+            ResearchPanelActive();
+        }
     }
     void Update()
     {

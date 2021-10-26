@@ -61,6 +61,9 @@ public class Craftable : SuperClass
     {
         InitializeObjects();
 
+        _txtHeader.text = string.Format("{0}", actualName);
+        _objTxtHeaderDone.GetComponent<TMP_Text>().text = string.Format("{0} (Crafted)", actualName);
+
         if (TimeManager.hasPlayedBefore)
         {
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
@@ -108,10 +111,13 @@ public class Craftable : SuperClass
     }
     protected void Crafted()
     {
-        _objBtnMain.GetComponent<Button>().interactable = false;
+        _btnMain.interactable = false;
         _objProgressCircle.SetActive(false);
         _objTxtHeader.SetActive(false);
         _objTxtHeaderDone.SetActive(true);
+        ColorBlock cb = _btnMain.colors;
+        cb.disabledColor = new Color(0, 0, 0, 1);
+        _btnMain.colors = cb;
 
         string htmlValue = "#D4D4D4";
 
@@ -136,7 +142,7 @@ public class Craftable : SuperClass
     public void MakeCraftableAgain()
     {
         // I don't think this is really needed, not until the player prestige at least.
-        _objBtnMain.GetComponent<Button>().interactable = true;
+        _btnMain.interactable = true;
         _objProgressCircle.SetActive(true);
         _objTxtHeader.SetActive(true);
         _objTxtHeaderDone.SetActive(false);
@@ -158,7 +164,7 @@ public class Craftable : SuperClass
 
         _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
 
-        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnCraft);
+        _btnMain.onClick.AddListener(OnCraft);
     }
     protected void SetDescriptionText(string description)
     {

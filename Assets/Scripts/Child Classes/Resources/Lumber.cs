@@ -15,8 +15,4 @@ public class Lumber : Resource
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         SetInitialValues();
     }
-    void Update()
-    {
-        UpdateResources();
-    }
 }

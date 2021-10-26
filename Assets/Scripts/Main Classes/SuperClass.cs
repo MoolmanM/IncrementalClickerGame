@@ -34,17 +34,22 @@ public abstract class SuperClass : MonoBehaviour
     public TypesToUnlock typesToUnlock;
     public bool isUnlockableByResource;
     public GameObject objSpacerBelow;
-
     public int unlockAmount, unlocksRequired;
+    public string actualName;
+
     [System.NonSerialized] public bool isUnlocked, hasSeen = true, isUnlockedByResource;
     [System.NonSerialized] public GameObject objMainPanel;
 
     protected float _timer = 0.1f;
     protected readonly float _maxValue = 0.1f;
     protected GameObject _prefabResourceCost, _prefabBodySpacer, _objProgressCircle, _objBtnMain, _objTxtHeaderDone, _objTxtHeader, _objBtnExpand, _objBtnCollapse, _objBody;
-    protected TMP_Text _txtDescription;
+    protected TMP_Text _txtDescription, _txtHeader;
     protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformTxtHeaderDone, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgProgressCircle;
+    protected Button _btnMain;
+    protected Color _colTxtHeader;
+
+    private bool isPurchaseable, isPurchaseableSet;
 
     void OnValidate()
     {
@@ -144,6 +149,10 @@ public abstract class SuperClass : MonoBehaviour
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
 
+        _txtHeader = _objTxtHeader.GetComponent<TMP_Text>();
+        _btnMain = _objBtnMain.GetComponent<Button>();
+        _colTxtHeader = _objTxtHeader.GetComponent<TMP_Text>().color;
+
         _objBtnExpand.GetComponent<Button>().onClick.AddListener(OnExpandCloseAll);
         _objBtnCollapse.GetComponent<Button>().onClick.AddListener(OnCollapse);
     }
@@ -196,86 +205,105 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void Purchaseable()
     {
-        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
-        cb.normalColor = new Color(0, 0, 0, 0);
-        _objBtnMain.GetComponent<Button>().colors = cb;
+        Debug.Log("Purchaseable");
+
         string htmlValue = "#333333";
+
+        _btnMain.interactable = true;
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
         {
-            _objTxtHeader.GetComponent<TMP_Text>().color = darkGreyColor;
+            _colTxtHeader = darkGreyColor;
         }
+
     }
     protected void UnPurchaseable()
     {
-        ColorBlock cb = _objBtnMain.GetComponent<Button>().colors;
-        cb.normalColor = new Color(0, 0, 0, 0.25f);
-        cb.highlightedColor = new Color(0, 0, 0, 0.23f);
-        cb.pressedColor = new Color(0, 0, 0, 0.3f);
-        cb.selectedColor = new Color(0, 0, 0, 0.23f);
-        _objBtnMain.GetComponent<Button>().colors = cb;
+        Debug.Log("Unpurchaseable");
+
+        _btnMain.interactable = false;
 
         string htmlValue = "#D71C2A";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color redColor))
         {
-            _objTxtHeader.GetComponent<TMP_Text>().color = redColor;
+            _colTxtHeader = redColor;
         }
+
     }
     protected void CheckIfPurchaseable()
     {
-        if (GetCurrentFill() == 1f)
+        if (GetCurrentFill() == 1)
         {
-            Purchaseable();
+            isPurchaseable = true;
         }
         else
         {
-            UnPurchaseable();
+            isPurchaseable = false;
         }
+
+        if (isPurchaseable && !isPurchaseableSet)
+        {
+            Purchaseable();
+            isPurchaseableSet = true;
+        }
+        else if (!isPurchaseable && isPurchaseableSet)
+        {
+            UnPurchaseable();
+            isPurchaseableSet = false;
+        }
+        // I should also cache these colors, shouldn't be using getcomponent
+        // I could just check for when it is 1
+        // Then make it purchaseable, but once again, that only has to run once.
+
+        //if (GetCurrentFill() != 1)
+        //{
+        //    UnPurchaseable();
+        //}
+        //else
+        //{
+        //    Purchaseable();
+        //}
     }
     protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
     {
-        if (isUnlocked)
+        if (amountPerSecond > 0 && cost > current)
         {
-            if (amountPerSecond > 0 && cost > current)
-            {
-                float secondsLeft = (cost - current) / (amountPerSecond);
-                TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
+            float secondsLeft = (cost - current) / (amountPerSecond);
+            TimeSpan timeSpan = TimeSpan.FromSeconds((double)(new decimal(secondsLeft)));
 
-                if (storageAmount < cost)
+            if (storageAmount < cost)
+            {
+                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+            }
+            else
+            {
+                if (current >= cost)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+                    txt.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                }
+                else if (timeSpan.Days == 0)
+                {
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
                 else
                 {
-                    if (current >= cost)
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
-                    }
-                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
-                    }
-                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
-                    }
-                    else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
-                    }
-                    else if (timeSpan.Days == 0)
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
-                    }
-                    else
-                    {
-                        txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
-                    }
+                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
             }
         }
-
     }
     protected float GetCurrentFill()
     {
@@ -314,7 +342,7 @@ public abstract class SuperClass : MonoBehaviour
                     PointerNotification.leftAmount++;
                 }
             }
-        }      
+        }
     }
     protected void CheckIfCraftingUnlocked()
     {
@@ -348,7 +376,7 @@ public abstract class SuperClass : MonoBehaviour
                     PointerNotification.leftAmount++;
                 }
             }
-        }    
+        }
     }
     protected void CheckIfWorkerUnlocked()
     {
@@ -381,7 +409,7 @@ public abstract class SuperClass : MonoBehaviour
                     PointerNotification.leftAmount++;
                 }
             }
-        }     
+        }
     }
     protected void CheckIfResearchUnlocked()
     {
@@ -395,14 +423,14 @@ public abstract class SuperClass : MonoBehaviour
                     researchable.Value.objSpacerBelow.SetActive(true);
                     researchable.Value.hasSeen = true;
                 }
-                else if(researchable.Value.hasSeen)
+                else if (researchable.Value.hasSeen)
                 {
                     Researchable.isResearchableUnlockedEvent = true;
                     researchable.Value.hasSeen = false;
                     PointerNotification.rightAmount++;
                 }
             }
-        }      
+        }
     }
     protected void CheckIfUnlocked()
     {
@@ -489,7 +517,7 @@ public abstract class SuperClass : MonoBehaviour
                 if (Craftable.Craftables[craft].unlockAmount == Craftable.Craftables[craft].unlocksRequired)
                 {
                     Craftable.Craftables[craft].isUnlocked = true;
-                    
+
                     if (UIManager.isBuildingVisible)
                     {
                         Craftable.isCraftableUnlockedEvent = true;
@@ -521,7 +549,7 @@ public abstract class SuperClass : MonoBehaviour
             foreach (BuildingType buildingType in typesToUnlock.buildingTypesToUnlock)
             {
                 Building.Buildings[buildingType].unlockAmount++;
-                
+
                 if (Building.Buildings[buildingType].unlockAmount == Building.Buildings[buildingType].unlocksRequired)
                 {
                     #region This is new and for testing
@@ -581,18 +609,30 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UpdateResourceCosts()
     {
+        // So can do an if check here to only update when it is unlocked.
+        // And then can also check if it's panel is unlocked to unlock
+        // can also only update the text fields when the body panel is expanded, otherwise there is no point to update the text fields.
+        // lets go
+
+
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = _maxValue;
 
+            //if (isUnlocked)
+            //{             
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
-                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
 
-                ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
+                if (_objBody.activeSelf)
+                {
+                    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+                    resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
+                    ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
+                }
             }
+            //}
             _imgProgressCircle.fillAmount = GetCurrentFill();
             CheckIfUnlocked();
         }

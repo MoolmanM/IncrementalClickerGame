@@ -38,7 +38,7 @@ public class MakeshiftBed : Building
             }          
         }
 
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
     }
     protected override void ModifyDescriptionText()
     {

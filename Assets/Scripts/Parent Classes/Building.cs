@@ -9,7 +9,7 @@ public enum BuildingType
     PotatoField,
     Woodlot,
     DigSite,
-    MakeshiftBed,
+    MakeshiftBed, // Change this to "Hut"?
     Smelter,
     StoragePile, // For Stone, Lumber, maybe other materials
     //StorageTent, For food, and more delicate stuff.
@@ -43,7 +43,6 @@ public abstract class Building : SuperClass
     public float costMultiplier;
 
     protected uint _selfCount;
-    protected string _stringOriginalHeader;
     private string _selfCountString, _isUnlockedString;
     private string[] _costString;
 
@@ -62,7 +61,7 @@ public abstract class Building : SuperClass
             resourceCost[i].costAmount = resourceCost[i].initialCostAmount;
             resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
         }
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
     }
     public void SetSelfCount(uint selfCountAmount)
     {
@@ -78,7 +77,7 @@ public abstract class Building : SuperClass
             Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += amountToIncreaseBy;
         }
 
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
 
         // This seems to do everything that I want.
     }
@@ -86,8 +85,14 @@ public abstract class Building : SuperClass
     {
         foreach (var resourceToIncrement in resourcesToIncrement)
         {
-            Debug.Log("Type: " + Type);
-            Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(Type, _selfCount, resourceToIncrement.resourceMulitplier, resourceToIncrement.resourceTypeToModify);
+            float buildingAmountPerSecond = _selfCount * resourceToIncrement.resourceMulitplier;
+            Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(gameObject, buildingAmountPerSecond, resourceToIncrement.resourceTypeToModify);
+        }
+
+        foreach (var resourceToDecrement in resourcesToDecrement)
+        {
+            float buildingAmountPerSecond = _selfCount * resourceToDecrement.resourceMulitplier;
+            Resource.Resources[resourceToDecrement.resourceTypeToModify].UpdateResourceInfo(gameObject, -buildingAmountPerSecond, resourceToDecrement.resourceTypeToModify);
         }
     }
     protected void SetInitialValues()
@@ -104,7 +109,7 @@ public abstract class Building : SuperClass
                 resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
             }
         }
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
     }
     public virtual void OnBuild()
     {
@@ -132,7 +137,7 @@ public abstract class Building : SuperClass
             UpdateResourceInfo();
         }
 
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0} ({1})", _stringOriginalHeader, _selfCount);
+        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
     }
     protected virtual void ModifyDescriptionText()
     {
@@ -167,6 +172,7 @@ public abstract class Building : SuperClass
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
             Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].resourceMulitplier;
+            Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
         }
     }
     protected override void InitializeObjects()
@@ -174,8 +180,6 @@ public abstract class Building : SuperClass
         base.InitializeObjects();
 
         _objBtnMain.GetComponent<Button>().onClick.AddListener(OnBuild);
-
-        _stringOriginalHeader = _objTxtHeader.GetComponent<TMP_Text>().text;
 
         _selfCountString = (Type.ToString() + "_selfCount");
         _isUnlockedString = (Type.ToString() + "isUnlocked");

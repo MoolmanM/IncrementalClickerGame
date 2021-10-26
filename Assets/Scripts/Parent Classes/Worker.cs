@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public enum WorkerType
@@ -39,11 +40,12 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public GameObject objSpacerBelow;
     public TMP_Text txtAvailableWorkers;
 
-    private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip;
+    private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip, _tformBtnPlus, _tformBtnMinus;
     private TMP_Text _txtDescriptionHeader, _txtDescriptionBody;
     private GameObject _objTooltip;
     private string _workerString, _previousText;
     protected uint _changeAmount = 1;
+    private Button _btnPlus, _btnMinus;
     //private bool buttonPressed;
 
     public void ResetWorker()
@@ -66,168 +68,17 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     protected void UpdateResourceInfo()
     {
-        //GameObject newObj;
-        // Need to make sure you check every resource that the worker modifies, and then instantiate a prefab in each resource.
-        //foreach (var resource in Resource.Resources)
-        //{
-        //    for (int i = 0; i < _resourcesToIncrement.Length; i++)
-        //    {
-        //        if (resource.Key == _resourcesToIncrement[i].resourceTypeToModify && !_resourcesToIncrement[i].hasInstantiated)
-        //        {
-        //            resource.Value.resourceInfoList.Add(new ResourceInfo() { name = Type.ToString(), amountPerSecond = workerCount * _resourcesToIncrement[i].incrementAmount * workerCount, workerAssociated = Type });
+        foreach (var resourceToIncrement in _resourcesToIncrement)
+        {
+            float workerAmountPerSecond = workerCount * resourceToIncrement.resourceMultiplier;
+            Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(gameObject, workerAmountPerSecond, resourceToIncrement.resourceTypeToModify);
+        }
 
-        //                if (Type == resource.Value.resourceInfoList[i].workerAssociated && !_resourcesToIncrement[i].hasInstantiated)
-        //                {
-        //                    ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-        //                    Debug.Log("How many ");
-        //                    resourceInfo.uiForResourceInfo.obj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-
-        //                    Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
-
-        //                    Transform _tformNewObj = resourceInfo.uiForResourceInfo.obj.transform;
-        //                    Transform _tformInfoName = _tformNewObj.Find("Text_Name");
-        //                    Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
-
-        //                    _resourcesToIncrement[i].hasInstantiated = true;
-
-        //                    resourceInfo.amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount;
-        //                    resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
-        //                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-
-        //                    resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
-        //                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
-
-        //                    resource.Value.resourceInfoList[i] = resourceInfo;
-        //                }                                             
-        //        }
-        //        else if (resource.Key == _resourcesToIncrement[i].resourceTypeToModify && _resourcesToIncrement[i].hasInstantiated && Type == resource.Value.resourceInfoList[i].workerAssociated)
-        //        {
-        //                ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-        //                Debug.Log(resourceInfo.name);
-
-        //                if (workerCount == 0)
-        //                {
-        //                    resourceInfo.uiForResourceInfo.obj.SetActive(false);
-        //                }
-        //                else
-        //                {
-        //                    resourceInfo.uiForResourceInfo.obj.SetActive(true);
-        //                }
-
-        //                resourceInfo.amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount;
-        //                resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
-
-        //                resource.Value.resourceInfoList[i] = resourceInfo;
-        //        }
-
-        //    }
-        //}
-
-
-        //foreach (var resource in Resource.Resources)
-        //{
-        //    for (int i = 0; i < _resourcesToIncrement.Length; i++)
-        //    {
-        //        if (resource.Key == _resourcesToIncrement[i].resourceTypeToModify && !_resourcesToIncrement[i].hasInstantiated)
-        //        {
-        //            resource.Value.resourceInfoList.Add(new ResourceInfo() { name = Type.ToString(), amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount });
-
-        //            for (int r = 0; r < resource.Value.resourceInfoList.Count; r++)
-        //            {
-        //                ResourceInfo resourceInfo = resource.Value.resourceInfoList[r];
-
-        //                resourceInfo.uiForResourceInfo.obj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-
-        //                Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
-
-        //                Transform _tformNewObj = resourceInfo.uiForResourceInfo.obj.transform;
-        //                Transform _tformInfoName = _tformNewObj.Find("Text_Name");
-        //                Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
-
-        //                _resourcesToIncrement[i].hasInstantiated = true;
-
-        //                resourceInfo.amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount;
-        //                resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
-        //                resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-
-        //                resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
-        //                resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
-
-        //                resource.Value.resourceInfoList[r] = resourceInfo;
-        //            }
-        //        }
-        //        else if (resource.Key == _resourcesToIncrement[i].resourceTypeToModify)
-        //        {
-        //            for (int r = 0; r < resource.Value.resourceInfoList.Count; r++)
-        //            {
-        //                ResourceInfo resourceInfo = resource.Value.resourceInfoList[r];
-        //                Debug.Log(resourceInfo.name);
-
-        //                if (workerCount == 0)
-        //                {
-        //                    resourceInfo.uiForResourceInfo.obj.SetActive(false);
-        //                }
-        //                else
-        //                {
-        //                    resourceInfo.uiForResourceInfo.obj.SetActive(true);
-        //                }
-
-        //                resourceInfo.amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount;
-        //                resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("+{0:0.00}/sec", resourceInfo.amountPerSecond);
-
-        //                resource.Value.resourceInfoList[r] = resourceInfo;
-        //            }
-        //        }
-        //    }
-
-        //    if (_resourcesToDecrement != null)
-        //    {
-        //        for (int i = 0; i < _resourcesToDecrement.Length; i++)
-        //        {
-        //            if (resource.Key == _resourcesToDecrement[i].resourceTypeToModify && !_resourcesToDecrement[i].hasInstantiated)
-        //            {
-        //                resource.Value.resourceInfoList.Add(new ResourceInfo() { name = Type.ToString(), amountPerSecond = _resourcesToIncrement[i].incrementAmount * workerCount });
-
-        //                for (int r = 0; r < resource.Value.resourceInfoList.Count; r++)
-        //                {
-        //                    ResourceInfo resourceInfo = resource.Value.resourceInfoList[r];
-
-        //                    GameObject newObj = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-        //                    Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
-
-        //                    _resourcesToDecrement[i].hasInstantiated = true;
-
-        //                    Transform _tformNewObj = newObj.transform;
-        //                    Transform _tformInfoName = _tformNewObj.Find("Text_Name");
-        //                    Transform _tformInfoAmountPerSecond = _tformNewObj.Find("Text_AmountPerSecond");
-
-        //                    resourceInfo.uiForResourceInfo.textInfoName = _tformInfoName.GetComponent<TMP_Text>();
-        //                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond = _tformInfoAmountPerSecond.GetComponent<TMP_Text>();
-        //                    resourceInfo.amountPerSecond = _resourcesToDecrement[i].incrementAmount * workerCount;
-
-        //                    resourceInfo.uiForResourceInfo.textInfoName.text = Type.ToString();
-        //                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("<color=#C63434>-{0:0.00}/sec</color>", resourceInfo.amountPerSecond);
-
-        //                    Debug.Log(resourceInfo.name + ", Amount per second: " + resourceInfo.amountPerSecond + ", Type to Modify: " + _resourcesToDecrement[i].resourceTypeToModify + ", Increment Amount: " + _resourcesToDecrement[r].incrementAmount);
-        //                    resource.Value.resourceInfoList[r] = resourceInfo;
-        //                }
-        //            }
-        //            else if (resource.Key == _resourcesToDecrement[i].resourceTypeToModify)
-        //            {
-        //                for (int r = 0; r < resource.Value.resourceInfoList.Count; r++)
-        //                {
-        //                    ResourceInfo resourceInfo = resource.Value.resourceInfoList[r];
-        //                    resourceInfo.amountPerSecond = _resourcesToDecrement[i].incrementAmount * workerCount;
-        //                    resourceInfo.uiForResourceInfo.textInfoAmountPerSecond.text = string.Format("<color=#C63434>-{0:0.00}/sec</color>", resourceInfo.amountPerSecond);
-
-        //                    Debug.Log(resourceInfo.name + ", Amount per second: " + resourceInfo.amountPerSecond + ", Type to Modify: " + _resourcesToDecrement[i].resourceTypeToModify + ", Increment Amount: " + _resourcesToDecrement[r].incrementAmount);
-        //                    resource.Value.resourceInfoList[r] = resourceInfo;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
+        foreach (var resourceToDecrement in _resourcesToDecrement)
+        {
+            float workerAmountPerSecond = workerCount * resourceToDecrement.resourceMultiplier;
+            Resource.Resources[resourceToDecrement.resourceTypeToModify].UpdateResourceInfo(gameObject, -workerAmountPerSecond, resourceToDecrement.resourceTypeToModify);
+        }
     }
     private void SetDescriptionText()
     {
@@ -272,16 +123,23 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected void InitializeObjects()
     {
         _tformTxtHeader = transform.Find("Panel_Main/Text_Header");
+        _tformBtnMinus = transform.Find("Panel_Main/Button_Minus");
+        _tformBtnPlus = transform.Find("Panel_Main/Button_Plus");
         _tformObjMainPanel = transform.Find("Panel_Main");
         _tformTxtDescriptionHeader = transform.Find("Worker_Tooltip/Header");
         _tformTxtDescriptionBody = transform.Find("Worker_Tooltip/Body");
         tformObjTooltip = transform.Find("Worker_Tooltip");
 
         txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
+        _btnPlus = _tformBtnPlus.GetComponent<Button>();
+        _btnMinus = _tformBtnMinus.GetComponent<Button>();
         objMainPanel = _tformObjMainPanel.gameObject;
         _txtDescriptionHeader = _tformTxtDescriptionHeader.GetComponent<TMP_Text>();
         _txtDescriptionBody = _tformTxtDescriptionBody.GetComponent<TMP_Text>();
         _objTooltip = tformObjTooltip.gameObject;
+
+        _btnPlus.onClick.AddListener(OnPlusButton);
+        _btnMinus.onClick.AddListener(OnMinusButton);
 
         SetDescriptionText();
 

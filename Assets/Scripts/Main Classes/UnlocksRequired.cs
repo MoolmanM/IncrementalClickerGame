@@ -85,7 +85,34 @@ public class UnlocksRequired : MonoBehaviour
                 {
                     if (resourceToIncrement.resourceTypeToModify == resource.Key)
                     {
-                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.name.ToString() });
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.actualName, objModifiedBy = building.Value.gameObject});
+                    }
+                }
+
+                foreach (var resourceToDecrement in building.Value.resourcesToDecrement)
+                {
+                    if (resourceToDecrement.resourceTypeToModify == resource.Key)
+                    {
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.actualName, objModifiedBy = building.Value.gameObject });
+                    }
+                }
+            }
+
+            foreach (var worker in Worker.Workers)
+            {
+                foreach (var resourceToIncrement in worker.Value._resourcesToIncrement)
+                {
+                    if (resourceToIncrement.resourceTypeToModify == resource.Key)
+                    {
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.name.ToString(), objModifiedBy = worker.Value.gameObject });
+                    }
+                }
+
+                foreach (var resourceToDecrement in worker.Value._resourcesToDecrement)
+                {
+                    if (resourceToDecrement.resourceTypeToModify == resource.Key)
+                    {
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.name.ToString(), objModifiedBy = worker.Value.gameObject });
                     }
                 }
             }
@@ -95,8 +122,7 @@ public class UnlocksRequired : MonoBehaviour
                 ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
 
                 resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
-
-                Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
+                resourceInfo.uiForResourceInfo.objSpacer = Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
 
                 resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.objMainPanel.transform;
                 resourceInfo.uiForResourceInfo.tformInfoName = resourceInfo.uiForResourceInfo.tformNewObj.Find("Text_Name");
@@ -113,6 +139,12 @@ public class UnlocksRequired : MonoBehaviour
                 // Okay so now I ONLY want to update the amount per second
                 // And if it reaches zero. Or at least when the workercount reaches zero, I need to setactive(false)
                 // BUT the problem is, how to know which amount per second to modify.
+            }
+
+            foreach (var resourceInfo in resource.Value.resourceInfoList)
+            {
+                resourceInfo.uiForResourceInfo.objMainPanel.SetActive(false);
+                resourceInfo.uiForResourceInfo.objSpacer.SetActive(false);
             }
         }
 
