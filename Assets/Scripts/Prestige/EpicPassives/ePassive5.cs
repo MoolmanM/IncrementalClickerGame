@@ -13,7 +13,7 @@ public class ePassive5 : EpicPassive
     }
     private void AddToBoxCache()
     {
-
+        Debug.Log("This is ePassive5(Currently out of order)");
     }
     public override void InitializePermanentStat()
     {

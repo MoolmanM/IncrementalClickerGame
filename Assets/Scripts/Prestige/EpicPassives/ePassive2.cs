@@ -5,7 +5,6 @@ public class ePassive2 : EpicPassive
 {
     private EpicPassive _epicPassive;
     private float percentageAmount = 0.02f; // 2%
-    private WorkerType workerTypeChosen;
 
     private void Awake()
     {

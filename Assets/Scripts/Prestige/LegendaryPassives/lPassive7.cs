@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 //ePassive7: Increase production of ALL production Buildings by a certain %.
-public class ePassive7 : EpicPassive
+public class lPassive7 : LegendaryPassive
 {
-    private EpicPassive _epicPassive;
+    private LegendaryPassive _legendaryPassive;
     private float percentageAmount = 0.01f; // 1%
 
     private void Awake()
     {
-        _epicPassive = GetComponent<EpicPassive>();
-        EpicPassives.Add(Type, _epicPassive);
-        description = "Increase production of all Buildings by " + percentageAmount;
+        _legendaryPassive = GetComponent<LegendaryPassive>();
+        LegendaryPassives.Add(Type, _legendaryPassive);
+        description = string.Format("Increase production of all Buildings by {0}%", percentageAmount * 100);
     }
     private void AddToBoxCache()
     {

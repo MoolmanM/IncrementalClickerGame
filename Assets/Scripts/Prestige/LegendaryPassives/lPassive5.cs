@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class lPassive5 : LegendaryPassive
@@ -11,9 +9,14 @@ public class lPassive5 : LegendaryPassive
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);
     }
-
-    public override void ExecutePassive()
+    private void AddToBoxCache()
     {
-        base.ExecutePassive();
+        Debug.Log("This is lPassive5(Currently out of order)");
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
+
+        AddToBoxCache();
     }
 }

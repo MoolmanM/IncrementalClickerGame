@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // ePassive6: Decrease initial cost of a random Building.
-public class ePassive6 : EpicPassive
+public class lPassive6 : LegendaryPassive
 {
-    private EpicPassive _epicPassive;
+    private LegendaryPassive _legendaryPassive;
 
     private float percentageAmount = 0.01f; // 1%
     private BuildingType buildingTypeChosen;
 
     private void Awake()
     {
-        _epicPassive = GetComponent<EpicPassive>();
-        EpicPassives.Add(Type, _epicPassive);
+        _legendaryPassive = GetComponent<LegendaryPassive>();
+        LegendaryPassives.Add(Type, _legendaryPassive);
     }
     private void ChooseRandomBuilding()
     {

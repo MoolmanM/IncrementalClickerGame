@@ -9,17 +9,22 @@ public enum LegendaryType
     Passive3,
     Passive4,
     Passive5,
+    Passive6,
+    Passive7,
+    Passive8,
+    Passive9,
+    Passive10,
 }
 
 public class LegendaryPassive : MonoBehaviour
 {
-    // Maybe just list
     public static Dictionary<LegendaryType, LegendaryPassive> LegendaryPassives = new Dictionary<LegendaryType, LegendaryPassive>();
     public LegendaryType Type;
-    public string description;
+    [System.NonSerialized] public string description;
+    protected int _index;
 
-    public virtual void ExecutePassive()
+    public virtual void InitializePermanentStat()
     {
-        Debug.Log("This is something the passives will all do because they have that in common");
+
     }
 }

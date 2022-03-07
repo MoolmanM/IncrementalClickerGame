@@ -6,6 +6,10 @@ using Sirenix.OdinInspector;
 public class BoxCache : MonoBehaviour
 {
     public static float cachedAllWorkerMultiplierAmount;
+    public static float cachedAllBuildingMultiplierAmount;
+
+    public static float cachedAllCraftablesCostReduced;
+    public static float cachedAllResearchablesCostReduced;
 
     public static Dictionary<CraftingType, float> cachedCraftableCostReduced = new Dictionary<CraftingType, float>();
     public static Dictionary<ResearchType, float> cachedResearchableCostReduced = new Dictionary<ResearchType, float>();
@@ -48,6 +52,73 @@ public class BoxCache : MonoBehaviour
         ModifyStorageLimit();
     }
 
+    private void ModifyAllResearchablesCost()
+    {
+        foreach (var researchable in Researchable.Researchables)
+        {
+            //Researchable researchable = Researchable.Researchables[cachedResearch.Key];
+            for (int i = 0; i < researchable.Value.resourceCost.Length; i++)
+            {
+                ResourceCost resourceCost = researchable.Value.resourceCost[i];
+                float oldResourceCost = resourceCost.costAmount;
+                float amountToDeduct = oldResourceCost * cachedAllResearchablesCostReduced;
+                float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                resourceCost.costAmount = newResourceCost;
+
+                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.actualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
+            }
+
+            PermanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
+        }
+    }
+    private void ModifyAllCraftableCost()
+    {
+        foreach (var craft in Craftable.Craftables)
+        {
+            Craftable craftable = Craftable.Craftables[craft.Key];
+            for (int i = 0; i < craftable.resourceCost.Length; i++)
+            {
+                ResourceCost resourceCost = craftable.resourceCost[i];
+                float oldResourceCost = resourceCost.costAmount;
+                float amountToDeduct = oldResourceCost * cachedAllCraftablesCostReduced;
+                float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                resourceCost.costAmount = newResourceCost;
+
+                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
+            }
+
+            PermanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
+        }
+    }
+    private void ModifyAllBuildingMultiplier()
+    {
+        foreach (var building in Building.Buildings)
+        {
+            //Building building = Building.Buildings[cachedBuilding.Key];
+
+            for (int i = 0; i < building.Value.resourcesToIncrement.Count; i++)
+            {
+                BuildingResourcesToModify buildingResourceToModify = building.Value.resourcesToIncrement[i];
+
+                float increaseAmount = buildingResourceToModify.baseResourceMultiplier * cachedAllBuildingMultiplierAmount;
+                buildingResourceToModify.currentResourceMultiplier += increaseAmount;
+                float differenceAmount = buildingResourceToModify.currentResourceMultiplier - buildingResourceToModify.baseResourceMultiplier;
+                //building.ModifyDescriptionText();
+
+                if (building.Value.isUnlocked)
+                {
+                    float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                    Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.Value.ReturnSelfCount();
+                    float newAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[buildingResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+
+                    Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", buildingResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, buildingResourceToModify.baseResourceMultiplier, buildingResourceToModify.currentResourceMultiplier, differenceAmount));
+                }
+            }
+
+            PermanentStats.allBuildingMultiplierAmount += cachedAllBuildingMultiplierAmount;
+        }
+    }
     private void ModifyBuildingCosts()
     {
         foreach (var cachedBuilding in cachedBuildingCostReduced)
@@ -61,7 +132,7 @@ public class BoxCache : MonoBehaviour
                 float newResourceCost = resourceCost.initialCostAmount - amountToDeduct;
                 resourceCost.costAmount = newResourceCost;
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
+                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
             }
 
             if (!PermanentStats.buildingCostReduced.ContainsKey(building.Type))

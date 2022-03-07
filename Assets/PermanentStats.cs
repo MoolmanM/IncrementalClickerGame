@@ -6,6 +6,10 @@ using Sirenix.OdinInspector;
 public class PermanentStats : MonoBehaviour
 {
     public static float allWorkerMultiplierAmount;
+    public static float allBuildingMultiplierAmount;
+
+    public static float allCraftablesCostReduced;
+    public static float allResearchablesCostReduced;
 
     public static Dictionary<CraftingType, float> craftableCostReduced = new Dictionary<CraftingType, float>();
     public static Dictionary<ResearchType, float> researchableCostReduced = new Dictionary<ResearchType, float>();

@@ -1,6 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// cPassive 1: Reduce time it takes to research stuff by a certain %.
+// cPassive 2: Increase a random Worker's Multiplier by a certain %.
+// cPassive 3: Start next/each run with a certain number of a random Building.
+// cPassive 4: Start next/each run with a certain number of Workers.
+// cPassive 5: Increase production of a random production Building by a certain %.
+// cPassive 6: Decrease cost of a random Craftable by a certain %.
+// cPassive 7: Decrease cost of random Researchable by a certain %.
+// cPassive 8: Increase storage limit of a random Storage Building by a certain %.
 public enum CommonType
 {
     Passive1,

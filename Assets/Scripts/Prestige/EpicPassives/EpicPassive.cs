@@ -11,8 +11,8 @@ using UnityEngine;
 //ePassive7: Increase production of ALL production Buildings by a certain %.
 //ePassive8: Decrease cost of ALL Craftables by a certain %.
 //ePassive9: Decrease cost of ALL Researchables by a certain %.
-//ePassive10: Decrease cost of ALL Buildings by a certain %. *This might be a little to strong.
-//ePassive11: Increase storage limit of ALL storage Buildings by a certain %.
+//ePassive10: Increase storage limit of ALL storage Buildings by a certain %.
+//ePassive11: Decrease cost of ALL Buildings by a certain %. *This might be a little to strong.
 
 public enum EpicType
 {
@@ -25,8 +25,7 @@ public enum EpicType
     Passive7,
     Passive8,
     Passive9,
-    Passive10,
-    Passive11
+    Passive10
 }
 
 public class EpicPassive : MonoBehaviour

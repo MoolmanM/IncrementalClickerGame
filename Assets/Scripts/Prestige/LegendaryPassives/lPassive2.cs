@@ -1,19 +1,25 @@
-using System.Collections;
+//ePassive2: Increase production of ALL Workers by a certain %.
 using System.Collections.Generic;
-using UnityEngine;
 
 public class lPassive2 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
+    private float percentageAmount = 0.05f; // 5%
 
     private void Awake()
     {
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);
+        description = "Increase production of all Workers by " + percentageAmount;
     }
-
-    public override void ExecutePassive()
+    private void AddToBoxCache()
     {
-        base.ExecutePassive();
+        BoxCache.cachedAllWorkerMultiplierAmount += percentageAmount;
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
+
+        AddToBoxCache();
     }
 }
