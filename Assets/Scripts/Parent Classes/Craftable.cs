@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum CraftingType
 {
@@ -32,8 +30,6 @@ public enum CraftingType
     IronHoe,
     IronPickaxe,
     IronSpear,
-
-
 }
 
 public class Craftable : SuperClass
@@ -45,46 +41,67 @@ public class Craftable : SuperClass
     [System.NonSerialized] public bool isCrafted;
 
     private string _isCraftedString, _isUnlockedString;
+    private GameObject _objCheckmark;
+    private Transform _tformObjCheckmark;
 
     public void ResetCraftable()
     {
         isUnlocked = false;
         objMainPanel.SetActive(false);
-        objSpacerBelow.SetActive(false);
         unlockAmount = 0;
         isUnlockedByResource = false;
         isCrafted = false;
         hasSeen = true;
         MakeCraftableAgain();
     }
-    public void SetInitialValues()
+    protected void SetInitialValues()
     {
         InitializeObjects();
 
         _txtHeader.text = string.Format("{0}", actualName);
-        _objTxtHeaderDone.GetComponent<TMP_Text>().text = string.Format("{0} (Crafted)", actualName);
 
-        if (TimeManager.hasPlayedBefore)
-        {
+        //if (TimeManager.hasPlayedBefore)
+        //{
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
             isCrafted = PlayerPrefs.GetInt(_isCraftedString) == 1 ? true : false;
+        //}
+        // Not sure why this was here? No need to set it to false since it should already be false. especially if you haven't played already.
+        //else
+        //{
+        //    isCrafted = false;
+        //}
+        if (isUnlocked)
+        {
+            objMainPanel.SetActive(true);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
         }
         else
         {
-            isCrafted = false;
+            objMainPanel.SetActive(false);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
         }
-
 
         if (isCrafted)
         {
-            Crafted();
+            _objCheckmark.SetActive(true);
+            _btnMain.interactable = false;
+            _objProgressCircle.SetActive(false);
+            _objBackground.SetActive(false);
+
+            if (Menu.isCraftingHidden)
+            {
+                objMainPanel.SetActive(false);
+            }
         }
-        else
-        {
-            MakeCraftableAgain();
-        }
+        // This is probably also not needed, but it might be.
+        //else
+        //{
+        //    MakeCraftableAgain();
+        //}
     }
-    public void OnCraft()
+    protected virtual void OnCraft()
     {
         bool canPurchase = true;
 
@@ -99,25 +116,48 @@ public class Craftable : SuperClass
 
         if (canPurchase)
         {
-            isCrafted = true;
-            Crafted();
-            
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             }
 
+            isCrafted = true;
+            Crafted();
         }
     }
     protected void Crafted()
     {
+        _objCheckmark.SetActive(true);
         _btnMain.interactable = false;
         _objProgressCircle.SetActive(false);
-        _objTxtHeader.SetActive(false);
-        _objTxtHeaderDone.SetActive(true);
-        ColorBlock cb = _btnMain.colors;
-        cb.disabledColor = new Color(0, 0, 0, 1);
-        _btnMain.colors = cb;
+        _objBackground.SetActive(false);
+
+        //_txtHeader.text = string.Format("{0} (Crafted)", actualName);
+
+        //string htmlValue = "#D4D4D4";
+
+        //if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+        //{
+        //    _imgExpand.color = greyColor;
+        //    _imgCollapse.color = greyColor;
+        //}
+
+        if (Menu.isCraftingHidden)
+        {
+            objMainPanel.SetActive(false);
+        }
+
+        UnlockCrafting();
+        UnlockBuilding();
+        UnlockResearchable();
+        UnlockWorkerJob();
+        UnlockResource();
+    }
+    protected void TestingNewCrafted()
+    {
+        _btnMain.interactable = false;
+        _objProgressCirclePanel.SetActive(false);
+        _txtHeader.text = string.Format("{0} (Crafted)", actualName);
 
         string htmlValue = "#D4D4D4";
 
@@ -130,7 +170,6 @@ public class Craftable : SuperClass
         if (Menu.isCraftingHidden)
         {
             objMainPanel.SetActive(false);
-            objSpacerBelow.SetActive(false);
         }
 
         UnlockCrafting();
@@ -143,9 +182,8 @@ public class Craftable : SuperClass
     {
         // I don't think this is really needed, not until the player prestige at least.
         _btnMain.interactable = true;
-        _objProgressCircle.SetActive(true);
-        _objTxtHeader.SetActive(true);
-        _objTxtHeaderDone.SetActive(false);
+        _objProgressCirclePanel.SetActive(true);
+        _txtHeader.text = string.Format("{0}", actualName);
 
         string htmlValue = "#333333";
 
@@ -154,7 +192,7 @@ public class Craftable : SuperClass
             _imgExpand.color = darkGreyColor;
             _imgCollapse.color = darkGreyColor;
         }
-    } 
+    }
     protected override void InitializeObjects()
     {
         base.InitializeObjects();
@@ -162,13 +200,28 @@ public class Craftable : SuperClass
         _isCraftedString = Type.ToString() + "isCrafted";
         _isUnlockedString = (Type.ToString() + "isUnlocked");
 
-        _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
-
         _btnMain.onClick.AddListener(OnCraft);
+
+        _tformObjCheckmark = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Checkmark");
+        _objCheckmark = _tformObjCheckmark.gameObject;
+        _objCheckmark.SetActive(false);
     }
     protected void SetDescriptionText(string description)
     {
         Craftables[Type]._txtDescription.text = string.Format("{0}", description);
+    }
+    protected void Update()
+    {
+        if ((_timer -= Time.deltaTime) <= 0)
+        {
+            _timer = _maxValue;
+            if (!isCrafted)
+            {
+                CheckIfPurchaseable();
+            }
+
+            UpdateResourceCosts();
+        }
     }
     void OnApplicationQuit()
     {

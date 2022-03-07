@@ -17,9 +17,4 @@ public class StoneEquipment : Researchable
     {      
         SetDescriptionText("Enables crafting of stone tools.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

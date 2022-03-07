@@ -1,37 +1,59 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
+// Increase production of a random production Building by a certain %.
 public class cPassive5 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.2f;
+    private float percentageAmount = 0.05f;
+    private BuildingType buildingTypeChosen;
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
     }
-    public override void ExecutePassive()
+    private void ChooseRandomBuilding()
     {
-        base.ExecutePassive();
-        //  Debug.Log("This for for Common 5 specifically");
+        List<BuildingType> buildingTypesInCurrentRun = new List<BuildingType>();
 
-        // I think I do need to increase resources using percentages eventually, I think it'll be a nice addition
-        // To the prestige system.
+        foreach (var building in Building.Buildings)
+        {
+            if (building.Value.isUnlocked)
+            {
+                buildingTypesInCurrentRun.Add(building.Key);
+            }
+        }
+        if (buildingTypesInCurrentRun.Count >= Prestige.buildingsUnlockedInPreviousRun.Count)
+        {
+            _index = Random.Range(0, buildingTypesInCurrentRun.Count);
+            buildingTypeChosen = buildingTypesInCurrentRun[_index];
+        }
+        else
+        {
+            _index = Random.Range(0, Prestige.buildingsUnlockedInPreviousRun.Count);
+            buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
+        }
 
-        // This one is just going to have you start next run with a certain amount of some resources.
+        description = string.Format("Increase production of the {0} by {1}%", Building.Buildings[buildingTypeChosen].actualName, percentageAmount * 100);
 
-        Resource.Resources[Prestige.resourcesUnlockedInPreviousRun[_index]].SetInitialAmount(percentageAmount);
+        AddToBoxCache();
     }
-
-    public override void GenerateRandomResource()
+    private void AddToBoxCache()
     {
-        base.GenerateRandomResource();
+        if (!BoxCache.cachedBuildingMultiplierModified.ContainsKey(buildingTypeChosen))
+        {
+            BoxCache.cachedBuildingMultiplierModified.Add(buildingTypeChosen, percentageAmount);
+        }
+        else
+        {
+            BoxCache.cachedBuildingMultiplierModified[buildingTypeChosen] += percentageAmount;
+        }
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
 
-        description = string.Format("{0} starts with 20% of max storage", Prestige.resourcesUnlockedInPreviousRun[_index].ToString());
-
-        // Higher rarities can go up by 20%, so legendary will have 100%
+        ChooseRandomBuilding();
     }
 }

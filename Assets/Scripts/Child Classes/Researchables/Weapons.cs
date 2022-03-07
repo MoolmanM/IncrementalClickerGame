@@ -17,9 +17,4 @@ public class Weapons : Researchable
     {
         SetDescriptionText("Unlocks spear for hunting.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

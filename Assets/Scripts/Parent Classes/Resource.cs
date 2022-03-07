@@ -46,8 +46,8 @@ public struct ResourceInfo
 
 public struct UiForResourceInfo
 {
-    public GameObject objMainPanel, objSpacer;
-    public TMP_Text textInfoName, textInfoAmountPerSecond;
+    public GameObject objMainPanel, objSpacer, objTop, objMid, objBot, objGroup;
+    public TMP_Text textInfoName, textInfoAmountPerSecond, textObjName, textObjAPS;
     public Transform tformNewObj, tformInfoName, tformInfoAmountPerSecond;
 }
 
@@ -57,20 +57,19 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public List<ResourceInfo> resourceInfoList = new List<ResourceInfo>();
     public Dictionary<GameObject, ResourceInfo> resourceInfoDict = new Dictionary<GameObject, ResourceInfo>();
 
-    [System.NonSerialized] public GameObject prefabResourceInfoPanel, prefabResourceInfoSpacer;
-    [System.NonSerialized] public Transform tformResourceTooltip;
-    [System.NonSerialized] public GameObject objTooltip;
+    [System.NonSerialized] public GameObject prefabObjGroup, prefabObjTop, prefabObjMid, prefabObjBot;
+    [System.NonSerialized] public Transform tformObjTooltipGroup;
+    [System.NonSerialized] public GameObject objTooltipGroup;
 
     [System.NonSerialized] public float amount, amountPerSecond;
     [System.NonSerialized] public bool isUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
     [System.NonSerialized] public GameObject objMainPanel;
+    [System.NonSerialized] public Canvas canvas;
+    [System.NonSerialized] public GraphicRaycaster graphicRaycaster;
 
     public float storageAmount, initialStorageAmount;
     public ResourceType Type;
-    public GameObject objSpacerBelow;
-    public float globalMultiplier = 1f;
-    public bool buttonPressed;
 
     protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
 
@@ -78,19 +77,30 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected Image _imgBar;
     protected float _timer = 0.1f;
 
+
     public float debugAmountToIncrease;
-    private float initialAmount;
+    //private float initialAmount;
+
+    // Testing seems to be working perfectly so far.
+    protected float cachedAmount;
+
+    // New testing
+    public float initialAmount;
 
     public void ResetResource()
     {
         amount = 0;
         amountPerSecond = 0;
         objMainPanel.SetActive(false);
-        objSpacerBelow.SetActive(false);
         isUnlocked = false;
         storageAmount = initialStorageAmount;
         // Set storage amount back to original storage amount
         // Remove the resourceinfo prefabs?
+    }
+    private void Start()
+    {
+        SetStartingResource();
+        GetCurrentFill();
     }
     public void UpdateResourceInfo(GameObject obj, float amountPerSecond, ResourceType resourceTypeToModify)
     {
@@ -105,12 +115,10 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 if (amountPerSecond == 0)
                 {
                     resourceInfo.uiForResourceInfo.objMainPanel.SetActive(false);
-                    resourceInfo.uiForResourceInfo.objSpacer.SetActive(false);
                 }
                 else
                 {
                     resourceInfo.uiForResourceInfo.objMainPanel.SetActive(true);
-                    resourceInfo.uiForResourceInfo.objSpacer.SetActive(true);
                 }
 
                 if (amountPerSecond < 0)
@@ -137,7 +145,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [Button(ButtonSizes.Small)]
     private void DebugIncreaseResource()
     {
-        if (amount > 0)
+        if (debugAmountToIncrease > 0)
         {
             amount += debugAmountToIncrease;
         }
@@ -151,77 +159,69 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (resourceInfoList != null && resourceInfoList.Any())
         {
-            buttonPressed = true;
-            objTooltip.SetActive(true);
+            objTooltipGroup.SetActive(true);
         }
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        buttonPressed = false;
-        objTooltip.SetActive(false);
+        objTooltipGroup.SetActive(false);
     }
     private void InitializePrefab()
     {
-        prefabResourceInfoPanel = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/ResourceInfo_Panel");
-        prefabResourceInfoSpacer = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Spacer");
+        //prefabResourceInfoPanel = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/ResourceInfo_Panel");
+        //prefabResourceInfoSpacer = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Spacer");
 
-        tformResourceTooltip = transform.Find("Resource_Tooltip");
+        //tformResourceTooltip = transform.Find("Resource_Tooltip");
 
-        objTooltip = tformResourceTooltip.gameObject;
+        //objTooltip = tformResourceTooltip.gameObject;
 
-        //InitializeResourceInfo();
+        #region This is new
+        prefabObjTop = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Top");
+        prefabObjMid = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Mid");
+        prefabObjBot = UnityEngine.Resources.Load<GameObject>("ResourceInfo_Prefab/Bot");
+
+        tformObjTooltipGroup = transform.Find("Tooltip_Group");
+
+        objTooltipGroup = tformObjTooltipGroup.gameObject;
+
+        #endregion
     }
     public virtual void SetInitialValues()
     {
         InitializeObjects();
-
-        if (TimeManager.hasPlayedBefore)
-        {
-            //Need to make food and sticks 'unlocked' after this.
-            amount = PlayerPrefs.GetFloat(_amountString, amount);
-            amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
-            storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
+        //if (TimeManager.hasPlayedBefore)
+        //{
             isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
-        }
-
+            if (isUnlocked)
+            {
+                amount = PlayerPrefs.GetFloat(_amountString, amount);
+                amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
+                storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
+            }         
+        //}
         if (isUnlocked)
         {
             objMainPanel.SetActive(true);
-            objSpacerBelow.SetActive(true);
-            if (amountPerSecond > 0f)
-            {
-                uiForResource.txtStorageAmount.text = string.Format("{0}", storageAmount);
-
-                if (amountPerSecond >= 0)
-                {
-                    uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", amountPerSecond);
-                }
-                else
-                {
-                    uiForResource.txtAmountPerSecond.text = string.Format("-{0:0.00}/sec", amountPerSecond);
-                }
-                uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
-            }
-            else
-            {
-                //txtEarned.text = string.Format("{0}: {1}", Type, "No production just yet."); 
-            }
-
+            canvas.enabled = true;
         }
         else
         {
             objMainPanel.SetActive(false);
-            objSpacerBelow.SetActive(false);
-            // Debug.Log(Type + ": Resource doesn't exist yet.");
+            canvas.enabled = false;
         }
-
+    }
+    private void SetStartingResource()
+    {
+        // Display amount and amount per second.
+        StaticMethods.ModifyAPSText(amountPerSecond, uiForResource.txtAmountPerSecond);
+        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
     }
     private void InitializeObjects()
     {
         _tformTxtAmount = transform.Find("Header_Panel/Text_Amount");
-        _tformTxtAmountPerSecond = transform.Find("Header_Panel/Text_AmountPerSecond");
+        _tformTxtAmountPerSecond = transform.Find("Header_Panel/Text_Amount_Per_Second");
         _tformTxtStorage = transform.Find("Header_Panel/Text_Storage");
-        _tformImgbar = transform.Find("ProgressBar");
+        _tformImgbar = transform.Find("Storage_Fill_Bar");
 
         _imgBar = _tformImgbar.GetComponent<Image>();
         uiForResource.txtAmount = _tformTxtAmount.GetComponent<TMP_Text>();
@@ -229,7 +229,8 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         uiForResource.txtStorageAmount = _tformTxtStorage.GetComponent<TMP_Text>();
 
         objMainPanel = gameObject;
-        objMainPanel.SetActive(false);
+        canvas = gameObject.GetComponent<Canvas>();
+        graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
 
         _perSecondString = Type.ToString() + "PS";
         _amountString = Type.ToString() + "A";
@@ -254,7 +255,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         fillAmount += add / div;
         _imgBar.fillAmount = fillAmount;
     }
-    protected virtual void UpdateResource()
+    protected virtual void DeprecatedUpdateResource()
     {
         if (isUnlocked)
         {
@@ -262,14 +263,13 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 _timer = 0.1f;
 
-
                 if (amount >= (storageAmount - amountPerSecond))
                 {
                     amount = storageAmount;
                 }
                 else
                 {
-                    amount += (amountPerSecond / 10) * globalMultiplier;
+                    amount += (amountPerSecond / 10);
                 }
 
                 uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
@@ -279,7 +279,51 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
 
     }
-    private void Update()
+    protected virtual void UpdateResource()
+    {
+        // Can probably check here every tick if amount == the previous cached amount
+        // And if it is not equal to the cached variable, then and only then update the text field
+        // otherwise you're just calling the code for nothing.
+        if (isUnlocked)
+        {
+            if ((_timer -= Time.deltaTime) <= 0)
+            {
+                _timer = 0.1f;
+                if (amount != storageAmount)
+                {
+                    if (amount >= (storageAmount - amountPerSecond))
+                    {
+                        amount = storageAmount;
+                    }
+                    else
+                    {
+                        amount += (amountPerSecond / 10);
+                    }
+
+                    if (amount != cachedAmount)
+                    {
+                        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+                    }
+
+                    GetCurrentFill();
+
+                    cachedAmount = amount;
+                }
+                else if (amountPerSecond <= 0.00f)
+                {
+                    amount += (amountPerSecond / 10);
+
+                    if (amount != cachedAmount)
+                    {
+                        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+                    }
+                }
+                cachedAmount = amount;
+            }
+        }
+
+    }
+    protected virtual void Update()
     {
         UpdateResource();
     }

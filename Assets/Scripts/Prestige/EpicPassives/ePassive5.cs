@@ -11,9 +11,14 @@ public class ePassive5 : EpicPassive
         _epicPassive = GetComponent<EpicPassive>();
         EpicPassives.Add(Type, _epicPassive);
     }
-
-    public override void ExecutePassive()
+    private void AddToBoxCache()
     {
-        base.ExecutePassive();
+
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
+
+        AddToBoxCache();
     }
 }

@@ -9,58 +9,63 @@ public class Power : Building
     public Energy energy;
     public Swipe swipe;
     public SliderEvent PointerDownHandler, PointerUpHandler;
+    public static bool hasNotEnoughEnergy;
 
-    private GameObject _objPanel, _objBackground, _objFillArea, _objSlider, _objHandle, _objtxtHandleAmount, _objChangeAmount;
-    private Transform _tformObjPanel, _tformObjBackground, _tformObjFillArea, _tformObjSlider, _tformTxtHandleAmount, _tformTxtPowerCounter, _tformObjHandle, _tformChangeAmount;
+    private GameObject _objPanel, _objSliderBackground, _objFillArea, _objSlider, _objHandle, _objtxtHandleAmount, _objTextPowerCounter;
+    private Transform _tformObjPanel, _tformObjSliderBackground, _tformObjFillArea, _tformObjSlider, _tformTxtHandleAmount, _tformTxtPowerCounter, _tformObjHandle;
     private TMP_Text _txtHandleAmount, _txtPowerCounter;
-    private int _poweredCount;    
-   
+    private Slider _slider;
+    private CanvasGroup _canvasGroupPanel;
+    private int _poweredCount;
+
     protected void InitializePower()
     {
+        SetInitialValues();
+
         _tformObjPanel = transform.Find("Panel_Main/Slider_Panel");
-        _tformObjBackground = transform.Find("Panel_Main/Slider_Panel/Slider/Background");
+        _tformObjSliderBackground = transform.Find("Panel_Main/Slider_Panel/Slider/Background");
         _tformObjFillArea = transform.Find("Panel_Main/Slider_Panel/Slider/Fill_Area");
         _tformObjSlider = transform.Find("Panel_Main/Slider_Panel/Slider");
         _tformTxtHandleAmount = transform.Find("Panel_Main/Slider_Panel/Slider/Handle_Slide_Area/Handle/Text_Handle_Amount");
-        _tformTxtPowerCounter = transform.Find("Panel_Main/Power_Counter/Text_Counter");
+        _tformTxtPowerCounter = transform.Find("Panel_Main/Text_Power_Counter");
         _tformObjHandle = transform.Find("Panel_Main/Slider_Panel/Slider/Handle_Slide_Area/Handle");
-        //_tformChangeAmount = transform.Find("Panel_Main/Slider_Panel/Text_ChangeAmount");
 
-        //_objChangeAmount = _tformChangeAmount.gameObject;
         _objHandle = _tformObjHandle.gameObject;
         _objPanel = _tformObjPanel.gameObject;
-        _objBackground = _tformObjBackground.gameObject;
+        _objSliderBackground = _tformObjSliderBackground.gameObject;
         _objFillArea = _tformObjFillArea.gameObject;
         _objSlider = _tformObjSlider.gameObject;
         _txtHandleAmount = _tformTxtHandleAmount.GetComponent<TMP_Text>();
         _objtxtHandleAmount = _tformTxtHandleAmount.gameObject;
+        _objTextPowerCounter = _tformTxtPowerCounter.gameObject;
         _txtPowerCounter = _tformTxtPowerCounter.GetComponent<TMP_Text>();
+        _slider = _objSlider.GetComponent<Slider>();
+        _canvasGroupPanel = _objPanel.GetComponent<CanvasGroup>();
 
-        _objBackground.SetActive(false);
+        _objSliderBackground.SetActive(false);
         _objFillArea.SetActive(false);
-        _objPanel.GetComponent<CanvasGroup>().alpha = 0;
+        _canvasGroupPanel.alpha = 0;
 
         //PointerDownHandler.OnPointerDownEvent.AddListener(OnPointerDown);
         //PointerUpHandler.OnPointerUpEvent.AddListener(OnPointerUp);
     }
     public void OnPointerDown(PointerEventData data)
     {
-
         _objtxtHandleAmount.SetActive(true);
-        _objSlider.GetComponent<Slider>().minValue = _poweredCount * (-1);
-        _objSlider.GetComponent<Slider>().maxValue = _selfCount - _poweredCount;
-        _objPanel.GetComponent<CanvasGroup>().alpha = 1;
-        _objBackground.SetActive(true);
+        _slider.minValue = _poweredCount * (-1);
+        _slider.maxValue = _selfCount - _poweredCount;
+        _canvasGroupPanel.alpha = 1;
+        _objSliderBackground.SetActive(true);
         _objFillArea.SetActive(true);
     }
     public void OnPointerUp(PointerEventData data)
     {
         _objtxtHandleAmount.SetActive(false);
         RectTransform rectHandle = _objHandle.GetComponent<RectTransform>();
-        Slider slider = _objSlider.GetComponent<Slider>();
+        Slider slider = _slider;
 
-        _objPanel.GetComponent<CanvasGroup>().alpha = 0;
-        _objBackground.SetActive(false);
+        _canvasGroupPanel.alpha = 0;
+        _objSliderBackground.SetActive(false);
         _objFillArea.SetActive(false);
         HandleEnergy();
         slider.minValue = _poweredCount * (-1);
@@ -80,7 +85,7 @@ public class Power : Building
     }
     private void HandleEnergy()
     {
-        int sliderValue = (int)_objSlider.GetComponent<Slider>().value;
+        int sliderValue = (int)_slider.value;
         if (energyConsumption > 0)
         {
             if (sliderValue < 0)
@@ -97,6 +102,12 @@ public class Power : Building
                     energy.energyConsumption += energyConsumption * sliderValue;
                     ModifyAmountPerSecond(sliderValue);
                 }
+                else
+                {
+                    hasNotEnoughEnergy = true;
+                    // Should also include a case where if this happens
+                    // Just assign the max amount of consumers before reaching production cap.
+                }
             }
         }
         else
@@ -105,12 +116,12 @@ public class Power : Building
             energy.energyProduction += energyProduction * sliderValue;
             ModifyAmountPerSecond(sliderValue);
         }
-        energy.txtEnergy.text = string.Format("{0}W/{1}W", energy.energyConsumption, energy.energyProduction);
+        energy.UpdateEnergy();
     }
     public void UpdateHandleAmount()
     {
         swipe.isDragging = false;
-        _txtHandleAmount.text = _objSlider.GetComponent<Slider>().value.ToString();
+        _txtHandleAmount.text = _slider.value.ToString();
     }
     public override void OnBuild()
     {
@@ -134,9 +145,6 @@ public class Power : Building
                 resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
             }
-            //buildingContributionAPS = 0;
-            //buildingContributionAPS = _selfCount * _resourceMultiplier;
-            //UpdateResourceInfo();
         }
 
         _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
@@ -147,25 +155,85 @@ public class Power : Building
         {
             for (int i = 0; i < resourcesToIncrement.Count; i++)
             {
-                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].resourceMulitplier * sliderValue;
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * sliderValue;
+
+                if (Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond > 0.00f)
+                {
+                    Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
+                }
+                else
+                {
+                    Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
+                }
             }
 
-            for (int i = 0; i < resourcesToDecrement.Count; i++)
+            if (resourcesToDecrement.Count != 0)
             {
-                Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= resourcesToDecrement[i].resourceMulitplier * sliderValue;
-            }         
+                for (int i = 0; i < resourcesToDecrement.Count; i++)
+                {
+                    Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= resourcesToDecrement[i].currentResourceMultiplier * sliderValue;
+
+                    if (Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond > 0.00f)
+                    {
+                        Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond);
+                    }
+                    else
+                    {
+                        Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond);
+                    }
+                }
+            }
         }
         else
         {
             for (int i = 0; i < resourcesToIncrement.Count; i++)
             {
-                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].resourceMulitplier * sliderValue;
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * sliderValue;
+
+                if (Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond > 0.00f)
+                {
+                    Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
+                }
+                else
+                {
+                    Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
+                }
             }
 
-            for (int i = 0; i < resourcesToDecrement.Count; i++)
+            if (resourcesToDecrement.Count != 0)
             {
-                Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= resourcesToDecrement[i].resourceMulitplier * sliderValue;
+                for (int i = 0; i < resourcesToDecrement.Count; i++)
+                {
+                    Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= resourcesToDecrement[i].currentResourceMultiplier * sliderValue;
+                    
+                    if (Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond > 0.00f)
+                    {
+                        Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond);
+                    }
+                    else
+                    {
+                        Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[resourcesToDecrement[i].resourceTypeToModify].amountPerSecond);
+                    }
+                }
             }
         }
+
+        UpdatePowerResourceInfo();
     }
+
+    protected void UpdatePowerResourceInfo()
+    {
+        foreach (var resourceToIncrement in resourcesToIncrement)
+        {
+            float buildingAmountPerSecond = resourceToIncrement.currentResourceMultiplier * _poweredCount;
+            Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(gameObject, buildingAmountPerSecond, resourceToIncrement.resourceTypeToModify);
+        }
+
+        foreach (var resourceToDecrement in resourcesToDecrement)
+        {
+            float buildingAmountPerSecond = resourceToDecrement.currentResourceMultiplier * _poweredCount;
+            Resource.Resources[resourceToDecrement.resourceTypeToModify].UpdateResourceInfo(gameObject, -buildingAmountPerSecond, resourceToDecrement.resourceTypeToModify);
+        }
+    }
+
 }

@@ -19,9 +19,4 @@ public class Cooking : Researchable
     {
         SetDescriptionText("Increases food production.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

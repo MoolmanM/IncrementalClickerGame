@@ -74,7 +74,6 @@ public class Menu : MonoBehaviour
             if (research.Value.isUnlocked)
             {
                 research.Value.objMainPanel.SetActive(true);
-                research.Value.objSpacerBelow.SetActive(true);
             }
         }
     }
@@ -90,7 +89,6 @@ public class Menu : MonoBehaviour
             if (research.Value.isUnlocked && research.Value.isResearched)
             {
                 research.Value.objMainPanel.SetActive(false);
-                research.Value.objSpacerBelow.SetActive(false);
             }
         }
     }
@@ -106,7 +104,6 @@ public class Menu : MonoBehaviour
             if (craft.Value.isUnlocked)
             {
                 craft.Value.objMainPanel.SetActive(true);
-                craft.Value.objSpacerBelow.SetActive(true);
             }
         }
 
@@ -123,7 +120,6 @@ public class Menu : MonoBehaviour
             if (craft.Value.isUnlocked && craft.Value.isCrafted)
             {
                 craft.Value.objMainPanel.SetActive(false);
-                craft.Value.objSpacerBelow.SetActive(false);
             }
         }
     }

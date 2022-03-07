@@ -23,9 +23,4 @@ public class FireHardenedWeapons : Researchable
     {
         SetDescriptionText("Enables crafting of stone tools.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

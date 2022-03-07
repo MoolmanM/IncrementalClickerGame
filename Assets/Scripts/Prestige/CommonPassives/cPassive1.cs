@@ -2,26 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Reduce time it takes to research stuff by a certain %.
 public class cPassive1 : CommonPassive
 {
     private CommonPassive _commonPassive;
+    private float percentageAmount = 0.05f; //5%
+
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
-    }
-
-    public override void ExecutePassive()
+        description = "Reduces time it takes to research by " + percentageAmount;
+    }   
+    private void AddToBoxCache()
     {
-        base.ExecutePassive();
-        // So this passive willllllll increase storage amount but how?, increase storage upgrades by a certain percentage?
-        // Increase initial storage?
-        // Increase storage permanently?
-        // Will start with the percentage option, for now default is 20%, so this will make that 30%.
-        StoragePile.storageAmountMultiplier += 0.1f;
-        // Increase with 10%
-        // This passive can maybe also loop through all unlocked 'storage' buildings.
-        
+        BoxCache.cachedResearchTimeReductionAmount += percentageAmount;
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
+
+        AddToBoxCache();
     }
 }

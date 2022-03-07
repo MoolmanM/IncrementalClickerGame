@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum ResearchType
 {
@@ -25,20 +23,19 @@ public enum ResearchType
     Weapons,
     StoneEquipment,
     Fire,
-    Cooking,
     FireHardenedWeapons,
     Smelting,
-    ManualEnergyProduction,
-    CopperMining,
-    TinMining,
-    IronMining,
-    BronzeAlloys,
-    TinEquipment,
-    CopperEquipment,
-    BronzeEquipment,
-    IronEquipment,
-    IronAlloys,
-    MinorStorage
+    //CopperMining,
+    //TinMining,
+    //IronMining,
+    //BronzeAlloys,
+    //TinEquipment,
+    //CopperEquipment,
+    //BronzeEquipment,
+    //IronEquipment,
+    //IronAlloys,
+    MinorStorage,
+    PowerGeneration
 }
 
 public abstract class Researchable : SuperClass
@@ -48,9 +45,9 @@ public abstract class Researchable : SuperClass
     public static bool hasReachedMaxSimulResearch, isResearchableUnlockedEvent;
 
     public ResearchType Type;
-    public uint testAmount;
+    //public uint testAmount;
     public float secondsToCompleteResearch;
-    [System.NonSerialized] public bool isResearched;
+    [NonSerialized] public bool isResearched;
 
     private bool _isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
@@ -59,30 +56,26 @@ public abstract class Researchable : SuperClass
     private readonly float maxValue = 0.1f;
 
     protected WorkerType[] _workerTypesToModify;
-    protected Transform _tformImgProgressCircle, _tformImgResearchBar, _tformProgressbarPanel, _tformTxtHeaderUncraft;
-    protected Image _imgResearchBar;
-    private string _stringHeader;
+    protected Transform _tformImgProgressCircle, _tformObjCheckmark;
+    private GameObject _objCheckmark;
 
     public void ResetResearchable()
     {
         isUnlocked = false;
         objMainPanel.SetActive(false);
-        objSpacerBelow.SetActive(false);
         unlockAmount = 0;
         isUnlockedByResource = false;
         isResearched = false;
         _isResearchStarted = false;
         hasSeen = true;
         _currentTimer = 0f;
-        _imgResearchBar.fillAmount = 0;
-        _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}", _stringHeader);
+        _txtHeader.text = string.Format("{0}", actualName);
 
         MakeResearchableAgain();
     }
     public void SetInitialValues()
     {
         InitializeObjects();
-        //isUnlocked = true;
 
         if (TimeManager.hasPlayedBefore)
         {
@@ -97,14 +90,14 @@ public abstract class Researchable : SuperClass
             {
                 _isResearchStarted = false;
                 isResearched = true;
-                Debug.Log("Research was completed while you were gone");
+                Debug.Log("Research has been completed while you were gone");
                 Researched();
             }
             else
             {
                 secondsToCompleteResearch = _researchTimeRemaining - (float)TimeManager.difference.TotalSeconds;
                 Debug.Log("You still have ongoing research");
-                _objProgressCircle.SetActive(false);
+                //_objProgressCirclePanel.SetActive(false);
             }
         }
 
@@ -129,26 +122,25 @@ public abstract class Researchable : SuperClass
 
                 _currentTimer += 0.1f;
 
-
-                _imgResearchBar.fillAmount = _currentTimer / secondsToCompleteResearch;
+                //_imgResearchBar.fillAmount = _currentTimer / secondsToCompleteResearch;
                 _researchTimeRemaining = secondsToCompleteResearch - _currentTimer;
                 TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(_researchTimeRemaining)));
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%s}s</b>)", _stringHeader, span.Duration());
+                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%s}s</b>)", actualName, span.Duration());
                 }
                 else if (span.Days == 0 && span.Hours == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
+                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%m}m {1:%s}s</b>)", actualName, span.Duration());
                 }
                 else if (span.Days == 0)
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%h}h {1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
+                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%h}h {1:%m}m {1:%s}s</b>)", actualName, span.Duration());
                 }
                 else
                 {
-                    _objTxtHeader.GetComponent<TMP_Text>().text = string.Format("{0}\n(<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", _stringHeader, span.Duration());
+                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", actualName, span.Duration());
                 }
                 CheckIfResearchIsComplete();
             }
@@ -159,7 +151,6 @@ public abstract class Researchable : SuperClass
     {
         if (researchSimulActive >= researchSimulAllowed)
         {
-            //Debug.Log(string.Format("You can only have {0} research active at the same time", researchSimulAllowed));
             hasReachedMaxSimulResearch = true;
         }
         else
@@ -196,65 +187,51 @@ public abstract class Researchable : SuperClass
         if (_currentTimer >= secondsToCompleteResearch)
         {
             _isResearchStarted = false;
-            isResearched = true;
             Researched();
         }
     }
     private void Researched()
     {
         isResearched = true;
+
+        researchSimulActive--;
+        UnlockCrafting();
+        UnlockBuilding();
+        UnlockResearchable();
+        UnlockWorkerJob();
+        UnlockResource();
+        //_objProgressCirclePanel.SetActive(false);
+        //_txtHeader.text = string.Format("{0} (Researched)", actualName);
+        _btnMain.interactable = false;
+        _objProgressCircle.SetActive(false);
+        _objBackground.SetActive(false);
+        _objCheckmark.SetActive(true);
+        _txtHeader.text = string.Format("{0}", actualName);
+        //string htmlValue = "#D4D4D4";
+
+        //if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+        //{
+        //    _imgExpand.color = greyColor;
+        //    _imgCollapse.color = greyColor;
+        //}
+
+
         if (Menu.isResearchHidden)
         {
-            researchSimulActive--;
-            UnlockCrafting();
-            UnlockBuilding();
-            UnlockResearchable();
-            UnlockWorkerJob();
-            UnlockResource();
-            _objProgressCircle.SetActive(false);
-            _objTxtHeader.SetActive(false);
-            _objTxtHeaderDone.SetActive(true);
-
-            string htmlValue = "#D4D4D4";
-
-            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
+            if (objMainPanel.activeSelf)
             {
-                _imgExpand.color = greyColor;
-                _imgCollapse.color = greyColor;
-            }
-
-            objMainPanel.SetActive(false);
-            objSpacerBelow.SetActive(false);
-        }
-        else
-        {
-            researchSimulActive--;
-            UnlockCrafting();
-            UnlockBuilding();
-            UnlockResearchable();
-            UnlockWorkerJob();
-            UnlockResource();
-            _objProgressCircle.SetActive(false);
-            _objTxtHeader.SetActive(false);
-            _objTxtHeaderDone.SetActive(true);
-
-            string htmlValue = "#D4D4D4";
-
-            if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
-            {
-                _imgExpand.color = greyColor;
-                _imgCollapse.color = greyColor;
+                objMainPanel.SetActive(false);
+                canvas.enabled = false;
+                graphicRaycaster.enabled = false;
             }
         }
-
     }
     public void MakeResearchableAgain()
     {
         // This will probably only happen after prestige.
-        _objBtnMain.GetComponent<Button>().interactable = true;
-        _objProgressCircle.SetActive(true);
-        _objTxtHeader.SetActive(true);
-        _objTxtHeaderDone.SetActive(false);
+        _btnMain.interactable = true;
+        _objProgressCirclePanel.SetActive(true);
+        _txtHeader.text = string.Format("{0}", actualName);
 
         string htmlValue = "#333333";
 
@@ -264,22 +241,11 @@ public abstract class Researchable : SuperClass
             _imgCollapse.color = darkGreyColor;
         }
     }
-    public void GetTimeToCompleteResearch()
-    {
-        _isResearchStarted = true;
-        DateTime currentTime = DateTime.Now;
-        //Debug.Log(currentTime);
-        DateTime timeToCompletion = currentTime.AddSeconds(60);
-        //Debug.Log(timeToCompletion);
-        TimeSpan differenceAmount = timeToCompletion.Subtract(currentTime);
-        //Debug.Log(differenceAmount + " " + differenceAmount.Seconds);
-        secondsToCompleteResearch = differenceAmount.Seconds;
-    }
     public void StartResearching()
     {
         researchSimulActive++;
         _isResearchStarted = true;
-        _objProgressCircle.SetActive(false);
+        //_objProgressCirclePanel.SetActive(false);
     }
     public void SetDescriptionText(string description)
     {
@@ -289,18 +255,43 @@ public abstract class Researchable : SuperClass
     {
         base.InitializeObjects();
 
-        _tformImgResearchBar = transform.Find("Panel_Main/Header_Panel/Research_FillBar");
-
-        _imgResearchBar = _tformImgResearchBar.GetComponent<Image>();
-
         _stringIsResearched = Type.ToString() + "IsResearched";
         _stringResearchTimeRemaining = (Type.ToString() + "TimeRemaining");
         _stringIsResearchStarted = (Type.ToString() + "IsResearchStarted");
 
-        _stringHeader = _objTxtHeader.GetComponent<TMP_Text>().text; 
-        _objTxtHeaderDone = _tformTxtHeaderDone.gameObject;
+        _btnMain.onClick.AddListener(OnResearch);
 
-        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnResearch);
+        _tformObjCheckmark = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Checkmark");
+        _objCheckmark = _tformObjCheckmark.gameObject;
+        _objCheckmark.SetActive(false);
+
+        if (isUnlocked)
+        {
+            objMainPanel.SetActive(true);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
+        }
+        else
+        {
+            objMainPanel.SetActive(false);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
+        }
+    }
+    protected void Update()
+    {
+        if ((_timer -= Time.deltaTime) <= 0)
+        {
+            _timer = _maxValue;
+            if (!isResearched || !_isResearchStarted)
+            {
+                CheckIfPurchaseable();
+            }
+
+            UpdateResourceCosts();
+        }
+
+        UpdateResearchTimer();
     }
     private void OnApplicationQuit()
     {

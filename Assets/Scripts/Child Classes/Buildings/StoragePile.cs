@@ -15,8 +15,11 @@ public class StoragePile : Building
     }
     void Start()
     {
-        storageAmountMultiplier = 0.2f;
+        storageAmountMultiplier = 0.1f;
+
         ModifyDescriptionText();
+
+        // Do this in another script that happens after everything initializes.
     }
     protected override void ModifyDescriptionText()
     {
@@ -29,11 +32,11 @@ public class StoragePile : Building
             {
                 oldString = _txtDescription.text;
 
-                _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> storage by <color=#FF0AF3>{2}</color>.", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), modifyAmount);
+                _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> storage by <color=#FF0AF3>{2}</color>.", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
             }
             else
             {
-                _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> storage by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), modifyAmount);
+                _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> storage by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
             }
 
         }
@@ -64,7 +67,7 @@ public class StoragePile : Building
             ModifyStorage();
             //buildingContributionAPS = 0;
             //buildingContributionAPS = _selfCount * _resourceMultiplier;
-            UpdateResourceInfo();
+            //UpdateResourceInfo();
             ModifyDescriptionText();
         }
 

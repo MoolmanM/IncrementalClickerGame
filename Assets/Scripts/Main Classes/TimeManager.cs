@@ -8,9 +8,9 @@ public class TimeManager : MonoBehaviour
     public static bool hasPlayedBefore;
     public static TimeSpan difference;
     public static int day, year, seasonCount;
-
-    public TMP_Text seasonText, goneForText;
-    public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
+    public TMP_Text txtGoneFor;
+    //public TMP_Text seasonText, txtGoneFor;
+    //public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
     
     private DateTime _currentDate;   
     private string _seasonString;
@@ -26,57 +26,57 @@ public class TimeManager : MonoBehaviour
     }
     private void CalculateSeason()
     {
-        day++;
-        if (seasonCount == 0)
-        {
-            _seasonString = "Spring";
-            objSpringImage.SetActive(true);
-            objSummerImage.SetActive(false);
-            objFallImage.SetActive(false);
-            objWinterImage.SetActive(false);
-        }
-        else if (seasonCount == 1)
-        {
-            _seasonString = "Summer";
-            objSpringImage.SetActive(false);
-            objSummerImage.SetActive(true);
-            objFallImage.SetActive(false);
-            objWinterImage.SetActive(false);
-        }
-        else if (seasonCount == 2)
-        {
-            _seasonString = "Fall";
-            objSpringImage.SetActive(false);
-            objSummerImage.SetActive(false);
-            objFallImage.SetActive(true);
-            objWinterImage.SetActive(false);
-        }
-        else if (seasonCount == 3)
-        {
-            _seasonString = "Winter";
-            objSpringImage.SetActive(false);
-            objSummerImage.SetActive(false);
-            objFallImage.SetActive(false);
-            objWinterImage.SetActive(true);
-        }
-        else
-        {
-            seasonCount = 0;
-        }
+        //day++;
+        //if (seasonCount == 0)
+        //{
+        //    _seasonString = "Spring";
+        //    objSpringImage.SetActive(true);
+        //    objSummerImage.SetActive(false);
+        //    objFallImage.SetActive(false);
+        //    objWinterImage.SetActive(false);
+        //}
+        //else if (seasonCount == 1)
+        //{
+        //    _seasonString = "Summer";
+        //    objSpringImage.SetActive(false);
+        //    objSummerImage.SetActive(true);
+        //    objFallImage.SetActive(false);
+        //    objWinterImage.SetActive(false);
+        //}
+        //else if (seasonCount == 2)
+        //{
+        //    _seasonString = "Fall";
+        //    objSpringImage.SetActive(false);
+        //    objSummerImage.SetActive(false);
+        //    objFallImage.SetActive(true);
+        //    objWinterImage.SetActive(false);
+        //}
+        //else if (seasonCount == 3)
+        //{
+        //    _seasonString = "Winter";
+        //    objSpringImage.SetActive(false);
+        //    objSummerImage.SetActive(false);
+        //    objFallImage.SetActive(false);
+        //    objWinterImage.SetActive(true);
+        //}
+        //else
+        //{
+        //    seasonCount = 0;
+        //}
 
-        if (day == 100 && seasonCount == 3)
-        {
-            year++;
-            seasonCount++;
-            day = 0;
-        }
+        //if (day == 100 && seasonCount == 3)
+        //{
+        //    year++;
+        //    seasonCount++;
+        //    day = 0;
+        //}
 
-        else if (day == 100)
-        {
-            seasonCount++;
-            day = 0;
-        }
-        seasonText.text = string.Format("Year {0} - {1}, day {2}", year, _seasonString, day);
+        //else if (day == 100)
+        //{
+        //    seasonCount++;
+        //    day = 0;
+        //}
+        //seasonText.text = string.Format("Year {0} - {1}, day {2}", year, _seasonString, day);
     }  
     void OnEnable()
     {
@@ -125,29 +125,43 @@ public class TimeManager : MonoBehaviour
         //Make the parts where the time is bold?
         if (difference.Days == 0 && difference.Hours == 0 && difference.Minutes == 0)
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%s}s</b>\n While you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%s}s</b>\n While you were gone, you earned:", difference.Duration());
         }
         else if (difference.Days == 0 && difference.Hours == 0)
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else if (difference.Days == 0)
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
         else
         {
-            goneForText.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
         }
 
-        
+        //_currentHistoryLog = txtHistoryLog.text;
+        //if (_currentHistoryLog == "")
+        //{
+        //    txtHistoryLog.text = string.Format("{0}<b>{1:t}</b>: {2}", _currentHistoryLog, DateTime.Now, notableEventString);
+        //}
+        //else
+        //{
+        //    txtHistoryLog.text = string.Format("{0}\n<b>{1:t}</b>: {2}", _currentHistoryLog, DateTime.Now, notableEventString);
+        //    // How is expensive is this?
+
+        //    Canvas.ForceUpdateCanvases();
+        //    scrollViewObject.GetComponent<UnityEngine.UI.ScrollRect>().verticalNormalizedPosition = 0f;
+
+        //}
+
     }
     void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = _maxValue;
-            CalculateSeason();
+            //CalculateSeason();
         }
     }
 }

@@ -33,25 +33,45 @@ public abstract class SuperClass : MonoBehaviour
     public ResourceCost[] resourceCost;
     public TypesToUnlock typesToUnlock;
     public bool isUnlockableByResource;
-    public GameObject objSpacerBelow;
     public int unlockAmount, unlocksRequired;
     public string actualName;
 
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true, isUnlockedByResource;
-    [System.NonSerialized] public GameObject objMainPanel;
+    [NonSerialized] public bool isUnlocked, isFirstUnlocked, hasSeen = true, isUnlockedByResource, isPurchaseable;
+    [NonSerialized] public GameObject objMainPanel;
+    [NonSerialized] public Canvas canvas;
+    [NonSerialized] public GraphicRaycaster graphicRaycaster;
 
-    protected float _timer = 0.1f;
+    protected float _timer = 0.1f, _lastFillAmount;
     protected readonly float _maxValue = 0.1f;
-    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objProgressCircle, _objBtnMain, _objTxtHeaderDone, _objTxtHeader, _objBtnExpand, _objBtnCollapse, _objBody;
+    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objBackground, _objProgressCircle, _objProgressCirclePanel, _objBtnMain, _objTxtHeader, _objBtnExpand, _objBtnCollapse;
     protected TMP_Text _txtDescription, _txtHeader;
-    protected Transform _tformDescription, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformTxtHeaderDone, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
+    protected Transform _tformDescription, _tformObjBackground, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgProgressCircle;
     protected Button _btnMain;
     protected Color _colTxtHeader;
+    protected bool _isPurchaseableSet;
 
-    private bool isPurchaseable, isPurchaseableSet;
+    // Testing
+    public GameObject _objBody;
 
-    void OnValidate()
+    // This is new and for testing seems to be working very well so far.
+
+    private float currentFillCache;
+
+    void Start()
+    {
+        //_objBody.SetActive(true);
+        //Debug.Log(actualName + " " + _objBody);
+        //canvas.enabled = true;
+        //graphicRaycaster.enabled = true;
+        //objMainPanel.SetActive(true);
+        //Canvas.ForceUpdateCanvases();
+        //objMainPanel.SetActive(true);
+        //graphicRaycaster.enabled = false;
+        //canvas.enabled = false;
+        //_objBody.SetActive(false);
+    }
+    private void OnValidate()
     {
         if (typesToUnlock.buildingTypesToUnlock.Length != 0)
         {
@@ -127,22 +147,29 @@ public abstract class SuperClass : MonoBehaviour
 
         #endregion
 
-        _tformDescription = transform.Find("Panel_Main/Body/Description_Panel/Text_Description");
+        
+        graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
+        canvas = gameObject.GetComponent<Canvas>();
+        
+        _tformObjBackground = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Background");
+        _tformDescription = transform.Find("Panel_Main/Body/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
         _tformBtnMain = transform.Find("Panel_Main/Header_Panel/Button_Main");
         _tformObjProgressCircle = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/ProgressCircle");
         _tformProgressCirclePanel = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel");
-        _tformTxtHeaderDone = transform.Find("Panel_Main/Header_Panel/Text_Header_Done");
         _tformBtnCollapse = transform.Find("Panel_Main/Header_Panel/Button_Collapse");
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformObjMain = transform.Find("Panel_Main");
 
+        
+        _objBackground = _tformObjBackground.gameObject;
         objMainPanel = _tformObjMain.gameObject;
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
+        _objProgressCircle = _tformObjProgressCircle.gameObject;
         _imgProgressCircle = _tformObjProgressCircle.GetComponent<Image>();
         _imgExpand = _tformBtnExpand.GetComponent<Image>();
         _imgCollapse = _tformBtnCollapse.GetComponent<Image>();
-        _objProgressCircle = _tformProgressCirclePanel.gameObject;
+        _objProgressCirclePanel = _tformProgressCirclePanel.gameObject;
         _objTxtHeader = _tformTxtHeader.gameObject;
         _objBtnMain = _tformBtnMain.gameObject;
         _objBtnExpand = _tformBtnExpand.gameObject;
@@ -162,9 +189,13 @@ public abstract class SuperClass : MonoBehaviour
         {
             foreach (var craft in Craftable.Craftables)
             {
-                craft.Value._objBody.SetActive(false);
-                craft.Value._objBtnCollapse.SetActive(false);
-                craft.Value._objBtnExpand.SetActive(true);
+                if (craft.Value._objBody.activeSelf)
+                {
+                    craft.Value._objBody.SetActive(false);
+                    craft.Value._objBtnCollapse.SetActive(false);
+                    craft.Value._objBtnExpand.SetActive(true);
+                }
+
             }
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
@@ -175,9 +206,12 @@ public abstract class SuperClass : MonoBehaviour
         {
             foreach (var building in Building.Buildings)
             {
-                building.Value._objBody.SetActive(false);
-                building.Value._objBtnCollapse.SetActive(false);
-                building.Value._objBtnExpand.SetActive(true);
+                if (building.Value._objBody.activeSelf)
+                {
+                    building.Value._objBody.SetActive(false);
+                    building.Value._objBtnCollapse.SetActive(false);
+                    building.Value._objBtnExpand.SetActive(true);
+                }            
             }
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
@@ -188,9 +222,12 @@ public abstract class SuperClass : MonoBehaviour
         {
             foreach (var research in Researchable.Researchables)
             {
-                research.Value._objBody.SetActive(false);
-                research.Value._objBtnCollapse.SetActive(false);
-                research.Value._objBtnExpand.SetActive(true);
+                if (research.Value._objBody.activeSelf)
+                {
+                    research.Value._objBody.SetActive(false);
+                    research.Value._objBtnCollapse.SetActive(false);
+                    research.Value._objBtnExpand.SetActive(true);
+                }
             }
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
@@ -205,8 +242,6 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void Purchaseable()
     {
-        Debug.Log("Purchaseable");
-
         string htmlValue = "#333333";
 
         _btnMain.interactable = true;
@@ -215,12 +250,9 @@ public abstract class SuperClass : MonoBehaviour
         {
             _colTxtHeader = darkGreyColor;
         }
-
     }
     protected void UnPurchaseable()
     {
-        Debug.Log("Unpurchaseable");
-
         _btnMain.interactable = false;
 
         string htmlValue = "#D71C2A";
@@ -229,41 +261,33 @@ public abstract class SuperClass : MonoBehaviour
         {
             _colTxtHeader = redColor;
         }
-
     }
-    protected void CheckIfPurchaseable()
+    public virtual void CheckIfPurchaseable()
     {
-        if (GetCurrentFill() == 1)
+        if (isUnlocked)
         {
-            isPurchaseable = true;
-        }
-        else
-        {
-            isPurchaseable = false;
-        }
+            if (_lastFillAmount != GetCurrentFill() && GetCurrentFill() != 1)
+            {
+                isPurchaseable = false;
+                UnPurchaseable();
+            }
+            else if (GetCurrentFill() == 1)
+            {
+                isPurchaseable = true;
+            }
 
-        if (isPurchaseable && !isPurchaseableSet)
-        {
-            Purchaseable();
-            isPurchaseableSet = true;
-        }
-        else if (!isPurchaseable && isPurchaseableSet)
-        {
-            UnPurchaseable();
-            isPurchaseableSet = false;
-        }
-        // I should also cache these colors, shouldn't be using getcomponent
-        // I could just check for when it is 1
-        // Then make it purchaseable, but once again, that only has to run once.
+            if (!isPurchaseable)
+            {
+                _isPurchaseableSet = false;
+            }
+            else if (isPurchaseable && !_isPurchaseableSet)
+            {
+                Purchaseable();
+                _isPurchaseableSet = true;
+            }
 
-        //if (GetCurrentFill() != 1)
-        //{
-        //    UnPurchaseable();
-        //}
-        //else
-        //{
-        //    Purchaseable();
-        //}
+            _lastFillAmount = GetCurrentFill();
+        }
     }
     protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
     {
@@ -332,7 +356,8 @@ public abstract class SuperClass : MonoBehaviour
                 if (UIManager.isBuildingVisible)
                 {
                     building.Value.objMainPanel.SetActive(true);
-                    building.Value.objSpacerBelow.SetActive(true);
+                    building.Value.canvas.enabled = true;
+                    building.Value.graphicRaycaster.enabled = true;
                     building.Value.hasSeen = true;
                 }
                 else if (building.Value.hasSeen)
@@ -360,7 +385,8 @@ public abstract class SuperClass : MonoBehaviour
                 {
                     // This does run more than once each, but isn't a big deal
                     craftable.Value.objMainPanel.SetActive(true);
-                    craftable.Value.objSpacerBelow.SetActive(true);
+                    craftable.Value.canvas.enabled = true;
+                    craftable.Value.graphicRaycaster.enabled = true;
                     craftable.Value.hasSeen = true;
                 }
                 else if (UIManager.isWorkerVisible && craftable.Value.hasSeen)
@@ -399,7 +425,8 @@ public abstract class SuperClass : MonoBehaviour
                 else if (UIManager.isWorkerVisible)
                 {
                     worker.Value.objMainPanel.SetActive(true);
-                    worker.Value.objSpacerBelow.SetActive(true);
+                    worker.Value.canvas.enabled = true;
+                    worker.Value.graphicRaycaster.enabled = true;
                     worker.Value.hasSeen = true;
                 }
                 else if (UIManager.isResearchVisible && worker.Value.hasSeen)
@@ -420,7 +447,8 @@ public abstract class SuperClass : MonoBehaviour
                 if (UIManager.isResearchVisible)
                 {
                     researchable.Value.objMainPanel.SetActive(true);
-                    researchable.Value.objSpacerBelow.SetActive(true);
+                    researchable.Value.canvas.enabled = true;
+                    researchable.Value.graphicRaycaster.enabled = true;
                     researchable.Value.hasSeen = true;
                 }
                 else if (researchable.Value.hasSeen)
@@ -463,7 +491,8 @@ public abstract class SuperClass : MonoBehaviour
                 Resource.Resources[resource].InitializeAmount();
                 Resource.Resources[resource].isUnlocked = true;
                 Resource.Resources[resource].objMainPanel.SetActive(true);
-                Resource.Resources[resource].objSpacerBelow.SetActive(true);
+                Resource.Resources[resource].canvas.enabled = true;
+                Resource.Resources[resource].graphicRaycaster.enabled = true;
             }
         }
     }
@@ -478,7 +507,8 @@ public abstract class SuperClass : MonoBehaviour
                 if (UIManager.isWorkerVisible)
                 {
                     Worker.Workers[worker].objMainPanel.SetActive(true);
-                    Worker.Workers[worker].objSpacerBelow.SetActive(true);
+                    Worker.Workers[worker].canvas.enabled = true;
+                    Worker.Workers[worker].graphicRaycaster.enabled = true;
                     Worker.Workers[worker].hasSeen = true;
                 }
                 else if (UIManager.isResearchVisible)
@@ -535,7 +565,8 @@ public abstract class SuperClass : MonoBehaviour
                     else
                     {
                         Craftable.Craftables[craft].objMainPanel.SetActive(true);
-                        Craftable.Craftables[craft].objSpacerBelow.SetActive(true);
+                        Craftable.Craftables[craft].canvas.enabled = true;
+                        Craftable.Craftables[craft].graphicRaycaster.enabled = true;
                         Craftable.Craftables[craft].hasSeen = true;
                     }
                 }
@@ -553,13 +584,15 @@ public abstract class SuperClass : MonoBehaviour
                 if (Building.Buildings[buildingType].unlockAmount == Building.Buildings[buildingType].unlocksRequired)
                 {
                     #region This is new and for testing
-                    if (cPassive4.buildingTypesSelfCountToModify.Contains(buildingType))
-                    {
-                        Building.Buildings[buildingType].SetInitialAmountPerSecond();
-                    }
+                    //if (cPassive4.buildingTypesSelfCountToModify.Contains(buildingType))
+                    //{
+                    //    Building.Buildings[buildingType].SetInitialAmountPerSecond();
+                    //}
                     #endregion
 
                     Building.Buildings[buildingType].isUnlocked = true;
+                    Building.Buildings[buildingType].CheckIfPurchaseable();
+                    
 
                     if (!UIManager.isBuildingVisible)
                     {
@@ -571,7 +604,8 @@ public abstract class SuperClass : MonoBehaviour
                     else
                     {
                         Building.Buildings[buildingType].objMainPanel.SetActive(true);
-                        Building.Buildings[buildingType].objSpacerBelow.SetActive(true);
+                        Building.Buildings[buildingType].canvas.enabled = true;
+                        Building.Buildings[buildingType].graphicRaycaster.enabled = true;
                         Building.Buildings[buildingType].hasSeen = true;
                     }
                 }
@@ -593,7 +627,8 @@ public abstract class SuperClass : MonoBehaviour
                     if (UIManager.isResearchVisible)
                     {
                         Researchable.Researchables[research].objMainPanel.SetActive(true);
-                        Researchable.Researchables[research].objSpacerBelow.SetActive(true);
+                        Researchable.Researchables[research].canvas.enabled = true;
+                        Researchable.Researchables[research].graphicRaycaster.enabled = true;
                         Researchable.Researchables[research].hasSeen = true;
                     }
                     else
@@ -609,37 +644,36 @@ public abstract class SuperClass : MonoBehaviour
     }
     protected void UpdateResourceCosts()
     {
-        // So can do an if check here to only update when it is unlocked.
-        // And then can also check if it's panel is unlocked to unlock
-        // can also only update the text fields when the body panel is expanded, otherwise there is no point to update the text fields.
-        // lets go
-
-
-        if ((_timer -= Time.deltaTime) <= 0)
+        for (int i = 0; i < resourceCost.Length; i++)
         {
-            _timer = _maxValue;
+            resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
 
-            //if (isUnlocked)
-            //{             
-            for (int i = 0; i < resourceCost.Length; i++)
+            if (!_objBtnExpand.activeSelf && isUnlocked)
             {
-                resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
-
-                if (_objBody.activeSelf)
-                {
-                    resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
-                    resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
-                    ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
-                }
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
+                ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
             }
-            //}
-            _imgProgressCircle.fillAmount = GetCurrentFill();
-            CheckIfUnlocked();
         }
-    }
-    protected virtual void Update()
-    {
-        UpdateResourceCosts();
-        CheckIfPurchaseable();
+
+        //if (GetCurrentFill() >= 0.01f && GetCurrentFill() <= 1)
+        //{
+        //    Debug.Log("This happened");
+        //    _imgProgressCircle.fillAmount = GetCurrentFill();
+        //}
+
+        //if (GetCurrentFill() != currentFillCache)
+        //{
+        //    _imgProgressCircle.fillAmount = GetCurrentFill();
+        //}
+        // This seems to be working very well, keeping the previous ones here incase something goes wrong.
+        if (GetCurrentFill() != currentFillCache && isUnlocked)
+        {
+            _imgProgressCircle.fillAmount = GetCurrentFill();
+        }      
+        currentFillCache = GetCurrentFill();
+
+
+        CheckIfUnlocked();
     }
 }

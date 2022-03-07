@@ -21,9 +21,4 @@ public class Smelting : Researchable
     {
         SetDescriptionText("Enables smelting ores into metals.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

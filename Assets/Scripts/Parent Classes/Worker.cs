@@ -13,10 +13,10 @@ public enum WorkerType
     Scholars
 }
 [System.Serializable]
-public struct ResourcesToModify
+public struct WorkerResourcesToModify
 {
     public ResourceType resourceTypeToModify;
-    public float resourceMultiplier;
+    public float baseResourceMultiplier, currentResourceMultiplier;
     [System.NonSerialized] public float incrementAmount, actualIncrementAmount;
     [System.NonSerialized] public bool hasAssignedEnough, hasAssignedNotEnough, hasInstantiated;
 }
@@ -26,57 +26,61 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
-    public static uint TotalWorkerCount, UnassignedWorkerCount;
+    public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount;
     public static bool isWorkerUnlockedEvent;
 
     [System.NonSerialized] public GameObject objMainPanel;
+    [System.NonSerialized] public Canvas canvas;
+    [System.NonSerialized] public GraphicRaycaster graphicRaycaster;
     [System.NonSerialized] public TMP_Text txtHeader;
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true;
-    public ResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
+    [System.NonSerialized] public bool isUnlocked, hasSeen = true, isFirstUnlocked;
+    public WorkerResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
 
     // Make workercount non serialized eventually, for now will use for debugging.
     public uint workerCount;
     public WorkerType Type;
-    public GameObject objSpacerBelow;
     public TMP_Text txtAvailableWorkers;
+    public string actualName;
 
     private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip, _tformBtnPlus, _tformBtnMinus;
     private TMP_Text _txtDescriptionHeader, _txtDescriptionBody;
     private GameObject _objTooltip;
-    private string _workerString, _previousText;
+    private string _workerString, _previousText, _isUnlockedString;
     protected uint _changeAmount = 1;
     private Button _btnPlus, _btnMinus;
-    //private bool buttonPressed;
 
+    public void ModifyDescriptionText()
+    {
+        SetDescriptionText();
+
+        // Check worker decription text, might still need some work.
+    }
     public void ResetWorker()
     {
         isUnlocked = false;
         objMainPanel.SetActive(false);
-        objSpacerBelow.SetActive(false);
         workerCount = 0;
         hasSeen = true;
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        //buttonPressed = true;
         _objTooltip.SetActive(true);
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        //buttonPressed = false;
         _objTooltip.SetActive(false);
     }
     protected void UpdateResourceInfo()
     {
         foreach (var resourceToIncrement in _resourcesToIncrement)
         {
-            float workerAmountPerSecond = workerCount * resourceToIncrement.resourceMultiplier;
+            float workerAmountPerSecond = workerCount * resourceToIncrement.currentResourceMultiplier;
             Resource.Resources[resourceToIncrement.resourceTypeToModify].UpdateResourceInfo(gameObject, workerAmountPerSecond, resourceToIncrement.resourceTypeToModify);
         }
 
         foreach (var resourceToDecrement in _resourcesToDecrement)
         {
-            float workerAmountPerSecond = workerCount * resourceToDecrement.resourceMultiplier;
+            float workerAmountPerSecond = workerCount * resourceToDecrement.currentResourceMultiplier;
             Resource.Resources[resourceToDecrement.resourceTypeToModify].UpdateResourceInfo(gameObject, -workerAmountPerSecond, resourceToDecrement.resourceTypeToModify);
         }
     }
@@ -92,11 +96,11 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
             if (_previousText != "")
             {
-                _txtDescriptionBody.text = string.Format("{0}\nIncreases {1} yield by: {2:0.00}", _previousText, resourcePlus.resourceTypeToModify.ToString(), resourcePlus.resourceMultiplier);
+                _txtDescriptionBody.text = string.Format("{0}\nIncreases {1} yield by: {2:0.00}", _previousText, resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
             }
             else
             {
-                _txtDescriptionBody.text = string.Format("Increases {0} yield by: {1:0.00}", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.resourceMultiplier);
+                _txtDescriptionBody.text = string.Format("Increases {0} yield by: {1:0.00}", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
             }
         }
         if (_resourcesToDecrement != null)
@@ -107,11 +111,11 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                 if (_previousText != "")
                 {
-                    _txtDescriptionBody.text = string.Format("{0}\nDecreases {1} yield by: {2:0.00}", _previousText, resourceMinus.resourceTypeToModify.ToString(), resourceMinus.resourceMultiplier);
+                    _txtDescriptionBody.text = string.Format("{0}\nDecreases {1} yield by: {2:0.00}", _previousText, resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
                 }
                 else
                 {
-                    _txtDescriptionBody.text = string.Format("Decreases {0} yield by: {1:0.00}", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.resourceMultiplier);
+                    _txtDescriptionBody.text = string.Format("Decreases {0} yield by: {1:0.00}", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
                 }
             }
         }
@@ -119,9 +123,30 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected void SetInitialValues()
     {
         InitializeObjects();
+
+        if (isUnlocked)
+        {
+            objMainPanel.SetActive(true);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
+        }
+        else
+        {
+            objMainPanel.SetActive(false);
+            canvas.enabled = false;
+            graphicRaycaster.enabled = false;
+        }
+
+        if (AutoToggle.isAutoWorkerOn == 1)
+        {
+            AutoWorker.CalculateWorkers();
+            AutoWorker.AutoAssignWorkers();
+        }
     }
     protected void InitializeObjects()
     {
+        graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
+        canvas = gameObject.GetComponent<Canvas>();
         _tformTxtHeader = transform.Find("Panel_Main/Text_Header");
         _tformBtnMinus = transform.Find("Panel_Main/Button_Minus");
         _tformBtnPlus = transform.Find("Panel_Main/Button_Plus");
@@ -146,30 +171,16 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _objTooltip.SetActive(false);
 
         _workerString = (Type.ToString() + "workerCount");
+        _isUnlockedString = (Type.ToString() + "isUnlocked");
 
         workerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)workerCount);
         UnassignedWorkerCount = (uint)PlayerPrefs.GetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         TotalWorkerCount = (uint)PlayerPrefs.GetInt("TotalWorkerCount", (int)TotalWorkerCount);
+        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
 
 
-        txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
-        txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
-
-        if (isUnlocked)
-        {
-            objMainPanel.SetActive(true);
-            objSpacerBelow.SetActive(true);
-        }
-        else
-        {
-            objMainPanel.SetActive(false);
-            objSpacerBelow.SetActive(false);
-        }
-        if (AutoToggle.isAutoWorkerOn == 1)
-        {
-            AutoWorker.CalculateWorkers();
-            AutoWorker.AutoAssignWorkers();
-        }
+        txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", Type.ToString(), workerCount);
+        txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
     }
     protected virtual void OnPlusButton()
     {
@@ -207,38 +218,43 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             UnassignedWorkerCount -= _changeAmount;
             workerCount += _changeAmount;
-            txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
-            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
+            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName.ToString(), workerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
+                    
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
                 }
             }
             else
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
                 }
                 for (int i = 0; i < _resourcesToDecrement.Length; i++)
                 {
-                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToDecrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+                    // Should the above not be toDecrement?
                 }
             }
 
-            //incrementAmount = (_changeAmount * resourceMultiplier);
+            //incrementAmount = (_changeAmount * currentResourceMultiplier);
             //Resource.Resources[resourceTypeToModify].amountPerSecond += incrementAmount;
-            //ContributionAPS = workerCount * _resourcesToIncrement[i].resourceMultiplier;
+            //ContributionAPS = workerCount * _resourcesToIncrement[i].currentResourceMultiplier;
             UpdateResourceInfo();
         }
     }
-    protected virtual void OnMinusButton()
+    public virtual void OnMinusButton()
     {
         if (workerCount > 0)
         {
@@ -274,40 +290,49 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             UnassignedWorkerCount += _changeAmount;
             workerCount -= _changeAmount;
-            txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
-            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
+            // FFCBFA <color=#FFCBFA>{1}</color>
+            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName, workerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
                 }
             }
             else
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
                 }
                 for (int i = 0; i < _resourcesToDecrement.Length; i++)
                 {
-                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                    _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond += _resourcesToDecrement[i].incrementAmount;
+                    StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
                 }
             }
 
-            //incrementAmount = (_changeAmount * resourceMultiplier);
+            //incrementAmount = (_changeAmount * currentResourceMultiplier);
             //Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
             UpdateResourceInfo();
         }
+    }
+    public virtual void ModifyMultiplier()
+    {
+
     }
     void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)workerCount);
         PlayerPrefs.SetInt("TotalWorkerCount", (int)TotalWorkerCount);
+        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
     }
 }

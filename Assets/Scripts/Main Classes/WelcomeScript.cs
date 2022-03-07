@@ -29,20 +29,24 @@ public class WelcomeScript : MonoBehaviour
 
                     if (resource.Value.amountPerSecond > 0)
                     {
-                        if (resource.Value.amount >= resource.Value.storageAmount)
+                        if (amountEarnedWhileAFK + resource.Value.amount >= resource.Value.storageAmount)
                         {
+                            // Can also made just type here "Storage Limit" In red color.
                             txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", 0, amountEarnedWhileAFK);
+                            resource.Value.amount = resource.Value.storageAmount;
                         }
                         else
                         {
-                            if (amountEarnedWhileAFK <= resource.Value.storageAmount - resource.Value.amount)
-                            {
-                                txtAmount.text = string.Format("{0:0.00}", differenceAmount);
-                            }
-                            else
-                            {
-                                txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", differenceAmount, amountEarnedWhileAFK);
-                            }
+                            txtAmount.text = string.Format("{0:0.00}", amountEarnedWhileAFK);
+                            resource.Value.amount += amountEarnedWhileAFK;
+                            //if (amountEarnedWhileAFK <= resource.Value.storageAmount - resource.Value.amount)
+                            //{
+                            //    txtAmount.text = string.Format("{0:0.00}", differenceAmount);
+                            //}
+                            //else
+                            //{
+                            //    txtAmount.text = string.Format("<color=#D71C2A>{0:0.00}</color> / {1:0.00}", differenceAmount, amountEarnedWhileAFK);
+                            //}
                         }
                     }
                     else
@@ -50,7 +54,7 @@ public class WelcomeScript : MonoBehaviour
                         txtAmount.text = string.Format("<color=#D71C2A>N/A</color>");
                     }
 
-                    txtName.text = resource.Value.name;
+                    txtName.text = resource.Value.Type.ToString();
                 }
             }
         }

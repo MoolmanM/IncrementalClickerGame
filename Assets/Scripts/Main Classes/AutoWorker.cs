@@ -50,19 +50,19 @@ public class AutoWorker : MonoBehaviour
             if (wantedWorkerCount > currentWorkerCount)
             {
                 uint differenceAmount = wantedWorkerCount - currentWorkerCount;
-                //IncrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
+                //IncrementAmount = (differenceAmount * worker.Value.currentResourceMultiplier);
                 //Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond += IncrementAmount;
             }
             else if (wantedWorkerCount < currentWorkerCount)
             {
                 uint differenceAmount = currentWorkerCount - wantedWorkerCount;
-                //DecrementAmount = (differenceAmount * worker.Value.resourceMultiplier);
+                //DecrementAmount = (differenceAmount * worker.Value.currentResourceMultiplier);
                 //Resource.Resources[worker.Value.resourceTypeToModify].amountPerSecond -= IncrementAmount;
             }
  
             Worker.UnassignedWorkerCount = 0;
-            worker.Value.txtHeader.text = string.Format("{0} [{1}]", worker.Value.Type.ToString(), worker.Value.workerCount);
-            worker.Value.txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+            worker.Value.txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", worker.Value.Type.ToString(), worker.Value.workerCount);
+            worker.Value.txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
         }              
     }
 }

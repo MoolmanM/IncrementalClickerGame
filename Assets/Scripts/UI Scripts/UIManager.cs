@@ -1,635 +1,457 @@
+using TMPro;
 using UnityEngine;
 
 
 public class UIManager : MonoBehaviour
 {
     public static bool isBuildingVisible, isCraftingVisible, isWorkerVisible, isResearchVisible;
+    public TMP_Text txtMainHeader;
     public uint swipeCount = 0;
 
     public Swipe _Swipe;
-    public GameObject[] buildingUI, craftUI, workerUI, researchUI, settingsUI, gatheringUI;
+    public Canvas[] gatheringObjects, workerObjects;
     public Animator animMainPanel;
 
     private readonly uint _panelCount = 3;
 
-    private static UIManager _instance;
-
-    public static UIManager Instance { get { return _instance; } }
-
-
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
+        //if (_instance != null && _instance != this)
+        //{
+        //    Destroy(this.gameObject);
+        //}
+        //else
+        //{
+        //    _instance = this;
+        //}
     }
     void Start()
     {
         swipeCount = 0;
-        foreach (var _settingsUI in settingsUI)
+        UpdatePopNotication();
+        //UpdateCanvas();
+        //Debug.Log(PointerNotification.rightAmount);
+        //UpdatePopNotication();
+        SetStartObjects();
+    }
+    private void UpdateCanvas()
+    {
+        foreach (var kvp in Building.Buildings)
+        {       
+            kvp.Value._objBody.SetActive(true);
+            kvp.Value.objMainPanel.SetActive(true);
+            kvp.Value.canvas.enabled = true;
+            kvp.Value.graphicRaycaster.enabled = true;
+            Canvas.ForceUpdateCanvases();
+            kvp.Value._objBody.SetActive(false);
+            kvp.Value.objMainPanel.SetActive(false);
+            kvp.Value.canvas.enabled = false;
+            kvp.Value.graphicRaycaster.enabled = false;
+        }
+        foreach (var kvp in Researchable.Researchables)
         {
-            _settingsUI.SetActive(false);
+            kvp.Value._objBody.SetActive(true);
+            kvp.Value.objMainPanel.SetActive(true);
+            kvp.Value.canvas.enabled = true;
+            kvp.Value.graphicRaycaster.enabled = true;
+            Canvas.ForceUpdateCanvases();
+            kvp.Value._objBody.SetActive(false);
+            kvp.Value.objMainPanel.SetActive(false);
+            kvp.Value.canvas.enabled = false;
+            kvp.Value.graphicRaycaster.enabled = false;
+        }
+        foreach (var kvp in Craftable.Craftables)
+        {
+            kvp.Value._objBody.SetActive(true);
+            kvp.Value.objMainPanel.SetActive(true);
+            kvp.Value.canvas.enabled = true;
+            kvp.Value.graphicRaycaster.enabled = true;
+            Canvas.ForceUpdateCanvases();
+            kvp.Value._objBody.SetActive(false);
+            kvp.Value.objMainPanel.SetActive(false);
+            kvp.Value.canvas.enabled = false;
+            kvp.Value.graphicRaycaster.enabled = false;
+        }
+        BuildingsActive();
+    }
+    private void SetStartObjects()
+    {
+        foreach (var gatheringObj in gatheringObjects)
+        {
+            if (!gatheringObj.enabled)
+            {
+                gatheringObj.enabled = true;
+            }
         }
 
-        BuildingPanelActive();
+        foreach (var workerObject in workerObjects)
+        {
+            if (workerObject.enabled)
+            {
+                workerObject.enabled = false;
+            }
+        }
+
+        isBuildingVisible = true;
     }
-    private void UpdateNotificationPanel()
+    private void UpdatePopNotication()
     {
         PointerNotification.HandleLeftAnim();
         PointerNotification.HandleRightAnim();
     }
-    public void BuildingPanelActive()
+    private void BuildingsOff()
     {
-        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
-        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
-        PointerNotification.leftAmount = 0;
-        PointerNotification.rightAmount = 0;
-
-        foreach (var _buildingUI in buildingUI)
+        foreach (var gatheringobject in gatheringObjects)
         {
-            if (!_buildingUI.activeSelf)
+            if (gatheringobject.enabled)
             {
-                _buildingUI.SetActive(true);
-            }
-
-        }
-        foreach (var _gatheringUI in gatheringUI)
-        {
-            if (Menu.isGatheringHidden)
-            {
-                _gatheringUI.SetActive(false);
-            }
-            else
-            {
-                _gatheringUI.SetActive(true);
-            }
-
-        }
-        foreach (var _workerUI in workerUI)
-        {
-            if (_workerUI.activeSelf)
-            {
-                _workerUI.SetActive(false);
-            }
-        }
-        foreach (var _researchUI in researchUI)
-        {
-            if (_researchUI.activeSelf)
-            {
-                _researchUI.SetActive(false);
+                gatheringobject.enabled = false;
             }
         }
 
-        foreach (var _craftUI in craftUI)
+        foreach (var kvp in Building.Buildings)
         {
-            if (_craftUI.activeSelf)
+            if (kvp.Value.canvas.enabled)
             {
-                _craftUI.SetActive(false);
+                kvp.Value.canvas.enabled = false;
+                kvp.Value.graphicRaycaster.enabled = false;
             }
         }
-
-        foreach (var craft in Craftable.Craftables)
-        {
-            if (craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(false);
-            }
-            if (craft.Value.objSpacerBelow.activeSelf)
-            {
-                craft.Value.objSpacerBelow.SetActive(false);
-            }
-            if (!craft.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        foreach (var researchable in Researchable.Researchables)
-        {
-            if (researchable.Value.objMainPanel.activeSelf)
-            {
-                researchable.Value.objMainPanel.SetActive(false);
-            }
-            if (researchable.Value.objSpacerBelow.activeSelf)
-            {
-                researchable.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!researchable.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        foreach (var worker in Worker.Workers)
-        {
-            if (worker.Value.objMainPanel.activeSelf)
-            {
-                worker.Value.objMainPanel.SetActive(false);
-            }
-            if (worker.Value.objSpacerBelow.activeSelf)
-            {
-                worker.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!worker.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        foreach (var building in Building.Buildings)
-        {
-            building.Value.hasSeen = true;
-            if (building.Value.isUnlocked && !building.Value.objMainPanel.activeSelf)
-            {
-                building.Value.objMainPanel.SetActive(true);
-                building.Value.objSpacerBelow.SetActive(true);
-            }
-            else if (!building.Value.isUnlocked && building.Value.objMainPanel.activeSelf)
-            {
-                building.Value.objMainPanel.SetActive(false);
-                building.Value.objSpacerBelow.SetActive(false);
-            }
-        }
-        UpdateNotificationPanel();
     }
-    public void CraftingPanelActive()
+    private void CraftablesOff()
     {
-        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
-        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
-        PointerNotification.leftAmount = 0;
-        PointerNotification.rightAmount = 0;
-
-        foreach (var _buildingUI in buildingUI)
+        foreach (var kvp in Craftable.Craftables)
         {
-            if (_buildingUI.activeSelf)
+            if (kvp.Value.canvas.enabled)
             {
-                _buildingUI.SetActive(false);
+                kvp.Value.canvas.enabled = false;
+                kvp.Value.graphicRaycaster.enabled = false;
             }
         }
-
-        foreach (var _workerUI in workerUI)
-        {
-            if (_workerUI.activeSelf)
-            {
-                _workerUI.SetActive(false);
-            }
-        }
-        foreach (var _researchUI in researchUI)
-        {
-            if (_researchUI.activeSelf)
-            {
-                _researchUI.SetActive(false);
-            }
-        }
-
-        foreach (var _craftUI in craftUI)
-        {
-            if (!_craftUI.activeSelf)
-            {
-                _craftUI.SetActive(true);
-            }
-
-        }
-
-        foreach (var building in Building.Buildings)
-        {
-            if (building.Value.objMainPanel.activeSelf)
-            {
-                building.Value.objMainPanel.SetActive(false);
-                building.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!building.Value.hasSeen)
-            {
-                PointerNotification.leftAmount++;
-            }
-        }
-
-        foreach (var researchable in Researchable.Researchables)
-        {
-            if (researchable.Value.objMainPanel.activeSelf)
-            {
-                researchable.Value.objMainPanel.SetActive(false);
-                researchable.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!researchable.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        foreach (var worker in Worker.Workers)
-        {
-            if (worker.Value.objMainPanel.activeSelf)
-            {
-                worker.Value.objMainPanel.SetActive(false);
-                worker.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!worker.Value.hasSeen)
-            {
-                PointerNotification.rightAmount++;
-            }
-        }
-
-        foreach (var craft in Craftable.Craftables)
-        {
-            craft.Value.hasSeen = true;
-
-            if (craft.Value.isUnlocked && !craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(true);
-                craft.Value.objSpacerBelow.SetActive(true);
-            }
-            else if (!craft.Value.isUnlocked && craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(false);
-                craft.Value.objSpacerBelow.SetActive(false);
-            }
-
-            // I can probably include this in the above if, and just make it the first if to check. 
-            // So that it will overwrite the rest.
-            if (Menu.isCraftingHidden && craft.Value.isCrafted && !craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(false);
-                craft.Value.objSpacerBelow.SetActive(false);
-            }
-        }
-
-        UpdateNotificationPanel();
     }
-    public void WorkerPanelActive()
+    private void ResearchablesOff()
+    {
+        foreach (var kvp in Researchable.Researchables)
+        {
+            if (kvp.Value.canvas.enabled)
+            {
+                kvp.Value.canvas.enabled = false;
+                kvp.Value.graphicRaycaster.enabled = false;
+            }
+        }
+    }
+    private void WorkersOff()
+    {
+        foreach (var workerObject in workerObjects)
+        {
+            if (workerObject.enabled)
+            {
+                workerObject.enabled = false;
+            }
+        }
+
+        foreach (var kvp in Worker.Workers)
+        {
+            if (kvp.Value.canvas.enabled)
+            {
+                kvp.Value.canvas.enabled = false;
+                kvp.Value.graphicRaycaster.enabled = false;
+            }
+        }
+    }
+    public void BuildingsActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        foreach (var _buildingUI in buildingUI)
+        CraftablesOff();
+        ResearchablesOff();
+        WorkersOff();
+
+        txtMainHeader.text = "Buildings:";
+
+        foreach (var gatheringObj in gatheringObjects)
         {
-            if (_buildingUI.activeSelf)
+            if (!gatheringObj.enabled)
             {
-                _buildingUI.SetActive(false);
+                gatheringObj.enabled = true;
             }
         }
 
-        foreach (var _workerUI in workerUI)
+        foreach (var kvp in Building.Buildings)
         {
-            if (!_workerUI.activeSelf)
+            kvp.Value.hasSeen = true;
+            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
             {
-                _workerUI.SetActive(true);
+                kvp.Value.objMainPanel.SetActive(true);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.isFirstUnlocked = true;
+                kvp.Value.graphicRaycaster.enabled = true;
             }
-        }
-        foreach (var _researchUI in researchUI)
-        {
-            if (_researchUI.activeSelf)
+            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
             {
-                _researchUI.SetActive(false);
-            }
-        }
-
-        foreach (var _craftUI in craftUI)
-        {
-            if (_craftUI.activeSelf)
-            {
-                _craftUI.SetActive(false);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.graphicRaycaster.enabled = true;
             }
         }
 
-        foreach (var building in Building.Buildings)
+        foreach (var kvp in Craftable.Craftables)
         {
-            if (building.Value.objMainPanel.activeSelf)
-            {
-                building.Value.objMainPanel.SetActive(false);
-                building.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!building.Value.hasSeen)
-            {
-                PointerNotification.leftAmount++;
-            }
-
-        }
-
-        foreach (var craft in Craftable.Craftables)
-        {
-            if (craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(false);
-                craft.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!craft.Value.hasSeen)
-            {
-                PointerNotification.leftAmount++;
-            }
-        }
-
-        foreach (var researchable in Researchable.Researchables)
-        {
-            if (researchable.Value.objMainPanel.activeSelf)
-            {
-                researchable.Value.objMainPanel.SetActive(false);
-                researchable.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!researchable.Value.hasSeen)
+            if (!kvp.Value.hasSeen)
             {
                 PointerNotification.rightAmount++;
             }
         }
 
-        foreach (var worker in Worker.Workers)
+        foreach (var kvp in Worker.Workers)
         {
-            worker.Value.hasSeen = true;
-            if (worker.Value.isUnlocked && !worker.Value.objMainPanel.activeSelf)
+            if (!kvp.Value.hasSeen)
             {
-                worker.Value.objMainPanel.SetActive(true);
-                worker.Value.objSpacerBelow.SetActive(true);
-            }
-            else if (!worker.Value.isUnlocked && worker.Value.objMainPanel.activeSelf)
-            { 
-                worker.Value.objMainPanel.SetActive(false);
-                worker.Value.objSpacerBelow.SetActive(false);
+                PointerNotification.rightAmount++;
             }
         }
-        UpdateNotificationPanel();
+
+        foreach (var kvp in Researchable.Researchables)
+        {
+            if (!kvp.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
+        }
+
+        isBuildingVisible = true;
+        isCraftingVisible = false;
+        isResearchVisible = false;
+        isWorkerVisible = false;
+
+        UpdatePopNotication();
     }
-    public void ResearchPanelActive()
+    public void CraftablesActive()
     {
         PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
         PointerNotification.lastRightAmount = PointerNotification.rightAmount;
         PointerNotification.leftAmount = 0;
         PointerNotification.rightAmount = 0;
 
-        foreach (var _buildingUI in buildingUI)
+        ResearchablesOff();
+        WorkersOff();
+        BuildingsOff();
+
+        txtMainHeader.text = "Crafting:";
+
+        foreach (var kvp in Craftable.Craftables)
         {
-            if (_buildingUI.activeSelf)
+            kvp.Value.hasSeen = true;
+            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
             {
-                _buildingUI.SetActive(false);
+                kvp.Value.objMainPanel.SetActive(true);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.isFirstUnlocked = true;
+                kvp.Value.graphicRaycaster.enabled = true;
             }
-        }
-        foreach (var _workerUI in workerUI)
-        {
-            if (_workerUI.activeSelf)
+            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
             {
-                _workerUI.SetActive(false);
-            }
-        }
-        foreach (var _researchUI in researchUI)
-        {
-            if (!_researchUI.activeSelf)
-            {
-                _researchUI.SetActive(true);
-            }
-        }
-        foreach (var _craftUI in craftUI)
-        {
-            if (_craftUI.activeSelf)
-            {
-                _craftUI.SetActive(false);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.graphicRaycaster.enabled = true;
             }
         }
 
-        foreach (var craft in Craftable.Craftables)
+        foreach (var kvp in Building.Buildings)
         {
-            if (craft.Value.objMainPanel.activeSelf)
-            {
-                craft.Value.objMainPanel.SetActive(false);
-                craft.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!craft.Value.hasSeen)
+            if (!kvp.Value.hasSeen)
             {
                 PointerNotification.leftAmount++;
             }
         }
 
-        foreach (var building in Building.Buildings)
+        foreach (var kvp in Worker.Workers)
         {
-            if (building.Value.objMainPanel.activeSelf)
+            if (!kvp.Value.hasSeen)
             {
-                building.Value.objMainPanel.SetActive(false);
-                building.Value.objSpacerBelow.SetActive(false);
+                PointerNotification.rightAmount++;
             }
+        }
 
-            if (!building.Value.hasSeen)
+        foreach (var kvp in Researchable.Researchables)
+        {
+            if (!kvp.Value.hasSeen)
+            {
+                PointerNotification.rightAmount++;
+            }
+        }
+
+        isBuildingVisible = false;
+        isCraftingVisible = true;
+        isResearchVisible = false;
+        isWorkerVisible = false;
+
+        UpdatePopNotication();
+    }
+    public void WorkersActive()
+    {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
+        PointerNotification.leftAmount = 0;
+        PointerNotification.rightAmount = 0;
+
+        CraftablesOff();
+        ResearchablesOff();
+        BuildingsOff();
+
+        txtMainHeader.text = "Jobs:";
+
+        foreach (var workerObject in workerObjects)
+        {
+            if (!workerObject.enabled)
+            {
+                workerObject.enabled = true;
+            }
+        }
+
+        foreach (var kvp in Worker.Workers)
+        {
+            kvp.Value.hasSeen = true;
+            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            {
+                kvp.Value.objMainPanel.SetActive(true);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.isFirstUnlocked = true;
+                kvp.Value.graphicRaycaster.enabled = true;
+            }
+            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            {
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.graphicRaycaster.enabled = true;
+            }
+        }
+
+        foreach (var kvp in Building.Buildings)
+        {
+            if (!kvp.Value.hasSeen)
             {
                 PointerNotification.leftAmount++;
             }
         }
 
-        foreach (var worker in Worker.Workers)
+        foreach (var kvp in Craftable.Craftables)
         {
-            if (worker.Value.objMainPanel.activeSelf)
-            {
-                worker.Value.objMainPanel.SetActive(false);
-                worker.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (!worker.Value.hasSeen)
+            if (!kvp.Value.hasSeen)
             {
                 PointerNotification.leftAmount++;
             }
         }
 
-        foreach (var researchable in Researchable.Researchables)
+        foreach (var kvp in Researchable.Researchables)
         {
-            researchable.Value.hasSeen = true;
-            if (researchable.Value.isUnlocked && !researchable.Value.objMainPanel.activeSelf)
+            if (!kvp.Value.hasSeen)
             {
-                researchable.Value.objMainPanel.SetActive(true);
-                researchable.Value.objSpacerBelow.SetActive(true);
-            }
-            else if (!researchable.Value.isUnlocked && researchable.Value.objMainPanel.activeSelf)
-            {
-                researchable.Value.objMainPanel.SetActive(false);
-                researchable.Value.objSpacerBelow.SetActive(false);
-            }
-
-            if (Menu.isResearchHidden && researchable.Value.isResearched)
-            {
-                if (researchable.Value.objMainPanel.activeSelf)
-                {
-
-                    researchable.Value.objMainPanel.SetActive(false);
-                    researchable.Value.objSpacerBelow.SetActive(false);
-                }
+                PointerNotification.rightAmount++;
             }
         }
-        UpdateNotificationPanel();
+
+        isBuildingVisible = false;
+        isCraftingVisible = false;
+        isResearchVisible = false;
+        isWorkerVisible = true;
+
+        UpdatePopNotication();
+    }
+    public void ResearchablesActive()
+    {
+        PointerNotification.lastLeftAmount = PointerNotification.leftAmount;
+        PointerNotification.lastRightAmount = PointerNotification.rightAmount;
+        PointerNotification.leftAmount = 0;
+        PointerNotification.rightAmount = 0;
+
+        CraftablesOff();
+        WorkersOff();
+        BuildingsOff();
+
+        txtMainHeader.text = "Research:";
+
+        foreach (var kvp in Researchable.Researchables)
+        {
+            kvp.Value.hasSeen = true;
+            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            {
+                kvp.Value.objMainPanel.SetActive(true);
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.isFirstUnlocked = true;
+                kvp.Value.graphicRaycaster.enabled = true;
+            }
+            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            {
+                kvp.Value.canvas.enabled = true;
+                kvp.Value.graphicRaycaster.enabled = true;
+            }
+        }
+
+        foreach (var kvp in Building.Buildings)
+        {
+            if (!kvp.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }
+        }
+
+        foreach (var kvp in Craftable.Craftables)
+        {
+            if (!kvp.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }
+        }
+
+        foreach (var kvp in Worker.Workers)
+        {
+            if (!kvp.Value.hasSeen)
+            {
+                PointerNotification.leftAmount++;
+            }
+        }
+
+        isBuildingVisible = false;
+        isCraftingVisible = false;
+        isResearchVisible = true;
+        isWorkerVisible = false;
+
+        UpdatePopNotication();
     }
     private void SwipeCountHandler()
     {
         if (_Swipe.SwipeRight && (swipeCount >= 1))
         {
-            //swipeCount--;
-            animMainPanel.SetTrigger("hasSwipedRight");
+            swipeCount--;
+            PanelHandler();
+            //animMainPanel.SetTrigger("hasSwipedRight");
         }
         else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
         {
-            //swipeCount++;
-            animMainPanel.SetTrigger("hasSwipedLeft");
+            swipeCount++;
+            PanelHandler();
+            //animMainPanel.SetTrigger("hasSwipedLeft");
         }
-    }
-    private void SwipeCountHandlerWorking()
-    {
-        #region Actual Swiping
-        if (_Swipe.SwipeRight && (swipeCount >= 1))
-        {
-            //swipeCount--;
-            animMainPanel.SetTrigger("hasSwipedRight");
-            Debug.Log("Check");
-
-        }
-        else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
-        {
-            //swipeCount++;
-            Debug.Log("Check");
-            animMainPanel.SetTrigger("hasSwipedLeft");
-        }
-        #endregion
-
-        //#region Sets Panels Active
-        //if (_Swipe.SwipeRight || _Swipe.SwipeLeft)
-        //{
-        //    if (swipeCount == 0)
-        //    {
-        //        BuildingPanelActive();
-        //    }
-        //    else if (swipeCount == 1)
-        //    {
-        //        CraftingPanelActive();
-        //    }
-        //    else if (swipeCount == 2)
-        //    {
-        //        WorkerPanelActive();
-        //    }
-        //    else if (swipeCount == 3)
-        //    {
-        //        ResearchPanelActive();
-        //    }
-        //    else
-        //    {
-        //        Debug.LogError("This shouldn't happen");
-        //    }
-        //}
-        //#endregion
-
-        // I'll keep this for now, but I'm not 100% sure about it, what if the phone lags or a lagspike happens, this seems very susceptible to that.
-        // One problem already with this is if you swipe excessively fast it just stays on the same panel.
-        #region Sets Panels Active
-        if (PointerNotification.IsPlaying(animMainPanel, "SwipeLeft") || PointerNotification.IsPlaying(animMainPanel, "SwipeRight"))
-        {
-            if (swipeCount == 0)
-            {
-                isBuildingVisible = true;
-                isCraftingVisible = false;
-                isResearchVisible = false;
-                isWorkerVisible = false;
-            }
-            else if (swipeCount == 1)
-            {
-                isBuildingVisible = false;
-                isCraftingVisible = true;
-                isResearchVisible = false;
-                isWorkerVisible = false;
-            }
-            else if (swipeCount == 2)
-            {
-                isBuildingVisible = false;
-                isCraftingVisible = false;
-                isResearchVisible = false;
-                isWorkerVisible = true;
-            }
-            else if (swipeCount == 3)
-            {
-                isBuildingVisible = false;
-                isCraftingVisible = false;
-                isResearchVisible = true;
-                isWorkerVisible = false;
-            }
-
-            if (isBuildingVisible)
-            {
-                Debug.Log("How many times");
-                BuildingPanelActive();
-            }
-            if (isCraftingVisible)
-            {
-                Debug.Log("How many times");
-                CraftingPanelActive();
-            }
-            if (isWorkerVisible)
-            {
-                Debug.Log("How many times");
-                WorkerPanelActive();
-            }
-            if (isResearchVisible)
-            {
-                Debug.Log("How many times");
-                ResearchPanelActive();
-            }
-            //Debug.Log("Building : " + isBuildingVisible + " Crafting " + isCraftingVisible + " Worker: " + isWorkerVisible + " Research: " + isResearchVisible);
-        }
-        #endregion
-
 
     }
     public void PanelHandler()
     {
         if (swipeCount == 0)
         {
-            isBuildingVisible = true;
-            isCraftingVisible = false;
-            isResearchVisible = false;
-            isWorkerVisible = false;
+            BuildingsActive();
         }
         else if (swipeCount == 1)
         {
-            isBuildingVisible = false;
-            isCraftingVisible = true;
-            isResearchVisible = false;
-            isWorkerVisible = false;
+            CraftablesActive();
         }
         else if (swipeCount == 2)
         {
-            isBuildingVisible = false;
-            isCraftingVisible = false;
-            isResearchVisible = false;
-            isWorkerVisible = true;
+            WorkersActive();
         }
         else if (swipeCount == 3)
         {
-            isBuildingVisible = false;
-            isCraftingVisible = false;
-            isResearchVisible = true;
-            isWorkerVisible = false;
-        }
-
-        if (isBuildingVisible)
-        {
-            BuildingPanelActive();
-        }
-        if (isCraftingVisible)
-        {
-            CraftingPanelActive();
-        }
-        if (isWorkerVisible)
-        {
-            WorkerPanelActive();
-        }
-        if (isResearchVisible)
-        {
-            ResearchPanelActive();
+            ResearchablesActive();
         }
     }
     void Update()

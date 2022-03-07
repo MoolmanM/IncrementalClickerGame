@@ -2,46 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Increase a random Worker's Multiplier by a certain %.
 public class cPassive2 : CommonPassive
 {
     private CommonPassive _commonPassive;
+    private WorkerType workerTypeChosen;
+    private float percentageAmount = 0.05f; //5%
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
     }
-    public override void ExecutePassive()
-    {
-        base.ExecutePassive();
-        // If I want to increase a certain resource's production
-        // I could run through all of them , check which ones are unlocked, and then choose one of those that have been unlocked in the previous run
-        // And the nrandomly select one of them to increase.
-        // It'll be weird if you can increase a resource you've never even seen before.
-        // The problem with this is, it dilutes the pool a bit, which might just be fine.
-        // And I'll have the set the description inside the for loop.
-        // Resources might need a new variable, to check if it was unlocked. Or I should check which ones were unlocked when the game resets
-        // And then just add them to a list, and then loop through them here. And as soon as the loop here finishes, I can remove them?
+    private void ChooseRandomWorker()
+    {      
+        List<WorkerType> workerTypesInCurrentRun = new List<WorkerType>();
 
-        
-        Resource.Resources[Prestige.resourcesUnlockedInPreviousRun[_index]].amountPerSecond += 0.12f;
+        foreach (var worker in Worker.Workers)
+        {
+            if (worker.Value.isUnlocked)
+            {
+                workerTypesInCurrentRun.Add(worker.Key);
+            }
+        }
+        if (workerTypesInCurrentRun.Count >= Prestige.workersUnlockedInPreviousRun.Count)
+        {
+            _index = Random.Range(0, workerTypesInCurrentRun.Count);
+            workerTypeChosen = workerTypesInCurrentRun[_index];
+        }
+        else
+        {
+            _index = Random.Range(0, Prestige.workersUnlockedInPreviousRun.Count);
+            workerTypeChosen = Prestige.workersUnlockedInPreviousRun[_index];
+        }
 
-        // And this also needs to instantiate the resourceinfo prefab
+        description = string.Format("Increase the production of {0} by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount*100);
+        AddToBoxCache();
     }
-    public override void GenerateRandomResource()
+    private void AddToBoxCache()
     {
-        base.GenerateRandomResource();
+        if (!BoxCache.cachedWorkerMultiplierModified.ContainsKey(workerTypeChosen))
+        {
+            BoxCache.cachedWorkerMultiplierModified.Add(workerTypeChosen, percentageAmount);
+        }
+        else
+        {
+            BoxCache.cachedWorkerMultiplierModified[workerTypeChosen] += percentageAmount;
+        }
+    }
+    public override void InitializePermanentStat()
+    {
+        base.InitializePermanentStat();
 
-        description = string.Format("Increases {0}'s production by 0.12/sec", Prestige.resourcesUnlockedInPreviousRun[_index].ToString());
-
-        // Then also, do I want to increase it via percentage, so this is currently just a flat amount
-        // But if I do it percentage, the percentage will get recalculated everytime the amountpersecond changed.
-        // So 1% of 10/sec will be 0.1/sec but 1% of 100 will be 1/sec. So it will scale higher with time.
-        // So the player will have to do those calculation themselves.
-        // But this will definitely make me modify some code in different places
-        // (everywhere where amountpersecond gets modified)
-
-        // Would also be really nice, if the increase in amountpersecond only started happening when that specific 
-        // resource gets unlocked again in the next run.
+        ChooseRandomWorker();
     }
 }

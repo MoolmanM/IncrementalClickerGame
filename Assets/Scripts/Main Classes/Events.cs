@@ -1,19 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using System;
 using System.IO;
+using TMPro;
+using UnityEngine;
 
 public class Events : MonoBehaviour
 {
     public static bool eventGood, eventBad, eventInfo, eventError, eventHappened;
-    public float  animalAttack, villageUnderAttack, randomNumber;
+    public float animalAttack, villageUnderAttack, randomNumber;
     public TMP_Text txtHistoryLog;
     private string _currentHistoryLog;
     public TMP_Text txtAvailableWorkers;
 
     public GameObject scrollViewObject;
+
+    private float workerEatAmount = 0.20f;
+    public float totalEatAmount;
 
     private float _timer = 1f;
     // Use the Info event to display stuff like: "You've entered the bronze age"
@@ -26,16 +27,16 @@ public class Events : MonoBehaviour
 
         if (randomNumber <= animalAttack)
         {
-            AnimalAttack();
+            //AnimalAttack();
         }
         if (randomNumber <= villageUnderAttack)
         {
-            VillageAttack();
+            // VillageAttack();
         }
 
         // These random events shouldn't start happening after the first time of launching the game. Maybe make it so that once the player reaches a certain point in the tutorial
         // Or if they reach a certain amount of a building such as potatoField.
-    } 
+    }
     private void AnimalAttack()
     {
         if (Worker.TotalWorkerCount > 0)
@@ -83,7 +84,7 @@ public class Events : MonoBehaviour
                     Debug.Log(Worker.UnassignedWorkerCount);
                     randomWorkerAmount -= Worker.UnassignedWorkerCount;
                     Worker.UnassignedWorkerCount = 0;
-                    txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+                    txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
                     foreach (var worker in Worker.Workers)
                     {
                         while (randomWorkerAmount != 0)
@@ -92,22 +93,22 @@ public class Events : MonoBehaviour
                             {
                                 worker.Value.workerCount--;
                                 randomWorkerAmount--;
-                                worker.Value.txtHeader.text = string.Format("{0} [{1}]", worker.Key, worker.Value.workerCount);                              
+                                worker.Value.txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", worker.Key, worker.Value.workerCount);
                             }
                             Debug.Log("Random worker amount: " + randomWorkerAmount + " Unassigned workers: " + Worker.UnassignedWorkerCount);
-                        }                       
-                    }                   
+                        }
+                    }
                 }
                 else
                 {
                     Worker.UnassignedWorkerCount -= randomWorkerAmount;
-                    txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
+                    txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
                 }
 
                 Worker.TotalWorkerCount -= randomWorkerAmount;
             }
         }
-              
+
         // Here we should roll another dice to see if the player can kill the animal or not.
         // If killed gets a random amount of food between generous values.
         // If the player can't kill the animal then a worker dies or multiple.
@@ -145,6 +146,16 @@ public class Events : MonoBehaviour
         // Then display everything that has been stolen and also display how many people have been killed and/or injured if we want a injuring system which
         // mioght just be too much effort.
     }
+    private void HasNotEnoughEnergy()
+    {
+        if (Power.hasNotEnoughEnergy)
+        {
+            eventHappened = true;
+            eventError = true;
+            NotableEvent("You do not have enough energy production.");
+            Power.hasNotEnoughEnergy = false;
+        }
+    }
     private void HasReachedMaxSimulResearch()
     {
         if (Researchable.hasReachedMaxSimulResearch)
@@ -158,7 +169,7 @@ public class Events : MonoBehaviour
     private void NewCraftingRecipe()
     {
         if (Craftable.isCraftableUnlockedEvent)
-        {       
+        {
             eventHappened = true;
             eventGood = true;
             NotableEvent("You've unlocked a new crafting recipe.");
@@ -203,26 +214,108 @@ public class Events : MonoBehaviour
     // Then just make sure the animation starts again correctly.
     private void GenerateWorkers()
     {
-        if (Worker.TotalWorkerCount < MakeshiftBed._selfCount && MakeshiftBed._selfCount != 0)
+        // Might have to eventually have another class that all the buildings inherit from that are living quarters.
+        // I wonder if I can do interfaces, because it can really work well.
+        // But if I remember correctly. they won't work for my use-case.
+
+        if (Worker.AliveCount < Hut._selfCount && Hut._selfCount != 0 && Resource.Resources[ResourceType.Food].amount - (Worker.AliveCount * workerEatAmount) >= 0)
         {
+            // This was in the if
+            // && Resource.Resources[ResourceType.Food].amount - (Worker.AliveCount * workerEatAmount) >= 0
             if ((_timer -= Time.deltaTime) <= 0)
             {
                 _timer = 10f;
 
                 eventHappened = true;
                 eventGood = true;
+                Worker.AliveCount++;
                 Worker.UnassignedWorkerCount++;
                 Worker.TotalWorkerCount++;
-                NotableEvent(string.Format("A worker has arrived [{0}]", Worker.TotalWorkerCount));
-                txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", Worker.UnassignedWorkerCount);
-                
+                NotableEvent(string.Format("A worker has arrived [{0}]", Worker.AliveCount));
+                txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
+
+                // Turn this into a bool.
                 if (AutoToggle.isAutoWorkerOn == 1)
                 {
                     AutoWorker.CalculateWorkers();
                     AutoWorker.AutoAssignWorkers();
                 }
+
+                DecreaseFoodAPS();
             }
         }
+    }
+    private void KillWorker()
+    {
+        // Killing workers should probably also happen at timer = 10f
+        // So here it should just modify the APS of Food specifically ONCE per tick I guess?
+        // But only do it once per pick if the APS that it modifies it with changes, otherwise it's just unessecary
+        // So I think the amount per second needs to be modified after a worker has starved.
+        bool hasWorkerStarved = false;
+
+        // No matter what the amount per second should always change, even if food is already zero and APS is less than zero.
+        // Food should just be forces to stay at zero.
+        if (Worker.AliveCount > 0 && Resource.Resources[ResourceType.Food].amount + (Resource.Resources[ResourceType.Food].amountPerSecond - (Worker.AliveCount * workerEatAmount)) <= 0)
+        {
+            // Also if this happens you can set food to zero 'permanently' until APS is >= 0, otherwise you'll be calling code for no reason.
+            // Make sure food doesn't go below 0, should probably do that in resources though, but in food specifically,
+            // If another resource goes below 0, I want to see it because then it means something went wrong.
+            // This is where you starve.
+            // Maybe workers that are not working should not minus food per second?
+
+            if (Worker.UnassignedWorkerCount > 0 && !hasWorkerStarved)
+            {
+                Worker.UnassignedWorkerCount--;
+                Worker.AliveCount--;
+                hasWorkerStarved = true;
+            }
+            else if (Worker.UnassignedWorkerCount == 0)
+            {
+                foreach (var kvp in Worker.Workers)
+                {
+                    if (kvp.Value.workerCount > 0 && !hasWorkerStarved)
+                    {
+                        //kvp.Value.workerCount--;
+                        Worker.AliveCount--;
+                        hasWorkerStarved = true;
+                        kvp.Value.OnMinusButton();
+                        Worker.UnassignedWorkerCount--;
+                        //kvp.Value.txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", kvp.Value.actualName.ToString(), kvp.Value.workerCount);
+                    }
+                }
+            }
+
+
+            // So you can just + APS of food here by the eat amount, no need to multiply by workeramount because just one dies at a time.
+            // Also modify the resource APS when a worker dies.
+            // Worker dies.
+            // And make sure in generate workers that they only come back when it's more than zero.
+
+            Resource.Resources[ResourceType.Food].amountPerSecond += workerEatAmount;
+            StaticMethods.ModifyAPSText(Resource.Resources[ResourceType.Food].amountPerSecond, Resource.Resources[ResourceType.Food].uiForResource.txtAmountPerSecond);
+            eventHappened = true;
+            eventBad = true;
+            NotableEvent(string.Format("A worker has died [{0}]", Worker.AliveCount));
+            txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
+
+        }
+        //else
+        //{
+        //    // This needs to happen everytime a worker gets generated.
+        //    // And then again everytime a worker dies.
+        //    // So all of this code needs to be inside generate woker.
+        //    Resource.Resources[ResourceType.Food].amountPerSecond += totalEatAmount;
+        //    totalEatAmount = 0;
+        //    totalEatAmount = Worker.AliveCount * workerEatAmount;
+        //    Resource.Resources[ResourceType.Food].amountPerSecond -= totalEatAmount;
+        //    Resource.Resources[ResourceType.Food].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[ResourceType.Food].amountPerSecond);
+        //}
+    }
+    private void DecreaseFoodAPS()
+    {
+        Resource.Resources[ResourceType.Food].amountPerSecond -= workerEatAmount;
+        StaticMethods.ModifyAPSText(Resource.Resources[ResourceType.Food].amountPerSecond, Resource.Resources[ResourceType.Food].uiForResource.txtAmountPerSecond);
+        //Resource.Resources[ResourceType.Food].uiForResource.txtAmountPerSecond.text = string.Format("{0:0.00}/sec", Resource.Resources[ResourceType.Food].amountPerSecond);
     }
     private void NotableEvent(string notableEventString)
     {
@@ -234,7 +327,7 @@ public class Events : MonoBehaviour
         //Question is where should I have this code, I'm thinking I should have that code inside here.
         //Currently events gets checked in update, which is completely wrong. It should only execute when an event occurs.
         //Go study events/delegates tomorrow.
-        
+
 
         // Write to a history log whenever something notable happens. 
         _currentHistoryLog = txtHistoryLog.text;
@@ -245,6 +338,8 @@ public class Events : MonoBehaviour
         else
         {
             txtHistoryLog.text = string.Format("{0}\n<b>{1:t}</b>: {2}", _currentHistoryLog, DateTime.Now, notableEventString);
+            // How is expensive is this?
+
             Canvas.ForceUpdateCanvases();
             scrollViewObject.GetComponent<UnityEngine.UI.ScrollRect>().verticalNormalizedPosition = 0f;
 
@@ -258,18 +353,20 @@ public class Events : MonoBehaviour
     }
     void Update()
     {
+        // Should maybe have all of these methods in their own class so they execute at the same time instead of in this order.
+        GenerateWorkers();
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = 1f;
-            StoneAgeEvents();           
-        }
-       
-        GenerateWorkers();
+            StoneAgeEvents();
+            KillWorker();
+        }      
         NewCraftingRecipe();
         NewResearchAvailable();
         NewBuildingAvailable();
         NewWorkerJobAvailable();
         HasReachedMaxSimulResearch();
+        HasNotEnoughEnergy();
         PopUpNotification.HandleAnim();
     }
 }

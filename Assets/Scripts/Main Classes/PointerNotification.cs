@@ -26,8 +26,7 @@ public class PointerNotification : MonoBehaviour
         textLeft = objTextLeft.GetComponent<TMP_Text>();
         textRight = objTextRight.GetComponent<TMP_Text>();
 
-        //objLeftPointer.SetActive(false);
-        //objRightPointer.SetActive(false);
+        rightAmount = (uint)PlayerPrefs.GetInt("Right_Amount", (int)rightAmount);
     }
     public static bool IsPlaying(Animator anim, string stateName)
     {
@@ -93,5 +92,18 @@ public class PointerNotification : MonoBehaviour
         }
 
         textRight.text = rightAmount.ToString();
+    }
+    private void OnApplicationQuit()
+    {
+        foreach (var item in Building.Buildings)
+        {
+            if (!item.Value.hasSeen)
+            {
+                leftAmount--;
+            }
+        }
+        rightAmount += leftAmount;
+        leftAmount = 0;
+        PlayerPrefs.SetInt("Right_Amount", (int)rightAmount);
     }
 }

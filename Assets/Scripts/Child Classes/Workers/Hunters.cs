@@ -55,14 +55,15 @@ public class Hunters : Worker
             UnassignedWorkerCount -= _changeAmount;
             workerCount += _changeAmount;
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
-            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                    Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
                 }
             }
             else
@@ -71,13 +72,15 @@ public class Hunters : Worker
                 {
                     for (int i = 0; i < _resourcesToDecrement.Length; i++)
                     {
-                        _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                        _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].currentResourceMultiplier;
                         Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToDecrement[i].incrementAmount;
+                        Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
                     }
                     for (int i = 0; i < _resourcesToIncrement.Length; i++)
                     {
-                        _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                        _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                         Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
+                        Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond.text = string.Format("+{0:0.00}/sec", Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond);
                     }
                 }
                 else
@@ -88,7 +91,7 @@ public class Hunters : Worker
         }
         UpdateResourceInfo();
     }
-    protected override void OnMinusButton()
+    public override void OnMinusButton()
     {
         if (workerCount > 0)
         {
@@ -125,13 +128,13 @@ public class Hunters : Worker
             UnassignedWorkerCount += _changeAmount;
             workerCount -= _changeAmount;
             txtHeader.text = string.Format("{0} [{1}]", Type.ToString(), workerCount);
-            txtAvailableWorkers.text = string.Format("Available Workers: [{0}]", UnassignedWorkerCount);
+            txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
             {
                 for (int i = 0; i < _resourcesToIncrement.Length; i++)
                 {
-                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                    _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                     Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
                 }
             }
@@ -141,12 +144,12 @@ public class Hunters : Worker
                 {
                     for (int i = 0; i < _resourcesToIncrement.Length; i++)
                     {
-                        _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].resourceMultiplier;
+                        _resourcesToIncrement[i].incrementAmount = _changeAmount * _resourcesToIncrement[i].currentResourceMultiplier;
                         Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
                     }
                     for (int i = 0; i < _resourcesToDecrement.Length; i++)
                     {
-                        _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].resourceMultiplier;
+                        _resourcesToDecrement[i].incrementAmount = _changeAmount * _resourcesToDecrement[i].currentResourceMultiplier;
                         Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond += _resourcesToDecrement[i].incrementAmount;
                     }
                 }
@@ -170,7 +173,7 @@ public class Hunters : Worker
 
                 for (int i = 0; i < _resourcesToDecrement.Length; i++)
                 {
-                    if (Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amount <= _resourcesToDecrement[i].resourceMultiplier)
+                    if (Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amount <= _resourcesToDecrement[i].currentResourceMultiplier)
                     {
                         hasEnoughResources = false;
                     }
@@ -196,7 +199,7 @@ public class Hunters : Worker
                         if (!_resourcesToIncrement[i].hasAssignedEnough)
                         {
                             _resourcesToIncrement[i].incrementAmount = 0;
-                            _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].resourceMultiplier;
+                            _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].currentResourceMultiplier;
                             Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += _resourcesToIncrement[i].incrementAmount;
                             _resourcesToIncrement[i].hasAssignedEnough = true;
                         }
@@ -206,7 +209,7 @@ public class Hunters : Worker
                         if (!_resourcesToDecrement[i].hasAssignedEnough)
                         {
                             _resourcesToDecrement[i].incrementAmount = 0;
-                            _resourcesToDecrement[i].incrementAmount = workerCount * _resourcesToDecrement[i].resourceMultiplier;
+                            _resourcesToDecrement[i].incrementAmount = workerCount * _resourcesToDecrement[i].currentResourceMultiplier;
                             Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToDecrement[i].incrementAmount;
                             _resourcesToDecrement[i].hasAssignedEnough = true;
                         }
@@ -228,7 +231,7 @@ public class Hunters : Worker
                     {
                         if (!_resourcesToIncrement[i].hasAssignedNotEnough)
                         {
-                            _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].resourceMultiplier;
+                            _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].currentResourceMultiplier;
                             Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
                             _resourcesToIncrement[i].incrementAmount = 0;
                             _resourcesToIncrement[i].hasAssignedNotEnough = true;
@@ -238,7 +241,7 @@ public class Hunters : Worker
                     {
                         if (!_resourcesToDecrement[i].hasAssignedNotEnough)
                         {
-                            _resourcesToDecrement[i].incrementAmount = workerCount * _resourcesToDecrement[i].resourceMultiplier;
+                            _resourcesToDecrement[i].incrementAmount = workerCount * _resourcesToDecrement[i].currentResourceMultiplier;
                             Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond += _resourcesToDecrement[i].incrementAmount;
                             _resourcesToDecrement[i].incrementAmount = 0;
                             _resourcesToDecrement[i].hasAssignedNotEnough = true;

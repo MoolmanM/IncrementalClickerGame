@@ -17,9 +17,4 @@ public class MinorStorage : Researchable
     {
         SetDescriptionText("Unlocks building minor storage facilities.");
     }
-    protected override void Update()
-    {
-        base.Update();
-        UpdateResearchTimer();
-    }
 }

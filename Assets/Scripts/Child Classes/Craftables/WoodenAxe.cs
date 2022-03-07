@@ -16,8 +16,4 @@ public class WoodenAxe : Craftable
     {
         SetDescriptionText("Enables building of the Wood-lot to automatically gather sticks.");
     }
-    protected override void Update()
-    {
-        base.Update();
-    }
 }

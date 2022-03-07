@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +8,9 @@ public enum UncommonType
     Passive3,
     Passive4,
     Passive5,
+    Passive6,
+    Passive7,
+    Passive8
 }
 
 public class UncommonPassive : MonoBehaviour
@@ -16,10 +18,11 @@ public class UncommonPassive : MonoBehaviour
     // Maybe just list
     public static Dictionary<UncommonType, UncommonPassive> UncommonPassives = new Dictionary<UncommonType, UncommonPassive>();
     public UncommonType Type;
-    public string description;
+    [System.NonSerialized] public string description;
+    protected int _index;
 
-    public virtual void ExecutePassive()
+    public virtual void InitializePermanentStat()
     {
-        Debug.Log("This is something the passives will all do because they have that in common");
+
     }
 }

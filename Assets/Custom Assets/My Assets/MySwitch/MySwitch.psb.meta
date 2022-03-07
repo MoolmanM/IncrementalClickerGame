@@ -25,6 +25,7 @@ ScriptedImporter:
     streamingMipmaps: 1
     streamingMipmapsPriority: 0
     vTOnly: 0
+    ignoreMasterTextureLimit: 0
     nPOTScale: 1
     sRGBTexture: 1
     spriteMode: 2
@@ -79,7 +80,6 @@ ScriptedImporter:
       width: 0
       height: 0
     spriteID: 
-    internalID: 0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -102,7 +102,6 @@ ScriptedImporter:
       width: 1700
       height: 900
     spriteID: b41d0d739beb399499003fb6fd6f3a17
-    internalID: 0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -124,7 +123,6 @@ ScriptedImporter:
       width: 4000
       height: 1200
     spriteID: 2a8a4d3f49d216346975bc0f39a53be2
-    internalID: 0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -147,7 +145,6 @@ ScriptedImporter:
       width: 1700
       height: 900
     spriteID: de3dbf53befe1f14f902489dcca0bef0
-    internalID: 0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -169,7 +166,6 @@ ScriptedImporter:
       width: 4000
       height: 1200
     spriteID: 5402c5944f151e940b465abf3d713d5f
-    internalID: 0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -242,16 +238,13 @@ ScriptedImporter:
   documentPivot: {x: 0, y: 0}
   documentAlignment: 0
   importHiddenLayers: 0
-  importedTextureWidth: 2048
-  importedTextureHeight: 2048
-  documentSize: {x: 4000, y: 1200}
+  layerMappingOption: 2
+  generatePhysicsShape: 0
   paperDollMode: 0
   keepDupilcateSpriteName: 1
   skeletonAssetReferenceID: 
   spriteCategoryList:
     categories: []
-  textureActualWidth: 4096
-  textureActualHeight: 4096
   spritePackingTag: 
   resliceFromLayer: 0
   mosaicPSDLayers:
@@ -262,6 +255,9 @@ ScriptedImporter:
     spriteID: b41d0d739beb399499003fb6fd6f3a17
     layerID: 8
     mosaicPosition: {x: 4, y: 1212}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
   - name: Rounded Rectangle 1
     spriteName: Rounded Rectangle 1
     isGroup: 0
@@ -269,6 +265,9 @@ ScriptedImporter:
     spriteID: 2a8a4d3f49d216346975bc0f39a53be2
     layerID: 7
     mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
   rigPSDLayers:
   - name: Rounded Rectangle 2
     spriteName: Rounded Rectangle 2
@@ -277,6 +276,9 @@ ScriptedImporter:
     spriteID: de3dbf53befe1f14f902489dcca0bef0
     layerID: 8
     mosaicPosition: {x: 4, y: 1212}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
   - name: Rounded Rectangle 1
     spriteName: Rounded Rectangle 1
     isGroup: 0
@@ -284,7 +286,11 @@ ScriptedImporter:
     spriteID: 5402c5944f151e940b465abf3d713d5f
     layerID: 7
     mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 0
+    isVisible: 0
   sharedRigPSDLayers: []
+  pSDLayerImportSetting: []
   generateGOHierarchy: 0
   textureAssetName: MySwitch Texture
   prefabAssetName: MySwitch Prefab
