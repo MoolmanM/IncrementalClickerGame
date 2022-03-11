@@ -2,7 +2,7 @@
 public class lPassive9 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
-    private float percentageAmount = 0.01f; //1%
+    private float percentageAmount = 0.025f; // 2.5%
 
     private void Awake()
     {

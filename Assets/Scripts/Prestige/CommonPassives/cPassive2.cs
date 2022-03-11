@@ -7,7 +7,7 @@ public class cPassive2 : CommonPassive
 {
     private CommonPassive _commonPassive;
     private WorkerType workerTypeChosen;
-    private float percentageAmount = 0.05f; //5%
+    private float percentageAmount = 0.01f; //1%
 
     private void Awake()
     {

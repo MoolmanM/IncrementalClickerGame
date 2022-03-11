@@ -148,35 +148,30 @@ public class Store : MonoBehaviour
     {
 
     }
-    [Button]
     public void OnCommonChest()
     {
         int amountToRoll = 2;
         InitializeRarityChances(0.1f, 0.7f, 2.5f, 20f);      
         GenerateRandomBuff(amountToRoll);
     }
-    [Button]
     public void OnUncommonChest()
     {
         int amountToRoll = 4;
         InitializeRarityChances(0.3f, 1.3f, 5f, 27.5f);      
         GenerateRandomBuff(amountToRoll);
     }
-    [Button]
     public void OnRareChest()
     {
         int amountToRoll = 6;
         InitializeRarityChances(1f, 4f, 10f, 40f);           
         GenerateRandomBuff(amountToRoll);
     }
-    [Button]
     public void OnEpicChest()
     {
         int amountToRoll = 8;
         InitializeRarityChances(2.5f, 8.75f, 20f, 70f);      
         GenerateRandomBuff(amountToRoll);
     }
-    [Button]
     public void OnLegendaryChest()
     {
         int amountToRoll = 10;
@@ -189,15 +184,6 @@ public class Store : MonoBehaviour
         {
             GameObject prefabObj = Instantiate(commonPrefab, content.GetComponent<Transform>());
             value.InitializePermanentStat();
-
-            // Adding something to a button should probably only happen when doing prestige stuff.
-            //prefabObj.GetComponent<Button>().onClick.AddListener(value.ExecutePermanentStat);
-            
-            // Should probably make this button only add this specific stat to another list
-            // And then when pressing done somewhere it will execute all of those stats from that list
-            // But if you buy boxes, you get everything anyways unless there are rerolls
-            // In which case you should still use the list idea. 
-            // So have some sort of 'Done' button should be good nonetheless.
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
@@ -209,7 +195,7 @@ public class Store : MonoBehaviour
         foreach (var value in RandomValues(UncommonPassive.UncommonPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(uncommonPrefab, content.GetComponent<Transform>());
-            //prefabObj.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+            value.InitializePermanentStat();
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
@@ -221,7 +207,7 @@ public class Store : MonoBehaviour
         foreach (var value in RandomValues(RarePassive.RarePassives).Take(1))
         {
             GameObject prefabObj = Instantiate(rarePrefab, content.GetComponent<Transform>());
-            //prefabObj.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+            value.InitializePermanentStat();
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
@@ -237,7 +223,7 @@ public class Store : MonoBehaviour
         foreach (var value in RandomValues(EpicPassive.EpicPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(epicPrefab, content.GetComponent<Transform>());
-            //prefabObj.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+            value.InitializePermanentStat();
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
@@ -249,7 +235,7 @@ public class Store : MonoBehaviour
         foreach (var value in RandomValues(LegendaryPassive.LegendaryPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(legendaryPrefab, content.GetComponent<Transform>());
-            //prefabObj.GetComponent<Button>().onClick.AddListener(value.ExecutePassive);
+            value.InitializePermanentStat();
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;

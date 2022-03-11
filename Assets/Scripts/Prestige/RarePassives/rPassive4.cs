@@ -7,7 +7,7 @@ using UnityEngine;
 public class rPassive4 : RarePassive
 {
     private RarePassive _rarePassive;
-    private uint amountToIncrease = 1;
+    private uint amountToIncrease = 4;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class rPassive4 : RarePassive
 
         if (amountToIncrease > 1)
         {
-            description = string.Format("Gains {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", amountToIncrease);
         }
         else
         {

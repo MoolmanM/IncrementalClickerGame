@@ -1,10 +1,9 @@
 //ePassive2: Increase production of ALL Workers by a certain %.
-using System.Collections.Generic;
 
 public class ePassive2 : EpicPassive
 {
     private EpicPassive _epicPassive;
-    private float percentageAmount = 0.02f; // 2%
+    private float percentageAmount = 0.01f; // 1%
 
     private void Awake()
     {

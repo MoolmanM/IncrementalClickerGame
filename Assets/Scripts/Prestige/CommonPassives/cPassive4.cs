@@ -16,7 +16,7 @@ public class cPassive4 : CommonPassive
 
         if (amountToIncrease > 1)
         {
-            description = string.Format("Gains {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", amountToIncrease);
         }
         else
         {

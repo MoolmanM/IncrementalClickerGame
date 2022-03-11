@@ -7,7 +7,7 @@ using UnityEngine;
 public class uPassive4 : UncommonPassive
 {
     private UncommonPassive _uncommonPassive;
-    private uint amountToIncrease = 1;
+    private uint amountToIncrease = 2;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class uPassive4 : UncommonPassive
 
         if (amountToIncrease > 1)
         {
-            description = string.Format("Gains {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", amountToIncrease);
         }
         else
         {

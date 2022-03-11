@@ -5,7 +5,7 @@ using UnityEngine;
 public class cPassive6 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.2f;
+    private float percentageAmount = 0.01f; //1%
     private CraftingType craftingTypeChosen;
 
     private void Awake()

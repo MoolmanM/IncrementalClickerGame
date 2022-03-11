@@ -6,7 +6,7 @@ public class lPassive6 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
 
-    private float percentageAmount = 0.01f; // 1%
+    private float percentageAmount = 0.01f; // 1.5%
     private BuildingType buildingTypeChosen;
 
     private void Awake()

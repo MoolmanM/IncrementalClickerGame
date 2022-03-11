@@ -6,7 +6,7 @@ using UnityEngine;
 public class uPassive8 : UncommonPassive
 {
     private UncommonPassive _unommonPassive;
-    private float percentageAmount = 0.1f; //10%
+    private float percentageAmount = 0.023f; // 2.3%
 
     private void Awake()
     {

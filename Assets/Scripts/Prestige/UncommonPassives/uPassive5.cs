@@ -5,7 +5,7 @@ using UnityEngine;
 public class uPassive5 : UncommonPassive
 {
     private UncommonPassive _uncommonPassive;
-    private float percentageAmount = 0.05f;
+    private float percentageAmount = 0.023f; // 2.3%
     private BuildingType buildingTypeChosen;
 
     private void Awake()

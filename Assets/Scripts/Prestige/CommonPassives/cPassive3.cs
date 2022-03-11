@@ -38,11 +38,11 @@ public class cPassive3 : CommonPassive
         }
         if (_selfCountIncreaseAmount > 1)
         {
-            description = string.Format("Start each run with an additional {0} {1}'s, when you unlock it", _selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start each run with an additional {0} {1}'s", _selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
         }
         else
         {
-            description = string.Format("Start each run with an additional {1}, when you unlock it", _selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start each run with an additional {1}", _selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
         }
      
         AddToBoxCache();

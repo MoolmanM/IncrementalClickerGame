@@ -6,14 +6,14 @@ using UnityEngine;
 public class rPassive1 : RarePassive
 {
     private RarePassive _rarePassive;
-    private float percentageAmount = 0.05f; //5%
+    private float percentageAmount = 0.0036f; // 0.36%
 
 
     private void Awake()
     {
         _rarePassive = GetComponent<RarePassive>();
         RarePassives.Add(Type, _rarePassive);
-        description = "Reduces time it takes to research by 5%";
+        description = string.Format("Reduces time it takes to research by {0}%", percentageAmount * 100);
     }   
     private void AddToBoxCache()
     {

@@ -8,7 +8,7 @@ public enum BuildingType
     PotatoField,
     LumberMill,
     DigSite,
-    Hut, // Change this to "Hut"?
+    Hut,
     Smelter,
     StoragePile, // For Stone, Lumber, maybe other materials
     //StorageTent, For food, and more delicate stuff.
@@ -43,15 +43,23 @@ public abstract class Building : SuperClass
     public float costMultiplier;
 
     protected uint _selfCount;
-    protected string _selfCountString, _isUnlockedString;
+    protected string _selfCountString, _isUnlockedString, _strInitialSelfCount;
     protected string[] _costString;
-
-    //private TMP_Text 
-    private uint typesToModifyCount;
 
     public uint initialSelfCount;
 
-    public void ReModifyDescription()
+    private string strDescription;
+
+    public void ModifyMultiplier(float newAmount)
+    {
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            BuildingResourcesToModify buildingResourcesToModify = resourcesToIncrement[i];
+            buildingResourcesToModify.currentResourceMultiplier = newAmount;
+            resourcesToIncrement[i] = buildingResourcesToModify;
+        }
+    }
+    public void UpdateDescription()
     {
         UpdateResourceInfo();
         ModifyDescriptionText();
@@ -112,13 +120,14 @@ public abstract class Building : SuperClass
 
         //if (TimeManager.hasPlayedBefore)
         //{
-            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
-            _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
+        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+        _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
+        initialSelfCount = (uint)PlayerPrefs.GetInt(_strInitialSelfCount, (int)initialSelfCount);
 
-            for (int i = 0; i < resourceCost.Length; i++)
-            {
-                resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
-            }
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
+        }
         //}
 
         if (isUnlocked)
@@ -169,86 +178,22 @@ public abstract class Building : SuperClass
     }
     protected virtual void ModifyDescriptionText()
     {
-        string oldString;
+        strDescription = "";
 
-        // Bug here, so lets say it has 2 decrements, and one increment, well it's going to not refer to oldString here because it only has 1 increment.
-        //for (int i = 0; i < resourcesToIncrement.Count; i++)
-        //{
-        //    if (i > 0)
-        //    {
-        //        oldString = _txtDescription.text;
-        //        _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2}</color>", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].currentResourceMultiplier);
-        //    }
-        //    else
-        //    {
-        //        _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].currentResourceMultiplier);
-        //    }
-        //    Debug.Log(oldString);
-        //}
-        //for (int i = 0; i < resourcesToDecrement.Count; i++)
-        //{
-        //    if (i > 0)
-        //    {
-        //        oldString = _txtDescription.text;
-        //        _txtDescription.text = string.Format("{0} \nDecrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2}</color>", oldString, resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].currentResourceMultiplier);
-        //    }
-        //    else
-        //    {
-        //        _txtDescription.text = string.Format("Decrease <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].currentResourceMultiplier);
-        //    }
-        //}
-        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        foreach (var resourcePlus in resourcesToIncrement)
         {
-            typesToModifyCount++;
+            strDescription += string.Format("Increase <color=#F3FF0A>{0:0.00}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>\n", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
         }
-        for (int i = 0; i < resourcesToDecrement.Count; i++)
+        if (resourcesToDecrement != null)
         {
-            typesToModifyCount++;
-        }
-
-
-        for (int i = 0; i < resourcesToIncrement.Count; i++)
-        {
-            if (typesToModifyCount > 1)
+            foreach (var resourceMinus in resourcesToDecrement)
             {
-                oldString = _txtDescription.text;
 
-                if (!string.IsNullOrEmpty(oldString))
-                {
-                    _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2:0.00}</color>", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].currentResourceMultiplier);
-                }
-                else
-                {
-                    _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].currentResourceMultiplier);
-                }
-            }
-            else
-            {
-                _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), resourcesToIncrement[i].currentResourceMultiplier);
+                strDescription += string.Format("Decrease <color=#F3FF0A>{0:0.00}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>\n", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
             }
         }
 
-        for (int i = 0; i < resourcesToDecrement.Count; i++)
-        {
-            if (typesToModifyCount > 1)
-            {
-                oldString = _txtDescription.text;
-
-                if (!string.IsNullOrEmpty(oldString))
-                {
-                    _txtDescription.text = string.Format("{0} \nDecrease <color=#F3FF0A>{1}</color> amount per second by <color=#FF0AF3>{2}</color>", oldString, resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].currentResourceMultiplier);
-                }
-                else
-                {
-                    _txtDescription.text = string.Format("Decrease <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].currentResourceMultiplier);
-                }
-            }
-            else
-            {
-                _txtDescription.text = string.Format("Decrease <color=#F3FF0A>{0}</color> amount per second by <color=#FF0AF3>{1}</color>.", resourcesToDecrement[i].resourceTypeToModify.ToString(), resourcesToDecrement[i].currentResourceMultiplier);
-            }
-        }
-        // So I need to check if increment and decrement combined is more than 1
+        _txtDescription.text = strDescription;
     }
     protected virtual void ModifyAmountPerSecond()
     {
@@ -262,7 +207,7 @@ public abstract class Building : SuperClass
             {
                 Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier;
             }
-            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);         
+            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
         }
 
         UpdateResourceInfo();
@@ -273,6 +218,7 @@ public abstract class Building : SuperClass
 
         _objBtnMain.GetComponent<Button>().onClick.AddListener(OnBuild);
 
+        _strInitialSelfCount = (Type.ToString() + "_initialSelfCount");
         _selfCountString = (Type.ToString() + "_selfCount");
         _isUnlockedString = (Type.ToString() + "isUnlocked");
         _costString = new string[resourceCost.Length];
@@ -298,6 +244,7 @@ public abstract class Building : SuperClass
     {
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_selfCountString, (int)_selfCount);
+        PlayerPrefs.SetInt(_strInitialSelfCount, (int)initialSelfCount);
 
         for (int i = 0; i < resourceCost.Length; i++)
         {

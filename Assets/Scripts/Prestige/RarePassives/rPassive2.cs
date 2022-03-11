@@ -6,7 +6,7 @@ public class rPassive2 : RarePassive
 {
     private RarePassive _rarePassive;
     private WorkerType workerTypeChosen;
-    private float percentageAmount = 0.05f; //5%
+    private float percentageAmount = 0.036f; // 3.6%
 
     private void Awake()
     {

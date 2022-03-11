@@ -9,7 +9,7 @@ using UnityEngine;
 public class ePassive10 : EpicPassive
 {
     private EpicPassive _epicPassive;
-    private float percentageAmount = 0.01f; 
+    private float percentageAmount = 0.01f; // 1%
 
     private void Awake()
     {

@@ -45,15 +45,22 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip, _tformBtnPlus, _tformBtnMinus;
     private TMP_Text _txtDescriptionHeader, _txtDescriptionBody;
     private GameObject _objTooltip;
-    private string _workerString, _previousText, _isUnlockedString;
+    private string _workerString, _isUnlockedString;
     protected uint _changeAmount = 1;
     private Button _btnPlus, _btnMinus;
 
+    public string strDescription;
+
+    public void ModifyMultiplier(float newAmount)
+    {
+        for (int i = 0; i < _resourcesToIncrement.Length; i++)
+        {
+            _resourcesToIncrement[i].currentResourceMultiplier = newAmount;
+        }
+    }
     public void ModifyDescriptionText()
     {
         SetDescriptionText();
-
-        // Check worker decription text, might still need some work.
     }
     public void ResetWorker()
     {
@@ -85,40 +92,24 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
     private void SetDescriptionText()
-    {
-        _txtDescriptionHeader.text = string.Format("{0}", Type.ToString());
+    {       
+        _txtDescriptionHeader.text = string.Format("{0}", actualName);
+        strDescription = "";
+
         foreach (var resourcePlus in _resourcesToIncrement)
         {
-            // If there is more than one. I need to make sure it goes to a new line.
-            // And if it is a decrement amount, change description text to "decreases"
-
-            _previousText = _txtDescriptionBody.text;
-
-            if (_previousText != "")
-            {
-                _txtDescriptionBody.text = string.Format("{0}\nIncreases {1} yield by: {2:0.00}", _previousText, resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
-            }
-            else
-            {
-                _txtDescriptionBody.text = string.Format("Increases {0} yield by: {1:0.00}", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
-            }
+            strDescription += string.Format("Increases {0} yield by: {1:0.00}\n", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
         }
         if (_resourcesToDecrement != null)
         {
             foreach (var resourceMinus in _resourcesToDecrement)
             {
-                _previousText = _txtDescriptionBody.text;
 
-                if (_previousText != "")
-                {
-                    _txtDescriptionBody.text = string.Format("{0}\nDecreases {1} yield by: {2:0.00}", _previousText, resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
-                }
-                else
-                {
-                    _txtDescriptionBody.text = string.Format("Decreases {0} yield by: {1:0.00}", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
-                }
+                strDescription += string.Format("Decreases {0} yield by: {1:0.00}\n", resourceMinus.resourceTypeToModify.ToString(), resourceMinus.currentResourceMultiplier);
             }
         }
+
+        _txtDescriptionBody.text = strDescription;
     }
     protected void SetInitialValues()
     {
@@ -151,8 +142,8 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _tformBtnMinus = transform.Find("Panel_Main/Button_Minus");
         _tformBtnPlus = transform.Find("Panel_Main/Button_Plus");
         _tformObjMainPanel = transform.Find("Panel_Main");
-        _tformTxtDescriptionHeader = transform.Find("Worker_Tooltip/Header");
-        _tformTxtDescriptionBody = transform.Find("Worker_Tooltip/Body");
+        _tformTxtDescriptionHeader = transform.Find("Worker_Tooltip/Content/Header");
+        _tformTxtDescriptionBody = transform.Find("Worker_Tooltip/Content/Body");
         tformObjTooltip = transform.Find("Worker_Tooltip");
 
         txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
@@ -323,10 +314,6 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             //Resource.Resources[resourceTypeToModify].amountPerSecond -= incrementAmount;
             UpdateResourceInfo();
         }
-    }
-    public virtual void ModifyMultiplier()
-    {
-
     }
     void OnApplicationQuit()
     {

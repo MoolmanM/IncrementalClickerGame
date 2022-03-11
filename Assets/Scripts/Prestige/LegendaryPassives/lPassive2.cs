@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class lPassive2 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
-    private float percentageAmount = 0.05f; // 5%
+    private float percentageAmount = 0.025f; // 2.5%
 
     private void Awake()
     {

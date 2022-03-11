@@ -6,7 +6,7 @@ using UnityEngine;
 public class rPassive8 : RarePassive
 {
     private RarePassive _rarePassive;
-    private float percentageAmount = 0.1f; //10%
+    private float percentageAmount = 0.036f; // 3.6%
 
     private void Awake()
     {

@@ -58,6 +58,13 @@ public abstract class SuperClass : MonoBehaviour
 
     private float currentFillCache;
 
+    public void UpdateResourceCostPassive(float newAmount)
+    {
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = newAmount;
+        }
+    }
     void Start()
     {
         //_objBody.SetActive(true);
@@ -147,10 +154,10 @@ public abstract class SuperClass : MonoBehaviour
 
         #endregion
 
-        
+
         graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
         canvas = gameObject.GetComponent<Canvas>();
-        
+
         _tformObjBackground = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Background");
         _tformDescription = transform.Find("Panel_Main/Body/Text_Description");
         _tformTxtHeader = transform.Find("Panel_Main/Header_Panel/Text_Header");
@@ -161,7 +168,7 @@ public abstract class SuperClass : MonoBehaviour
         _tformBtnExpand = transform.Find("Panel_Main/Header_Panel/Button_Expand");
         _tformObjMain = transform.Find("Panel_Main");
 
-        
+
         _objBackground = _tformObjBackground.gameObject;
         objMainPanel = _tformObjMain.gameObject;
         _txtDescription = _tformDescription.GetComponent<TMP_Text>();
@@ -211,7 +218,7 @@ public abstract class SuperClass : MonoBehaviour
                     building.Value._objBody.SetActive(false);
                     building.Value._objBtnCollapse.SetActive(false);
                     building.Value._objBtnExpand.SetActive(true);
-                }            
+                }
             }
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
@@ -592,7 +599,7 @@ public abstract class SuperClass : MonoBehaviour
 
                     Building.Buildings[buildingType].isUnlocked = true;
                     Building.Buildings[buildingType].CheckIfPurchaseable();
-                    
+
 
                     if (!UIManager.isBuildingVisible)
                     {
@@ -670,7 +677,7 @@ public abstract class SuperClass : MonoBehaviour
         if (GetCurrentFill() != currentFillCache && isUnlocked)
         {
             _imgProgressCircle.fillAmount = GetCurrentFill();
-        }      
+        }
         currentFillCache = GetCurrentFill();
 
 

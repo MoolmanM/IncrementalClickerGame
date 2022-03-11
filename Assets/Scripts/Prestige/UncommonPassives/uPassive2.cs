@@ -6,7 +6,7 @@ public class uPassive2 : UncommonPassive
 {
     private UncommonPassive _uncommonPassive;
     private WorkerType workerTypeChosen;
-    private float percentageAmount = 0.05f; //5%
+    private float percentageAmount = 0.023f; // 2.3%
 
     private void Awake()
     {

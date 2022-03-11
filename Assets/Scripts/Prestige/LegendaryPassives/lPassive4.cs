@@ -3,7 +3,7 @@ public class lPassive4 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
 
-    private uint amountToIncrease = 5;
+    private uint amountToIncrease = 7;
 
     private void Awake()
     {
@@ -12,7 +12,7 @@ public class lPassive4 : LegendaryPassive
 
         if (amountToIncrease > 1)
         {
-            description = string.Format("Gains {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", amountToIncrease);
         }
         else
         {

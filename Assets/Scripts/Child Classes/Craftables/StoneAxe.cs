@@ -41,18 +41,18 @@ public class StoneAxe : Craftable
 
             isCrafted = true;
             Crafted();
-            ModifyWorker();
+            //ModifyWorker();
         }
     }
 
-    private void ModifyWorker()
-    {
-        foreach (var kvp in Worker.Workers)
-        {
-            if (kvp.Key == WorkerType.Woodcutters)
-            {
-                kvp.Value.ModifyMultiplier();
-            }
-        }
-    }
+    //private void ModifyWorker()
+    //{
+    //    foreach (var kvp in Worker.Workers)
+    //    {
+    //        if (kvp.Key == WorkerType.Woodcutters)
+    //        {
+    //            kvp.Value.ModifyMultiplier();
+    //        }
+    //    }
+    //}
 }
