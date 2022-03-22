@@ -5,6 +5,8 @@ using Sirenix.OdinInspector;
 
 public class BoxCache : MonoBehaviour
 {
+    public PermanentStats permanentStats;
+
     public static float cachedAllWorkerMultiplierAmount;
     public static float cachedAllBuildingMultiplierAmount;
 
@@ -24,7 +26,6 @@ public class BoxCache : MonoBehaviour
     public static float cachedResearchTimeReductionAmount;
     public static float cachedstoragePercentageAmount;
 
-    [Button]
     public void OnDoneButton()
     {
         // cPassive1
@@ -56,8 +57,22 @@ public class BoxCache : MonoBehaviour
         ModifyAllBuildingMultiplier();
         ModifyBuildingCost();
         ModifyAllWorkerMultiplier();
-    }
 
+        cachedAllWorkerMultiplierAmount = 0;
+        cachedAllBuildingMultiplierAmount = 0;
+        cachedAllCraftablesCostReduced = 0;
+        cachedAllResearchablesCostReduced = 0;
+        cachedWorkerCountModified = 0;
+        cachedResearchTimeReductionAmount = 0;
+        cachedstoragePercentageAmount = 0;
+
+        cachedCraftableCostReduced.Clear();
+        cachedResearchableCostReduced.Clear();
+        cachedBuildingCostReduced.Clear();
+        cachedWorkerMultiplierModified.Clear();
+        cachedBuildingMultiplierModified.Clear();
+        cachedBuildingSelfCountModified.Clear();
+    }
 
     private void ModifyResearchTime()
     {
@@ -69,7 +84,7 @@ public class BoxCache : MonoBehaviour
             research.Value.ModifyTimeToCompleteResearch(cachedResearchTimeReductionAmount);
         }
 
-        PermanentStats.researchTimeReductionAmount += cachedResearchTimeReductionAmount;
+        permanentStats.researchTimeReductionAmount += cachedResearchTimeReductionAmount;
     }
     private void ModifyStorageLimit()
     {
@@ -77,7 +92,7 @@ public class BoxCache : MonoBehaviour
 
         Debug.Log(string.Format("Increased storage limit by {0}%", cachedstoragePercentageAmount*100));
 
-        PermanentStats.storagePercentageAmount += cachedstoragePercentageAmount;
+        permanentStats.storagePercentageAmount += cachedstoragePercentageAmount;
     }    
 
     private void ModifyInitialWorkerCount()
@@ -85,6 +100,7 @@ public class BoxCache : MonoBehaviour
         Worker.TotalWorkerCount += cachedWorkerCountModified;
         Worker.AliveCount += cachedWorkerCountModified;
 
+        permanentStats.workerCountModified += cachedWorkerCountModified;
         Debug.Log(string.Format("Increased workers by {0}", cachedWorkerCountModified));
     }
     private void ModifyInitialBuildingCount()
@@ -126,7 +142,7 @@ public class BoxCache : MonoBehaviour
                 }
             }
 
-            PermanentStats.allBuildingMultiplierAmount += cachedAllBuildingMultiplierAmount;
+            permanentStats.allBuildingMultiplierAmount += cachedAllBuildingMultiplierAmount;
         }
     }
     private void ModifyAllWorkerMultiplier()
@@ -158,7 +174,7 @@ public class BoxCache : MonoBehaviour
                 }
             }
 
-            PermanentStats.allWorkerMultiplierAmount += cachedAllWorkerMultiplierAmount;
+            permanentStats.allWorkerMultiplierAmount += cachedAllWorkerMultiplierAmount;
         }
     }
     private void ModifyBuildingMultiplier()
@@ -188,13 +204,13 @@ public class BoxCache : MonoBehaviour
                 }
             }
 
-            if (!PermanentStats.buildingMultiplierModified.ContainsKey(cachedBuilding.Key))
+            if (!permanentStats.buildingMultiplierModified.ContainsKey(cachedBuilding.Key))
             {
-                PermanentStats.buildingMultiplierModified.Add(cachedBuilding.Key, cachedBuilding.Value);
+                permanentStats.buildingMultiplierModified.Add(cachedBuilding.Key, cachedBuilding.Value);
             }
             else
             {
-                PermanentStats.buildingMultiplierModified[cachedBuilding.Key] += cachedBuilding.Value;
+                permanentStats.buildingMultiplierModified[cachedBuilding.Key] += cachedBuilding.Value;
             }
         }
         //foreach (var building in cachedBuildingMultiplierModified)
@@ -259,18 +275,17 @@ public class BoxCache : MonoBehaviour
                     float oldAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
                     Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * worker.workerCount;
                     float newAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
-                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
-                    Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also worker multiplier changed from {3} to {4}, difference: {5}", workerResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, workerResourceToModify.baseResourceMultiplier, workerResourceToModify.currentResourceMultiplier, differenceAmount));
+                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);               
                 }
             }
 
-            if (!PermanentStats.workerMultiplierModified.ContainsKey(cachedWorker.Key))
+            if (!permanentStats.workerMultiplierModified.ContainsKey(cachedWorker.Key))
             {
-                PermanentStats.workerMultiplierModified.Add(cachedWorker.Key, cachedWorker.Value);
+                permanentStats.workerMultiplierModified.Add(cachedWorker.Key, cachedWorker.Value);
             }
             else
             {
-                PermanentStats.workerMultiplierModified[cachedWorker.Key] += cachedWorker.Value;
+                permanentStats.workerMultiplierModified[cachedWorker.Key] += cachedWorker.Value;
             }
         }       
     }   
@@ -292,7 +307,7 @@ public class BoxCache : MonoBehaviour
                 Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.actualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
             }
 
-            PermanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
+            permanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
         }
     }
     private void ModifyAllCraftableCost()
@@ -312,7 +327,7 @@ public class BoxCache : MonoBehaviour
                 Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
             }
 
-            PermanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
+            permanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
         }
     }
     private void ModifyBuildingCost()
@@ -332,13 +347,13 @@ public class BoxCache : MonoBehaviour
                 Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
             }
 
-            if (!PermanentStats.buildingCostReduced.ContainsKey(building.Type))
+            if (!permanentStats.buildingCostReduced.ContainsKey(building.Type))
             {
-                PermanentStats.buildingCostReduced.Add(building.Type, cachedBuilding.Value);
+                permanentStats.buildingCostReduced.Add(building.Type, cachedBuilding.Value);
             }
             else
             {
-                PermanentStats.buildingCostReduced[building.Type] += cachedBuilding.Value;
+                permanentStats.buildingCostReduced[building.Type] += cachedBuilding.Value;
             }
         }
     }
@@ -359,13 +374,13 @@ public class BoxCache : MonoBehaviour
                 Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
             }
 
-            if (!PermanentStats.craftableCostReduced.ContainsKey(craftable.Type))
+            if (!permanentStats.craftableCostReduced.ContainsKey(craftable.Type))
             {
-                PermanentStats.craftableCostReduced.Add(craftable.Type, cachedCraft.Value);
+                permanentStats.craftableCostReduced.Add(craftable.Type, cachedCraft.Value);
             }
             else
             {
-                PermanentStats.craftableCostReduced[craftable.Type] += cachedCraft.Value;
+                permanentStats.craftableCostReduced[craftable.Type] += cachedCraft.Value;
             }
         }
     }
@@ -386,13 +401,13 @@ public class BoxCache : MonoBehaviour
                 Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.actualName, oldResourceCost, newResourceCost, cachedResearch.Value * 100));
             }
 
-            if (!PermanentStats.researchableCostReduced.ContainsKey(cachedResearch.Key))
+            if (!permanentStats.researchableCostReduced.ContainsKey(cachedResearch.Key))
             {
-                PermanentStats.researchableCostReduced.Add(cachedResearch.Key, cachedResearch.Value);
+                permanentStats.researchableCostReduced.Add(cachedResearch.Key, cachedResearch.Value);
             }
             else
             {
-                PermanentStats.researchableCostReduced[cachedResearch.Key] += cachedResearch.Value;
+                permanentStats.researchableCostReduced[cachedResearch.Key] += cachedResearch.Value;
             }
         }
     }

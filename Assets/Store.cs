@@ -60,6 +60,7 @@ public class Store : MonoBehaviour
     public int testAmount;
     public GameObject content;
     public GameObject commonPrefab, uncommonPrefab, rarePrefab, epicPrefab, legendaryPrefab;
+
     public void Start()
     {
         txtGems.text = gemsAmount.ToString();
@@ -139,14 +140,6 @@ public class Store : MonoBehaviour
         _rarity[4].randomChance = 100f;
         _rarity[4].Type = RarityType.Common;
         _rarity[4].passiveCost = 1;
-    }
-    public void OnButtonGemPage()
-    {
-
-    }
-    public void OnButtonChestPage()
-    {
-
     }
     public void OnCommonChest()
     {
@@ -239,6 +232,13 @@ public class Store : MonoBehaviour
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
+        }
+    }
+    public void ClearContent()
+    {
+        foreach (Transform transformChild in content.GetComponent<Transform>())
+        {
+            Destroy(transformChild.gameObject);
         }
     }
     public void Test()
