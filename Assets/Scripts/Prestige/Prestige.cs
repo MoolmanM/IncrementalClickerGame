@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.ParticleSystem;
 
 [System.Serializable]
 public struct Rarity
@@ -13,8 +14,11 @@ public struct Rarity
     public float passiveCost;
     public Button buyButton;
 
-    public Rarity(RarityType rarityType, int passiveCost, Button buyButton) : this()
+    public Rarity(RarityType lastType, int lastPassiveCost, Button lastBuyButton) : this()
     {
+        Type = lastType;
+        passiveCost = lastPassiveCost;
+        buyButton = lastBuyButton;
     }
 }
 public enum RarityType
@@ -25,6 +29,17 @@ public enum RarityType
     Epic,
     Legendary
 }
+[System.Serializable]
+public struct TestButtons
+{
+    public Button button;
+
+    public TestButtons(Button lastButton)
+{
+        button = lastButton;
+    }
+}
+
 public class Prestige : MonoBehaviour
 {
     public static float prestigePoints = 2;
@@ -40,8 +55,9 @@ public class Prestige : MonoBehaviour
     public GameObject objOpeningPanel;
 
     //public Dictionary<RarityType, Button> prestigeBox = new Dictionary<RarityType, Button>();
-    public List<Rarity> prestigeBox;
-
+    public List<Rarity> prestigeBox = new();
+    public List<TestButtons> testButtonList = new();
+ 
     public IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
     {
         List<TValue> values = Enumerable.ToList(dict.Values);
@@ -136,9 +152,6 @@ public class Prestige : MonoBehaviour
             Button buyButton = prefabObj.GetComponent<Button>();
 
             value.InitializePermanentStat();
-            
-            buyButton.onClick.AddListener(DeductPrestigePoints(1));
-            buyButton.onClick.AddListener(CheckIfPrestigePurchaseable);
 
             if (prestigePoints < 1)
             {
@@ -146,97 +159,104 @@ public class Prestige : MonoBehaviour
             }
             
             txtBuyAmount.text = "1";
-            
             txtName.text = value.description;
             prestigeBox.Add(new Rarity(RarityType.Common, 1, buyButton));
+            //testButtonList.Add(new TestButtons(buyButton));
+            //testButtonList.Add(new TestButtons(buyButton));
+            //buyButton.onClick.AddListener(value.InitializePermanentStat);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(1); });
         }
     }
     private void GenerateRandomUncommonPassive()
     {
-        // Modifying the 'take' amount is just how many values you want to randomize.
         foreach (var value in RandomValues(UncommonPassive.UncommonPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(uncommonPrefab, content.GetComponent<Transform>());
-            value.InitializePermanentStat();
+            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
+            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
+            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
-            buyButton.onClick.AddListener(CheckIfPrestigePurchaseable);
+
             if (prestigePoints < 2)
             {
                 buyButton.interactable = false;
             }
-            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
-            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+
             txtBuyAmount.text = "2";
-            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
-            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
+            prestigeBox.Add(new Rarity(RarityType.Uncommon, 2, buyButton));
+            buyButton.onClick.AddListener(value.InitializePermanentStat);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(2); });
         }
     }
     private void GenerateRandomRarePassive()
     {
-        // Modifying the 'take' amount is just how many values you want to randomize.
         foreach (var value in RandomValues(RarePassive.RarePassives).Take(1))
         {
             GameObject prefabObj = Instantiate(rarePrefab, content.GetComponent<Transform>());
-            value.InitializePermanentStat();
+            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
+            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
+            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
-            buyButton.onClick.AddListener(CheckIfPrestigePurchaseable);
+            Debug.Log(buyButton);
             if (prestigePoints < 3)
             {
                 buyButton.interactable = false;
             }
-            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
-            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+
             txtBuyAmount.text = "3";
-            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
-            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
+            prestigeBox.Add(new Rarity(RarityType.Rare, 3, buyButton));
+            buyButton.onClick.AddListener(value.InitializePermanentStat);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(3); });
         }
     }
     private void GenerateRandomEpicPassive()
     {
-        // Okay so now each passive that gets generated needs to be assigned to one of the text fields.
-        // It also needs to instantiate the correct one i.e the correct color, as well as animation
-        // I will worry about attaching the correct animation at a later date.
-
-        // Modifying the 'take' amount is just how many values you want to randomize.
         foreach (var value in RandomValues(EpicPassive.EpicPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(epicPrefab, content.GetComponent<Transform>());
-            value.InitializePermanentStat();
+            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
+            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
+            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
-            buyButton.onClick.AddListener(CheckIfPrestigePurchaseable);
+
             if (prestigePoints < 4)
             {
                 buyButton.interactable = false;
             }
-            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
-            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+
             txtBuyAmount.text = "4";
-            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
-            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
+            prestigeBox.Add(new Rarity(RarityType.Epic, 4, buyButton));
+            buyButton.onClick.AddListener(value.InitializePermanentStat);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(4); });
         }
     }
     private void GenerateRandomLegendaryPassive()
     {
-        // Modifying the 'take' amount is just how many values you want to randomize.
         foreach (var value in RandomValues(LegendaryPassive.LegendaryPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(legendaryPrefab, content.GetComponent<Transform>());
-            value.InitializePermanentStat();
+            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
+            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
+            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
-            buyButton.onClick.AddListener(CheckIfPrestigePurchaseable);
+
             if (prestigePoints < 5)
             {
                 buyButton.interactable = false;
             }
-            Transform tformTxtBuyAmount = prefabObj.GetComponent<Transform>().Find("Buy_Box/Buy_Amount");
-            TMP_Text txtBuyAmount = tformTxtBuyAmount.GetComponent<TMP_Text>();
+
             txtBuyAmount.text = "5";
-            Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
-            TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             txtName.text = value.description;
+            prestigeBox.Add(new Rarity(RarityType.Legendary, 5, buyButton));
+            buyButton.onClick.AddListener(value.InitializePermanentStat);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(5); });
         }
     }
     public void ClearContent()
@@ -249,11 +269,7 @@ public class Prestige : MonoBehaviour
     private void DeductPrestigePoints(int passiveCost)
     {
         prestigePoints -= passiveCost;
-    }
-    private void CheckIfPrestigePurchaseable()
-    {
-        // The problem here is, if you buy a passive, it needs to check if you can continue to buy the other passives.
-        // prestigePoints -= passiveCost;
+
         foreach (var item in prestigeBox)
         {
             if (prestigePoints < item.passiveCost)
