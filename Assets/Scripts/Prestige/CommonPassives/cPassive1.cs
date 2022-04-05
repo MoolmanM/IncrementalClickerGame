@@ -6,23 +6,33 @@ using UnityEngine;
 public class cPassive1 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.001f; // 0.1%
-
+    private float permanentAmount = 0.001f, prestigeAmount = 0.005f;
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
-        description = string.Format("Reduces time it takes to research by {0}%", percentageAmount * 100);
+        
     }   
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
-        BoxCache.cachedResearchTimeReductionAmount += percentageAmount;
+        BoxCache.cachedResearchTimeReductionAmount += percentageAmount;    
+    }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Reduces time it takes to research by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        AddToBoxCache(permanentAmount);
+        ModifyStatDescription(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 }

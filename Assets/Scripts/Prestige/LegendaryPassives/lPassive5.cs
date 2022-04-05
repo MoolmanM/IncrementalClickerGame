@@ -15,8 +15,6 @@ public class lPassive5 : LegendaryPassive
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         AddToBoxCache();
     }
 }

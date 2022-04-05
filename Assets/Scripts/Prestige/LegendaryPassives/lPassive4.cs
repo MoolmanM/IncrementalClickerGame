@@ -2,14 +2,19 @@
 public class lPassive4 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
-
-    private uint amountToIncrease = 7;
+    private uint permanentAmount = 7, prestigeAmount = 35;
 
     private void Awake()
     {
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);
-
+    }
+    private void AddToBoxCache(uint amountToIncrease)
+    {
+        BoxCache.cachedWorkerCountModified += amountToIncrease;
+    }
+    private void ModifyStatDescription(uint amountToIncrease)
+    {
         if (amountToIncrease > 1)
         {
             description = string.Format("Gain {0} additional workers", amountToIncrease);
@@ -19,14 +24,17 @@ public class lPassive4 : LegendaryPassive
             description = string.Format("Gain an additional worker", amountToIncrease);
         }
     }
-    private void AddToBoxCache()
-    {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
-    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 }

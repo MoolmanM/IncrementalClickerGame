@@ -17,7 +17,8 @@ public enum BuildingType
     //Storage Facility
     //Transformer maybe transformer should be something that you craft or research, for a once of boost to energy
     MineShaft,
-    WoodGenerator
+    WoodGenerator,
+    None
 
 
 }

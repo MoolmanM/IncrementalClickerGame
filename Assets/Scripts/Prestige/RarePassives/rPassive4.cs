@@ -7,30 +7,39 @@ using UnityEngine;
 public class rPassive4 : RarePassive
 {
     private RarePassive _rarePassive;
-    private uint amountToIncrease = 4;
+    private uint permanentAmount = 4, prestigeAmount = 20;
 
     private void Awake()
     {
         _rarePassive = GetComponent<RarePassive>();
-        RarePassives.Add(Type, _rarePassive);
-
-        if (amountToIncrease > 1)
+        RarePassives.Add(Type, _rarePassive);           
+    }
+    private void AddToBoxCache(uint workerIncreaseAmount)
+    {
+        BoxCache.cachedWorkerCountModified += workerIncreaseAmount;
+    }
+    private void ModifyStatDescription(uint workerIncreaseAmount)
+    {
+        if (workerIncreaseAmount > 1)
         {
-            description = string.Format("Gain {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", workerIncreaseAmount);
         }
         else
         {
-            description = string.Format("Gain an additional worker", amountToIncrease);
-        }             
-    }
-    private void AddToBoxCache()
-    {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
+            description = string.Format("Gain an additional worker", workerIncreaseAmount);
+        }
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        AddToBoxCache(permanentAmount);
+        ModifyStatDescription(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 }

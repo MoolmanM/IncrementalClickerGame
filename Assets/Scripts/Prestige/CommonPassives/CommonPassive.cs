@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // cPassive 1: Reduce time it takes to research stuff by a certain %.
 // cPassive 2: Increase a random Worker's Multiplier by a certain %.
@@ -31,7 +32,47 @@ public class CommonPassive : MonoBehaviour
 
     public virtual void InitializePermanentStat()
     {
-        
+
+    }
+    public virtual void InitializePrestigeStat()
+    {
+
+    }
+    public virtual void InitializePrestigeButton()
+    {
+
+    }
+    public virtual void InitializePrestigeButtonCrafting(CraftingType craftingType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonBuilding(BuildingType buildingType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonResearch(ResearchType researchType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonWorker(WorkerType workerType)
+    {
+
+    }
+    public virtual CraftingType ReturnCraftingType()
+    {
+        return CraftingType.FireHardenedSpear;
+    }
+    public virtual BuildingType ReturnBuildingType()
+    {
+        return BuildingType.WoodGenerator;
+    }
+    public virtual ResearchType ReturnResearchType()
+    {
+        return ResearchType.FireHardenedWeapons;
+    }
+    public virtual WorkerType ReturnWorkerType()
+    {
+        return WorkerType.None;
     }
 }
 

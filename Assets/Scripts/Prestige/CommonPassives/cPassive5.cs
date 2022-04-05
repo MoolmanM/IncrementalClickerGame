@@ -5,8 +5,8 @@ using UnityEngine;
 public class cPassive5 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.01f; // 1%
     private BuildingType buildingTypeChosen;
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f;
 
     private void Awake()
     {
@@ -34,12 +34,8 @@ public class cPassive5 : CommonPassive
             _index = Random.Range(0, Prestige.buildingsUnlockedInPreviousRun.Count);
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
-
-        description = string.Format("Increase production of the {0} by {1}%", Building.Buildings[buildingTypeChosen].actualName, percentageAmount * 100);
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedBuildingMultiplierModified.ContainsKey(buildingTypeChosen))
         {
@@ -50,10 +46,27 @@ public class cPassive5 : CommonPassive
             BoxCache.cachedBuildingMultiplierModified[buildingTypeChosen] += percentageAmount;
         }
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase production of building '{0}' by {1}%", Building.Buildings[buildingTypeChosen].actualName, percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomBuilding();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomBuilding();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override BuildingType ReturnBuildingType()
+    {
+        return buildingTypeChosen;
     }
 }

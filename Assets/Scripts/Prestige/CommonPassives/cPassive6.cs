@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Decrease cost of a random Craftable by a certain %.
 public class cPassive6 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.01f; //1%
-    private CraftingType craftingTypeChosen;
+    public CraftingType craftingTypeChosen;
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f;
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
     }
-    private void ChooseRandomCraftable()
+    public void ChooseRandomCrafting()
     {
         List<CraftingType> craftingTypesInCurrentRun = new List<CraftingType>();
 
@@ -24,7 +25,7 @@ public class cPassive6 : CommonPassive
                 craftingTypesInCurrentRun.Add(craft.Key);
             }
         }
-        if (craftingTypesInCurrentRun.Count >= Prestige.workersUnlockedInPreviousRun.Count)
+        if (craftingTypesInCurrentRun.Count >= Prestige.craftablesUnlockedInPreviousRun.Count)
         {
             _index = Random.Range(0, craftingTypesInCurrentRun.Count);
             craftingTypeChosen = craftingTypesInCurrentRun[_index];
@@ -34,26 +35,39 @@ public class cPassive6 : CommonPassive
             _index = Random.Range(0, Prestige.craftablesUnlockedInPreviousRun.Count);
             craftingTypeChosen = Prestige.craftablesUnlockedInPreviousRun[_index];
         }
-
-        description = string.Format("Decrease the cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount, CraftingType craftingType)
     {
-        if (!BoxCache.cachedCraftableCostReduced.ContainsKey(craftingTypeChosen))
+        if (!BoxCache.cachedCraftableCostReduced.ContainsKey(craftingType))
         {
-            BoxCache.cachedCraftableCostReduced.Add(craftingTypeChosen, percentageAmount);
+            BoxCache.cachedCraftableCostReduced.Add(craftingType, percentageAmount);
         }
         else
         {
-            BoxCache.cachedCraftableCostReduced[craftingTypeChosen] += percentageAmount;
+            BoxCache.cachedCraftableCostReduced[craftingType] += percentageAmount;
         }
+    }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Decrease the cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        ChooseRandomCraftable();
+        ChooseRandomCrafting();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount, craftingTypeChosen);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomCrafting();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonCrafting(CraftingType craftingType)
+    {
+        AddToBoxCache(prestigeAmount, craftingType);
+    }
+    public override CraftingType ReturnCraftingType()
+    {
+        return craftingTypeChosen;
     }
 }

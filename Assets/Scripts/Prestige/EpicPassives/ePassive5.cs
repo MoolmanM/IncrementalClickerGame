@@ -5,6 +5,7 @@ using UnityEngine;
 public class ePassive5 : EpicPassive
 {
     private EpicPassive _epicPassive;
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f;
 
     private void Awake()
     {

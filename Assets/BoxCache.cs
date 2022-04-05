@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 public class BoxCache : MonoBehaviour
 {
@@ -58,6 +56,11 @@ public class BoxCache : MonoBehaviour
         ModifyBuildingCost();
         ModifyAllWorkerMultiplier();
 
+        ClearBoxCache();
+    }
+
+    public void ClearBoxCache()
+    {
         cachedAllWorkerMultiplierAmount = 0;
         cachedAllBuildingMultiplierAmount = 0;
         cachedAllCraftablesCostReduced = 0;
@@ -79,336 +82,354 @@ public class BoxCache : MonoBehaviour
         // This should probably only happen on game reset.
         // Or if you can revert the previous research time reduction and reduce it by the new amount, that could also work but sounds hard to do.
 
-        foreach (var research in Researchable.Researchables)
+        if (cachedResearchTimeReductionAmount > 0)
         {
-            research.Value.ModifyTimeToCompleteResearch(cachedResearchTimeReductionAmount);
-        }
+            foreach (var research in Researchable.Researchables)
+            {
+                research.Value.ModifyTimeToCompleteResearch(cachedResearchTimeReductionAmount);
+            }
 
-        permanentStats.researchTimeReductionAmount += cachedResearchTimeReductionAmount;
+            permanentStats.researchTimeReductionAmount += cachedResearchTimeReductionAmount;
+        }       
     }
     private void ModifyStorageLimit()
     {
-        StoragePile.storageAmountMultiplier += cachedstoragePercentageAmount;
+        if (cachedstoragePercentageAmount > 0)
+        {
+            StoragePile.storageAmountMultiplier += cachedstoragePercentageAmount;
 
-        Debug.Log(string.Format("Increased storage limit by {0}%", cachedstoragePercentageAmount*100));
+            Debug.Log(string.Format("Increased storage limit by {0}%", cachedstoragePercentageAmount * 100));
 
-        permanentStats.storagePercentageAmount += cachedstoragePercentageAmount;
-    }    
+            permanentStats.storagePercentageAmount += cachedstoragePercentageAmount;
+        }      
+    }
 
     private void ModifyInitialWorkerCount()
     {
-        Worker.TotalWorkerCount += cachedWorkerCountModified;
-        Worker.AliveCount += cachedWorkerCountModified;
+        if (cachedWorkerCountModified > 0)
+        {
+            Worker.InitialWorkerCount += cachedWorkerCountModified;
 
-        permanentStats.workerCountModified += cachedWorkerCountModified;
-        Debug.Log(string.Format("Increased workers by {0}", cachedWorkerCountModified));
+            permanentStats.workerCountModified += cachedWorkerCountModified;
+
+            Debug.Log(string.Format("Increased workers by {0}", cachedWorkerCountModified));
+        }     
     }
     private void ModifyInitialBuildingCount()
     {
-        foreach (var cachedBuilding in cachedBuildingSelfCountModified)
+        if (cachedBuildingSelfCountModified.Count > 0)
         {
-            Building.Buildings[cachedBuilding.Key].SetSelfCount(cachedBuilding.Value);
-            Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].actualName, cachedBuilding.Value));
+            foreach (var cachedBuilding in cachedBuildingSelfCountModified)
+            {
+                Building.Buildings[cachedBuilding.Key].SetSelfCount(cachedBuilding.Value);
+
+                Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].actualName, cachedBuilding.Value));
+            }
         }
-    
-       // Don't actually think I need to add this to permanent stats. 
-       // Foudn another way to handle this particular passive.
+        
+        // Don't actually think I need to add this to permanent stats. 
+        // Foudn another way to handle this particular passive.
     }
 
     private void ModifyAllBuildingMultiplier()
     {
-        foreach (var building in Building.Buildings)
+        if (cachedAllBuildingMultiplierAmount > 0)
         {
-            //Building building = Building.Buildings[cachedBuilding.Key];
-
-            for (int i = 0; i < building.Value.resourcesToIncrement.Count; i++)
+            foreach (var building in Building.Buildings)
             {
-                BuildingResourcesToModify buildingResourceToModify = building.Value.resourcesToIncrement[i];
+                //Building building = Building.Buildings[cachedBuilding.Key];
 
-                float increaseAmount = buildingResourceToModify.baseResourceMultiplier * cachedAllBuildingMultiplierAmount;
-                buildingResourceToModify.currentResourceMultiplier += increaseAmount;
-                float differenceAmount = buildingResourceToModify.currentResourceMultiplier - buildingResourceToModify.baseResourceMultiplier;
-                building.Value.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
-                building.Value.UpdateDescription();
-
-                if (building.Value.isUnlocked)
+                for (int i = 0; i < building.Value.resourcesToIncrement.Count; i++)
                 {
-                    float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
-                    Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.Value.ReturnSelfCount();
-                    float newAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
-                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[buildingResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+                    BuildingResourcesToModify buildingResourceToModify = building.Value.resourcesToIncrement[i];
 
-                    Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", buildingResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, buildingResourceToModify.baseResourceMultiplier, buildingResourceToModify.currentResourceMultiplier, differenceAmount));
+                    float increaseAmount = buildingResourceToModify.baseResourceMultiplier * cachedAllBuildingMultiplierAmount;
+                    buildingResourceToModify.currentResourceMultiplier += increaseAmount;
+                    float differenceAmount = buildingResourceToModify.currentResourceMultiplier - buildingResourceToModify.baseResourceMultiplier;
+                    building.Value.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
+                    building.Value.UpdateDescription();
+
+                    if (building.Value.isUnlocked)
+                    {
+                        float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                        Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.Value.ReturnSelfCount();
+                        float newAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                        StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[buildingResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+
+                        Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", buildingResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, buildingResourceToModify.baseResourceMultiplier, buildingResourceToModify.currentResourceMultiplier, differenceAmount));
+                    }
                 }
-            }
 
-            permanentStats.allBuildingMultiplierAmount += cachedAllBuildingMultiplierAmount;
-        }
+                permanentStats.allBuildingMultiplierAmount += cachedAllBuildingMultiplierAmount;
+            }
+        }      
     }
     private void ModifyAllWorkerMultiplier()
     {
         // I can probably merge this into the other worker multiplier function.
         // Execution will probably still be the same, but it will just be displayed different when you display all the stats.
-
-        foreach (var worker in Worker.Workers)
+        if (cachedAllWorkerMultiplierAmount > 0)
         {
-            //Worker worker = Worker.Workers[cachedWorker.Key];
-
-            for (int i = 0; i < worker.Value._resourcesToIncrement.Length; i++)
+            foreach (var worker in Worker.Workers)
             {
-                WorkerResourcesToModify workerResourceToModify = worker.Value._resourcesToIncrement[i];
+                //Worker worker = Worker.Workers[cachedWorker.Key];
 
-                float increaseAmount = workerResourceToModify.baseResourceMultiplier * cachedAllWorkerMultiplierAmount;
-                workerResourceToModify.currentResourceMultiplier += increaseAmount;
-                float differenceAmount = workerResourceToModify.currentResourceMultiplier - workerResourceToModify.baseResourceMultiplier;
-                worker.Value.ModifyMultiplier(workerResourceToModify.currentResourceMultiplier);
-                worker.Value.ModifyDescriptionText();
-
-                if (worker.Value.workerCount > 0)
+                for (int i = 0; i < worker.Value._resourcesToIncrement.Length; i++)
                 {
-                    float oldAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
-                    Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * worker.Value.workerCount;
-                    float newAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
-                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
-                    Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also worker multiplier changed from {3} to {4}, difference: {5}", workerResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, workerResourceToModify.baseResourceMultiplier, workerResourceToModify.currentResourceMultiplier, differenceAmount));
-                }
-            }
+                    WorkerResourcesToModify workerResourceToModify = worker.Value._resourcesToIncrement[i];
 
-            permanentStats.allWorkerMultiplierAmount += cachedAllWorkerMultiplierAmount;
-        }
+                    float increaseAmount = workerResourceToModify.baseResourceMultiplier * cachedAllWorkerMultiplierAmount;
+                    workerResourceToModify.currentResourceMultiplier += increaseAmount;
+                    float differenceAmount = workerResourceToModify.currentResourceMultiplier - workerResourceToModify.baseResourceMultiplier;
+                    worker.Value.ModifyMultiplier(workerResourceToModify.currentResourceMultiplier);
+                    worker.Value.ModifyDescriptionText();
+
+                    if (worker.Value.workerCount > 0)
+                    {
+                        float oldAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
+                        Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * worker.Value.workerCount;
+                        float newAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
+                        StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+
+                        Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also worker multiplier changed from {3} to {4}, difference: {5}", workerResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, workerResourceToModify.baseResourceMultiplier, workerResourceToModify.currentResourceMultiplier, differenceAmount));
+                    }
+                }
+
+                permanentStats.allWorkerMultiplierAmount += cachedAllWorkerMultiplierAmount;
+            }
+        }      
     }
     private void ModifyBuildingMultiplier()
     {
-        foreach (var cachedBuilding in cachedBuildingMultiplierModified)
+        if (cachedBuildingMultiplierModified.Count > 0)
         {
-            Building building = Building.Buildings[cachedBuilding.Key];
-
-            for (int i = 0; i < building.resourcesToIncrement.Count; i++)
+            foreach (var cachedBuilding in cachedBuildingMultiplierModified)
             {
-                BuildingResourcesToModify buildingResourceToModify = building.resourcesToIncrement[i];
+                Building building = Building.Buildings[cachedBuilding.Key];
 
-                float increaseAmount = buildingResourceToModify.baseResourceMultiplier * cachedBuilding.Value;
-                buildingResourceToModify.currentResourceMultiplier += increaseAmount;
-                float differenceAmount = buildingResourceToModify.currentResourceMultiplier - buildingResourceToModify.baseResourceMultiplier;
-                building.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
-                building.UpdateDescription();
-
-                if (building.isUnlocked)
+                for (int i = 0; i < building.resourcesToIncrement.Count; i++)
                 {
-                    float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
-                    Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.ReturnSelfCount();
-                    float newAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
-                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[buildingResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+                    BuildingResourcesToModify buildingResourceToModify = building.resourcesToIncrement[i];
 
-                    Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", buildingResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, buildingResourceToModify.baseResourceMultiplier, buildingResourceToModify.currentResourceMultiplier, differenceAmount));
+                    float increaseAmount = buildingResourceToModify.baseResourceMultiplier * cachedBuilding.Value;
+                    buildingResourceToModify.currentResourceMultiplier += increaseAmount;
+                    float differenceAmount = buildingResourceToModify.currentResourceMultiplier - buildingResourceToModify.baseResourceMultiplier;
+                    building.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
+                    building.UpdateDescription();
+
+                    if (building.isUnlocked)
+                    {
+                        float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                        Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.ReturnSelfCount();
+                        float newAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
+                        StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[buildingResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+
+                        Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", buildingResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, buildingResourceToModify.baseResourceMultiplier, buildingResourceToModify.currentResourceMultiplier, differenceAmount));
+                    }
+                }
+
+                if (!permanentStats.buildingMultiplierModified.ContainsKey(cachedBuilding.Key))
+                {
+                    permanentStats.buildingMultiplierModified.Add(cachedBuilding.Key, cachedBuilding.Value);
+                }
+                else
+                {
+                    permanentStats.buildingMultiplierModified[cachedBuilding.Key] += cachedBuilding.Value;
                 }
             }
-
-            if (!permanentStats.buildingMultiplierModified.ContainsKey(cachedBuilding.Key))
-            {
-                permanentStats.buildingMultiplierModified.Add(cachedBuilding.Key, cachedBuilding.Value);
-            }
-            else
-            {
-                permanentStats.buildingMultiplierModified[cachedBuilding.Key] += cachedBuilding.Value;
-            }
         }
-        //foreach (var building in cachedBuildingMultiplierModified)
-        //{
-        //    for (int i = 0; i < Building.Buildings[buildingTypeChosen].resourcesToIncrement.Count; i++)
-        //    {
-        //        BuildingResourcesToModify resourceTypeToModify = Building.Buildings[buildingTypeChosen].resourcesToIncrement[i];
-        //        float oldResourceMultiplier = resourceTypeToModify.currentResourceMultiplier;
-        //        float newResourceMultiplier = resourceTypeToModify.currentResourceMultiplier * percentageAmount;
-        //        resourceTypeToModify.currentResourceMultiplier = newResourceMultiplier;
-
-        //        multiplierModifiedAmount = newResourceMultiplier - oldResourceMultiplier;
-
-        //        // After modifying this, you should probably also check how many workers there are currently assigned to that job.
-
-        //        if (Building.Buildings[buildingTypeChosen].isUnlocked)
-        //        {
-        //            float oldAmountPerSecond = Resource.Resources[resourceTypeToModify.resourceTypeToModify].amountPerSecond;
-        //            //Building.Buildings[buildingTypeChosen];
-        //            // Re-modify amount per second
-        //            float newAmountPerSecond = Resource.Resources[resourceTypeToModify.resourceTypeToModify].amountPerSecond += multiplierModifiedAmount;
-        //            Resource.Resources[resourceTypeToModify.resourceTypeToModify].amountPerSecond = newAmountPerSecond;
-        //            StaticMethods.ModifyAPSText(Resource.Resources[resourceTypeToModify.resourceTypeToModify].amountPerSecond, Resource.Resources[resourceTypeToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
-
-        //            Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}", resourceTypeToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond));
-        //        }
-        //        Building.Buildings[buildingTypeChosen].ReModifyDescription();
-        //        Debug.Log(string.Format("Modified {0}'s resource multiplier amount from {1} to {2}", buildingTypeChosen, oldResourceMultiplier, newResourceMultiplier));
-        //        description = string.Format("Modified {0}'s resource multiplier amount from {1} to {2}", buildingTypeChosen, oldResourceMultiplier, newResourceMultiplier);
-
-        //        AddToPermanentList();
-        //    }
-
-        //    if (!PermanentStats.buildingMultiplierModified.ContainsKey(buildingTypeChosen))
-        //    {
-        //        PermanentStats.buildingMultiplierModified.Add(buildingTypeChosen, multiplierModifiedAmount);
-        //    }
-        //    else
-        //    {
-        //        PermanentStats.buildingMultiplierModified[buildingTypeChosen] += multiplierModifiedAmount;
-        //    }
-        //}
     }
     private void ModifyWorkerMultiplier()
     {
-        foreach (var cachedWorker in cachedWorkerMultiplierModified)
+        if (cachedWorkerMultiplierModified.Count > 0)
         {
-            Worker worker = Worker.Workers[cachedWorker.Key];
-
-            for (int i = 0; i < worker._resourcesToIncrement.Length; i++)
+            foreach (var cachedWorker in cachedWorkerMultiplierModified)
             {
-                WorkerResourcesToModify workerResourceToModify = worker._resourcesToIncrement[i];
+                Worker worker = Worker.Workers[cachedWorker.Key];
 
-                float increaseAmount = workerResourceToModify.baseResourceMultiplier * cachedWorker.Value;
-                workerResourceToModify.currentResourceMultiplier += increaseAmount;
-                float differenceAmount = workerResourceToModify.currentResourceMultiplier - workerResourceToModify.baseResourceMultiplier;
-                worker.ModifyMultiplier(workerResourceToModify.currentResourceMultiplier);
-                worker.ModifyDescriptionText();
-
-                if (worker.workerCount > 0)
+                for (int i = 0; i < worker._resourcesToIncrement.Length; i++)
                 {
-                    float oldAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
-                    Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * worker.workerCount;
-                    float newAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
-                    StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);               
+                    WorkerResourcesToModify workerResourceToModify = worker._resourcesToIncrement[i];
+
+                    float increaseAmount = workerResourceToModify.baseResourceMultiplier * cachedWorker.Value;
+                    workerResourceToModify.currentResourceMultiplier += increaseAmount;
+                    float differenceAmount = workerResourceToModify.currentResourceMultiplier - workerResourceToModify.baseResourceMultiplier;
+                    worker.ModifyMultiplier(workerResourceToModify.currentResourceMultiplier);
+                    worker.ModifyDescriptionText();
+
+                    if (worker.workerCount > 0)
+                    {
+                        float oldAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
+                        Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * worker.workerCount;
+                        float newAmountPerSecond = Resource.Resources[workerResourceToModify.resourceTypeToModify].amountPerSecond;
+                        StaticMethods.ModifyAPSText(newAmountPerSecond, Resource.Resources[workerResourceToModify.resourceTypeToModify].uiForResource.txtAmountPerSecond);
+
+                        Debug.Log(string.Format("Changed current amount per second of {0} from {1} to {2}, also building multiplier changed from {3} to {4}, difference: {5}", workerResourceToModify.resourceTypeToModify, oldAmountPerSecond, newAmountPerSecond, workerResourceToModify.baseResourceMultiplier, workerResourceToModify.currentResourceMultiplier, differenceAmount));
+                    }
+                }
+
+                if (!permanentStats.workerMultiplierModified.ContainsKey(cachedWorker.Key))
+                {
+                    permanentStats.workerMultiplierModified.Add(cachedWorker.Key, cachedWorker.Value);
+                }
+                else
+                {
+                    permanentStats.workerMultiplierModified[cachedWorker.Key] += cachedWorker.Value;
                 }
             }
-
-            if (!permanentStats.workerMultiplierModified.ContainsKey(cachedWorker.Key))
-            {
-                permanentStats.workerMultiplierModified.Add(cachedWorker.Key, cachedWorker.Value);
-            }
-            else
-            {
-                permanentStats.workerMultiplierModified[cachedWorker.Key] += cachedWorker.Value;
-            }
-        }       
-    }   
+        }
+    }
 
     private void ModifyAllResearchablesCost()
     {
-        foreach (var researchable in Researchable.Researchables)
+        if (cachedResearchableCostReduced.Count > 0)
         {
-            //Researchable researchable = Researchable.Researchables[cachedResearch.Key];
-            for (int i = 0; i < researchable.Value.resourceCost.Length; i++)
+            foreach (var researchable in Researchable.Researchables)
             {
-                ResourceCost resourceCost = researchable.Value.resourceCost[i];
-                float oldResourceCost = resourceCost.costAmount;
-                float amountToDeduct = oldResourceCost * cachedAllResearchablesCostReduced;
-                float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                resourceCost.costAmount = newResourceCost;
-                researchable.Value.UpdateResourceCostPassive(resourceCost.costAmount);
+                //Researchable researchable = Researchable.Researchables[cachedResearch.Key];
+                for (int i = 0; i < researchable.Value.resourceCost.Length; i++)
+                {
+                    ResourceCost resourceCost = researchable.Value.resourceCost[i];
+                    float oldResourceCost = resourceCost.costAmount;
+                    float amountToDeduct = oldResourceCost * cachedAllResearchablesCostReduced;
+                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                    resourceCost.costAmount = newResourceCost;
+                    researchable.Value.UpdateResourceCostPassive(resourceCost.costAmount);
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.actualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
+                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.actualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
+                }
+
+                permanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
             }
-
-            permanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
         }
     }
     private void ModifyAllCraftableCost()
     {
-        foreach (var craft in Craftable.Craftables)
+        if (cachedCraftableCostReduced.Count > 0)
         {
-            Craftable craftable = Craftable.Craftables[craft.Key];
-            for (int i = 0; i < craftable.resourceCost.Length; i++)
+            foreach (var craft in Craftable.Craftables)
             {
-                ResourceCost resourceCost = craftable.resourceCost[i];
-                float oldResourceCost = resourceCost.costAmount;
-                float amountToDeduct = oldResourceCost * cachedAllCraftablesCostReduced;
-                float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                resourceCost.costAmount = newResourceCost;
-                craftable.UpdateResourceCostPassive(resourceCost.costAmount);
+                Craftable craftable = Craftable.Craftables[craft.Key];
+                for (int i = 0; i < craftable.resourceCost.Length; i++)
+                {
+                    ResourceCost resourceCost = craftable.resourceCost[i];
+                    float oldResourceCost = resourceCost.costAmount;
+                    float amountToDeduct = oldResourceCost * cachedAllCraftablesCostReduced;
+                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                    resourceCost.costAmount = newResourceCost;
+                    craftable.UpdateResourceCostPassive(resourceCost.costAmount);
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
+                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
+                }
+
+                permanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
             }
-
-            permanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
         }
     }
     private void ModifyBuildingCost()
     {
-        foreach (var cachedBuilding in cachedBuildingCostReduced)
+        if (cachedBuildingCostReduced.Count > 0)
         {
-            Building building = Building.Buildings[cachedBuilding.Key];
-            for (int i = 0; i < building.resourceCost.Length; i++)
+            foreach (var cachedBuilding in cachedBuildingCostReduced)
             {
-                ResourceCost resourceCost = building.resourceCost[i];
-                float oldResourceCost = resourceCost.initialCostAmount;
-                float amountToDeduct = oldResourceCost * cachedBuilding.Value;
-                float newResourceCost = resourceCost.initialCostAmount - amountToDeduct;
-                resourceCost.costAmount = newResourceCost;
-                building.UpdateResourceCostPassive(resourceCost.costAmount);
+                Building building = Building.Buildings[cachedBuilding.Key];
+                for (int i = 0; i < building.resourceCost.Length; i++)
+                {
+                    ResourceCost resourceCost = building.resourceCost[i];
+                    float oldResourceCost = resourceCost.initialCostAmount;
+                    float amountToDeduct = oldResourceCost * cachedBuilding.Value;
+                    float newResourceCost = resourceCost.initialCostAmount - amountToDeduct;
+                    resourceCost.costAmount = newResourceCost;
+                    building.UpdateResourceCostPassive(resourceCost.costAmount);
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
-            }
+                    if (cachedBuilding.Value > 0)
+                    {
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
+                    }
+                    
+                }
 
-            if (!permanentStats.buildingCostReduced.ContainsKey(building.Type))
-            {
-                permanentStats.buildingCostReduced.Add(building.Type, cachedBuilding.Value);
-            }
-            else
-            {
-                permanentStats.buildingCostReduced[building.Type] += cachedBuilding.Value;
+                if (!permanentStats.buildingCostReduced.ContainsKey(building.Type))
+                {
+                    permanentStats.buildingCostReduced.Add(building.Type, cachedBuilding.Value);
+                }
+                else
+                {
+                    permanentStats.buildingCostReduced[building.Type] += cachedBuilding.Value;
+                }
             }
         }
+
     }
     private void ModifyCraftableCost()
     {
-        foreach (var cachedCraft in cachedCraftableCostReduced)
+        if (cachedCraftableCostReduced.Count > 0)
         {
-            Craftable craftable = Craftable.Craftables[cachedCraft.Key];
-            for (int i = 0; i < craftable.resourceCost.Length; i++)
+            foreach (var cachedCraft in cachedCraftableCostReduced)
             {
-                ResourceCost resourceCost = craftable.resourceCost[i];
-                float oldResourceCost = resourceCost.initialCostAmount;
-                float amountToDeduct = oldResourceCost * cachedCraft.Value;
-                float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                resourceCost.costAmount = newResourceCost;              
-                craftable.UpdateResourceCostPassive(resourceCost.costAmount);
+                Craftable craftable = Craftable.Craftables[cachedCraft.Key];
+                for (int i = 0; i < craftable.resourceCost.Length; i++)
+                {
+                    ResourceCost resourceCost = craftable.resourceCost[i];
+                    float oldResourceCost = resourceCost.initialCostAmount;
+                    float amountToDeduct = oldResourceCost * cachedCraft.Value;
+                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                    resourceCost.costAmount = newResourceCost;
+                    craftable.UpdateResourceCostPassive(resourceCost.costAmount);
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
-            }
+                    if (cachedCraft.Value > 0)
+                    {
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
+                    }
+                   
 
-            if (!permanentStats.craftableCostReduced.ContainsKey(craftable.Type))
-            {
-                permanentStats.craftableCostReduced.Add(craftable.Type, cachedCraft.Value);
-            }
-            else
-            {
-                permanentStats.craftableCostReduced[craftable.Type] += cachedCraft.Value;
+                }
+
+                if (!permanentStats.craftableCostReduced.ContainsKey(craftable.Type))
+                {
+                    permanentStats.craftableCostReduced.Add(craftable.Type, cachedCraft.Value);
+                }
+                else
+                {
+                    permanentStats.craftableCostReduced[craftable.Type] += cachedCraft.Value;
+                }
             }
         }
+
     }
     private void ModifyResearchableCost()
     {
-        foreach (var cachedResearch in cachedResearchableCostReduced)
+        if (cachedResearchableCostReduced.Count > 0)
         {
-            Researchable researchable = Researchable.Researchables[cachedResearch.Key];
-            for (int i = 0; i < researchable.resourceCost.Length; i++)
+            foreach (var cachedResearch in cachedResearchableCostReduced)
             {
-                ResourceCost resourceCost = researchable.resourceCost[i];
-                float oldResourceCost = resourceCost.costAmount;
-                float amountToDeduct = oldResourceCost * cachedResearch.Value;
-                float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                resourceCost.costAmount = newResourceCost;
-                researchable.UpdateResourceCostPassive(resourceCost.costAmount);
+                Researchable researchable = Researchable.Researchables[cachedResearch.Key];
+                for (int i = 0; i < researchable.resourceCost.Length; i++)
+                {
+                    ResourceCost resourceCost = researchable.resourceCost[i];
+                    float oldResourceCost = resourceCost.costAmount;
+                    float amountToDeduct = oldResourceCost * cachedResearch.Value;
+                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
+                    resourceCost.costAmount = newResourceCost;
+                    researchable.UpdateResourceCostPassive(resourceCost.costAmount);
 
-                Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.actualName, oldResourceCost, newResourceCost, cachedResearch.Value * 100));
-            }
+                    if (cachedResearch.Value > 0)
+                    {
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.actualName, oldResourceCost, newResourceCost, cachedResearch.Value * 100));
+                    }
+                    
+                }
 
-            if (!permanentStats.researchableCostReduced.ContainsKey(cachedResearch.Key))
-            {
-                permanentStats.researchableCostReduced.Add(cachedResearch.Key, cachedResearch.Value);
-            }
-            else
-            {
-                permanentStats.researchableCostReduced[cachedResearch.Key] += cachedResearch.Value;
+                if (!permanentStats.researchableCostReduced.ContainsKey(cachedResearch.Key))
+                {
+                    permanentStats.researchableCostReduced.Add(cachedResearch.Key, cachedResearch.Value);
+                }
+                else
+                {
+                    permanentStats.researchableCostReduced[cachedResearch.Key] += cachedResearch.Value;
+                }
             }
         }
+
     }
 }

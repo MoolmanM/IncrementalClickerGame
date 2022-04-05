@@ -5,15 +5,15 @@ using UnityEngine;
 public class rPassive6 : RarePassive
 {
     private RarePassive _rarePassive;
-    private float percentageAmount = 0.036f; // 3.6%
     private CraftingType craftingTypeChosen;
+    private float permanentAmount = 0.036f, prestigeAmount = 0.180f;
 
     private void Awake()
     {
         _rarePassive = GetComponent<RarePassive>();
         RarePassives.Add(Type, _rarePassive);
     }
-    private void ChooseRandomCraftable()
+    private void ChooseRandomCrafting()
     {
         List<CraftingType> craftingTypesInCurrentRun = new List<CraftingType>();
 
@@ -34,12 +34,8 @@ public class rPassive6 : RarePassive
             _index = Random.Range(0, Prestige.craftablesUnlockedInPreviousRun.Count);
             craftingTypeChosen = Prestige.craftablesUnlockedInPreviousRun[_index];
         }
-
-        description = string.Format("Decrease the cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedCraftableCostReduced.ContainsKey(craftingTypeChosen))
         {
@@ -50,10 +46,27 @@ public class rPassive6 : RarePassive
             BoxCache.cachedCraftableCostReduced[craftingTypeChosen] += percentageAmount;
         }
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Decrease the cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        ChooseRandomCraftable();
+        ChooseRandomCrafting();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomCrafting();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonCrafting(CraftingType craftingType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override CraftingType ReturnCraftingType()
+    {
+        return craftingTypeChosen;
     }
 }

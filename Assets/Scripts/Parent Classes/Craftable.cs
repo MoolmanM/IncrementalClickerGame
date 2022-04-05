@@ -30,6 +30,7 @@ public enum CraftingType
     IronHoe,
     IronPickaxe,
     IronSpear,
+    None
 }
 
 public class Craftable : SuperClass

@@ -10,7 +10,8 @@ public enum WorkerType
     Woodcutters,
     Miners,
     Hunters,
-    Scholars
+    Scholars,
+    None
 }
 [System.Serializable]
 public struct WorkerResourcesToModify
@@ -26,7 +27,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
-    public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount;
+    public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount, InitialWorkerCount;
     public static bool isWorkerUnlockedEvent;
 
     [System.NonSerialized] public GameObject objMainPanel;

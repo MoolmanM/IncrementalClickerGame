@@ -4,7 +4,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.ParticleSystem;
 
 [System.Serializable]
 public struct Rarity
@@ -13,12 +12,17 @@ public struct Rarity
     public float randomChance;
     public float passiveCost;
     public Button buyButton;
-
-    public Rarity(RarityType lastType, int lastPassiveCost, Button lastBuyButton) : this()
+    public CraftingType craftingType;
+    public BuildingType buildingType;
+    public ResearchType researchType;
+    public Rarity(RarityType lastType, int lastPassiveCost, Button lastBuyButton, CraftingType lastCraftingType, BuildingType lastBuildingType, ResearchType lastResearchType) : this()
     {
         Type = lastType;
         passiveCost = lastPassiveCost;
         buyButton = lastBuyButton;
+        craftingType = lastCraftingType;
+        buildingType = lastBuildingType;
+        researchType = lastResearchType;
     }
 }
 public enum RarityType
@@ -29,20 +33,10 @@ public enum RarityType
     Epic,
     Legendary
 }
-[System.Serializable]
-public struct TestButtons
-{
-    public Button button;
-
-    public TestButtons(Button lastButton)
-{
-        button = lastButton;
-    }
-}
 
 public class Prestige : MonoBehaviour
 {
-    public static float prestigePoints = 2;
+    public static float prestigePoints = 12, cachedPrestigePoints;
     public static List<ResourceType> resourcesUnlockedInPreviousRun = new List<ResourceType>();
     public static List<BuildingType> buildingsUnlockedInPreviousRun = new List<BuildingType>();
     public static List<WorkerType> workersUnlockedInPreviousRun = new List<WorkerType>();
@@ -53,10 +47,12 @@ public class Prestige : MonoBehaviour
     public GameObject content;
     public GameObject commonPrefab, uncommonPrefab, rarePrefab, epicPrefab, legendaryPrefab;
     public GameObject objOpeningPanel;
+    public static Dictionary<CraftingType, float> prestigeCraftableCostReduced = new Dictionary<CraftingType, float>();
 
     //public Dictionary<RarityType, Button> prestigeBox = new Dictionary<RarityType, Button>();
     public List<Rarity> prestigeBox = new();
-    public List<TestButtons> testButtonList = new();
+    public BoxCache boxCache;
+    public TMP_Text txtPrestigePoints;
  
     public IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
     {
@@ -66,6 +62,10 @@ public class Prestige : MonoBehaviour
         {
             yield return values[UnityEngine.Random.Range(0, size)];
         }
+    }
+    private void Start()
+    {
+        txtPrestigePoints.text = prestigePoints.ToString();
     }
     public void GenerateRandomBuff(int amountToRoll)
     {
@@ -142,6 +142,7 @@ public class Prestige : MonoBehaviour
     }
     private void GenerateRandomCommonPassive()
     {
+        int passiveCost = 1;
         foreach (var value in RandomValues(CommonPassive.CommonPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(commonPrefab, content.GetComponent<Transform>());
@@ -151,24 +152,33 @@ public class Prestige : MonoBehaviour
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
 
-            value.InitializePermanentStat();
+            value.InitializePrestigeStat();
+            CraftingType cacheCraftiingType = value.ReturnCraftingType();
+            BuildingType cacheBuildingType = value.ReturnBuildingType();
+            ResearchType cacheResearchType = value.ReturnResearchType();
 
-            if (prestigePoints < 1)
+
+            if (prestigePoints < passiveCost)
             {
                 buyButton.interactable = false;
             }
+
             
-            txtBuyAmount.text = "1";
+            txtBuyAmount.text = passiveCost.ToString();
             txtName.text = value.description;
-            prestigeBox.Add(new Rarity(RarityType.Common, 1, buyButton));
-            //testButtonList.Add(new TestButtons(buyButton));
-            //testButtonList.Add(new TestButtons(buyButton));
-            //buyButton.onClick.AddListener(value.InitializePermanentStat);
-            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(1); });
+
+            // Is this prestigeBox even needed?
+            prestigeBox.Add(new Rarity(RarityType.Common, passiveCost, buyButton, cacheCraftiingType, cacheBuildingType, cacheResearchType));
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonCrafting(cacheCraftiingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonBuilding(cacheBuildingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonResearch(cacheResearchType); });
+            buyButton.onClick.AddListener(value.InitializePrestigeButton);
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(passiveCost); });
         }
     }
     private void GenerateRandomUncommonPassive()
     {
+        int passiveCost = 2;
         foreach (var value in RandomValues(UncommonPassive.UncommonPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(uncommonPrefab, content.GetComponent<Transform>());
@@ -178,20 +188,32 @@ public class Prestige : MonoBehaviour
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
 
-            if (prestigePoints < 2)
+            value.InitializePrestigeStat();
+            CraftingType cacheCraftiingType = value.ReturnCraftingType();
+            BuildingType cacheBuildingType = value.ReturnBuildingType();
+            ResearchType cacheResearchType = value.ReturnResearchType();
+
+
+            if (prestigePoints < passiveCost)
             {
                 buyButton.interactable = false;
             }
 
-            txtBuyAmount.text = "2";
+
+            txtBuyAmount.text = passiveCost.ToString();
             txtName.text = value.description;
-            prestigeBox.Add(new Rarity(RarityType.Uncommon, 2, buyButton));
-            buyButton.onClick.AddListener(value.InitializePermanentStat);
-            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(2); });
+
+            // Is this prestigeBox even needed?
+            prestigeBox.Add(new Rarity(RarityType.Common, passiveCost, buyButton, cacheCraftiingType, cacheBuildingType, cacheResearchType));
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonCrafting(cacheCraftiingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonBuilding(cacheBuildingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonResearch(cacheResearchType); });
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(passiveCost); });
         }
     }
     private void GenerateRandomRarePassive()
     {
+        int passiveCost = 3;
         foreach (var value in RandomValues(RarePassive.RarePassives).Take(1))
         {
             GameObject prefabObj = Instantiate(rarePrefab, content.GetComponent<Transform>());
@@ -200,21 +222,33 @@ public class Prestige : MonoBehaviour
             Transform tformTxtName = prefabObj.GetComponent<Transform>().Find("Text_Name");
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
-            Debug.Log(buyButton);
-            if (prestigePoints < 3)
+
+            value.InitializePrestigeStat();
+            CraftingType cacheCraftiingType = value.ReturnCraftingType();
+            BuildingType cacheBuildingType = value.ReturnBuildingType();
+            ResearchType cacheResearchType = value.ReturnResearchType();
+
+
+            if (prestigePoints < passiveCost)
             {
                 buyButton.interactable = false;
             }
 
-            txtBuyAmount.text = "3";
+
+            txtBuyAmount.text = passiveCost.ToString();
             txtName.text = value.description;
-            prestigeBox.Add(new Rarity(RarityType.Rare, 3, buyButton));
-            buyButton.onClick.AddListener(value.InitializePermanentStat);
-            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(3); });
+
+            // Is this prestigeBox even needed?
+            prestigeBox.Add(new Rarity(RarityType.Common, passiveCost, buyButton, cacheCraftiingType, cacheBuildingType, cacheResearchType));
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonCrafting(cacheCraftiingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonBuilding(cacheBuildingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonResearch(cacheResearchType); });
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(passiveCost); });
         }
     }
     private void GenerateRandomEpicPassive()
     {
+        int passiveCost = 4;
         foreach (var value in RandomValues(EpicPassive.EpicPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(epicPrefab, content.GetComponent<Transform>());
@@ -224,20 +258,32 @@ public class Prestige : MonoBehaviour
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
 
-            if (prestigePoints < 4)
+            value.InitializePrestigeStat();
+            CraftingType cacheCraftiingType = value.ReturnCraftingType();
+            BuildingType cacheBuildingType = value.ReturnBuildingType();
+            ResearchType cacheResearchType = value.ReturnResearchType();
+
+
+            if (prestigePoints < passiveCost)
             {
                 buyButton.interactable = false;
             }
 
-            txtBuyAmount.text = "4";
+
+            txtBuyAmount.text = passiveCost.ToString();
             txtName.text = value.description;
-            prestigeBox.Add(new Rarity(RarityType.Epic, 4, buyButton));
-            buyButton.onClick.AddListener(value.InitializePermanentStat);
-            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(4); });
+
+            // Is this prestigeBox even needed?
+            prestigeBox.Add(new Rarity(RarityType.Common, passiveCost, buyButton, cacheCraftiingType, cacheBuildingType, cacheResearchType));
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonCrafting(cacheCraftiingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonBuilding(cacheBuildingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonResearch(cacheResearchType); });
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(passiveCost); });
         }
     }
     private void GenerateRandomLegendaryPassive()
     {
+        int passiveCost = 5;
         foreach (var value in RandomValues(LegendaryPassive.LegendaryPassives).Take(1))
         {
             GameObject prefabObj = Instantiate(legendaryPrefab, content.GetComponent<Transform>());
@@ -247,16 +293,27 @@ public class Prestige : MonoBehaviour
             TMP_Text txtName = tformTxtName.GetComponent<TMP_Text>();
             Button buyButton = prefabObj.GetComponent<Button>();
 
-            if (prestigePoints < 5)
+            value.InitializePrestigeStat();
+            CraftingType cacheCraftiingType = value.ReturnCraftingType();
+            BuildingType cacheBuildingType = value.ReturnBuildingType();
+            ResearchType cacheResearchType = value.ReturnResearchType();
+
+
+            if (prestigePoints < passiveCost)
             {
                 buyButton.interactable = false;
             }
 
-            txtBuyAmount.text = "5";
+
+            txtBuyAmount.text = passiveCost.ToString();
             txtName.text = value.description;
-            prestigeBox.Add(new Rarity(RarityType.Legendary, 5, buyButton));
-            buyButton.onClick.AddListener(value.InitializePermanentStat);
-            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(5); });
+
+            // Is this prestigeBox even needed?
+            prestigeBox.Add(new Rarity(RarityType.Common, passiveCost, buyButton, cacheCraftiingType, cacheBuildingType, cacheResearchType));
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonCrafting(cacheCraftiingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonBuilding(cacheBuildingType); });
+            buyButton.onClick.AddListener(delegate { value.InitializePrestigeButtonResearch(cacheResearchType); });
+            buyButton.onClick.AddListener(delegate { DeductPrestigePoints(passiveCost); });
         }
     }
     public void ClearContent()
@@ -269,12 +326,37 @@ public class Prestige : MonoBehaviour
     private void DeductPrestigePoints(int passiveCost)
     {
         prestigePoints -= passiveCost;
+        cachedPrestigePoints += passiveCost;
+        txtPrestigePoints.text = prestigePoints.ToString();
 
         foreach (var item in prestigeBox)
         {
             if (prestigePoints < item.passiveCost)
             {
                 item.buyButton.interactable = false;
+            }
+            else
+            {
+                item.buyButton.interactable = true;
+            }
+        }
+    }
+    [Button]
+    public void RefundButton()
+    {
+        prestigePoints += cachedPrestigePoints;
+        boxCache.ClearBoxCache();
+        txtPrestigePoints.text = prestigePoints.ToString();
+
+        foreach (var item in prestigeBox)
+        {
+            if (prestigePoints < item.passiveCost)
+            {
+                item.buyButton.interactable = false;
+            }
+            else
+            {
+                item.buyButton.interactable = true;
             }
         }
     }

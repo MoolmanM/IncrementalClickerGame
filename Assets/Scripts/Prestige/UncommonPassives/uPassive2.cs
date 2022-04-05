@@ -6,7 +6,7 @@ public class uPassive2 : UncommonPassive
 {
     private UncommonPassive _uncommonPassive;
     private WorkerType workerTypeChosen;
-    private float percentageAmount = 0.023f; // 2.3%
+    private float permanentAmount = 0.023f, prestigeAmount = 0.115f;
 
     private void Awake()
     {
@@ -14,7 +14,7 @@ public class uPassive2 : UncommonPassive
         UncommonPassives.Add(Type, _uncommonPassive);
     }
     private void ChooseRandomWorker()
-    {      
+    {
         List<WorkerType> workerTypesInCurrentRun = new List<WorkerType>();
 
         foreach (var worker in Worker.Workers)
@@ -34,11 +34,12 @@ public class uPassive2 : UncommonPassive
             _index = Random.Range(0, Prestige.workersUnlockedInPreviousRun.Count);
             workerTypeChosen = Prestige.workersUnlockedInPreviousRun[_index];
         }
-
-        description = string.Format("Increase the production of {0} by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount*100);
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase the production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount * 100);
+    }
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedWorkerMultiplierModified.ContainsKey(workerTypeChosen))
         {
@@ -51,8 +52,21 @@ public class uPassive2 : UncommonPassive
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomWorker();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomWorker();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonWorker(WorkerType workerType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override WorkerType ReturnWorkerType()
+    {
+        return workerTypeChosen;
     }
 }

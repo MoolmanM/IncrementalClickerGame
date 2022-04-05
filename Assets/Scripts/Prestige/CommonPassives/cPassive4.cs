@@ -7,30 +7,39 @@ using UnityEngine;
 public class cPassive4 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private uint amountToIncrease = 1;
+    private uint permanentAmount = 1, prestigeAmount = 5;
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
-
-        if (amountToIncrease > 1)
+    }
+    private void AddToBoxCache(uint workerIncreaseAmount)
+    {
+        BoxCache.cachedWorkerCountModified += workerIncreaseAmount;
+    }
+    private void ModifyStatDescription(uint workerIncreaseAmount)
+    {
+        if (workerIncreaseAmount > 1)
         {
-            description = string.Format("Gain {0} additional workers", amountToIncrease);
+            description = string.Format("Gain {0} additional workers", workerIncreaseAmount);
         }
         else
         {
-            description = string.Format("Gain an additional worker", amountToIncrease);
-        }             
-    }
-    private void AddToBoxCache()
-    {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
+            description = string.Format("Gain an additional worker", workerIncreaseAmount);
+        }
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        AddToBoxCache(permanentAmount);
+        ModifyStatDescription(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 }

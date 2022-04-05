@@ -27,4 +27,44 @@ public class LegendaryPassive : MonoBehaviour
     {
 
     }
+    public virtual void InitializePrestigeStat()
+    {
+
+    }
+    public virtual void InitializePrestigeButton()
+    {
+
+    }
+    public virtual void InitializePrestigeButtonCrafting(CraftingType craftingType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonBuilding(BuildingType buildingType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonResearch(ResearchType researchType)
+    {
+
+    }
+    public virtual void InitializePrestigeButtonWorker(WorkerType workerType)
+    {
+
+    }
+    public virtual CraftingType ReturnCraftingType()
+    {
+        return CraftingType.FireHardenedSpear;
+    }
+    public virtual BuildingType ReturnBuildingType()
+    {
+        return BuildingType.WoodGenerator;
+    }
+    public virtual ResearchType ReturnResearchType()
+    {
+        return ResearchType.FireHardenedWeapons;
+    }
+    public virtual WorkerType ReturnWorkerType()
+    {
+        return WorkerType.None;
+    }
 }

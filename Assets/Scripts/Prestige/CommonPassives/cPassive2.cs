@@ -7,7 +7,7 @@ public class cPassive2 : CommonPassive
 {
     private CommonPassive _commonPassive;
     private WorkerType workerTypeChosen;
-    private float percentageAmount = 0.01f; //1%
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f;
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class cPassive2 : CommonPassive
         CommonPassives.Add(Type, _commonPassive);
     }
     private void ChooseRandomWorker()
-    {      
+    {
         List<WorkerType> workerTypesInCurrentRun = new List<WorkerType>();
 
         foreach (var worker in Worker.Workers)
@@ -35,11 +35,12 @@ public class cPassive2 : CommonPassive
             _index = Random.Range(0, Prestige.workersUnlockedInPreviousRun.Count);
             workerTypeChosen = Prestige.workersUnlockedInPreviousRun[_index];
         }
-
-        description = string.Format("Increase the production of {0} by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount*100);
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase the production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount * 100);
+    }
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedWorkerMultiplierModified.ContainsKey(workerTypeChosen))
         {
@@ -52,8 +53,21 @@ public class cPassive2 : CommonPassive
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomWorker();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomWorker();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonWorker(WorkerType workerType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override WorkerType ReturnWorkerType()
+    {
+        return workerTypeChosen;
     }
 }

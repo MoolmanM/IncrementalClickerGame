@@ -6,28 +6,33 @@ using UnityEngine;
 public class uPassive8 : UncommonPassive
 {
     private UncommonPassive _unommonPassive;
-    private float percentageAmount = 0.023f; // 2.3%
+    private float permanentAmount = 0.023f, prestigeAmount = 0.115f;
 
     private void Awake()
     {
         _unommonPassive = GetComponent<UncommonPassive>();
-        UncommonPassives.Add(Type, _unommonPassive);
-
-        description = string.Format("Increase storage limit by {0}%", percentageAmount*100);
+        UncommonPassives.Add(Type, _unommonPassive);     
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
-        BoxCache.cachedstoragePercentageAmount += percentageAmount;
+        BoxCache.cachedstoragePercentageAmount += percentageAmount;       
+    }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase storage limit by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
     }
-
-    // Increase initial storage
-    // Increase storage permanently?
-    // Eventually this passive can also loop through all 'storage' type Buildings.
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
+    }
 }
 

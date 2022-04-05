@@ -6,24 +6,33 @@ using UnityEngine;
 public class rPassive8 : RarePassive
 {
     private RarePassive _rarePassive;
-    private float percentageAmount = 0.036f; // 3.6%
+    private float permanentAmount = 0.036f, prestigeAmount = 0.180f;
 
     private void Awake()
     {
         _rarePassive = GetComponent<RarePassive>();
-        RarePassives.Add(Type, _rarePassive);
-
-        description = string.Format("Increase storage limit by {0}%", percentageAmount*100);
+        RarePassives.Add(Type, _rarePassive);      
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         BoxCache.cachedstoragePercentageAmount += percentageAmount;
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase storage limit by {0}%", percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 
     // Increase initial storage

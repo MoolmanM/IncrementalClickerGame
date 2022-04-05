@@ -7,8 +7,8 @@ using UnityEngine;
 public class uPassive7 : UncommonPassive
 {
     private UncommonPassive _uncommonPassive;
-    private float percentageAmount = 0.023f; // 2.3%
     private ResearchType researchTypeChosen;
+    private float permanentAmount = 0.023f, prestigeAmount = 0.115f;
 
     private void Awake()
     {
@@ -36,11 +36,8 @@ public class uPassive7 : UncommonPassive
             _index = Random.Range(0, Prestige.researchablesUnlockedInPreviousRun.Count);
             researchTypeChosen = Prestige.researchablesUnlockedInPreviousRun[_index];
         }
-        description = string.Format("Decrease the cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].actualName, percentageAmount*100);
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedResearchableCostReduced.ContainsKey(researchTypeChosen))
         {
@@ -51,10 +48,27 @@ public class uPassive7 : UncommonPassive
             BoxCache.cachedResearchableCostReduced[researchTypeChosen] += percentageAmount;
         }
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Decrease the cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].actualName, percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomResearchable();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomResearchable();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonResearch(ResearchType researchType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override ResearchType ReturnResearchType()
+    {
+        return researchTypeChosen;
     }
 }

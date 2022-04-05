@@ -35,7 +35,8 @@ public enum ResearchType
     //IronEquipment,
     //IronAlloys,
     MinorStorage,
-    PowerGeneration
+    PowerGeneration,
+    None
 }
 
 public abstract class Researchable : SuperClass

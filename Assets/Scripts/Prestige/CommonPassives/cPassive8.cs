@@ -6,24 +6,33 @@ using UnityEngine;
 public class cPassive8 : CommonPassive
 {
     private CommonPassive _commonPassive;
-    private float percentageAmount = 0.01f; // 1%
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f; // 1%
 
     private void Awake()
     {
         _commonPassive = GetComponent<CommonPassive>();
-        CommonPassives.Add(Type, _commonPassive);
-
-        description = string.Format("Increase storage limit by {0}%", percentageAmount*100);
+        CommonPassives.Add(Type, _commonPassive);  
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         BoxCache.cachedstoragePercentageAmount += percentageAmount;
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Increase storage limit by {0}%", percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 
     // Increase initial storage

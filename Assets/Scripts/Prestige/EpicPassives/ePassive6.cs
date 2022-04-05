@@ -5,9 +5,8 @@ using UnityEngine;
 public class ePassive6 : EpicPassive
 {
     private EpicPassive _epicPassive;
-
-    private float percentageAmount = 0.005f; // 0.5%
     private BuildingType buildingTypeChosen;
+    private float permanentAmount = 0.005f, prestigeAmount = 0.025f;
 
     private void Awake()
     {
@@ -35,10 +34,8 @@ public class ePassive6 : EpicPassive
             _index = Random.Range(0, Prestige.buildingsUnlockedInPreviousRun.Count);
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedBuildingCostReduced.ContainsKey(buildingTypeChosen))
         {
@@ -49,10 +46,27 @@ public class ePassive6 : EpicPassive
             BoxCache.cachedBuildingCostReduced[buildingTypeChosen] += percentageAmount;
         }
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Decrease the cost of all Buildings by {0}%", percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomBuilding();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomBuilding();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override BuildingType ReturnBuildingType()
+    {
+        return buildingTypeChosen;
     }
 }

@@ -5,9 +5,8 @@ using UnityEngine;
 public class lPassive6 : LegendaryPassive
 {
     private LegendaryPassive _legendaryPassive;
-
-    private float percentageAmount = 0.01f; // 1.5%
     private BuildingType buildingTypeChosen;
+    private float permanentAmount = 0.01f, prestigeAmount = 0.05f;
 
     private void Awake()
     {
@@ -35,10 +34,8 @@ public class lPassive6 : LegendaryPassive
             _index = Random.Range(0, Prestige.buildingsUnlockedInPreviousRun.Count);
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
-
-        AddToBoxCache();
     }
-    private void AddToBoxCache()
+    private void AddToBoxCache(float percentageAmount)
     {
         if (!BoxCache.cachedBuildingCostReduced.ContainsKey(buildingTypeChosen))
         {
@@ -49,10 +46,27 @@ public class lPassive6 : LegendaryPassive
             BoxCache.cachedBuildingCostReduced[buildingTypeChosen] += percentageAmount;
         }
     }
+    private void ModifyStatDescription(float percentageAmount)
+    {
+        description = string.Format("Decrease the cost of all Buildings by {0}%", percentageAmount * 100);
+    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
         ChooseRandomBuilding();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ChooseRandomBuilding();
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
+    {
+        AddToBoxCache(prestigeAmount);
+    }
+    public override BuildingType ReturnBuildingType()
+    {
+        return buildingTypeChosen;
     }
 }

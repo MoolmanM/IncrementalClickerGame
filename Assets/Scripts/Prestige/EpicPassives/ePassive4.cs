@@ -6,14 +6,19 @@ using UnityEngine;
 public class ePassive4 : EpicPassive
 {
     private EpicPassive _epicPassive;
-
-    private uint amountToIncrease = 5;
+    private uint permanentAmount = 5, prestigeAmount = 25;
 
     private void Awake()
     {
         _epicPassive = GetComponent<EpicPassive>();
         EpicPassives.Add(Type, _epicPassive);
-
+    }
+    private void AddToBoxCache(uint amountToIncrease)
+    {
+        BoxCache.cachedWorkerCountModified += amountToIncrease;
+    }
+    private void ModifyStatDescription(uint amountToIncrease)
+    {
         if (amountToIncrease > 1)
         {
             description = string.Format("Gain {0} additional workers", amountToIncrease);
@@ -23,14 +28,17 @@ public class ePassive4 : EpicPassive
             description = string.Format("Gain an additional worker", amountToIncrease);
         }
     }
-    private void AddToBoxCache()
-    {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
-    }
     public override void InitializePermanentStat()
     {
-        base.InitializePermanentStat();
-
-        AddToBoxCache();
+        ModifyStatDescription(permanentAmount);
+        AddToBoxCache(permanentAmount);
+    }
+    public override void InitializePrestigeStat()
+    {
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToBoxCache(prestigeAmount);
     }
 }
