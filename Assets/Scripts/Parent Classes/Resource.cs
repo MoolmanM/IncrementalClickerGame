@@ -54,6 +54,7 @@ public struct UiForResourceInfo
 public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<ResourceType, Resource> Resources = new Dictionary<ResourceType, Resource>();
+
     public List<ResourceInfo> resourceInfoList = new List<ResourceInfo>();
     public Dictionary<GameObject, ResourceInfo> resourceInfoDict = new Dictionary<GameObject, ResourceInfo>();
 
@@ -91,9 +92,19 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         amount = 0;
         amountPerSecond = 0;
-        objMainPanel.SetActive(false);
+        canvas.enabled = false;
+        graphicRaycaster.enabled = false;
         isUnlocked = false;
         storageAmount = initialStorageAmount;
+        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+        StaticMethods.ModifyAPSText(amountPerSecond, uiForResource.txtAmountPerSecond);
+        GetCurrentFill();
+        Resources[ResourceType.Food].isUnlocked = true;
+        Resources[ResourceType.Lumber].isUnlocked = true;
+        Resources[ResourceType.Lumber].canvas.enabled = true;
+        Resources[ResourceType.Food].canvas.enabled = true;
+        Resources[ResourceType.Lumber].graphicRaycaster.enabled = true;
+        Resources[ResourceType.Food].graphicRaycaster.enabled = true;
         // Set storage amount back to original storage amount
         // Remove the resourceinfo prefabs?
     }
@@ -142,7 +153,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         amount = initialAmount;
     }
-    [Button(ButtonSizes.Small)]
+    [Button]
     private void DebugIncreaseResource()
     {
         if (debugAmountToIncrease > 0)
@@ -302,7 +313,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                     if (amount != cachedAmount)
                     {
-                        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+                        uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(amount));
                     }
 
                     GetCurrentFill();
@@ -315,7 +326,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                     if (amount != cachedAmount)
                     {
-                        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+                        uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(amount));
                     }
                 }
                 cachedAmount = amount;

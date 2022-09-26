@@ -17,32 +17,46 @@ public class Energy : MonoBehaviour
     public TMP_Text textKardashev;
     private float _timer = 0.1f;
     public GameObject objIconPanel;
-    private bool hasIntroducedEnergy;
+    private bool _hasIntroducedEnergy;
 
+    public void ResetEnergy()
+    {
+        energyProduction = 0;
+        energyConsumption = 0;
+        objIconPanel.SetActive(false);
+        _hasIntroducedEnergy = false;
+    }
     private void Start()
     {
-        if (hasIntroducedEnergy)
+        _hasIntroducedEnergy = PlayerPrefs.GetInt("_hasIntroducedEnergy") == 1 ? true : false;
+
+        if (_hasIntroducedEnergy)
         {
             objIconPanel.SetActive(true);
         }
+
+        energyProduction = PlayerPrefs.GetFloat("TotalEnergyProduction", energyProduction);
+        energyConsumption = PlayerPrefs.GetFloat("TotalEnergyConsumption", energyConsumption);
+
         // Earth's current is 20000000000000
         wattsConsumed = 20000000000000;
         kardashevValue = (Mathf.Log10(wattsConsumed) - 6) / 10;
         sliderKardashev.value = kardashevValue;
         textKardashev.text = string.Format("You are currently {0} on the Kardashev Scale.", kardashevValue);
+        UpdateEnergy();
     }
     public void UpdateEnergy()
     {
-        if (!hasIntroducedEnergy && energyProduction > 0)
+        if (!_hasIntroducedEnergy && energyProduction > 0)
         {
-            hasIntroducedEnergy = true;
+            _hasIntroducedEnergy = true;
             objIconPanel.SetActive(true);
         }
         float normalRatio = energyConsumption / energyProduction;
-        float percentage = (-normalRatio + 1) * 100;
+        //float percentage = (-normalRatio + 1) * 100;
         energyBar.fillAmount = -normalRatio + 1;
-        txtWatts.text = string.Format("{0}W/{1}W", energyConsumption, energyProduction);
-        txtPercentage.text = string.Format("{0:0.00}%", percentage);
+        //txtWatts.text = string.Format("{0}W/{1}W", energyConsumption, energyProduction);
+        //txtPercentage.text = string.Format("{0:0.00}%", percentage);
     }
     private void Update()
     {
@@ -60,7 +74,9 @@ public class Energy : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt("hasIntroducedEnergy", hasIntroducedEnergy ? 1 : 0);
+        PlayerPrefs.SetInt("_hasIntroducedEnergy", _hasIntroducedEnergy ? 1 : 0);
+        PlayerPrefs.SetFloat("TotalEnergyProduction", energyProduction);
+        PlayerPrefs.SetFloat("TotalEnergyConsumption", energyConsumption);
     }
 }
 

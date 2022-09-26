@@ -11,9 +11,6 @@ public class WoodenAxe : Craftable
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
-    }
-    void Start()
-    {
         SetDescriptionText("Enables building of the Wood-lot to automatically gather sticks.");
     }
 }

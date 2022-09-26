@@ -43,7 +43,7 @@ public abstract class Building : SuperClass
     public BuildingType Type;
     public float costMultiplier;
 
-    protected uint _selfCount;
+    public uint _selfCount;
     protected string _selfCountString, _isUnlockedString, _strInitialSelfCount;
     protected string[] _costString;
 
@@ -51,41 +51,115 @@ public abstract class Building : SuperClass
 
     private string strDescription;
 
-    public void ModifyMultiplier(float newAmount)
+    // Reset variables
+
+    public uint permCountAddition;
+    public float permAllMultiplierAddition, permMultiplierAddition, permCostSubtraction;
+
+    public uint prestigeCountAddition;
+    public float prestigeAllMultiplierAddition, prestigeMultiplierAddition, prestigeCostSubtraction;
+
+    private string _strPermCountAddition, _strPermAllMultiplierAddition, _strPermCostSubtraction, _strPermMultiplierAddition;
+    private string _strPrestigeCountAddition, _strPrestigeAllMultiplierAddition, _strPrestigeCostSubtraction, _strPrestigeMultiplierAddition;
+
+    public void ModifySelfCount()
+    {
+        _selfCount = 0;
+        _selfCount += (permCountAddition + prestigeCountAddition);
+        prestigeCountAddition = 0;
+
+        // Maybe need a permCountAddition and a prestigeCountAddition, prestigeCount needs to be set to zero after prestiging. permanent one needs to be saved throughout.
+        // I think at least, needs some more brainstorming.
+        // Both needs to be saved on exit and assigned values on start. 
+
+        Debug.Log(string.Format("Changed building {0}'s self count from {1} to {2}", actualName, "Hopefully 0", _selfCount));
+    }
+    public void InitialUnlock()
+    {
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+            resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
+            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+        }
+
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            if (CalculateAdBoost.isAdBoostActivated)
+            {
+                Debug.Log("Multiplier: " + resourcesToIncrement[i].currentResourceMultiplier + " Self Count: " + _selfCount);
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * _selfCount * CalculateAdBoost.adBoostMultiplier;
+            }
+            else
+            {
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * _selfCount;
+            }
+            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        }
+
+        UpdateResourceInfo();
+    }
+    public void ModifyCost()
+    {
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = resourceCost[i].baseCostAmount;
+            float subtractionAmount = resourceCost[i].baseCostAmount * (prestigeCostSubtraction + permCostSubtraction);
+            prestigeCostSubtraction = 0;
+            resourceCost[i].costAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
+            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+        }
+    }
+    public void ModifyMultiplier()
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
             BuildingResourcesToModify buildingResourcesToModify = resourcesToIncrement[i];
-            buildingResourcesToModify.currentResourceMultiplier = newAmount;
+            buildingResourcesToModify.currentResourceMultiplier = buildingResourcesToModify.baseResourceMultiplier;
+            float additionAmount = buildingResourcesToModify.baseResourceMultiplier * ((prestigeAllMultiplierAddition + permAllMultiplierAddition) + (permMultiplierAddition + prestigeMultiplierAddition));
+            prestigeAllMultiplierAddition = 0;
+            prestigeMultiplierAddition = 0;
+            buildingResourcesToModify.currentResourceMultiplier += additionAmount;
+            Debug.Log(string.Format("Changed building {0}'s resource multi from {1} to {2}", actualName, buildingResourcesToModify.baseResourceMultiplier, buildingResourcesToModify.currentResourceMultiplier));
             resourcesToIncrement[i] = buildingResourcesToModify;
         }
+        //ModifyDescriptionText();
     }
     public void UpdateDescription()
     {
         UpdateResourceInfo();
         ModifyDescriptionText();
     }
-    public void ResetBuilding()
+    public virtual void ResetBuilding()
     {
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            if (CalculateAdBoost.isAdBoostActivated)
+            {
+                // Why not just set this to zero?
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= (resourcesToIncrement[i].currentResourceMultiplier * CalculateAdBoost.adBoostMultiplier) * _selfCount;
+            }
+            else
+            {
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= resourcesToIncrement[i].currentResourceMultiplier * _selfCount;
+            }
+            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        }
+
         isUnlocked = false;
+        canvas.enabled = false;
         objMainPanel.SetActive(false);
+        graphicRaycaster.enabled = false;
         unlockAmount = 0;
         _selfCount = 0;
         hasSeen = true;
-        for (int i = 0; i < resourceCost.Length; i++)
-        {
-            resourceCost[i].costAmount = resourceCost[i].initialCostAmount;
-            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
-        }
+        isUnlockedByResource = false;
+        ModifySelfCount();
+        ModifyMultiplier();
+        ModifyCost();
         _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
-    }
-    public uint ReturnSelfCount()
-    {
-        return _selfCount;
-    }
-    public void SetSelfCount(uint selfCountAmount)
-    {
-        initialSelfCount += selfCountAmount;
+        ModifyDescriptionText();
     }
     public void SetInitialAmountPerSecond()
     {
@@ -119,8 +193,8 @@ public abstract class Building : SuperClass
     {
         InitializeObjects();
 
-        //if (TimeManager.hasPlayedBefore)
-        //{
+        FetchPrestigeValues();
+
         isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
         _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
         initialSelfCount = (uint)PlayerPrefs.GetInt(_strInitialSelfCount, (int)initialSelfCount);
@@ -129,7 +203,6 @@ public abstract class Building : SuperClass
         {
             resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
         }
-        //}
 
         if (isUnlocked)
         {
@@ -183,7 +256,14 @@ public abstract class Building : SuperClass
 
         foreach (var resourcePlus in resourcesToIncrement)
         {
-            strDescription += string.Format("Increase <color=#F3FF0A>{0:0.00}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>\n", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
+            if (resourcesToIncrement.Count > 1)
+            {
+                strDescription += string.Format("Increase <color=#F3FF0A>{0:0.00}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>\n", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
+            }
+            else
+            {
+                strDescription += string.Format("Increase <color=#F3FF0A>{0:0.00}</color> amount per second by <color=#FF0AF3>{1:0.00}</color>", resourcePlus.resourceTypeToModify.ToString(), resourcePlus.currentResourceMultiplier);
+            }
         }
         if (resourcesToDecrement != null)
         {
@@ -200,9 +280,9 @@ public abstract class Building : SuperClass
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
-            if (WatchAdPopup.isAdBoostActivated)
+            if (CalculateAdBoost.isAdBoostActivated)
             {
-                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * WatchAdPopup.adBoostMultiplier;
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += resourcesToIncrement[i].currentResourceMultiplier * CalculateAdBoost.adBoostMultiplier;
             }
             else
             {
@@ -224,6 +304,8 @@ public abstract class Building : SuperClass
         _isUnlockedString = (Type.ToString() + "isUnlocked");
         _costString = new string[resourceCost.Length];
 
+        AssignPrestigeStrings();
+
         for (int i = 0; i < resourceCost.Length; i++)
         {
             _costString[i] = Type.ToString() + resourceCost[i].associatedType.ToString();
@@ -232,13 +314,92 @@ public abstract class Building : SuperClass
 
         ModifyDescriptionText();
     }
-    protected void Update()
+    private void AssignPrestigeStrings()
+    {
+        _strPermCountAddition = Type.ToString() + "permCountAddition";
+        _strPermAllMultiplierAddition = Type.ToString() + "permAllMultiplierAddition";
+        _strPermMultiplierAddition = Type.ToString() + "permMultiplierAddition";
+        _strPermCostSubtraction = Type.ToString() + "permCostSubtraction";
+
+        _strPrestigeCountAddition = Type.ToString() + "PrestigeCountAddition";
+        _strPrestigeAllMultiplierAddition = Type.ToString() + "PrestigeAllMultiplierAddition";
+        _strPrestigeMultiplierAddition = Type.ToString() + "PrestigeMultiplierAddition";
+        _strPrestigeCostSubtraction = Type.ToString() + "PrestigeCostSubtraction";
+    }
+    private void SavePrestigeValues()
+    {
+        PlayerPrefs.SetInt(_strPermCountAddition, (int)permCountAddition);
+        PlayerPrefs.SetFloat(_strPermAllMultiplierAddition, permAllMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPermMultiplierAddition, permMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPermCostSubtraction, permCostSubtraction);
+
+        PlayerPrefs.SetInt(_strPrestigeCountAddition, (int)prestigeCountAddition);
+        PlayerPrefs.SetFloat(_strPrestigeAllMultiplierAddition, prestigeAllMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPrestigeMultiplierAddition, prestigeMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPrestigeCostSubtraction, prestigeCostSubtraction);
+    }
+    private void FetchPrestigeValues()
+    {
+        permCountAddition = (uint)PlayerPrefs.GetInt(_strPermCountAddition, (int)permCountAddition);
+        permAllMultiplierAddition = PlayerPrefs.GetFloat(_strPermAllMultiplierAddition, permAllMultiplierAddition);
+        permMultiplierAddition = PlayerPrefs.GetFloat(_strPermMultiplierAddition, permMultiplierAddition);
+        permCostSubtraction = PlayerPrefs.GetFloat(_strPermCostSubtraction, permCostSubtraction);
+
+        prestigeCountAddition = (uint)PlayerPrefs.GetInt(_strPrestigeCountAddition, (int)prestigeCountAddition);
+        prestigeAllMultiplierAddition = PlayerPrefs.GetFloat(_strPrestigeAllMultiplierAddition, prestigeAllMultiplierAddition);
+        prestigeMultiplierAddition = PlayerPrefs.GetFloat(_strPrestigeMultiplierAddition, prestigeMultiplierAddition);
+        prestigeCostSubtraction = PlayerPrefs.GetFloat(_strPrestigeCostSubtraction, prestigeCostSubtraction);
+    }
+    private void UnlockedViaResources()
+    {
+        if (isUnlocked)
+        {
+            InitialUnlock();
+            objMainPanel.SetActive(true);
+            if (UIManager.isBuildingVisible)
+            {
+                canvas.enabled = true;
+                graphicRaycaster.enabled = true;
+                hasSeen = true;
+            }
+            else if (hasSeen)
+            {
+                isBuildingUnlockedEvent = true;
+                hasSeen = false;
+                PointerNotification.leftAmount++;
+            }
+        }
+    }
+    private void CheckIfUnlocked()
+    {
+        if (!isUnlocked)
+        {
+            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
+            {
+                isUnlockedByResource = true;
+                unlockAmount++;
+
+                if (unlockAmount == unlocksRequired)
+                {
+                    isUnlocked = true;
+
+                    //if (type)
+                    UnlockedViaResources();
+
+                    PointerNotification.HandleRightAnim();
+                    PointerNotification.HandleLeftAnim();
+                }
+            }
+        }
+    }
+    protected virtual void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = _maxValue;
             CheckIfPurchaseable();
             UpdateResourceCosts();
+            CheckIfUnlocked();
         }
     }
     void OnApplicationQuit()
@@ -251,13 +412,7 @@ public abstract class Building : SuperClass
         {
             PlayerPrefs.SetFloat(_costString[i], resourceCost[i].costAmount);
         }
+
+        SavePrestigeValues();
     }
 }
-
-
-
-
-
-
-
-

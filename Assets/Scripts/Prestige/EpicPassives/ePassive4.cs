@@ -13,9 +13,13 @@ public class ePassive4 : EpicPassive
         _epicPassive = GetComponent<EpicPassive>();
         EpicPassives.Add(Type, _epicPassive);
     }
-    private void AddToBoxCache(uint amountToIncrease)
+    private void AddToPrestigeCache(uint amountToIncrease)
     {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
+        PrestigeCache.prestigeBoxWorkerCountAddition += amountToIncrease;
+    }
+    private void AddToPermanentCache(uint amountToIncrease)
+    {
+        PermanentCache.permanentBoxWorkerCountAddition += amountToIncrease;
     }
     private void ModifyStatDescription(uint amountToIncrease)
     {
@@ -31,7 +35,7 @@ public class ePassive4 : EpicPassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -39,6 +43,6 @@ public class ePassive4 : EpicPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

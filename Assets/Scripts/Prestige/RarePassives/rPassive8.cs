@@ -13,9 +13,13 @@ public class rPassive8 : RarePassive
         _rarePassive = GetComponent<RarePassive>();
         RarePassives.Add(Type, _rarePassive);      
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedstoragePercentageAmount += percentageAmount;
+        PrestigeCache.prestigeBoxStorageAddition += percentageAmount;
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxStorageAddition += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
@@ -24,7 +28,7 @@ public class rPassive8 : RarePassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -32,11 +36,7 @@ public class rPassive8 : RarePassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
-
-    // Increase initial storage
-    // Increase storage permanently?
-    // Eventually this passive can also loop through all 'storage' type Buildings.
 }
 

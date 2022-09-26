@@ -11,68 +11,24 @@ public class UIManager : MonoBehaviour
     public Swipe _Swipe;
     public Canvas[] gatheringObjects, workerObjects;
     public Animator animMainPanel;
+    public GameObject leftButton, rightButton;
 
     private readonly uint _panelCount = 3;
 
-    private void Awake()
-    {
-        //if (_instance != null && _instance != this)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        //else
-        //{
-        //    _instance = this;
-        //}
-    }
     void Start()
     {
         swipeCount = 0;
         UpdatePopNotication();
-        //UpdateCanvas();
-        //Debug.Log(PointerNotification.rightAmount);
-        //UpdatePopNotication();
         SetStartObjects();
-    }
-    private void UpdateCanvas()
-    {
-        foreach (var kvp in Building.Buildings)
-        {       
-            kvp.Value._objBody.SetActive(true);
-            kvp.Value.objMainPanel.SetActive(true);
-            kvp.Value.canvas.enabled = true;
-            kvp.Value.graphicRaycaster.enabled = true;
-            Canvas.ForceUpdateCanvases();
-            kvp.Value._objBody.SetActive(false);
-            kvp.Value.objMainPanel.SetActive(false);
-            kvp.Value.canvas.enabled = false;
-            kvp.Value.graphicRaycaster.enabled = false;
-        }
-        foreach (var kvp in Researchable.Researchables)
+
+        if (leftButton.activeSelf)
         {
-            kvp.Value._objBody.SetActive(true);
-            kvp.Value.objMainPanel.SetActive(true);
-            kvp.Value.canvas.enabled = true;
-            kvp.Value.graphicRaycaster.enabled = true;
-            Canvas.ForceUpdateCanvases();
-            kvp.Value._objBody.SetActive(false);
-            kvp.Value.objMainPanel.SetActive(false);
-            kvp.Value.canvas.enabled = false;
-            kvp.Value.graphicRaycaster.enabled = false;
+            leftButton.SetActive(false);
         }
-        foreach (var kvp in Craftable.Craftables)
+        if (!rightButton.activeSelf)
         {
-            kvp.Value._objBody.SetActive(true);
-            kvp.Value.objMainPanel.SetActive(true);
-            kvp.Value.canvas.enabled = true;
-            kvp.Value.graphicRaycaster.enabled = true;
-            Canvas.ForceUpdateCanvases();
-            kvp.Value._objBody.SetActive(false);
-            kvp.Value.objMainPanel.SetActive(false);
-            kvp.Value.canvas.enabled = false;
-            kvp.Value.graphicRaycaster.enabled = false;
+            rightButton.SetActive(true);
         }
-        BuildingsActive();
     }
     private void SetStartObjects()
     {
@@ -172,6 +128,15 @@ public class UIManager : MonoBehaviour
 
         txtMainHeader.text = "Buildings:";
 
+        if (leftButton.activeSelf)
+        {
+            leftButton.SetActive(false);
+        }
+        if (!rightButton.activeSelf)
+        {
+            rightButton.SetActive(true);
+        }
+
         foreach (var gatheringObj in gatheringObjects)
         {
             if (!gatheringObj.enabled)
@@ -241,6 +206,15 @@ public class UIManager : MonoBehaviour
 
         txtMainHeader.text = "Crafting:";
 
+        if (!leftButton.activeSelf)
+        {
+            leftButton.SetActive(true);
+        }
+        if (!rightButton.activeSelf)
+        {
+            rightButton.SetActive(true);
+        }
+
         foreach (var kvp in Craftable.Craftables)
         {
             kvp.Value.hasSeen = true;
@@ -301,6 +275,15 @@ public class UIManager : MonoBehaviour
         BuildingsOff();
 
         txtMainHeader.text = "Jobs:";
+
+        if (!leftButton.activeSelf)
+        {
+            leftButton.SetActive(true);
+        }
+        if (!rightButton.activeSelf)
+        {
+            rightButton.SetActive(true);
+        }
 
         foreach (var workerObject in workerObjects)
         {
@@ -371,6 +354,15 @@ public class UIManager : MonoBehaviour
 
         txtMainHeader.text = "Research:";
 
+        if (!leftButton.activeSelf)
+        {
+            leftButton.SetActive(true);
+        }
+        if (rightButton.activeSelf)
+        {
+            rightButton.SetActive(false);
+        }
+
         foreach (var kvp in Researchable.Researchables)
         {
             kvp.Value.hasSeen = true;
@@ -423,15 +415,15 @@ public class UIManager : MonoBehaviour
     {
         if (_Swipe.SwipeRight && (swipeCount >= 1))
         {
-            swipeCount--;
-            PanelHandler();
-            //animMainPanel.SetTrigger("hasSwipedRight");
+            //swipeCount--;
+            //PanelHandler();
+            animMainPanel.SetTrigger("hasSwipedRight");
         }
         else if (_Swipe.SwipeLeft && (swipeCount <= (_panelCount - 1)))
         {
-            swipeCount++;
-            PanelHandler();
-            //animMainPanel.SetTrigger("hasSwipedLeft");
+            //swipeCount++;
+            //PanelHandler();
+            animMainPanel.SetTrigger("hasSwipedLeft");
         }
 
     }

@@ -15,6 +15,6 @@ public class Weapons : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Unlocks spear for hunting.");
+        SetDescriptionText("Unlocks Wooden Spear");
     }
 }

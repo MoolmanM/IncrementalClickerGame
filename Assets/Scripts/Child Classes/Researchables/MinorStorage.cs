@@ -15,6 +15,6 @@ public class MinorStorage : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Unlocks building minor storage facilities.");
+        SetDescriptionText("Unlocks resource storage buildings");
     }
 }

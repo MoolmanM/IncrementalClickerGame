@@ -14,17 +14,21 @@ public class cPassive1 : CommonPassive
         CommonPassives.Add(Type, _commonPassive);
         
     }   
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedResearchTimeReductionAmount += percentageAmount;    
+        PrestigeCache.prestigeBoxResearchTimeSubtraction += percentageAmount;    
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxResearchTimeSubtraction += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Reduces time it takes to research by {0}%", percentageAmount * 100);
+        description = string.Format("Reduce research time by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
         ModifyStatDescription(permanentAmount);
     }
     public override void InitializePrestigeStat()
@@ -33,6 +37,6 @@ public class cPassive1 : CommonPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

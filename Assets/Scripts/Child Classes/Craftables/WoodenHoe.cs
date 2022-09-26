@@ -11,9 +11,6 @@ public class WoodenHoe : Craftable
         _craftable = GetComponent<Craftable>();
         Craftables.Add(Type, _craftable);
         SetInitialValues();
-    }
-    void Start()
-    {
         SetDescriptionText("Enables building of the Potato Field to automatically gather potatoes.");
     }
 }

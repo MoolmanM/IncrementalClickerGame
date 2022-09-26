@@ -14,32 +14,36 @@ public class uPassive4 : UncommonPassive
         _uncommonPassive = GetComponent<UncommonPassive>();
         UncommonPassives.Add(Type, _uncommonPassive);         
     }
-    private void AddToBoxCache(uint workerIncreaseAmount)
+    private void AddToPrestigeCache(uint amountToIncrease)
     {
-        BoxCache.cachedWorkerCountModified += workerIncreaseAmount;
+        PrestigeCache.prestigeBoxWorkerCountAddition += amountToIncrease;
     }
-    private void ModifyStatDescription(uint workerIncreaseAmount)
+    private void AddToPermanentCache(uint amountToIncrease)
     {
-        if (workerIncreaseAmount > 1)
+        PermanentCache.permanentBoxWorkerCountAddition += amountToIncrease;
+    }
+    private void ModifyStatDescription(uint amountToIncrease)
+    {
+        if (amountToIncrease > 1)
         {
-            description = string.Format("Gain {0} additional workers", workerIncreaseAmount);
+            description = string.Format("Gain {0} additional workers", amountToIncrease);
         }
         else
         {
-            description = string.Format("Gain an additional worker", workerIncreaseAmount);
+            description = string.Format("Gain an additional worker", amountToIncrease);
         }
     }
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
-    }
-    public override void InitializePrestigeButton()
-    {
-        ModifyStatDescription(prestigeAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
-        AddToBoxCache(prestigeAmount);
+        ModifyStatDescription(prestigeAmount);
+    }
+    public override void InitializePrestigeButton()
+    {
+        AddToPrestigeCache(prestigeAmount);
     }
 }

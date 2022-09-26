@@ -19,6 +19,6 @@ public class Smelting : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Enables smelting ores into metals.");
+        SetDescriptionText("Enables smelting ores into metals");
     }
 }

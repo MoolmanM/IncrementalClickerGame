@@ -35,26 +35,37 @@ public class ePassive6 : EpicPassive
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        if (!BoxCache.cachedBuildingCostReduced.ContainsKey(buildingTypeChosen))
+        if (!PrestigeCache.prestigeBoxBuildingCostSubtraction.ContainsKey(buildingTypeChosen))
         {
-            BoxCache.cachedBuildingCostReduced.Add(buildingTypeChosen, percentageAmount);
+            PrestigeCache.prestigeBoxBuildingCostSubtraction.Add(buildingTypeChosen, percentageAmount);
         }
         else
         {
-            BoxCache.cachedBuildingCostReduced[buildingTypeChosen] += percentageAmount;
+            PrestigeCache.prestigeBoxBuildingCostSubtraction[buildingTypeChosen] += percentageAmount;
+        }
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        if (!PermanentCache.permanentBoxBuildingCostSubtraction.ContainsKey(buildingTypeChosen))
+        {
+            PermanentCache.permanentBoxBuildingCostSubtraction.Add(buildingTypeChosen, percentageAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxBuildingCostSubtraction[buildingTypeChosen] += percentageAmount;
         }
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease the cost of all Buildings by {0}%", percentageAmount * 100);
+        description = string.Format("Decrease cost of all Buildings by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
         ChooseRandomBuilding();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -63,7 +74,7 @@ public class ePassive6 : EpicPassive
     }
     public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
     public override BuildingType ReturnBuildingType()
     {

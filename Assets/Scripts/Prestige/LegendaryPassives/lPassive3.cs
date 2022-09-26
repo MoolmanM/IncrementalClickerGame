@@ -35,33 +35,44 @@ public class lPassive3 : LegendaryPassive
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
     }
-    private void AddToBoxCache(uint selfCountIncreaseAmount)
+    private void AddToPrestigeCache(uint selfCountIncreaseAmount)
     {
-        if (!BoxCache.cachedBuildingSelfCountModified.ContainsKey(buildingTypeChosen))
+        if (!PrestigeCache.prestigeBoxBuildingCountAddition.ContainsKey(buildingTypeChosen))
         {
-            BoxCache.cachedBuildingSelfCountModified.Add(buildingTypeChosen, selfCountIncreaseAmount);
+            PrestigeCache.prestigeBoxBuildingCountAddition.Add(buildingTypeChosen, selfCountIncreaseAmount);
         }
         else
         {
-            BoxCache.cachedBuildingSelfCountModified[buildingTypeChosen] += selfCountIncreaseAmount;
+            PrestigeCache.prestigeBoxBuildingCountAddition[buildingTypeChosen] += selfCountIncreaseAmount;
+        }
+    }
+    private void AddToPermanentCache(uint selfCountIncreaseAmount)
+    {
+        if (!PermanentCache.permanentBoxBuildingCountAddition.ContainsKey(buildingTypeChosen))
+        {
+            PermanentCache.permanentBoxBuildingCountAddition.Add(buildingTypeChosen, selfCountIncreaseAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxBuildingCountAddition[buildingTypeChosen] += selfCountIncreaseAmount;
         }
     }
     private void ModifyStatDescription(uint selfCountIncreaseAmount)
     {
         if (selfCountIncreaseAmount > 1)
         {
-            description = string.Format("Start each run with {0} additional {1}'s", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start with {0} additional {1}'s", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
         }
         else
         {
-            description = string.Format("Start each run with an additional '{1}'", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start with an additional '{1}'", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
         }
     }
     public override void InitializePermanentStat()
     {
         ChooseRandomBuilding();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -70,7 +81,7 @@ public class lPassive3 : LegendaryPassive
     }
     public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
     public override BuildingType ReturnBuildingType()
     {

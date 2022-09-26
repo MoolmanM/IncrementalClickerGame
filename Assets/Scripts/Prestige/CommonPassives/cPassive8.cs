@@ -13,9 +13,13 @@ public class cPassive8 : CommonPassive
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);  
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedstoragePercentageAmount += percentageAmount;
+        PrestigeCache.prestigeBoxStorageAddition += percentageAmount;
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxStorageAddition += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
@@ -24,7 +28,7 @@ public class cPassive8 : CommonPassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -32,7 +36,7 @@ public class cPassive8 : CommonPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 
     // Increase initial storage

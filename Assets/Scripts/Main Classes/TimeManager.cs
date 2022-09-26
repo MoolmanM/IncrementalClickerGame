@@ -13,9 +13,6 @@ public class TimeManager : MonoBehaviour
     //public GameObject objWelcomePanel, objSpringImage, objWinterImage, objSummerImage, objFallImage;
     
     private DateTime _currentDate;   
-    private string _seasonString;
-    private float _timer = 0.1f;
-    private readonly float _maxValue = 5f;
     private long _temp;
 
     public static void ResetSeason()
@@ -125,19 +122,19 @@ public class TimeManager : MonoBehaviour
         //Make the parts where the time is bold?
         if (difference.Days == 0 && difference.Hours == 0 && difference.Minutes == 0)
         {
-            txtGoneFor.text = string.Format("You were gone for <b>{0:%s}s</b>\n While you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%s}s</b>", difference.Duration());
         }
         else if (difference.Days == 0 && difference.Hours == 0)
         {
-            txtGoneFor.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%m}m {0:%s}s</b>", difference.Duration());
         }
         else if (difference.Days == 0)
         {
-            txtGoneFor.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%h}h {0:%m}m {0:%s}s</b>", difference.Duration());
         }
         else
         {
-            txtGoneFor.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>\nWhile you were gone, you earned:", difference.Duration());
+            txtGoneFor.text = string.Format("You were gone for <b>{0:%d}d {0:%h}h {0:%m}m {0:%s}s</b>", difference.Duration());
         }
 
         //_currentHistoryLog = txtHistoryLog.text;
@@ -155,13 +152,5 @@ public class TimeManager : MonoBehaviour
 
         //}
 
-    }
-    void Update()
-    {
-        if ((_timer -= Time.deltaTime) <= 0)
-        {
-            _timer = _maxValue;
-            //CalculateSeason();
-        }
     }
 }

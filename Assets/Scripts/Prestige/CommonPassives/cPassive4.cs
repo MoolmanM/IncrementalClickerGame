@@ -14,9 +14,13 @@ public class cPassive4 : CommonPassive
         _commonPassive = GetComponent<CommonPassive>();
         CommonPassives.Add(Type, _commonPassive);
     }
-    private void AddToBoxCache(uint workerIncreaseAmount)
+    private void AddToPrestigeCache(uint workerIncreaseAmount)
     {
-        BoxCache.cachedWorkerCountModified += workerIncreaseAmount;
+        PrestigeCache.prestigeBoxWorkerCountAddition += workerIncreaseAmount;
+    }
+    private void AddToPermanentCache(uint workerIncreaseAmount)
+    {
+        PermanentCache.permanentBoxWorkerCountAddition += workerIncreaseAmount;
     }
     private void ModifyStatDescription(uint workerIncreaseAmount)
     {
@@ -31,7 +35,7 @@ public class cPassive4 : CommonPassive
     }
     public override void InitializePermanentStat()
     {
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
         ModifyStatDescription(permanentAmount);
     }
     public override void InitializePrestigeStat()
@@ -40,6 +44,6 @@ public class cPassive4 : CommonPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

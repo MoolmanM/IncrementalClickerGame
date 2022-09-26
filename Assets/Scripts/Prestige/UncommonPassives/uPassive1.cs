@@ -13,18 +13,22 @@ public class uPassive1 : UncommonPassive
         _uncommonPassive = GetComponent<UncommonPassive>();
         UncommonPassives.Add(Type, _uncommonPassive);      
     }   
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedResearchTimeReductionAmount += percentageAmount;      
+        PrestigeCache.prestigeBoxResearchTimeSubtraction += percentageAmount;      
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxResearchTimeSubtraction += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Reduces time it takes to research by {0}%", percentageAmount * 100);
+        description = string.Format("Reduce research time by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -32,6 +36,6 @@ public class uPassive1 : UncommonPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

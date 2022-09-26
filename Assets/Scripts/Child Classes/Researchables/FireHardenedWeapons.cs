@@ -21,6 +21,6 @@ public class FireHardenedWeapons : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Enables crafting of stone tools.");
+        SetDescriptionText("Unlocks Fire Hardened Weapons");
     }
 }

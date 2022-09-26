@@ -9,9 +9,13 @@ public class lPassive4 : LegendaryPassive
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);
     }
-    private void AddToBoxCache(uint amountToIncrease)
+    private void AddToPrestigeCache(uint amountToIncrease)
     {
-        BoxCache.cachedWorkerCountModified += amountToIncrease;
+        PrestigeCache.prestigeBoxWorkerCountAddition += amountToIncrease;
+    }
+    private void AddToPermanentCache(uint amountToIncrease)
+    {
+        PermanentCache.permanentBoxWorkerCountAddition += amountToIncrease;
     }
     private void ModifyStatDescription(uint amountToIncrease)
     {
@@ -27,7 +31,7 @@ public class lPassive4 : LegendaryPassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -35,6 +39,6 @@ public class lPassive4 : LegendaryPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

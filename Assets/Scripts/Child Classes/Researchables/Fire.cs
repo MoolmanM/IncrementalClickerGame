@@ -18,6 +18,6 @@ public class Fire : Researchable
     }
     void Start()
     {
-        SetDescriptionText("Unlock new important technologies, such as cooking and more.");
+        SetDescriptionText("Unlock new technologies");
     }
 }

@@ -37,26 +37,37 @@ public class uPassive7 : UncommonPassive
             researchTypeChosen = Prestige.researchablesUnlockedInPreviousRun[_index];
         }
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        if (!BoxCache.cachedResearchableCostReduced.ContainsKey(researchTypeChosen))
+        if (!PrestigeCache.prestigeBoxResearchableCostSubtraction.ContainsKey(researchTypeChosen))
         {
-            BoxCache.cachedResearchableCostReduced.Add(researchTypeChosen, percentageAmount);
+            PrestigeCache.prestigeBoxResearchableCostSubtraction.Add(researchTypeChosen, percentageAmount);
         }
         else
         {
-            BoxCache.cachedResearchableCostReduced[researchTypeChosen] += percentageAmount;
+            PrestigeCache.prestigeBoxResearchableCostSubtraction[researchTypeChosen] += percentageAmount;
+        }
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        if (!PermanentCache.permanentBoxResearchableCostSubtraction.ContainsKey(researchTypeChosen))
+        {
+            PermanentCache.permanentBoxResearchableCostSubtraction.Add(researchTypeChosen, percentageAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxResearchableCostSubtraction[researchTypeChosen] += percentageAmount;
         }
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease the cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Decrease cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].actualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
         ChooseRandomResearchable();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -65,7 +76,7 @@ public class uPassive7 : UncommonPassive
     }
     public override void InitializePrestigeButtonResearch(ResearchType researchType)
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
     public override ResearchType ReturnResearchType()
     {

@@ -27,7 +27,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static Dictionary<WorkerType, Worker> Workers = new Dictionary<WorkerType, Worker>();
 
-    public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount, InitialWorkerCount;
+    public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount;
     public static bool isWorkerUnlockedEvent;
 
     [System.NonSerialized] public GameObject objMainPanel;
@@ -52,11 +52,32 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public string strDescription;
 
-    public void ModifyMultiplier(float newAmount)
+    //Reset variables
+    public static uint permCountAddition, prestigeCountAddition;
+
+    public float permAllMultiplierAddition, permMultiplierAddition;
+
+    public float prestigeAllMultiplierAddition, prestigeMultiplierAddition;
+
+    private string _strPermCountAddition, _strPrestigeCountAddition, _strPermAllMultiplierAddition, _strPermMultiplierAddition, _strPrestigeAllMultiplierAddition, _strPrestigeMultiplierAddition;
+
+    public void ModifyWorkerCount()
+    {
+        TotalWorkerCount += (prestigeCountAddition + permCountAddition);
+        prestigeCountAddition = 0;
+
+        Debug.Log(string.Format("Changed total workers from {0} to {1}", "Hopefully 0", TotalWorkerCount));
+    }
+    public void ModifyMultiplier()
     {
         for (int i = 0; i < _resourcesToIncrement.Length; i++)
         {
-            _resourcesToIncrement[i].currentResourceMultiplier = newAmount;
+            _resourcesToIncrement[i].currentResourceMultiplier = _resourcesToIncrement[i].baseResourceMultiplier;
+            float additionAmount = _resourcesToIncrement[i].baseResourceMultiplier * ((prestigeAllMultiplierAddition + permAllMultiplierAddition) + (prestigeMultiplierAddition + permMultiplierAddition));;
+            prestigeAllMultiplierAddition = 0;
+            prestigeMultiplierAddition = 0;
+            _resourcesToIncrement[i].currentResourceMultiplier += additionAmount;
+            Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", actualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
         }
     }
     public void ModifyDescriptionText()
@@ -65,10 +86,44 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public void ResetWorker()
     {
+        //if (_resourcesToDecrement == null)
+        //{
+        //    for (int i = 0; i < _resourcesToIncrement.Length; i++)
+        //    {
+        //        _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].currentResourceMultiplier;
+        //        Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+        //        StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        //    }
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < _resourcesToIncrement.Length; i++)
+        //    {
+        //        _resourcesToIncrement[i].incrementAmount = workerCount * _resourcesToIncrement[i].currentResourceMultiplier;
+        //        Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond -= _resourcesToIncrement[i].incrementAmount;
+        //        StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        //    }
+        //    for (int i = 0; i < _resourcesToDecrement.Length; i++)
+        //    {
+        //        _resourcesToDecrement[i].incrementAmount = workerCount * _resourcesToDecrement[i].currentResourceMultiplier;
+        //        Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond += _resourcesToDecrement[i].incrementAmount;
+        //        StaticMethods.ModifyAPSText(Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[_resourcesToDecrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        //    }
+        //}
+
         isUnlocked = false;
         objMainPanel.SetActive(false);
+        canvas.enabled = false;
+        graphicRaycaster.enabled = false;
         workerCount = 0;
         hasSeen = true;
+        TotalWorkerCount = 0;
+        UnassignedWorkerCount = 0;
+        ModifyMultiplier();
+        //ModifyWorkerCount();
+        SetDescriptionText();
+        txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName.ToString(), workerCount);
+        txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -165,10 +220,14 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _workerString = (Type.ToString() + "workerCount");
         _isUnlockedString = (Type.ToString() + "isUnlocked");
 
+        AssignPrestigeStrings();
+
         workerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)workerCount);
         UnassignedWorkerCount = (uint)PlayerPrefs.GetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         TotalWorkerCount = (uint)PlayerPrefs.GetInt("TotalWorkerCount", (int)TotalWorkerCount);
         isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+
+        FetchPrestigeValues();
 
 
         txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", Type.ToString(), workerCount);
@@ -316,11 +375,43 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             UpdateResourceInfo();
         }
     }
+    private void AssignPrestigeStrings()
+    {
+        _strPermCountAddition = Type.ToString() + "permCountAddition";
+        _strPermAllMultiplierAddition = Type.ToString() + "permAllMultiplierAddition";
+        _strPermMultiplierAddition = Type.ToString() + "permMultiplierAddition";
+
+        _strPrestigeCountAddition = Type.ToString() + "PrestigeCountAddition";
+        _strPrestigeAllMultiplierAddition = Type.ToString() + "PrestigeAllMultiplierAddition";
+        _strPrestigeMultiplierAddition = Type.ToString() + "PrestigeMultiplierAddition";
+    }
+    private void SavePrestigeValues()
+    {
+        PlayerPrefs.SetInt(_strPermCountAddition, (int)permCountAddition);
+        PlayerPrefs.SetFloat(_strPermAllMultiplierAddition, permAllMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPermMultiplierAddition, permMultiplierAddition);
+
+        PlayerPrefs.SetInt(_strPrestigeCountAddition, (int)prestigeCountAddition);
+        PlayerPrefs.SetFloat(_strPrestigeAllMultiplierAddition, prestigeAllMultiplierAddition);
+        PlayerPrefs.SetFloat(_strPrestigeMultiplierAddition, prestigeMultiplierAddition);
+    }
+    private void FetchPrestigeValues()
+    {
+        permCountAddition = (uint)PlayerPrefs.GetInt(_strPermCountAddition, (int)permCountAddition);
+        permAllMultiplierAddition = PlayerPrefs.GetFloat(_strPermAllMultiplierAddition, permAllMultiplierAddition);
+        permMultiplierAddition = PlayerPrefs.GetFloat(_strPermMultiplierAddition, permMultiplierAddition);
+
+        prestigeCountAddition = (uint)PlayerPrefs.GetInt(_strPrestigeCountAddition, (int)prestigeCountAddition);
+        prestigeAllMultiplierAddition = PlayerPrefs.GetFloat(_strPrestigeAllMultiplierAddition, prestigeAllMultiplierAddition);
+        prestigeMultiplierAddition = PlayerPrefs.GetFloat(_strPrestigeMultiplierAddition, prestigeMultiplierAddition);
+    }
     void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)workerCount);
         PlayerPrefs.SetInt("TotalWorkerCount", (int)TotalWorkerCount);
         PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+
+        SavePrestigeValues();
     }
 }

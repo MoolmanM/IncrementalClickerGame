@@ -35,26 +35,37 @@ public class uPassive6 : UncommonPassive
             craftingTypeChosen = Prestige.craftablesUnlockedInPreviousRun[_index];
         }
     }
-    private void AddToBoxCache(float percentageAmount, CraftingType craftingType)
+    private void AddToPrestigeCache(float percentageAmount, CraftingType craftingType)
     {
-        if (!BoxCache.cachedCraftableCostReduced.ContainsKey(craftingType))
+        if (!PrestigeCache.prestigeBoxCraftableCostSubtraction.ContainsKey(craftingType))
         {
-            BoxCache.cachedCraftableCostReduced.Add(craftingType, percentageAmount);
+            PrestigeCache.prestigeBoxCraftableCostSubtraction.Add(craftingType, percentageAmount);
         }
         else
         {
-            BoxCache.cachedCraftableCostReduced[craftingType] += percentageAmount;
+            PrestigeCache.prestigeBoxCraftableCostSubtraction[craftingType] += percentageAmount;
+        }
+    }
+    private void AddToPermanentCache(float percentageAmount, CraftingType craftingType)
+    {
+        if (!PermanentCache.permanentBoxCraftableCostSubtraction.ContainsKey(craftingType))
+        {
+            PermanentCache.permanentBoxCraftableCostSubtraction.Add(craftingType, percentageAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxCraftableCostSubtraction[craftingType] += percentageAmount;
         }
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease the cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Decrease cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
         ChooseRandomCrafting();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount, craftingTypeChosen);
+        AddToPermanentCache(permanentAmount, craftingTypeChosen);
     }
     public override void InitializePrestigeStat()
     {
@@ -63,7 +74,7 @@ public class uPassive6 : UncommonPassive
     }
     public override void InitializePrestigeButtonCrafting(CraftingType craftingType)
     {
-        AddToBoxCache(prestigeAmount, craftingType);
+        AddToPrestigeCache(prestigeAmount, craftingType);
     }
     public override CraftingType ReturnCraftingType()
     {

@@ -14,7 +14,7 @@ public struct ResourceCost
     public ResourceType associatedType;
     [System.NonSerialized] public float currentAmount;
     public float costAmount;
-    public float initialCostAmount;
+    public float baseCostAmount;
     public UiForResourceCost uiForResourceCost;
 }
 
@@ -43,7 +43,7 @@ public abstract class SuperClass : MonoBehaviour
 
     protected float _timer = 0.1f, _lastFillAmount;
     protected readonly float _maxValue = 0.1f;
-    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objBackground, _objProgressCircle, _objProgressCirclePanel, _objBtnMain, _objTxtHeader, _objBtnExpand, _objBtnCollapse;
+    protected GameObject _prefabResourceCost, _prefabBodySpacer, _objBackground, _objProgressCircle, _objProgressCirclePanel, _objBtnMain, _objTxtHeader, _objBtnExpand, _objBtnCollapse, _objBody;
     protected TMP_Text _txtDescription, _txtHeader;
     protected Transform _tformDescription, _tformObjBackground, _tformTxtHeader, _tformBtnMain, _tformObjProgressCircle, _tformProgressCirclePanel, _tformBtnExpand, _tformBtnCollapse, _tformBody, _tformObjMain, _tformExpand, _tformCollapse;
     protected Image _imgMain, _imgExpand, _imgCollapse, _imgProgressCircle;
@@ -51,33 +51,8 @@ public abstract class SuperClass : MonoBehaviour
     protected Color _colTxtHeader;
     protected bool _isPurchaseableSet;
 
-    // Testing
-    public GameObject _objBody;
-
-    // This is new and for testing seems to be working very well so far.
-
     private float currentFillCache;
 
-    public void UpdateResourceCostPassive(float newAmount)
-    {
-        for (int i = 0; i < resourceCost.Length; i++)
-        {
-            resourceCost[i].costAmount = newAmount;
-        }
-    }
-    void Start()
-    {
-        //_objBody.SetActive(true);
-        //Debug.Log(actualName + " " + _objBody);
-        //canvas.enabled = true;
-        //graphicRaycaster.enabled = true;
-        //objMainPanel.SetActive(true);
-        //Canvas.ForceUpdateCanvases();
-        //objMainPanel.SetActive(true);
-        //graphicRaycaster.enabled = false;
-        //canvas.enabled = false;
-        //_objBody.SetActive(false);
-    }
     private void OnValidate()
     {
         if (typesToUnlock.buildingTypesToUnlock.Length != 0)
@@ -138,8 +113,7 @@ public abstract class SuperClass : MonoBehaviour
         {
             GameObject newObj = Instantiate(_prefabResourceCost, _tformBody);
 
-            //This loop just makes sure that there is a never a body spacer underneath the last element(the last resource cost panel)
-            for (int spacerI = i + 1; spacerI < resourceCost.Length; spacerI++)
+            if (i < resourceCost.Length - 1)
             {
                 Instantiate(_prefabBodySpacer, _tformBody);
             }
@@ -269,6 +243,31 @@ public abstract class SuperClass : MonoBehaviour
             _colTxtHeader = redColor;
         }
     }
+    private void InitialBuildingUnlock(Building building)
+    {
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+            resourceCost[i].costAmount *= Mathf.Pow(building.costMultiplier, building._selfCount);
+            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+        }
+
+        for (int i = 0; i < building.resourcesToIncrement.Count; i++)
+        {
+            if (CalculateAdBoost.isAdBoostActivated)
+            {
+                Resource.Resources[building.resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += building.resourcesToIncrement[i].currentResourceMultiplier * building._selfCount * CalculateAdBoost.adBoostMultiplier;
+            }
+            else
+            {
+                Resource.Resources[building.resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += building.resourcesToIncrement[i].currentResourceMultiplier * building._selfCount;
+            }
+            StaticMethods.ModifyAPSText(Resource.Resources[building.resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[building.resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        }
+        building._txtHeader.text = string.Format("{0} ({1})", building.actualName, building._selfCount);
+
+        //building.UpdateResourceInfo();
+    }
     public virtual void CheckIfPurchaseable()
     {
         if (isUnlocked)
@@ -360,9 +359,11 @@ public abstract class SuperClass : MonoBehaviour
         {
             if (building.Value.isUnlocked)
             {
+                InitialBuildingUnlock(building.Value);
+                building.Value.objMainPanel.SetActive(true);
+
                 if (UIManager.isBuildingVisible)
-                {
-                    building.Value.objMainPanel.SetActive(true);
+                {                    
                     building.Value.canvas.enabled = true;
                     building.Value.graphicRaycaster.enabled = true;
                     building.Value.hasSeen = true;
@@ -417,6 +418,8 @@ public abstract class SuperClass : MonoBehaviour
         {
             if (worker.Value.isUnlocked)
             {
+                worker.Value.objMainPanel.SetActive(true);
+
                 if (UIManager.isBuildingVisible && worker.Value.hasSeen)
                 {
                     Worker.isWorkerUnlockedEvent = true;
@@ -431,7 +434,6 @@ public abstract class SuperClass : MonoBehaviour
                 }
                 else if (UIManager.isWorkerVisible)
                 {
-                    worker.Value.objMainPanel.SetActive(true);
                     worker.Value.canvas.enabled = true;
                     worker.Value.graphicRaycaster.enabled = true;
                     worker.Value.hasSeen = true;
@@ -467,7 +469,7 @@ public abstract class SuperClass : MonoBehaviour
             }
         }
     }
-    protected void CheckIfUnlocked()
+    protected void CheckIfUnlockedDeprecated()
     {
         if (!isUnlocked)
         {
@@ -479,10 +481,25 @@ public abstract class SuperClass : MonoBehaviour
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
-                    CheckIfResearchUnlocked();
-                    CheckIfCraftingUnlocked();
-                    CheckIfWorkerUnlocked();
-                    CheckIfBuildingUnlocked();
+                    if (typesToUnlock.isUnlockingResearch)
+                    {
+                        CheckIfResearchUnlocked();
+                    }
+                    if (typesToUnlock.isUnlockingCrafting)
+                    {
+                        CheckIfCraftingUnlocked();
+                    }
+                    if (typesToUnlock.isUnlockingWorker)
+                    {
+                        CheckIfWorkerUnlocked();
+                    }
+                    if (typesToUnlock.isUnlockingBuilding)
+                    {
+                        CheckIfBuildingUnlocked();
+                    }
+                    
+                    
+                    
                     PointerNotification.HandleRightAnim();
                     PointerNotification.HandleLeftAnim();
                 }
@@ -510,10 +527,10 @@ public abstract class SuperClass : MonoBehaviour
             foreach (var worker in typesToUnlock.workerTypesToUnlock)
             {
                 Worker.Workers[worker].isUnlocked = true;
+                Worker.Workers[worker].objMainPanel.SetActive(true);
 
                 if (UIManager.isWorkerVisible)
                 {
-                    Worker.Workers[worker].objMainPanel.SetActive(true);
                     Worker.Workers[worker].canvas.enabled = true;
                     Worker.Workers[worker].graphicRaycaster.enabled = true;
                     Worker.Workers[worker].hasSeen = true;
@@ -587,20 +604,14 @@ public abstract class SuperClass : MonoBehaviour
             foreach (BuildingType buildingType in typesToUnlock.buildingTypesToUnlock)
             {
                 Building.Buildings[buildingType].unlockAmount++;
+                Building.Buildings[buildingType].objMainPanel.SetActive(true);
 
                 if (Building.Buildings[buildingType].unlockAmount == Building.Buildings[buildingType].unlocksRequired)
                 {
-                    #region This is new and for testing
-                    //if (cPassive4.buildingTypesSelfCountToModify.Contains(buildingType))
-                    //{
-                    //    Building.Buildings[buildingType].SetInitialAmountPerSecond();
-                    //}
-                    #endregion
-
+                    InitialBuildingUnlock(Building.Buildings[buildingType]);
                     Building.Buildings[buildingType].isUnlocked = true;
                     Building.Buildings[buildingType].CheckIfPurchaseable();
-
-
+                    
                     if (!UIManager.isBuildingVisible)
                     {
                         Building.isBuildingUnlockedEvent = true;
@@ -610,7 +621,6 @@ public abstract class SuperClass : MonoBehaviour
                     }
                     else
                     {
-                        Building.Buildings[buildingType].objMainPanel.SetActive(true);
                         Building.Buildings[buildingType].canvas.enabled = true;
                         Building.Buildings[buildingType].graphicRaycaster.enabled = true;
                         Building.Buildings[buildingType].hasSeen = true;
@@ -681,6 +691,6 @@ public abstract class SuperClass : MonoBehaviour
         currentFillCache = GetCurrentFill();
 
 
-        CheckIfUnlocked();
+        //CheckIfUnlocked();
     }
 }

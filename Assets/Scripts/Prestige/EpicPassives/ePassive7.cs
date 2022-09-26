@@ -13,9 +13,13 @@ public class ePassive7 : EpicPassive
         _epicPassive = GetComponent<EpicPassive>();
         EpicPassives.Add(Type, _epicPassive);    
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedAllBuildingMultiplierAmount += percentageAmount;    
+        PrestigeCache.prestigeBoxAllBuildingMultiplierAddition += percentageAmount;    
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxAllBuildingMultiplierAddition += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
@@ -24,7 +28,7 @@ public class ePassive7 : EpicPassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -32,6 +36,6 @@ public class ePassive7 : EpicPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

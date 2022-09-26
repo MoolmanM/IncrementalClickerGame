@@ -8,7 +8,6 @@ using UnityEngine.EventSystems;
 public class Food : Resource
 {
     private Resource _resource;
-
     void Awake()
     {
         _resource = GetComponent<Resource>();
@@ -62,11 +61,6 @@ public class Food : Resource
                 cachedAmount = amount;
             }
         }
-    }
-
-    protected override void Update()
-    {
-        UpdateResource();
     }
 }
 

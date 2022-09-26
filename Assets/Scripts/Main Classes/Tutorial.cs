@@ -13,6 +13,8 @@ public class Tutorial : MonoBehaviour
     public bool hasSwipedToCrafting, hasReceivedGatheringObjective, hasSwipedToBuildings, hasCompletedTutorials, hasBuiltLumberMill, hasTappedGatherSticks, hasNoticedLumber ,hasGathered10Sticks, hasCraftedWoodenAxe, hasNoticedNewBuilding, hasSkippedTutorial;
     public Button btnGatherSticks, btnCraftWoodenAxe, btnBuildLumberMill;   
     public TMP_Text textDescription;
+
+    
     void Start()
     {
         hasCompletedTutorials = PlayerPrefs.GetInt("hasCompletedTutorials") == 1 ? true : false;
@@ -192,6 +194,7 @@ public class Tutorial : MonoBehaviour
         hasCompletedTutorials = true;
         objMainTutorial.GetComponent<Canvas>().enabled = false;
     }
+
     private IEnumerator EffectTypewriter(string text, TMP_Text uiText)
     {
         foreach (char character in text.ToCharArray())

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public enum ResearchType
@@ -47,23 +46,33 @@ public abstract class Researchable : SuperClass
 
     public ResearchType Type;
     //public uint testAmount;
-    public float secondsToCompleteResearch;
+    public float secondsToCompleteResearch, baseSecondsToCompleteResearch;
     [NonSerialized] public bool isResearched;
 
     private bool _isResearchStarted;
-    private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted;
+    private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted, _stringIsUnlocked;
     private float _currentTimer, _researchTimeRemaining;
     private float timer = 0.1f;
     private readonly float maxValue = 0.1f;
 
     protected WorkerType[] _workerTypesToModify;
     protected Transform _tformImgProgressCircle, _tformObjCheckmark;
-    private GameObject _objCheckmark;
+    protected GameObject _objCheckmark;
+
+    // Reset Variables
+
+    public float permTimeSubtraction, permAllCostSubtraction, permCostSubtraction;
+
+    public float prestigeTimeSubtraction, prestigeAllCostSubtraction, prestigeCostSubtraction;
+
+    private string _strPermTimeSubtraction, _strPermAllCostSubtraction, _strPermCostSubtraction, _strPrestigeTimeSubtraction, _strPrestigeAllCostSubtraction, _strPrestigeCostSubtraction;
 
     public void ResetResearchable()
     {
         isUnlocked = false;
-        objMainPanel.SetActive(false);
+        canvas.enabled = false;
+        //objMainPanel.SetActive(false);
+        graphicRaycaster.enabled = false;
         unlockAmount = 0;
         isUnlockedByResource = false;
         isResearched = false;
@@ -72,7 +81,29 @@ public abstract class Researchable : SuperClass
         _currentTimer = 0f;
         _txtHeader.text = string.Format("{0}", actualName);
 
+        ModifyTimeToCompleteResearch();
+        ModifyCost();
         MakeResearchableAgain();
+    }
+    public void ModifyCost()
+    {
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = resourceCost[i].baseCostAmount;
+            float subtractionAmount = resourceCost[i].baseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (prestigeCostSubtraction + permCostSubtraction));
+            prestigeAllCostSubtraction = 0;
+            prestigeCostSubtraction = 0;
+            resourceCost[i].costAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed research {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
+        }
+    }
+    public void ModifyTimeToCompleteResearch()
+    {
+        secondsToCompleteResearch = baseSecondsToCompleteResearch;
+        float subtractionAmount = baseSecondsToCompleteResearch * (prestigeTimeSubtraction + permTimeSubtraction);
+        prestigeTimeSubtraction = 0;
+        secondsToCompleteResearch -= subtractionAmount;
+        Debug.Log(string.Format("Changed research {0}'s time from {1} to {2}", actualName, baseSecondsToCompleteResearch, secondsToCompleteResearch));
     }
     public void SetInitialValues()
     {
@@ -83,6 +114,9 @@ public abstract class Researchable : SuperClass
             _isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
             isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
             _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
+            isUnlocked = PlayerPrefs.GetInt(_stringIsUnlocked) == 1 ? true : false;
+
+            FetchPrestigeValues();
         }
 
         if (!isResearched && _isResearchStarted)
@@ -107,11 +141,6 @@ public abstract class Researchable : SuperClass
             Researched();
         }
 
-    }
-    public void ModifyTimeToCompleteResearch(float prestigePercentage)
-    {
-        float amountToDecreaseTimeBy = secondsToCompleteResearch * prestigePercentage;
-        secondsToCompleteResearch -= amountToDecreaseTimeBy;
     }
     public virtual void UpdateResearchTimer()
     {
@@ -191,7 +220,7 @@ public abstract class Researchable : SuperClass
             Researched();
         }
     }
-    private void Researched()
+    protected virtual void Researched()
     {
         isResearched = true;
 
@@ -257,8 +286,11 @@ public abstract class Researchable : SuperClass
         base.InitializeObjects();
 
         _stringIsResearched = Type.ToString() + "IsResearched";
-        _stringResearchTimeRemaining = (Type.ToString() + "TimeRemaining");
-        _stringIsResearchStarted = (Type.ToString() + "IsResearchStarted");
+        _stringResearchTimeRemaining = Type.ToString() + "TimeRemaining";
+        _stringIsResearchStarted = Type.ToString() + "IsResearchStarted";
+        _stringIsUnlocked = Type.ToString() + "IsUnlocked";
+
+        AssignPrestigeStrings();
 
         _btnMain.onClick.AddListener(OnResearch);
 
@@ -279,6 +311,76 @@ public abstract class Researchable : SuperClass
             graphicRaycaster.enabled = false;
         }
     }
+    protected void UnlockedViaResource()
+    {
+        if (isUnlocked)
+        {
+            if (UIManager.isResearchVisible)
+            {
+                objMainPanel.SetActive(true);
+                canvas.enabled = true;
+                graphicRaycaster.enabled = true;
+                hasSeen = true;
+            }
+            else if (hasSeen)
+            {
+                isResearchableUnlockedEvent = true;
+                hasSeen = false;
+                PointerNotification.rightAmount++;
+            }
+        }
+    }
+    private void CheckIfUnlocked()
+    {
+        if (!isUnlocked)
+        {
+            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
+            {
+                isUnlockedByResource = true;
+                unlockAmount++;
+
+                if (unlockAmount == unlocksRequired)
+                {
+                    isUnlocked = true;
+
+                    UnlockedViaResource();
+
+                    PointerNotification.HandleRightAnim();
+                    PointerNotification.HandleLeftAnim();
+                }
+            }
+        }
+    }
+    private void AssignPrestigeStrings()
+    {
+        _strPermTimeSubtraction = Type.ToString() + "permTimeSubtraction";
+        _strPermAllCostSubtraction = Type.ToString() + "permAllCostSubtraction";
+        _strPermCostSubtraction = Type.ToString() + "permCostSubtraction";
+
+        _strPrestigeTimeSubtraction = Type.ToString() + "prestigeTimeSubtraction";
+        _strPrestigeAllCostSubtraction = Type.ToString() + "prestigeAllCostSubtraction";
+        _strPrestigeCostSubtraction = Type.ToString() + "prestigeCostSubtraction";
+    }
+    private void SavePrestigeValues()
+    {
+        PlayerPrefs.SetFloat(_strPermTimeSubtraction, permTimeSubtraction);
+        PlayerPrefs.SetFloat(_strPermAllCostSubtraction, permAllCostSubtraction);
+        PlayerPrefs.SetFloat(_strPermCostSubtraction, permCostSubtraction);
+
+        PlayerPrefs.SetFloat(_strPrestigeTimeSubtraction, prestigeTimeSubtraction);
+        PlayerPrefs.SetFloat(_strPrestigeAllCostSubtraction, prestigeAllCostSubtraction);
+        PlayerPrefs.SetFloat(_strPrestigeCostSubtraction, prestigeCostSubtraction);
+    }
+    private void FetchPrestigeValues()
+    {
+        permTimeSubtraction = PlayerPrefs.GetFloat(_strPermTimeSubtraction, permTimeSubtraction);
+        permAllCostSubtraction = PlayerPrefs.GetFloat(_strPermAllCostSubtraction, permAllCostSubtraction);
+        permCostSubtraction = PlayerPrefs.GetFloat(_strPermCostSubtraction, permCostSubtraction);
+
+        prestigeTimeSubtraction = PlayerPrefs.GetFloat(_strPrestigeTimeSubtraction, prestigeTimeSubtraction);
+        prestigeAllCostSubtraction = PlayerPrefs.GetFloat(_strPrestigeAllCostSubtraction, prestigeAllCostSubtraction);
+        prestigeCostSubtraction = PlayerPrefs.GetFloat(_strPrestigeCostSubtraction, prestigeCostSubtraction);
+    }
     protected void Update()
     {
         if ((_timer -= Time.deltaTime) <= 0)
@@ -290,6 +392,7 @@ public abstract class Researchable : SuperClass
             }
 
             UpdateResourceCosts();
+            CheckIfUnlocked();
         }
 
         UpdateResearchTimer();
@@ -299,6 +402,9 @@ public abstract class Researchable : SuperClass
         PlayerPrefs.SetInt(_stringIsResearchStarted, _isResearchStarted ? 1 : 0);
         PlayerPrefs.SetInt(_stringIsResearched, isResearched ? 1 : 0);
         PlayerPrefs.SetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
+        PlayerPrefs.SetInt(_stringIsUnlocked, isUnlocked ? 1 : 0);
+
+        SavePrestigeValues();
     }
 }
 

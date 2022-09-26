@@ -65,15 +65,15 @@ public class EpicPassive : MonoBehaviour
     }
     public virtual CraftingType ReturnCraftingType()
     {
-        return CraftingType.FireHardenedSpear;
+        return CraftingType.None;
     }
     public virtual BuildingType ReturnBuildingType()
     {
-        return BuildingType.WoodGenerator;
+        return BuildingType.None;
     }
     public virtual ResearchType ReturnResearchType()
     {
-        return ResearchType.FireHardenedWeapons;
+        return ResearchType.None;
     }
     public virtual WorkerType ReturnWorkerType()
     {

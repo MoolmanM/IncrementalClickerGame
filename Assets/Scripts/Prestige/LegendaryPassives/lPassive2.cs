@@ -11,9 +11,13 @@ public class lPassive2 : LegendaryPassive
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);        
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedAllWorkerMultiplierAmount += percentageAmount;
+        PrestigeCache.prestigeBoxAllWorkerMultiplierAddition += percentageAmount;
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxAllWorkerMultiplierAddition += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
@@ -22,7 +26,7 @@ public class lPassive2 : LegendaryPassive
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -30,6 +34,6 @@ public class lPassive2 : LegendaryPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

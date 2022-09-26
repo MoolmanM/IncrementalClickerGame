@@ -14,6 +14,6 @@ public class WoodenSpear : Craftable
     }
     void Start()
     {
-        SetDescriptionText("Enables you to assign your workers to go hunting.");
+        SetDescriptionText("Unlocks hunters.");
     }
 }

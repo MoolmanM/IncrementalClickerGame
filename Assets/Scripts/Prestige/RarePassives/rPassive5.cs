@@ -19,7 +19,7 @@ public class rPassive5 : RarePassive
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked)
+            if (building.Value.isUnlocked && building.Value.resourcesToIncrement.Count > 0)
             {
                 buildingTypesInCurrentRun.Add(building.Key);
             }
@@ -35,15 +35,26 @@ public class rPassive5 : RarePassive
             buildingTypeChosen = Prestige.buildingsUnlockedInPreviousRun[_index];
         }
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        if (!BoxCache.cachedBuildingMultiplierModified.ContainsKey(buildingTypeChosen))
+        if (!PrestigeCache.prestigeBoxBuildingMultiplierAddition.ContainsKey(buildingTypeChosen))
         {
-            BoxCache.cachedBuildingMultiplierModified.Add(buildingTypeChosen, percentageAmount);
+            PrestigeCache.prestigeBoxBuildingMultiplierAddition.Add(buildingTypeChosen, percentageAmount);
         }
         else
         {
-            BoxCache.cachedBuildingMultiplierModified[buildingTypeChosen] += percentageAmount;
+            PrestigeCache.prestigeBoxBuildingMultiplierAddition[buildingTypeChosen] += percentageAmount;
+        }
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        if (!PermanentCache.permanentBoxBuildingMultiplierAddition.ContainsKey(buildingTypeChosen))
+        {
+            PermanentCache.permanentBoxBuildingMultiplierAddition.Add(buildingTypeChosen, percentageAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxBuildingMultiplierAddition[buildingTypeChosen] += percentageAmount;
         }
     }
     private void ModifyStatDescription(float percentageAmount)
@@ -54,7 +65,7 @@ public class rPassive5 : RarePassive
     {
         ChooseRandomBuilding();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -63,7 +74,7 @@ public class rPassive5 : RarePassive
     }
     public override void InitializePrestigeButtonBuilding(BuildingType buildingType)
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
     public override BuildingType ReturnBuildingType()
     {

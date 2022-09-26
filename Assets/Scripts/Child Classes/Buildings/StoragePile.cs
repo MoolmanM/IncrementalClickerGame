@@ -6,6 +6,7 @@ public class StoragePile : Building
     private Building _building;
     public static float storageAmountMultiplier;
 
+    public static float permStorageAddition, prestigeStorageAddition;
     //private float _increaseStorageAmount;
     void Awake()
     {

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using TMPro;
 using UnityEngine;
 
@@ -156,6 +155,16 @@ public class Events : MonoBehaviour
             Power.hasNotEnoughEnergy = false;
         }
     }
+    private void LessThanZeroAPS()
+    {
+        if (Power.hasLessThanZeroAPS)
+        {
+            eventHappened = true;
+            eventError = true;
+            NotableEvent("Can't have less than zero resource gain");
+            Power.hasLessThanZeroAPS = false;
+        }
+    }
     private void HasReachedMaxSimulResearch()
     {
         if (Researchable.hasReachedMaxSimulResearch)
@@ -206,44 +215,46 @@ public class Events : MonoBehaviour
             Worker.isWorkerUnlockedEvent = false;
         }
     }
-    // When generating workers, display the current total amount of workers next to the notification.
-    // Need to rethink the different timers here, maybe have two seperate timers for stoneageevents and workers.
-    // Or there could be a more elegant solution.
-    // Maybe put the animation part in update without any timer.
-    // And then just do something to exit the animation completely after the idle duration perhaps.
-    // Then just make sure the animation starts again correctly.
-    private void GenerateWorkers()
+    public void GenerateWorker()
     {
-        // Might have to eventually have another class that all the buildings inherit from that are living quarters.
-        // I wonder if I can do interfaces, because it can really work well.
-        // But if I remember correctly. they won't work for my use-case.
+        //if (hutSelfCount != 0 && Worker.TotalWorkerCount < hutSelfCount)
+        //{
+        //    if ((_timer -= Time.deltaTime) <= 0)
+        //    {
+        //        _timer = 10f;
 
-        if (Worker.AliveCount < Hut._selfCount && Hut._selfCount != 0 && Resource.Resources[ResourceType.Food].amount - (Worker.AliveCount * workerEatAmount) >= 0)
+        //        eventHappened = true;
+        //        eventGood = true;
+        //        //Worker.AliveCount++;
+        //        Worker.UnassignedWorkerCount++;
+        //        Worker.TotalWorkerCount++;
+        //        NotableEvent(string.Format("A worker has arrived [{0}]", Worker.TotalWorkerCount));
+        //        txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
+
+        //        // Turn this into a bool.
+        //        if (AutoToggle.isAutoWorkerOn == 1)
+        //        {
+        //            AutoWorker.CalculateWorkers();
+        //            AutoWorker.AutoAssignWorkers();
+        //        }
+        //    }
+        //}
+
+
+        eventHappened = true;
+        eventGood = true;
+        Worker.UnassignedWorkerCount++;
+        Worker.TotalWorkerCount++;
+        NotableEvent(string.Format("A worker has arrived [{0}]", Worker.TotalWorkerCount));
+        txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
+
+        // Turn this into a bool.
+        if (AutoToggle.isAutoWorkerOn == 1)
         {
-            // This was in the if
-            // && Resource.Resources[ResourceType.Food].amount - (Worker.AliveCount * workerEatAmount) >= 0
-            if ((_timer -= Time.deltaTime) <= 0)
-            {
-                _timer = 10f;
-
-                eventHappened = true;
-                eventGood = true;
-                Worker.AliveCount++;
-                Worker.UnassignedWorkerCount++;
-                Worker.TotalWorkerCount++;
-                NotableEvent(string.Format("A worker has arrived [{0}]", Worker.AliveCount));
-                txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", Worker.UnassignedWorkerCount);
-
-                // Turn this into a bool.
-                if (AutoToggle.isAutoWorkerOn == 1)
-                {
-                    AutoWorker.CalculateWorkers();
-                    AutoWorker.AutoAssignWorkers();
-                }
-
-                DecreaseFoodAPS();
-            }
+            AutoWorker.CalculateWorkers();
+            AutoWorker.AutoAssignWorkers();
         }
+
     }
     private void KillWorker()
     {
@@ -339,6 +350,7 @@ public class Events : MonoBehaviour
         {
             txtHistoryLog.text = string.Format("{0}\n<b>{1:t}</b>: {2}", _currentHistoryLog, DateTime.Now, notableEventString);
             // How is expensive is this?
+            // Resource wise?
 
             Canvas.ForceUpdateCanvases();
             scrollViewObject.GetComponent<UnityEngine.UI.ScrollRect>().verticalNormalizedPosition = 0f;
@@ -354,19 +366,20 @@ public class Events : MonoBehaviour
     void Update()
     {
         // Should maybe have all of these methods in their own class so they execute at the same time instead of in this order.
-        GenerateWorkers();
+        //GenerateWorker();
         if ((_timer -= Time.deltaTime) <= 0)
         {
             _timer = 1f;
             StoneAgeEvents();
-            KillWorker();
-        }      
+            //KillWorker();
+        }
         NewCraftingRecipe();
         NewResearchAvailable();
         NewBuildingAvailable();
         NewWorkerJobAvailable();
         HasReachedMaxSimulResearch();
         HasNotEnoughEnergy();
+        LessThanZeroAPS();
         PopUpNotification.HandleAnim();
     }
 }

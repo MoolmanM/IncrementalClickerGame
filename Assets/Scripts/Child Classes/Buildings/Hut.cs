@@ -5,8 +5,9 @@ using TMPro;
 
 public class Hut : Building
 {
-    private Building _building; 
-    public static new uint _selfCount;
+    private Building _building;
+    //public static new uint _selfCount;
+    public Events events;
 
     void Awake()
     {
@@ -32,10 +33,11 @@ public class Hut : Building
             _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);                
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[Buildings[Type].resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
-            }          
+                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);              
+            }
+            events.GenerateWorker();
         }
 
         _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);

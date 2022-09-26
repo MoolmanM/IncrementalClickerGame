@@ -9,18 +9,22 @@ public class lPassive9 : LegendaryPassive
         _legendaryPassive = GetComponent<LegendaryPassive>();
         LegendaryPassives.Add(Type, _legendaryPassive);     
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        BoxCache.cachedAllResearchablesCostReduced += percentageAmount;
+        PrestigeCache.prestigeBoxAllResearchablesCostSubtraction += percentageAmount;
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        PermanentCache.permanentBoxAllResearchablesCostSubtraction += percentageAmount;
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease the cost of all Researchables by {0}%", percentageAmount * 100);
+        description = string.Format("Decrease cost of all Researchables by {0}%", percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -28,6 +32,6 @@ public class lPassive9 : LegendaryPassive
     }
     public override void InitializePrestigeButton()
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
 }

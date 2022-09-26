@@ -38,24 +38,35 @@ public class cPassive2 : CommonPassive
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Increase the production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Increase production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount * 100);
     }
-    private void AddToBoxCache(float percentageAmount)
+    private void AddToPrestigeCache(float percentageAmount)
     {
-        if (!BoxCache.cachedWorkerMultiplierModified.ContainsKey(workerTypeChosen))
+        if (!PrestigeCache.prestigeBoxWorkerMultiplierAddition.ContainsKey(workerTypeChosen))
         {
-            BoxCache.cachedWorkerMultiplierModified.Add(workerTypeChosen, percentageAmount);
+            PrestigeCache.prestigeBoxWorkerMultiplierAddition.Add(workerTypeChosen, percentageAmount);
         }
         else
         {
-            BoxCache.cachedWorkerMultiplierModified[workerTypeChosen] += percentageAmount;
+            PrestigeCache.prestigeBoxWorkerMultiplierAddition[workerTypeChosen] += percentageAmount;
+        }
+    }
+    private void AddToPermanentCache(float percentageAmount)
+    {
+        if (!PermanentCache.permanentBoxWorkerMultiplierAddition.ContainsKey(workerTypeChosen))
+        {
+            PermanentCache.permanentBoxWorkerMultiplierAddition.Add(workerTypeChosen, percentageAmount);
+        }
+        else
+        {
+            PermanentCache.permanentBoxWorkerMultiplierAddition[workerTypeChosen] += percentageAmount;
         }
     }
     public override void InitializePermanentStat()
     {
         ChooseRandomWorker();
         ModifyStatDescription(permanentAmount);
-        AddToBoxCache(permanentAmount);
+        AddToPermanentCache(permanentAmount);
     }
     public override void InitializePrestigeStat()
     {
@@ -64,7 +75,7 @@ public class cPassive2 : CommonPassive
     }
     public override void InitializePrestigeButtonWorker(WorkerType workerType)
     {
-        AddToBoxCache(prestigeAmount);
+        AddToPrestigeCache(prestigeAmount);
     }
     public override WorkerType ReturnWorkerType()
     {
