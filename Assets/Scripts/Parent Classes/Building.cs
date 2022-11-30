@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -239,7 +240,8 @@ public abstract class Building : SuperClass
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
+                //resourceCost[i].baseCostAmount = 0;
+                resourceCost[i].costAmount = resourceCost[i].baseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
                 resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
             }
             ModifyAmountPerSecond();
@@ -398,7 +400,7 @@ public abstract class Building : SuperClass
         {
             _timer = _maxValue;
             CheckIfPurchaseable();
-            UpdateResourceCosts();
+            UpdateResourceCostTexts();
             CheckIfUnlocked();
         }
     }
@@ -414,5 +416,29 @@ public abstract class Building : SuperClass
         }
 
         SavePrestigeValues();
+    }
+
+    [Button]
+    public void MultiplyMultiplier(float mulitplierAmount)
+    {
+        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        {
+            BuildingResourcesToModify buildingResourcesToModify = resourcesToIncrement[i];
+            buildingResourcesToModify.currentResourceMultiplier *= mulitplierAmount;
+            resourcesToIncrement[i] = buildingResourcesToModify;
+            ModifyDescriptionText();
+
+            if (CalculateAdBoost.isAdBoostActivated)
+            {
+                //Debug.Log("Multiplier: " + resourcesToIncrement[i].currentResourceMultiplier + " Self Count: " + _selfCount);
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond *= mulitplierAmount;
+            }
+            else
+            {
+                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond *= mulitplierAmount;
+            }
+            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+        }
+
     }
 }

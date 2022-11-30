@@ -49,6 +49,7 @@ ScriptedImporter:
     flipbookRows: 0
     flipbookColumns: 0
     ignorePngGamma: 0
+    cookieMode: 0
     filterMode: 1
     aniso: 1
     mipBias: 0
@@ -90,6 +91,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
+    spritePosition: {x: 0, y: 0}
   mosaicSpriteImportData:
   - name: Rounded Rectangle 2
     originalName: 
@@ -110,7 +112,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: -151, y: 1067}
+    uvTransform: {x: 3, y: 1211}
+    spritePosition: {x: 154, y: 144}
   - name: Rounded Rectangle 1
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -130,7 +133,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
+    uvTransform: {x: 3, y: 3}
+    spritePosition: {x: -1, y: -1}
   rigSpriteImportData:
   - name: Rounded Rectangle 2
     originalName: 
@@ -152,6 +156,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: -151, y: 1067}
+    spritePosition: {x: 0, y: 0}
   - name: Rounded Rectangle 1
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -172,6 +177,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 0, y: 0}
   characterData:
     bones: []
     parts: []

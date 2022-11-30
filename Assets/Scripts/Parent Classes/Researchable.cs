@@ -391,7 +391,7 @@ public abstract class Researchable : SuperClass
                 CheckIfPurchaseable();
             }
 
-            UpdateResourceCosts();
+            UpdateResourceCostTexts();
             CheckIfUnlocked();
         }
 

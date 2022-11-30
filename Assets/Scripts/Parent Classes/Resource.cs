@@ -202,13 +202,13 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         InitializeObjects();
         //if (TimeManager.hasPlayedBefore)
         //{
-            isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
-            if (isUnlocked)
-            {
-                amount = PlayerPrefs.GetFloat(_amountString, amount);
-                amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
-                storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
-            }         
+        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+        if (isUnlocked)
+        {
+            amount = PlayerPrefs.GetFloat(_amountString, amount);
+            amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
+            storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
+        }
         //}
         if (isUnlocked)
         {
@@ -225,7 +225,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         // Display amount and amount per second.
         StaticMethods.ModifyAPSText(amountPerSecond, uiForResource.txtAmountPerSecond);
-        uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
+        uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(amount));
     }
     private void InitializeObjects()
     {
@@ -273,33 +273,6 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             if ((_timer -= Time.deltaTime) <= 0)
             {
                 _timer = 0.1f;
-
-                if (amount >= (storageAmount - amountPerSecond))
-                {
-                    amount = storageAmount;
-                }
-                else
-                {
-                    amount += (amountPerSecond / 10);
-                }
-
-                uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
-
-                GetCurrentFill();
-            }
-        }
-
-    }
-    protected virtual void UpdateResource()
-    {
-        // Can probably check here every tick if amount == the previous cached amount
-        // And if it is not equal to the cached variable, then and only then update the text field
-        // otherwise you're just calling the code for nothing.
-        if (isUnlocked)
-        {
-            if ((_timer -= Time.deltaTime) <= 0)
-            {
-                _timer = 0.1f;
                 if (amount != storageAmount)
                 {
                     if (amount >= (storageAmount - amountPerSecond))
@@ -333,6 +306,35 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
 
+    }
+    protected virtual void UpdateResource()
+    {
+        if (isUnlocked)
+        {
+            if ((_timer -= Time.deltaTime) <= 0)
+            {
+                _timer = 0.1f;
+
+                if (amount >= (storageAmount - amountPerSecond))
+                {
+                    amount = storageAmount;
+                }
+                else
+                {
+                    amount += (amountPerSecond / 10);
+                }
+
+                if (amount != cachedAmount)
+                {
+                    uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(amount));
+                }
+
+                GetCurrentFill();
+
+                //cachedAmount = amount;
+            }
+            cachedAmount = amount;
+        }
     }
     protected virtual void Update()
     {

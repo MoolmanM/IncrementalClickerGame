@@ -247,7 +247,7 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
         {
             _timer = _maxValue;
             CheckIfPurchaseable();
-            UpdateResourceCosts();
+            UpdateResourceCostTexts();
         }
 
         if (buttonHeld)

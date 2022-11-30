@@ -329,7 +329,7 @@ public class Craftable : SuperClass
                 CheckIfPurchaseable();
             }
 
-            UpdateResourceCosts();
+            UpdateResourceCostTexts();
             CheckIfUnlocked();
         }
     }

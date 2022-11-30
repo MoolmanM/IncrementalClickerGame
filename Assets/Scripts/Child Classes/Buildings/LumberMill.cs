@@ -1,39 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using JetBrains.Annotations;
 
 public class LumberMill : Building
 {
     private Building _building;
-    public float testMultiplierAmount;
+
+    public float test;
 
     void Awake()
     {
         _building = GetComponent<Building>();
         Buildings.Add(Type, _building);
-        SetInitialValues();       
+        SetInitialValues();
     }
     [Button]
-    public void MultiplyMultiplier()
+    private void Calculate(int n, float b, float r, int k, int c)
     {
-        for (int i = 0; i < resourcesToIncrement.Count; i++)
+        for (int i = 0; i < 25; i++)
         {
-            BuildingResourcesToModify buildingResourcesToModify = resourcesToIncrement[i];
-            buildingResourcesToModify.currentResourceMultiplier *= testMultiplierAmount;        
-            resourcesToIncrement[i] = buildingResourcesToModify;
-            ModifyDescriptionText();
-
-            if (CalculateAdBoost.isAdBoostActivated)
-            {
-                //Debug.Log("Multiplier: " + resourcesToIncrement[i].currentResourceMultiplier + " Self Count: " + _selfCount);
-                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond *= testMultiplierAmount;
-            }
-            else
-            {
-                Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond *= testMultiplierAmount;
-            }
-            StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
+            
         }
-
+        test = 10 * Mathf.Pow(costMultiplier, 24) / 2;
+        Debug.Log(test);
     }
+
 }

@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 public struct UiForResourceCost
 {
     public TMP_Text textCostName;
@@ -52,6 +53,8 @@ public abstract class SuperClass : MonoBehaviour
     protected bool _isPurchaseableSet;
 
     private float currentFillCache;
+
+    private string _strCachedResourceCost;
 
     private void OnValidate()
     {
@@ -295,8 +298,9 @@ public abstract class SuperClass : MonoBehaviour
             _lastFillAmount = GetCurrentFill();
         }
     }
-    protected void ShowResourceCostTime(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
+    protected void CalculateResourceCosts(TMP_Text txt, float current, float cost, float amountPerSecond, float storageAmount)
     {
+        string strResourceCost;
         if (amountPerSecond > 0 && cost > current)
         {
             float secondsLeft = (cost - current) / (amountPerSecond);
@@ -304,36 +308,47 @@ public abstract class SuperClass : MonoBehaviour
 
             if (storageAmount < cost)
             {
-                txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+                strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#D71C2A>Never</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
             }
             else
             {
                 if (current >= cost)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
                 }
                 else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0 && timeSpan.Seconds < 1)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>0.{2:%f}ms</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
                 else if (timeSpan.Days == 0 && timeSpan.Hours == 0 && timeSpan.Minutes == 0)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
                 else if (timeSpan.Days == 0 && timeSpan.Hours == 0)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%m}m{2:%s}s</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
                 else if (timeSpan.Days == 0)
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%h}h{2:%m}m</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
                 else
                 {
-                    txt.text = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
+                    strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
             }
+            
         }
+        else
+        {
+            strResourceCost = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost));
+        }
+
+        if (strResourceCost != _strCachedResourceCost)
+        {
+            txt.text = strResourceCost;
+        }
+        _strCachedResourceCost = strResourceCost;
     }
     protected float GetCurrentFill()
     {
@@ -659,7 +674,7 @@ public abstract class SuperClass : MonoBehaviour
             }
         }
     }
-    protected void UpdateResourceCosts()
+    protected void UpdateResourceCostTexts()
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
@@ -667,30 +682,15 @@ public abstract class SuperClass : MonoBehaviour
 
             if (!_objBtnExpand.activeSelf && isUnlocked)
             {
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(resourceCost[i].currentAmount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
                 resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
-                ShowResourceCostTime(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
+                CalculateResourceCosts(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
             }
         }
 
-        //if (GetCurrentFill() >= 0.01f && GetCurrentFill() <= 1)
-        //{
-        //    Debug.Log("This happened");
-        //    _imgProgressCircle.fillAmount = GetCurrentFill();
-        //}
-
-        //if (GetCurrentFill() != currentFillCache)
-        //{
-        //    _imgProgressCircle.fillAmount = GetCurrentFill();
-        //}
-        // This seems to be working very well, keeping the previous ones here incase something goes wrong.
         if (GetCurrentFill() != currentFillCache && isUnlocked)
         {
             _imgProgressCircle.fillAmount = GetCurrentFill();
         }
         currentFillCache = GetCurrentFill();
-
-
-        //CheckIfUnlocked();
     }
 }
