@@ -42,8 +42,6 @@ public class Craftable : SuperClass
     [System.NonSerialized] public bool isCrafted;
 
     private string _isCraftedString, _isUnlockedString;
-    private GameObject _objCheckmark;
-    private Transform _tformObjCheckmark;
 
     // Reset variables
 
@@ -52,11 +50,13 @@ public class Craftable : SuperClass
     public float prestigeCostSubtraction, prestigeAllCostSubtraction;
 
     private string _strPermCostSubtraction, _strPermAllCostSubtraction, _strPrestigeCostSubtraction, _strPrestigeAllCostSubtraction;
+    private GameObject _objCrafted;
+    private Transform _tformObjCrafted;
 
     public void ResetCraftable()
     {
         isUnlocked = false;
-        _objCheckmark.SetActive(false);
+        _objCrafted.SetActive(false);
         //objMainPanel.SetActive(false);
         canvas.enabled = false;
         graphicRaycaster.enabled = false;
@@ -115,7 +115,7 @@ public class Craftable : SuperClass
 
         if (isCrafted)
         {
-            _objCheckmark.SetActive(true);
+            _objCrafted.SetActive(true);
             _btnMain.interactable = false;
             _objProgressCircle.SetActive(false);
             _objBackground.SetActive(false);
@@ -157,7 +157,7 @@ public class Craftable : SuperClass
     }
     protected void Crafted()
     {
-        _objCheckmark.SetActive(true);
+        _objCrafted.SetActive(true);
         _btnMain.interactable = false;
         _objProgressCircle.SetActive(false);
         _objBackground.SetActive(false);
@@ -234,9 +234,9 @@ public class Craftable : SuperClass
 
         _btnMain.onClick.AddListener(OnCraft);
 
-        _tformObjCheckmark = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Checkmark");
-        _objCheckmark = _tformObjCheckmark.gameObject;
-        _objCheckmark.SetActive(false);
+        _tformObjCrafted = transform.Find("Panel_Main/Header_Panel/Image_Crafted");
+        _objCrafted = _tformObjCrafted.gameObject;
+        _objCrafted.SetActive(false);
     }
     protected void SetDescriptionText(string description)
     {

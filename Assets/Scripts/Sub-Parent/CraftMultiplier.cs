@@ -11,6 +11,8 @@ public struct BuildingMultiplierIncreasing
 public class CraftMultiplier : Craftable
 {
     public BuildingMultiplierIncreasing buildingMultiplierIncreasing;
+    private float newCostAmount;
+
     protected override void OnCraft()
     {
         bool canPurchase = true;
@@ -34,5 +36,19 @@ public class CraftMultiplier : Craftable
             Crafted();
             Building.Buildings[buildingMultiplierIncreasing.buildingType].MultiplyMultiplier(buildingMultiplierIncreasing.multiplier);                      
         }
+    }
+    protected void InitializeCostAmount()
+    {
+        foreach (var resourceCost in Building.Buildings[buildingMultiplierIncreasing.buildingType].resourceCost)
+        {
+            newCostAmount = resourceCost.baseCostAmount * Mathf.Pow(Building.Buildings[buildingMultiplierIncreasing.buildingType].costMultiplier, 25);
+        }
+
+        for (int i = 0; i < resourceCost.Length; i++)
+        {
+            resourceCost[i].costAmount = newCostAmount;
+        }
+
+        SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[buildingMultiplierIncreasing.buildingType].actualName, buildingMultiplierIncreasing.multiplier));
     }
 }

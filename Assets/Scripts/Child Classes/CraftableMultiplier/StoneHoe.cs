@@ -15,6 +15,7 @@ public class StoneHoe : CraftMultiplier
 
     void Start()
     {
-        SetDescriptionText("Multiplies Potato Field'ss production by " + buildingMultiplierIncreasing.multiplier);
+        InitializeCostAmount();
+        SetDescriptionText("Multiplies Potato Field's production by " + buildingMultiplierIncreasing.multiplier);
     }
 }

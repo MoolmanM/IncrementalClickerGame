@@ -417,8 +417,6 @@ public abstract class Building : SuperClass
 
         SavePrestigeValues();
     }
-
-    [Button]
     public void MultiplyMultiplier(float mulitplierAmount)
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)

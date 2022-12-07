@@ -330,8 +330,6 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 }
 
                 GetCurrentFill();
-
-                //cachedAmount = amount;
             }
             cachedAmount = amount;
         }

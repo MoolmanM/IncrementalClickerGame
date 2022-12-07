@@ -159,7 +159,6 @@ public abstract class SuperClass : MonoBehaviour
         _objBtnExpand = _tformBtnExpand.gameObject;
         _objBtnCollapse = _tformBtnCollapse.gameObject;
         _objBody = _tformBody.gameObject;
-
         _txtHeader = _objTxtHeader.GetComponent<TMP_Text>();
         _btnMain = _objBtnMain.GetComponent<Button>();
         _colTxtHeader = _objTxtHeader.GetComponent<TMP_Text>().color;
@@ -184,6 +183,7 @@ public abstract class SuperClass : MonoBehaviour
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
             _objBtnCollapse.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_objBody.GetComponent<RectTransform>());
         }
 
         if (UIManager.isBuildingVisible)
@@ -200,6 +200,7 @@ public abstract class SuperClass : MonoBehaviour
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
             _objBtnCollapse.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_objBody.GetComponent<RectTransform>());
         }
 
         if (UIManager.isResearchVisible)
@@ -216,6 +217,7 @@ public abstract class SuperClass : MonoBehaviour
             _objBtnExpand.SetActive(false);
             _objBody.SetActive(true);
             _objBtnCollapse.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_objBody.GetComponent<RectTransform>());
         }
     }
     protected void OnCollapse()

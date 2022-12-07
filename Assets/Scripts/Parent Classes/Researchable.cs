@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ResearchType
 {
@@ -22,7 +23,7 @@ public enum ResearchType
     Weapons,
     StoneEquipment,
     Fire,
-    FireHardenedWeapons,
+    BronzeEquipment,
     Smelting,
     //CopperMining,
     //TinMining,
@@ -35,7 +36,10 @@ public enum ResearchType
     //IronAlloys,
     MinorStorage,
     PowerGeneration,
+    Mining,
     None
+    // Books
+    // Library
 }
 
 public abstract class Researchable : SuperClass
@@ -66,6 +70,11 @@ public abstract class Researchable : SuperClass
     public float prestigeTimeSubtraction, prestigeAllCostSubtraction, prestigeCostSubtraction;
 
     private string _strPermTimeSubtraction, _strPermAllCostSubtraction, _strPermCostSubtraction, _strPrestigeTimeSubtraction, _strPrestigeAllCostSubtraction, _strPrestigeCostSubtraction;
+
+    [SerializeField] private Sprite _pressedSprite;
+
+    private Image imgResearchFill;
+    private Transform tformResearchFill;
 
     public void ResetResearchable()
     {
@@ -109,15 +118,12 @@ public abstract class Researchable : SuperClass
     {
         InitializeObjects();
 
-        if (TimeManager.hasPlayedBefore)
-        {
-            _isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
-            isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
-            _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
-            isUnlocked = PlayerPrefs.GetInt(_stringIsUnlocked) == 1 ? true : false;
+        _isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
+        isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
+        _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
+        isUnlocked = PlayerPrefs.GetInt(_stringIsUnlocked) == 1 ? true : false;
 
-            FetchPrestigeValues();
-        }
+        FetchPrestigeValues();
 
         if (!isResearched && _isResearchStarted)
         {
@@ -138,7 +144,21 @@ public abstract class Researchable : SuperClass
 
         else if (isResearched && !_isResearchStarted)
         {
-            Researched();
+            _objProgressCircle.SetActive(false);
+            _objBackground.SetActive(false);
+            _txtHeader.text = string.Format("{0}", actualName);
+            _btnMain.interactable = false;
+            imgResearchFill.fillAmount = 1;
+
+            if (Menu.isResearchHidden)
+            {
+                if (objMainPanel.activeSelf)
+                {
+                    objMainPanel.SetActive(false);
+                    canvas.enabled = false;
+                    graphicRaycaster.enabled = false;
+                }
+            }
         }
 
     }
@@ -152,26 +172,29 @@ public abstract class Researchable : SuperClass
 
                 _currentTimer += 0.1f;
 
-                //_imgResearchBar.fillAmount = _currentTimer / secondsToCompleteResearch;
                 _researchTimeRemaining = secondsToCompleteResearch - _currentTimer;
                 TimeSpan span = TimeSpan.FromSeconds((double)(new decimal(_researchTimeRemaining)));
+                float percentage = (_currentTimer / secondsToCompleteResearch);
+
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
                 {
-                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%s}s</b>)", actualName, span.Duration());
+                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{2:%s}s</b>)", actualName, percentage * 100, span.Duration());
                 }
                 else if (span.Days == 0 && span.Hours == 0)
                 {
-                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%m}m {1:%s}s</b>)", actualName, span.Duration());
+                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
                 }
                 else if (span.Days == 0)
                 {
-                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%h}h {1:%m}m {1:%s}s</b>)", actualName, span.Duration());
+                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%h}h {1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
                 }
                 else
                 {
-                    _txtHeader.text = string.Format("{0}\nResearching... (<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", actualName, span.Duration());
+                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
                 }
+
+                imgResearchFill.fillAmount = percentage;
                 CheckIfResearchIsComplete();
             }
         }
@@ -230,21 +253,12 @@ public abstract class Researchable : SuperClass
         UnlockResearchable();
         UnlockWorkerJob();
         UnlockResource();
-        //_objProgressCirclePanel.SetActive(false);
-        //_txtHeader.text = string.Format("{0} (Researched)", actualName);
-        _btnMain.interactable = false;
+
         _objProgressCircle.SetActive(false);
         _objBackground.SetActive(false);
-        _objCheckmark.SetActive(true);
         _txtHeader.text = string.Format("{0}", actualName);
-        //string htmlValue = "#D4D4D4";
-
-        //if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
-        //{
-        //    _imgExpand.color = greyColor;
-        //    _imgCollapse.color = greyColor;
-        //}
-
+        _btnMain.interactable = false;
+        imgResearchFill.fillAmount = 1;
 
         if (Menu.isResearchHidden)
         {
@@ -294,9 +308,11 @@ public abstract class Researchable : SuperClass
 
         _btnMain.onClick.AddListener(OnResearch);
 
-        _tformObjCheckmark = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Checkmark");
-        _objCheckmark = _tformObjCheckmark.gameObject;
-        _objCheckmark.SetActive(false);
+        tformResearchFill = transform.Find("Panel_Main/Header_Panel/Image_Research_Fill");
+        imgResearchFill = tformResearchFill.GetComponent<Image>();
+        //_tformObjCheckmark = transform.Find("Panel_Main/Header_Panel/Progress_Circle_Panel/Checkmark");
+        //_objCheckmark = _tformObjCheckmark.gameObject;
+        //_objCheckmark.SetActive(false);
 
         if (isUnlocked)
         {
