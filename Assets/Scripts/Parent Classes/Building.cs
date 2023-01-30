@@ -19,6 +19,7 @@ public enum BuildingType
     //Transformer maybe transformer should be something that you craft or research, for a once of boost to energy
     MineShaft,
     WoodGenerator,
+    Library,
     None
 
 
@@ -417,7 +418,7 @@ public abstract class Building : SuperClass
 
         SavePrestigeValues();
     }
-    public void MultiplyMultiplier(float mulitplierAmount)
+    public void MultiplyIncrementAmount(float mulitplierAmount)
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {

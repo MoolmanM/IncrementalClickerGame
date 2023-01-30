@@ -37,6 +37,10 @@ public enum ResearchType
     MinorStorage,
     PowerGeneration,
     Mining,
+    Housing,
+    CopperEquipment,
+    TinEquipment,
+    Books,
     None
     // Books
     // Library
@@ -53,7 +57,7 @@ public abstract class Researchable : SuperClass
     public float secondsToCompleteResearch, baseSecondsToCompleteResearch;
     [NonSerialized] public bool isResearched;
 
-    private bool _isResearchStarted;
+    public bool _isResearchStarted;
     private string _stringIsResearched, _stringResearchTimeRemaining, _stringIsResearchStarted, _stringIsUnlocked;
     private float _currentTimer, _researchTimeRemaining;
     private float timer = 0.1f;
@@ -61,7 +65,6 @@ public abstract class Researchable : SuperClass
 
     protected WorkerType[] _workerTypesToModify;
     protected Transform _tformImgProgressCircle, _tformObjCheckmark;
-    protected GameObject _objCheckmark;
 
     // Reset Variables
 
@@ -80,7 +83,6 @@ public abstract class Researchable : SuperClass
     {
         isUnlocked = false;
         canvas.enabled = false;
-        //objMainPanel.SetActive(false);
         graphicRaycaster.enabled = false;
         unlockAmount = 0;
         isUnlockedByResource = false;
@@ -228,6 +230,8 @@ public abstract class Researchable : SuperClass
                     {
                         Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                     }
+                    _objProgressCircle.SetActive(false);
+                    _objBackground.SetActive(false);
                     StartResearching();
                 }
             }

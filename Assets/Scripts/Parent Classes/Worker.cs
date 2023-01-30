@@ -68,7 +68,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         Debug.Log(string.Format("Changed total workers from {0} to {1}", "Hopefully 0", TotalWorkerCount));
     }
-    public void ModifyMultiplier()
+    public void ModifyMultiplierForPrestige()
     {
         for (int i = 0; i < _resourcesToIncrement.Length; i++)
         {
@@ -78,6 +78,22 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             prestigeMultiplierAddition = 0;
             _resourcesToIncrement[i].currentResourceMultiplier += additionAmount;
             Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", actualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
+        }
+    }
+    public void MultiplyIncrementAmount(float multiplierAmount, WorkerType workerType)
+    {
+        for (int i = 0; i < _resourcesToIncrement.Length; i++)
+        {
+            //_resourcesToIncrement[i].currentResourceMultiplier = _resourcesToIncrement[i].baseResourceMultiplier;
+            //float additionAmount = _resourcesToIncrement[i].baseResourceMultiplier * ((prestigeAllMultiplierAddition + permAllMultiplierAddition) + (prestigeMultiplierAddition + permMultiplierAddition)); ;
+            //prestigeAllMultiplierAddition = 0;
+            //restigeMultiplierAddition = 0;
+            float newAmount = _resourcesToIncrement[i].currentResourceMultiplier * multiplierAmount;
+            float diffAmount = newAmount - _resourcesToIncrement[i].currentResourceMultiplier;
+            _resourcesToIncrement[i].currentResourceMultiplier = newAmount;
+            SetDescriptionText();
+            Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += diffAmount * Workers[workerType].workerCount;
+            //Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", actualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
         }
     }
     public void ModifyDescriptionText()
@@ -119,7 +135,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         hasSeen = true;
         TotalWorkerCount = 0;
         UnassignedWorkerCount = 0;
-        ModifyMultiplier();
+        ModifyMultiplierForPrestige();
         //ModifyWorkerCount();
         SetDescriptionText();
         txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName.ToString(), workerCount);

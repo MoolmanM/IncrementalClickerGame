@@ -5,7 +5,6 @@ using UnityEngine;
 public class StonePickaxe : CraftMultiplier
 {
     private Craftable _craftable;
-    private float newAmount;
 
     void Awake()
     {
@@ -16,6 +15,6 @@ public class StonePickaxe : CraftMultiplier
     void Start()
     {
         InitializeCostAmount();
-        SetDescriptionText("Multiplies Dig Site's production by " + buildingMultiplierIncreasing.multiplier);
+        InitializeDescriptionText();
     }
 }

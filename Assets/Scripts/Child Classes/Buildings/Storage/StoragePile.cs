@@ -16,7 +16,7 @@ public class StoragePile : Building
     }
     void Start()
     {
-        storageAmountMultiplier = 0.1f;
+        storageAmountMultiplier = 0.05f;
 
         ModifyDescriptionText();
 
@@ -78,7 +78,6 @@ public class StoragePile : Building
     {
         for (int i = 0; i < resourcesToIncrement.Count; i++)
         {
-            // default Multiplier will be 20%.
             Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].storageAmount += Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].storageAmount * storageAmountMultiplier;
         }
     }

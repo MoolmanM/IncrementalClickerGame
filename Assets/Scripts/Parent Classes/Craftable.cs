@@ -13,7 +13,6 @@ public enum CraftingType
     StoneAxe,
     StonePickaxe,
     StoneSpear,
-    FireHardenedSpear,
     TinHoe,
     TinAxe,
     TinPickaxe,
@@ -52,6 +51,8 @@ public class Craftable : SuperClass
     private string _strPermCostSubtraction, _strPermAllCostSubtraction, _strPrestigeCostSubtraction, _strPrestigeAllCostSubtraction;
     private GameObject _objCrafted;
     private Transform _tformObjCrafted;
+
+    //public static int craftUnlockedAmount;
 
     public void ResetCraftable()
     {
@@ -131,7 +132,7 @@ public class Craftable : SuperClass
         //    MakeCraftableAgain();
         //}
     }
-    protected virtual void OnCraft()
+    public virtual void OnCraft()
     {
         bool canPurchase = true;
 
@@ -149,6 +150,7 @@ public class Craftable : SuperClass
             for (int i = 0; i < resourceCost.Length; i++)
             {
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[resourceCost[i].associatedType].uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount));
             }
 
             isCrafted = true;
@@ -286,7 +288,8 @@ public class Craftable : SuperClass
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
-
+                    //craftUnlockedAmount += 1;
+                    //Debug.Log(craftUnlockedAmount);
                     UnlockedViaResource();
 
                     PointerNotification.HandleRightAnim();

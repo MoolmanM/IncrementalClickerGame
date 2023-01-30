@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoneSpear : Craftable
+public class StoneSpear : CraftMultiplier
 {
     private Craftable _craftable;
 
@@ -15,6 +15,7 @@ public class StoneSpear : Craftable
 
     void Start()
     {
-        SetDescriptionText("Increases your hunting efficiency.");
+        InitializeCostAmount();
+        InitializeDescriptionText();
     }
 }

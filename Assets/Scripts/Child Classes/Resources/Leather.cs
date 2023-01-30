@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pelts : Resource
+public class Leather : Resource
 {
     private Resource _resource;
 

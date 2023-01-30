@@ -5,7 +5,7 @@ using UnityEngine;
 public class StoneAxe : CraftMultiplier
 {
     private Craftable _craftable;
-    private float newAmount;
+
     void Awake()
     {
         _craftable = GetComponent<Craftable>();
@@ -16,6 +16,6 @@ public class StoneAxe : CraftMultiplier
     void Start()
     {
         InitializeCostAmount();
-        SetDescriptionText("Multiplies Lumber Mill's production by " + buildingMultiplierIncreasing.multiplier);
+        InitializeDescriptionText();
     }
 }

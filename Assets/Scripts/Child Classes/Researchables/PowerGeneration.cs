@@ -25,31 +25,9 @@ public class PowerGeneration : Researchable
     }
     protected override void Researched()
     {
-        isResearched = true;
+        base.Researched();
 
-        researchSimulActive--;
-        UnlockCrafting();
-        UnlockBuilding();
-        UnlockResearchable();
-        UnlockWorkerJob();
-        UnlockResource();
         energy.objIconPanel.SetActive(true);
-
-        _btnMain.interactable = false;
-        _objProgressCircle.SetActive(false);
-        _objBackground.SetActive(false);
-        _objCheckmark.SetActive(true);
-        _txtHeader.text = string.Format("{0}", actualName);
-
-        if (Menu.isResearchHidden)
-        {
-            if (objMainPanel.activeSelf)
-            {
-                objMainPanel.SetActive(false);
-                canvas.enabled = false;
-                graphicRaycaster.enabled = false;
-            }
-        }
     }
     void Start()
     {

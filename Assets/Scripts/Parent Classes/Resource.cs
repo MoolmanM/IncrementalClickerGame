@@ -26,7 +26,7 @@ public enum ResourceType
     Lumber,
     Stone,
     Knowledge,
-    Pelts,
+    Leather,
     Copper,
     Tin,
     Bronze,
@@ -84,6 +84,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     // Testing seems to be working perfectly so far.
     protected float cachedAmount;
+    public float trackedAmount;
 
     // New testing
     public float initialAmount;
@@ -322,6 +323,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 else
                 {
                     amount += (amountPerSecond / 10);
+                    trackedAmount += (amountPerSecond / 10);
                 }
 
                 if (amount != cachedAmount)
@@ -330,8 +332,12 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 }
 
                 GetCurrentFill();
+
+                cachedAmount = amount;
+
+                
             }
-            cachedAmount = amount;
+            
         }
     }
     protected virtual void Update()
