@@ -58,3 +58,8 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Ignore Unity layout configurations
+UserSettings/Layouts/
+
+# Ignore Plastic SCM metadata folder
+/.plastic/
