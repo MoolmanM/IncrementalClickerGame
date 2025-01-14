@@ -135,7 +135,6 @@ public class Achievement : MonoBehaviour
                     }
                     achievementTier[2].isAchieveable = true;
                     achievementTier[2].btnAchieve.interactable = true;
-                    Debug.Log("Achievement Tier 2 Achieveable");
                 }
                 else if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded + achievementTier[1].amountNeeded) && !achievementTier[1].isAchieved && !achievementTier[1].isAchieveable)
                 {
@@ -146,7 +145,6 @@ public class Achievement : MonoBehaviour
                     }
                     achievementTier[1].isAchieveable = true;
                     achievementTier[1].btnAchieve.interactable = true;
-                    Debug.Log("Achievement Tier 1 Achieveable");
                 }
                 else if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded) && !achievementTier[0].isAchieved && !achievementTier[0].isAchieveable)
                 {
@@ -157,7 +155,6 @@ public class Achievement : MonoBehaviour
                     }
                     achievementTier[0].isAchieveable = true;
                     achievementTier[0].btnAchieve.interactable = true;
-                    Debug.Log("Achievement Tier 0 Achieveable");
                 }
                 else
                 {
@@ -277,7 +274,6 @@ public class Achievement : MonoBehaviour
             {
                 if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded + achievementTier[1].amountNeeded + achievementTier[2].amountNeeded))
                 {
-                    // Send notification
                     achievementTier[2].isAchieveable = true;
                 }
                 else if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded + achievementTier[1].amountNeeded))
@@ -290,44 +286,11 @@ public class Achievement : MonoBehaviour
                 }
                 else
                 {
-
                     //GetCurrentFill(Resource.Resources[typeNeeded].trackedAmount, achievementTier[0].amountNeeded);
                     //strAmountNeeded = string.Format("{0:0.00}/{1} - {2}", NumberToLetter.FormatNumber(Resource.Resources[typeNeeded].trackedAmount), NumberToLetter.FormatNumber(achievementTier[0].amountNeeded), typeNeeded);
                 }
             }
             txtAmountNeeded.text = strAmountNeeded;
         }
-
-        //for (int i = 0; i < achievementTier.Length; i++)
-        //{
-        //    if (Resource.Resources[typeNeeded].amountPerSecond != 0 || Resource.Resources[typeNeeded].amount != 0)
-        //    {
-        //        if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded + achievementTier[1].amountNeeded + achievementTier[2].amountNeeded))
-        //        {
-        //            achievementTier[2].objAssociatedTrophy.SetActive(true);
-        //            strAmountNeeded = "Completed";
-        //        }
-        //        else if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded + achievementTier[1].amountNeeded))
-        //        {
-        //            achievementTier[1].objAssociatedTrophy.SetActive(true);
-        //            GetCurrentFill(Resource.Resources[typeNeeded].trackedAmount - achievementTier[1].amountNeeded, achievementTier[2].amountNeeded);
-        //            strAmountNeeded = string.Format("{0:0.00}/{1} - {2}", NumberToLetter.FormatNumber(Resource.Resources[typeNeeded].trackedAmount - achievementTier[1].amountNeeded), NumberToLetter.FormatNumber(achievementTier[2].amountNeeded), typeNeeded);
-        //        }
-        //        else if (Resource.Resources[typeNeeded].trackedAmount >= (achievementTier[0].amountNeeded))
-        //        {
-        //            achievementTier[0].objAssociatedTrophy.SetActive(true);
-        //            GetCurrentFill(Resource.Resources[typeNeeded].trackedAmount - achievementTier[0].amountNeeded, achievementTier[1].amountNeeded);
-        //            strAmountNeeded = string.Format("{0:0.00}/{1} - {2}", NumberToLetter.FormatNumber(Resource.Resources[typeNeeded].trackedAmount - achievementTier[0].amountNeeded), NumberToLetter.FormatNumber(achievementTier[1].amountNeeded), typeNeeded);
-        //        }
-        //        else
-        //        {
-        //            GetCurrentFill(Resource.Resources[typeNeeded].trackedAmount, achievementTier[0].amountNeeded);
-        //            strAmountNeeded = string.Format("{0:0.00}/{1} - {2}", NumberToLetter.FormatNumber(Resource.Resources[typeNeeded].trackedAmount), NumberToLetter.FormatNumber(achievementTier[0].amountNeeded), typeNeeded);
-        //        }
-        //    }
-        //    txtAmountNeeded.text = strAmountNeeded;
-        //}
-
-
     }
 }
