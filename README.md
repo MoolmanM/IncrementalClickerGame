@@ -1,5 +1,9 @@
-
 # Incremental Clicker Game
+
+![License](https://img.shields.io/badge/license-MIT-green)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
+## Introduction
 
 Welcome to my incremental clicker game! This project is a mobile-friendly idle clicker game where players can progress through resource gathering, upgrades, and automation.
 
