@@ -42,6 +42,10 @@ public abstract class GameEntity : MonoBehaviour
     [NonSerialized] public Canvas canvas;
     [NonSerialized] public GraphicRaycaster graphicRaycaster;
 
+    // Implemnt method to consolidate UnlockResource, UnlockWorkerJob,
+    // UnlockCrafting, UnlockBuilding, and UnlockResearchable into a generic unlock handler
+    // based on the type of the entity
+
     protected float _timer = 0.1f, _lastFillAmount;
     protected readonly float _maxValue = 0.1f;
     protected GameObject _prefabResourceCost, _prefabBodySpacer, _objBackground, _objProgressCircle, _objProgressCirclePanel, _objBtnMain, _objTxtHeader, _objBtnExpand, _objBtnCollapse, _objBody;
