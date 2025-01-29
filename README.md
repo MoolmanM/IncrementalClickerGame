@@ -1,6 +1,6 @@
 # Incremental Clicker Game
 
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-No%20License-lightgrey)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
 
 ## Introduction
