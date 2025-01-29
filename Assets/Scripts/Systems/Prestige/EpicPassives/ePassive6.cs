@@ -19,7 +19,7 @@ public class ePassive6 : EpicPassive
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked)
+            if (building.Value.IsUnlocked)
             {
                 buildingTypesInCurrentRun.Add(building.Key);
             }

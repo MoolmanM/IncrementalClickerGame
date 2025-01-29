@@ -57,7 +57,7 @@ public class Prestige : MonoBehaviour
     private GameObject objBtnClickAnywhere;
     private float timeToWait;
     //private GameObject objBtnReset, objBtnAdditionalBox;
-    public Transform canvasMain;
+    public Transform CanvasMain;
     public GameObject objPrefabBoxOpening;
     private Transform content;
 
@@ -516,7 +516,7 @@ public class Prestige : MonoBehaviour
     }
     private void InstantiateBoxOpening()
     {
-        GameObject prefabObj = Instantiate(objPrefabBoxOpening, canvasMain);
+        GameObject prefabObj = Instantiate(objPrefabBoxOpening, CanvasMain);
         Transform tformPrefabObj = prefabObj.GetComponent<Transform>();
 
         Button btnDone = tformPrefabObj.Find("Button_Done").GetComponent<Button>();

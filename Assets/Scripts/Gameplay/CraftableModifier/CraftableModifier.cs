@@ -38,9 +38,9 @@ public class CraftableModifier : Craftable
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -49,9 +49,9 @@ public class CraftableModifier : Craftable
 
         if (canPurchase)
         {
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+                Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
             }
             isCrafted = true;
             Crafted();
@@ -75,14 +75,14 @@ public class CraftableModifier : Craftable
     }
     protected void InitializeCostAmount()
     {
-        foreach (var resourceCost in Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].resourceCost)
+        foreach (var ResourceCost in Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].ResourceCost)
         {
-            newCostAmount += resourceCost.BaseCostAmount * Mathf.Pow(Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].costMultiplier, buildingToDeriveCostAmountFrom.selfCountAmount);
+            newCostAmount += ResourceCost.BaseCostAmount * Mathf.Pow(Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].costMultiplier, buildingToDeriveCostAmountFrom.selfCountAmount);
         }
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            resourceCost[i].CostAmount = newCostAmount;
+            ResourceCost[i].CostAmount = newCostAmount;
         }
     }
     protected void InitializeDescriptionText()
@@ -91,13 +91,13 @@ public class CraftableModifier : Craftable
         {
             foreach (var worker in workerToMultiply)
             {
-                description += string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier);
-                //SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier));
+                description += string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier);
+                //SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier));
             }
             foreach (var building in buildingToMultiply)
             {
-                description += string.Format("\nMultiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier);
-                //SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier));
+                description += string.Format("\nMultiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier);
+                //SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier));
             }
             SetDescriptionText(description);
         }
@@ -105,14 +105,14 @@ public class CraftableModifier : Craftable
         {
             foreach (var worker in workerToMultiply)
             {
-                SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier));
+                SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier));
             }
         }
         else if (buildingToMultiply.Count != 0)
         {
             foreach (var building in buildingToMultiply)
             {
-                SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier));
+                SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier));
             }
         }
 
@@ -120,14 +120,14 @@ public class CraftableModifier : Craftable
         //{
         //    foreach (var worker in workerToMultiply)
         //    {
-        //        SetDescriptionText(string.Format("Multiplies {0}'s effiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier));
+        //        SetDescriptionText(string.Format("Multiplies {0}'s effiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier));
         //    }
         //}
         //else if (buildingToMultiply.Count != 0)
         //{
         //    foreach (var building in buildingToMultiply)
         //    {
-        //        SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier));
+        //        SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier));
         //    }
         //}
     }

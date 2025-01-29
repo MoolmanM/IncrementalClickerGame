@@ -71,9 +71,9 @@ public class Menu : MonoBehaviour
 
         foreach (var research in Researchable.Researchables)
         {
-            if (research.Value.isUnlocked)
+            if (research.Value.IsUnlocked)
             {
-                research.Value.objMainPanel.SetActive(true);
+                research.Value.ObjMainPanel.SetActive(true);
             }
         }
     }
@@ -86,9 +86,9 @@ public class Menu : MonoBehaviour
 
         foreach (var research in Researchable.Researchables)
         {
-            if (research.Value.isUnlocked && research.Value.isResearched)
+            if (research.Value.IsUnlocked && research.Value.isResearched)
             {
-                research.Value.objMainPanel.SetActive(false);
+                research.Value.ObjMainPanel.SetActive(false);
             }
         }
     }
@@ -101,9 +101,9 @@ public class Menu : MonoBehaviour
 
         foreach (var craft in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked)
+            if (craft.Value.IsUnlocked)
             {
-                craft.Value.objMainPanel.SetActive(true);
+                craft.Value.ObjMainPanel.SetActive(true);
             }
         }
 
@@ -117,9 +117,9 @@ public class Menu : MonoBehaviour
 
         foreach (var craft in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked && craft.Value.isCrafted)
+            if (craft.Value.IsUnlocked && craft.Value.isCrafted)
             {
-                craft.Value.objMainPanel.SetActive(false);
+                craft.Value.ObjMainPanel.SetActive(false);
             }
         }
     }

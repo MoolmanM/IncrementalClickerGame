@@ -19,7 +19,7 @@ public class uPassive5 : UncommonPassive
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked && building.Value.resourcesToIncrement.Count > 0)
+            if (building.Value.IsUnlocked && building.Value.resourcesToIncrement.Count > 0)
             {
                 buildingTypesInCurrentRun.Add(building.Key);
             }
@@ -59,7 +59,7 @@ public class uPassive5 : UncommonPassive
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Increase production of building '{0}' by {1}%", Building.Buildings[buildingTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Increase production of building '{0}' by {1}%", Building.Buildings[buildingTypeChosen].ActualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {

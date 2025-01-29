@@ -68,10 +68,10 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Building.Buildings)
         {
-            if (kvp.Value.canvas.enabled)
+            if (kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = false;
-                kvp.Value.graphicRaycaster.enabled = false;
+                kvp.Value.Canvas.enabled = false;
+                kvp.Value.GraphicRaycaster.enabled = false;
             }
         }
     }
@@ -79,10 +79,10 @@ public class UIManager : MonoBehaviour
     {
         foreach (var kvp in Craftable.Craftables)
         {
-            if (kvp.Value.canvas.enabled)
+            if (kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = false;
-                kvp.Value.graphicRaycaster.enabled = false;
+                kvp.Value.Canvas.enabled = false;
+                kvp.Value.GraphicRaycaster.enabled = false;
             }
         }
     }
@@ -90,10 +90,10 @@ public class UIManager : MonoBehaviour
     {
         foreach (var kvp in Researchable.Researchables)
         {
-            if (kvp.Value.canvas.enabled)
+            if (kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = false;
-                kvp.Value.graphicRaycaster.enabled = false;
+                kvp.Value.Canvas.enabled = false;
+                kvp.Value.GraphicRaycaster.enabled = false;
             }
         }
     }
@@ -109,10 +109,10 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Worker.Workers)
         {
-            if (kvp.Value.canvas.enabled)
+            if (kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = false;
-                kvp.Value.graphicRaycaster.enabled = false;
+                kvp.Value.Canvas.enabled = false;
+                kvp.Value.GraphicRaycaster.enabled = false;
             }
         }
     }
@@ -148,24 +148,24 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Building.Buildings)
         {
-            kvp.Value.hasSeen = true;
-            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            kvp.Value.HasSeen = true;
+            if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled && !kvp.Value.IsFirstUnlocked)
             {
-                kvp.Value.objMainPanel.SetActive(true);
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.isFirstUnlocked = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.ObjMainPanel.SetActive(true);
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.IsFirstUnlocked = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
-            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            else if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
         }
 
         foreach (var kvp in Craftable.Craftables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Worker.Workers)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -181,7 +181,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Researchable.Researchables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -218,24 +218,24 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Craftable.Craftables)
         {
-            kvp.Value.hasSeen = true;
-            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            kvp.Value.HasSeen = true;
+            if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled && !kvp.Value.IsFirstUnlocked)
             {
-                kvp.Value.objMainPanel.SetActive(true);
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.isFirstUnlocked = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.ObjMainPanel.SetActive(true);
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.IsFirstUnlocked = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
-            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            else if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
         }
 
         foreach (var kvp in Building.Buildings)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }
@@ -243,7 +243,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Worker.Workers)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -251,7 +251,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Researchable.Researchables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -296,24 +296,24 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Worker.Workers)
         {
-            kvp.Value.hasSeen = true;
-            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            kvp.Value.HasSeen = true;
+            if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled && !kvp.Value.IsFirstUnlocked)
             {
-                kvp.Value.objMainPanel.SetActive(true);
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.isFirstUnlocked = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.ObjMainPanel.SetActive(true);
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.IsFirstUnlocked = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
-            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            else if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
         }
 
         foreach (var kvp in Building.Buildings)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }
@@ -321,7 +321,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Craftable.Craftables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }
@@ -329,7 +329,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Researchable.Researchables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.rightAmount++;
             }
@@ -366,24 +366,24 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Researchable.Researchables)
         {
-            kvp.Value.hasSeen = true;
-            if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled && !kvp.Value.isFirstUnlocked)
+            kvp.Value.HasSeen = true;
+            if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled && !kvp.Value.IsFirstUnlocked)
             {
-                kvp.Value.objMainPanel.SetActive(true);
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.isFirstUnlocked = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.ObjMainPanel.SetActive(true);
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.IsFirstUnlocked = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
-            else if (kvp.Value.isUnlocked && !kvp.Value.canvas.enabled)
+            else if (kvp.Value.IsUnlocked && !kvp.Value.Canvas.enabled)
             {
-                kvp.Value.canvas.enabled = true;
-                kvp.Value.graphicRaycaster.enabled = true;
+                kvp.Value.Canvas.enabled = true;
+                kvp.Value.GraphicRaycaster.enabled = true;
             }
         }
 
         foreach (var kvp in Building.Buildings)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }
@@ -391,7 +391,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Craftable.Craftables)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }
@@ -399,7 +399,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var kvp in Worker.Workers)
         {
-            if (!kvp.Value.hasSeen)
+            if (!kvp.Value.HasSeen)
             {
                 PointerNotification.leftAmount++;
             }

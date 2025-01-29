@@ -21,7 +21,7 @@ public class uPassive7 : UncommonPassive
 
         foreach (var researchable in Researchable.Researchables)
         {
-            if (researchable.Value.isUnlocked)
+            if (researchable.Value.IsUnlocked)
             {
                 researchTypesInCurrentRun.Add(researchable.Key);
             }
@@ -61,7 +61,7 @@ public class uPassive7 : UncommonPassive
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Decrease cost to research '{0}' by {1}%", Researchable.Researchables[researchTypeChosen].ActualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {

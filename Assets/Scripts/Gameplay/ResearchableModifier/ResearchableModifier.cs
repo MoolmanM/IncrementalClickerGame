@@ -35,13 +35,13 @@ public class ResearchableModifier : Researchable
         {
             foreach (var worker in workerToMultiply)
             {
-                description += string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier);
-                //SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier));
+                description += string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier);
+                //SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier));
             }
             foreach (var building in buildingToMultiply)
             {
-                description += string.Format("\nMultiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier);
-                //SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier));
+                description += string.Format("\nMultiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier);
+                //SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier));
             }
             SetDescriptionText(description);
         }
@@ -49,14 +49,14 @@ public class ResearchableModifier : Researchable
         {
             foreach (var worker in workerToMultiply)
             {
-                SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].actualName, worker.multiplier));
+                SetDescriptionText(string.Format("Multiplies {0}'s efficiency by {1}", Worker.Workers[worker.workerType].ActualName, worker.multiplier));
             }
         }
         else if (buildingToMultiply.Count != 0)
         {
             foreach (var building in buildingToMultiply)
             {
-                SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].actualName, building.multiplier));
+                SetDescriptionText(string.Format("Multiplies {0}'s production by {1}", Building.Buildings[building.buildingType].ActualName, building.multiplier));
             }
         }
     }

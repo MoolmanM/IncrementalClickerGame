@@ -19,7 +19,7 @@ public class lPassive6 : LegendaryPassive
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked)
+            if (building.Value.IsUnlocked)
             {
                 buildingTypesInCurrentRun.Add(building.Key);
             }

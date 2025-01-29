@@ -13,7 +13,7 @@ public class AutoWorker : MonoBehaviour
     {
         foreach (var actualWorker in Worker.Workers)
         {
-            if (actualWorker.Value.isUnlocked)
+            if (actualWorker.Value.IsUnlocked)
             {
                 AutoWorkerAmount = Worker.TotalWorkerCount / TotalWorkerJobs;
                 AutoRemainderAmount = Worker.TotalWorkerCount % TotalWorkerJobs;

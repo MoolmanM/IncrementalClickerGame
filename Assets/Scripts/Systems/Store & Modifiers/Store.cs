@@ -66,7 +66,7 @@ public class Store : MonoBehaviour
     public GameObject objPanelPacks;
 
     private GameObject objBtnClickAnywhere;
-    public Transform canvasMain;
+    public Transform CanvasMain;
     private float timeToWait;
 
     public GameObject objPrefabBoxOpening, objPrefabAreYouSure;
@@ -452,7 +452,7 @@ public class Store : MonoBehaviour
     {
         if (commonBoxCost < gemsAmount)
         {
-            GameObject prefabObj = Instantiate(objPrefabAreYouSure, canvasMain);
+            GameObject prefabObj = Instantiate(objPrefabAreYouSure, CanvasMain);
             Transform tformBtnYes = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_Yes");
             Transform tformBtnNo = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_No");
 
@@ -472,7 +472,7 @@ public class Store : MonoBehaviour
     {
         if (uncommonBoxCost < gemsAmount)
         {
-            GameObject prefabObj = Instantiate(objPrefabAreYouSure, canvasMain);
+            GameObject prefabObj = Instantiate(objPrefabAreYouSure, CanvasMain);
             Transform tformBtnYes = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_Yes");
             Transform tformBtnNo = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_No");
 
@@ -492,7 +492,7 @@ public class Store : MonoBehaviour
     {
         if (rareBoxCost < gemsAmount)
         {
-            GameObject prefabObj = Instantiate(objPrefabAreYouSure, canvasMain);
+            GameObject prefabObj = Instantiate(objPrefabAreYouSure, CanvasMain);
             Transform tformBtnYes = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_Yes");
             Transform tformBtnNo = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_No");
 
@@ -512,7 +512,7 @@ public class Store : MonoBehaviour
     {
         if (epicBoxCost < gemsAmount)
         {
-            GameObject prefabObj = Instantiate(objPrefabAreYouSure, canvasMain);
+            GameObject prefabObj = Instantiate(objPrefabAreYouSure, CanvasMain);
             Transform tformBtnYes = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_Yes");
             Transform tformBtnNo = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_No");
 
@@ -532,7 +532,7 @@ public class Store : MonoBehaviour
     {
         if (legendaryBoxCost < gemsAmount)
         {
-            GameObject prefabObj = Instantiate(objPrefabAreYouSure, canvasMain);
+            GameObject prefabObj = Instantiate(objPrefabAreYouSure, CanvasMain);
             Transform tformBtnYes = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_Yes");
             Transform tformBtnNo = prefabObj.GetComponent<Transform>().Find("Popup_AreYouSure/Popup/Button_No");
 
@@ -550,7 +550,7 @@ public class Store : MonoBehaviour
     }
     private void InstantiateBoxOpening()
     {
-        GameObject prefabObj = Instantiate(objPrefabBoxOpening, canvasMain);
+        GameObject prefabObj = Instantiate(objPrefabBoxOpening, CanvasMain);
         Transform tformPrefabObj = prefabObj.GetComponent<Transform>();
 
         Button btnDone = tformPrefabObj.Find("Button_Done").GetComponent<Button>();

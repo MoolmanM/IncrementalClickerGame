@@ -97,7 +97,7 @@ public class PointerNotification : MonoBehaviour
     {
         foreach (var item in Building.Buildings)
         {
-            if (!item.Value.hasSeen)
+            if (!item.Value.HasSeen)
             {
                 leftAmount--;
             }

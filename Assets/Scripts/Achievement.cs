@@ -27,7 +27,7 @@ public class Achievement : MonoBehaviour
 
     public AchievementType type;
     public AchievementTier[] achievementTier = new AchievementTier[3];
-    public string actualName;
+    public string ActualName;
     public string strAmountNeeded;
     public TMP_Text txtAmountNeeded;
     public ResourceType typeNeeded;

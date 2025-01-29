@@ -46,7 +46,7 @@ public abstract class Building : GameEntity
     public float costMultiplier;
 
     public uint _selfCount;
-    protected string _selfCountString, _isUnlockedString, _strInitialSelfCount;
+    protected string _selfCountString, _IsUnlockedString, _strInitialSelfCount;
     protected string[] _costString;
 
     public uint initialSelfCount;
@@ -76,15 +76,15 @@ public abstract class Building : GameEntity
         // I think at least, needs some more brainstorming.
         // Both needs to be saved on exit and assigned values on start. 
 
-        Debug.Log(string.Format("Changed building {0}'s self count from {1} to {2}", actualName, "Hopefully 0", _selfCount));
+        Debug.Log(string.Format("Changed building {0}'s self count from {1} to {2}", ActualName, "Hopefully 0", _selfCount));
     }
     public void InitialUnlock()
     {
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            //Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-            resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
-            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
+            //Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+            ResourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
+            ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[ResourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(ResourceCost[i].CostAmount));
         }
 
         for (int i = 0; i < resourcesToIncrement.Count; i++)
@@ -105,14 +105,14 @@ public abstract class Building : GameEntity
     }
     public void ModifyCost()
     {
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
-            float subtractionAmount = resourceCost[i].BaseCostAmount * (prestigeCostSubtraction + permCostSubtraction);
+            ResourceCost[i].CostAmount = ResourceCost[i].BaseCostAmount;
+            float subtractionAmount = ResourceCost[i].BaseCostAmount * (prestigeCostSubtraction + permCostSubtraction);
             prestigeCostSubtraction = 0;
-            resourceCost[i].CostAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
-            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].AssociatedType].amount, resourceCost[i].CostAmount);
+            ResourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", ActualName, ResourceCost[i].BaseCostAmount, ResourceCost[i].CostAmount));
+            ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[ResourceCost[i].AssociatedType].amount, ResourceCost[i].CostAmount);
         }
     }
     public void ModifyMultiplier()
@@ -125,7 +125,7 @@ public abstract class Building : GameEntity
             prestigeAllMultiplierAddition = 0;
             prestigeMultiplierAddition = 0;
             buildingResourcesToModify.currentResourceMultiplier += additionAmount;
-            Debug.Log(string.Format("Changed building {0}'s resource multi from {1} to {2}", actualName, buildingResourcesToModify.baseResourceMultiplier, buildingResourcesToModify.currentResourceMultiplier));
+            Debug.Log(string.Format("Changed building {0}'s resource multi from {1} to {2}", ActualName, buildingResourcesToModify.baseResourceMultiplier, buildingResourcesToModify.currentResourceMultiplier));
             resourcesToIncrement[i] = buildingResourcesToModify;
         }
         //ModifyDescriptionText();
@@ -151,18 +151,18 @@ public abstract class Building : GameEntity
             StaticMethods.ModifyAPSText(Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond, Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].uiForResource.txtAmountPerSecond);
         }
 
-        isUnlocked = false;
-        canvas.enabled = false;
-        objMainPanel.SetActive(false);
-        graphicRaycaster.enabled = false;
-        unlockAmount = 0;
+        IsUnlocked = false;
+        Canvas.enabled = false;
+        ObjMainPanel.SetActive(false);
+        GraphicRaycaster.enabled = false;
+        UnlockAmount = 0;
         _selfCount = 0;
-        hasSeen = true;
-        isUnlockedByResource = false;
+        HasSeen = true;
+        IsUnlockedByResource = false;
         ModifySelfCount();
         ModifyMultiplier();
         ModifyCost();
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
         ModifyDescriptionText();
     }
     public void SetInitialAmountPerSecond()
@@ -175,7 +175,7 @@ public abstract class Building : GameEntity
             Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += amountToIncreaseBy;
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
 
         // This seems to do everything that I want.
     }
@@ -199,38 +199,38 @@ public abstract class Building : GameEntity
 
         FetchPrestigeValues();
 
-        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+        IsUnlocked = PlayerPrefs.GetInt(_IsUnlockedString) == 1 ? true : false;
         _selfCount = (uint)PlayerPrefs.GetInt(_selfCountString, (int)_selfCount);
         initialSelfCount = (uint)PlayerPrefs.GetInt(_strInitialSelfCount, (int)initialSelfCount);
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            resourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
+            ResourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
         }
 
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            objMainPanel.SetActive(true);
-            canvas.enabled = true;
-            graphicRaycaster.enabled = true;
+            ObjMainPanel.SetActive(true);
+            Canvas.enabled = true;
+            GraphicRaycaster.enabled = true;
         }
 
         else
         {
-            objMainPanel.SetActive(false);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(false);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
     }
     public virtual void OnBuild()
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -241,12 +241,12 @@ public abstract class Building : GameEntity
         {
             _selfCount++;
             trackedBuiltAmount++;
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-                //resourceCost[i].BaseCostAmount = 0;
-                resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
+                Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+                //ResourceCost[i].BaseCostAmount = 0;
+                ResourceCost[i].CostAmount = ResourceCost[i].BaseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
+                ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[ResourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(ResourceCost[i].CostAmount));
             }
             ModifyAmountPerSecond();
 
@@ -254,7 +254,7 @@ public abstract class Building : GameEntity
             //UpdateResourceInfo();
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
     }
     protected virtual void ModifyDescriptionText()
     {
@@ -280,7 +280,7 @@ public abstract class Building : GameEntity
             }
         }
 
-        _txtDescription.text = strDescription;
+        TxtDescription.text = strDescription;
     }
     protected virtual void ModifyAmountPerSecond()
     {
@@ -303,19 +303,19 @@ public abstract class Building : GameEntity
     {
         base.InitializeObjects();
 
-        _objBtnMain.GetComponent<Button>().onClick.AddListener(OnBuild);
+        ObjBtnMain.GetComponent<Button>().onClick.AddListener(OnBuild);
 
         _strInitialSelfCount = (Type.ToString() + "_initialSelfCount");
         _selfCountString = (Type.ToString() + "_selfCount");
-        _isUnlockedString = (Type.ToString() + "isUnlocked");
-        _costString = new string[resourceCost.Length];
+        _IsUnlockedString = (Type.ToString() + "IsUnlocked");
+        _costString = new string[ResourceCost.Length];
 
         AssignPrestigeStrings();
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            _costString[i] = Type.ToString() + resourceCost[i].AssociatedType.ToString();
-            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
+            _costString[i] = Type.ToString() + ResourceCost[i].AssociatedType.ToString();
+            PlayerPrefs.GetFloat(_costString[i], ResourceCost[i].CostAmount);
         }
 
         ModifyDescriptionText();
@@ -358,36 +358,36 @@ public abstract class Building : GameEntity
     }
     private void UnlockedViaResources()
     {
-        if (isUnlocked)
+        if (IsUnlocked)
         {
             InitialUnlock();
-            objMainPanel.SetActive(true);
+            ObjMainPanel.SetActive(true);
             if (UIManager.isBuildingVisible)
             {
-                canvas.enabled = true;
-                graphicRaycaster.enabled = true;
-                hasSeen = true;
+                Canvas.enabled = true;
+                GraphicRaycaster.enabled = true;
+                HasSeen = true;
             }
-            else if (hasSeen)
+            else if (HasSeen)
             {
                 isBuildingUnlockedEvent = true;
-                hasSeen = false;
+                HasSeen = false;
                 //PointerNotification.leftAmount++;
             }
         }
     }
     private void CheckIfUnlocked()
     {
-        if (!isUnlocked)
+        if (!IsUnlocked)
         {
-            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
+            if (GetCurrentFill() >= 0.8f & !IsUnlockedByResource && IsUnlockableByResource)
             {
-                isUnlockedByResource = true;
-                unlockAmount++;
+                IsUnlockedByResource = true;
+                UnlockAmount++;
 
-                if (unlockAmount == unlocksRequired)
+                if (UnlockAmount == UnlocksRequired)
                 {
-                    isUnlocked = true;
+                    IsUnlocked = true;
 
                     //if (type)
                     UnlockedViaResources();
@@ -400,9 +400,9 @@ public abstract class Building : GameEntity
     }
     protected virtual void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            timer = maxValue;
             CheckIfPurchaseable();
             UpdateResourceCostTexts();
             CheckIfUnlocked();
@@ -410,13 +410,13 @@ public abstract class Building : GameEntity
     }
     void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_IsUnlockedString, IsUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_selfCountString, (int)_selfCount);
         PlayerPrefs.SetInt(_strInitialSelfCount, (int)initialSelfCount);
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].CostAmount);
+            PlayerPrefs.SetFloat(_costString[i], ResourceCost[i].CostAmount);
         }
 
         SavePrestigeValues();

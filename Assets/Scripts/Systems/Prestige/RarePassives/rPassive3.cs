@@ -20,7 +20,7 @@ public class rPassive3 : RarePassive
 
         foreach (var building in Building.Buildings)
         {
-            if (building.Value.isUnlocked)
+            if (building.Value.IsUnlocked)
             {
                 buildingTypesInCurrentRun.Add(building.Key);
             }
@@ -62,11 +62,11 @@ public class rPassive3 : RarePassive
     {
         if (selfCountIncreaseAmount > 1)
         {
-            description = string.Format("Start with {0} additional {1}'s", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start with {0} additional {1}'s", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].ActualName);
         }
         else
         {
-            description = string.Format("Start with an additional '{1}'", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].actualName);
+            description = string.Format("Start with an additional '{1}'", selfCountIncreaseAmount, Building.Buildings[buildingTypeChosen].ActualName);
         }
     }
     public override void InitializePermanentStat()

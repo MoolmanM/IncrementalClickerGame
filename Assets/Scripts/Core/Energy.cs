@@ -15,7 +15,7 @@ public class Energy : MonoBehaviour
 
     public Slider sliderKardashev;
     public TMP_Text textKardashev;
-    private float _timer = 0.1f;
+    private float timer = 0.1f;
     public GameObject objIconPanel;
     private bool _hasIntroducedEnergy;
 
@@ -61,9 +61,9 @@ public class Energy : MonoBehaviour
     private void Update()
     {
         // This should only be calculated every time you open up the kardashev scale.
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = 5f;
+            timer = 5f;
 
             wattsConsumed = 0;
             wattsConsumed = energyProduction;

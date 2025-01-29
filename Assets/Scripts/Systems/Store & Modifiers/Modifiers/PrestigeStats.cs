@@ -167,7 +167,7 @@ public class PrestigeStats : MonoBehaviour
             strBuildingCountAddition.Add(item.Key, "");
             if (strBuildingCountAddition.ContainsKey(item.Key))
             {
-                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>{0}</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].actualName);
+                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>{0}</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].ActualName);
             }          
         }
         foreach (var item in strBuildingCountAddition)
@@ -182,7 +182,7 @@ public class PrestigeStats : MonoBehaviour
             strBuildingMultiplierAddition.Add(item.Key, "");
             if (strBuildingMultiplierAddition.ContainsKey(item.Key))
             {
-                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in strBuildingMultiplierAddition)
@@ -197,7 +197,7 @@ public class PrestigeStats : MonoBehaviour
             strWorkerMultiplierAddition.Add(item.Key, "");
             if (strWorkerMultiplierAddition.ContainsKey(item.Key))
             {
-                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Worker.Workers[item.Key].actualName, item.Value * 100);
+                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Worker.Workers[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in strWorkerMultiplierAddition)
@@ -212,7 +212,7 @@ public class PrestigeStats : MonoBehaviour
             strBuildingCostSubtraction.Add(item.Key, "");
             if (strBuildingCostSubtraction.ContainsKey(item.Key))
             {
-                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in strBuildingCostSubtraction)
@@ -227,7 +227,7 @@ public class PrestigeStats : MonoBehaviour
             strResearchableCostSubtraction.Add(item.Key, "");
             if (strResearchableCostSubtraction.ContainsKey(item.Key))
             {
-                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Researchable.Researchables[item.Key].actualName, item.Value * 100);
+                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Researchable.Researchables[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in strResearchableCostSubtraction)
@@ -242,7 +242,7 @@ public class PrestigeStats : MonoBehaviour
             strCraftableCostSubtraction.Add(item.Key, "");
             if (strCraftableCostSubtraction.ContainsKey(item.Key))
             {
-                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Craftable.Craftables[item.Key].actualName, item.Value * 100);
+                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Craftable.Craftables[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in strCraftableCostSubtraction)

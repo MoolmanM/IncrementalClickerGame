@@ -30,23 +30,23 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public static uint TotalWorkerCount, UnassignedWorkerCount, AliveCount, DeadCount;
     public static bool isWorkerUnlockedEvent;
 
-    [System.NonSerialized] public GameObject objMainPanel;
-    [System.NonSerialized] public Canvas canvas;
-    [System.NonSerialized] public GraphicRaycaster graphicRaycaster;
+    [System.NonSerialized] public GameObject ObjMainPanel;
+    [System.NonSerialized] public Canvas Canvas;
+    [System.NonSerialized] public GraphicRaycaster GraphicRaycaster;
     [System.NonSerialized] public TMP_Text txtHeader;
-    [System.NonSerialized] public bool isUnlocked, hasSeen = true, isFirstUnlocked;
+    [System.NonSerialized] public bool IsUnlocked, HasSeen = true, IsFirstUnlocked;
     public WorkerResourcesToModify[] _resourcesToIncrement, _resourcesToDecrement;
 
     // Make workercount non serialized eventually, for now will use for debugging.
     public uint workerCount;
     public WorkerType Type;
     public TMP_Text txtAvailableWorkers;
-    public string actualName;
+    public string ActualName;
 
     private Transform _tformTxtHeader, _tformObjMainPanel, _tformTxtDescriptionHeader, _tformTxtDescriptionBody, tformObjTooltip, _tformBtnPlus, _tformBtnMinus;
-    private TMP_Text _txtDescriptionHeader, _txtDescriptionBody;
+    private TMP_Text TxtDescriptionHeader, TxtDescriptionBody;
     private GameObject _objTooltip;
-    private string _workerString, _isUnlockedString;
+    private string _workerString, _IsUnlockedString;
     protected uint _changeAmount = 1;
     private Button _btnPlus, _btnMinus;
 
@@ -78,7 +78,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             prestigeAllMultiplierAddition = 0;
             prestigeMultiplierAddition = 0;
             _resourcesToIncrement[i].currentResourceMultiplier += additionAmount;
-            Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", actualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
+            Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", ActualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
         }
     }
     public void MultiplyIncrementAmount(float multiplierAmount, WorkerType workerType)
@@ -94,7 +94,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             _resourcesToIncrement[i].currentResourceMultiplier = newAmount;
             SetDescriptionText();
             Resource.Resources[_resourcesToIncrement[i].resourceTypeToModify].amountPerSecond += diffAmount * Workers[workerType].workerCount;
-            //Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", actualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
+            //Debug.Log(string.Format("Changed worker {0}'s resource multi from {1} to {2}", ActualName, _resourcesToIncrement[i].baseResourceMultiplier, _resourcesToIncrement[i].currentResourceMultiplier));
         }
     }
     public void ModifyDescriptionText()
@@ -128,18 +128,18 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         //    }
         //}
 
-        isUnlocked = false;
-        objMainPanel.SetActive(false);
-        canvas.enabled = false;
-        graphicRaycaster.enabled = false;
+        IsUnlocked = false;
+        ObjMainPanel.SetActive(false);
+        Canvas.enabled = false;
+        GraphicRaycaster.enabled = false;
         workerCount = 0;
-        hasSeen = true;
+        HasSeen = true;
         TotalWorkerCount = 0;
         UnassignedWorkerCount = 0;
         ModifyMultiplierForPrestige();
         //ModifyWorkerCount();
         SetDescriptionText();
-        txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName.ToString(), workerCount);
+        txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", ActualName.ToString(), workerCount);
         txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
     }
     public void OnPointerDown(PointerEventData eventData)
@@ -166,7 +166,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void SetDescriptionText()
     {       
-        _txtDescriptionHeader.text = string.Format("{0}", actualName);
+        TxtDescriptionHeader.text = string.Format("{0}", ActualName);
         strDescription = "";
 
         foreach (var resourcePlus in _resourcesToIncrement)
@@ -182,23 +182,23 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
 
-        _txtDescriptionBody.text = strDescription;
+        TxtDescriptionBody.text = strDescription;
     }
     protected void SetInitialValues()
     {
         InitializeObjects();
 
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            objMainPanel.SetActive(true);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(true);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
         else
         {
-            objMainPanel.SetActive(false);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(false);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
 
         if (AutoToggle.isAutoWorkerOn == 1)
@@ -209,8 +209,8 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     protected void InitializeObjects()
     {
-        graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
-        canvas = gameObject.GetComponent<Canvas>();
+        GraphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
+        Canvas = gameObject.GetComponent<Canvas>();
         _tformTxtHeader = transform.Find("Panel_Main/Text_Header");
         _tformBtnMinus = transform.Find("Panel_Main/Button_Minus");
         _tformBtnPlus = transform.Find("Panel_Main/Button_Plus");
@@ -222,9 +222,9 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         txtHeader = _tformTxtHeader.GetComponent<TMP_Text>();
         _btnPlus = _tformBtnPlus.GetComponent<Button>();
         _btnMinus = _tformBtnMinus.GetComponent<Button>();
-        objMainPanel = _tformObjMainPanel.gameObject;
-        _txtDescriptionHeader = _tformTxtDescriptionHeader.GetComponent<TMP_Text>();
-        _txtDescriptionBody = _tformTxtDescriptionBody.GetComponent<TMP_Text>();
+        ObjMainPanel = _tformObjMainPanel.gameObject;
+        TxtDescriptionHeader = _tformTxtDescriptionHeader.GetComponent<TMP_Text>();
+        TxtDescriptionBody = _tformTxtDescriptionBody.GetComponent<TMP_Text>();
         _objTooltip = tformObjTooltip.gameObject;
 
         _btnPlus.onClick.AddListener(OnPlusButton);
@@ -235,14 +235,14 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _objTooltip.SetActive(false);
 
         _workerString = (Type.ToString() + "workerCount");
-        _isUnlockedString = (Type.ToString() + "isUnlocked");
+        _IsUnlockedString = (Type.ToString() + "IsUnlocked");
 
         AssignPrestigeStrings();
 
         workerCount = (uint)PlayerPrefs.GetInt(_workerString, (int)workerCount);
         UnassignedWorkerCount = (uint)PlayerPrefs.GetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         TotalWorkerCount = (uint)PlayerPrefs.GetInt("TotalWorkerCount", (int)TotalWorkerCount);
-        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+        IsUnlocked = PlayerPrefs.GetInt(_IsUnlockedString) == 1 ? true : false;
 
         FetchPrestigeValues();
 
@@ -286,7 +286,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             UnassignedWorkerCount -= _changeAmount;
             workerCount += _changeAmount;
-            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName.ToString(), workerCount);
+            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", ActualName.ToString(), workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
@@ -359,7 +359,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             UnassignedWorkerCount += _changeAmount;
             workerCount -= _changeAmount;
             // FFCBFA <color=#FFCBFA>{1}</color>
-            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", actualName, workerCount);
+            txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", ActualName, workerCount);
             txtAvailableWorkers.text = string.Format("Available Workers: [<color=#FFCBFA>{0}</color>]", UnassignedWorkerCount);
 
             if (_resourcesToDecrement == null)
@@ -427,7 +427,7 @@ public class Worker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         PlayerPrefs.SetInt("UnassignedWorkerCount", (int)UnassignedWorkerCount);
         PlayerPrefs.SetInt(_workerString, (int)workerCount);
         PlayerPrefs.SetInt("TotalWorkerCount", (int)TotalWorkerCount);
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_IsUnlockedString, IsUnlocked ? 1 : 0);
 
         SavePrestigeValues();
     }

@@ -116,7 +116,7 @@ public class TestMaths : MonoBehaviour
         {
             foreach (var resource in Resource.Resources)
             {
-                if (resource.Value.isUnlocked)
+                if (resource.Value.IsUnlocked)
                 {
                     resource.Value.trackedAmount += resource.Value.storageAmount - resource.Value.amount;
                     resource.Value.amount += resource.Value.storageAmount - resource.Value.amount;

@@ -12,61 +12,61 @@ public class UnlocksRequired : MonoBehaviour
     {
         foreach (var kvp in Researchable.Researchables)
         {
-            if (kvp.Value.isUnlockableByResource)
+            if (kvp.Value.IsUnlockableByResource)
             {
-                kvp.Value.unlocksRequired++;
+                kvp.Value.UnlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.TypesToUnlock.CraftingTypesToUnlock)
             {
-                Craftable.Craftables[type].unlocksRequired++;
+                Craftable.Craftables[type].UnlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.TypesToUnlock.ResearchTypesToUnlock)
             {
-                Researchable.Researchables[type].unlocksRequired++;
+                Researchable.Researchables[type].UnlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.TypesToUnlock.BuildingTypesToUnlock)
             {
-                Building.Buildings[type].unlocksRequired++;
+                Building.Buildings[type].UnlocksRequired++;
             }
         }
 
         foreach (var kvp in Building.Buildings)
         {
-            if (kvp.Value.isUnlockableByResource)
+            if (kvp.Value.IsUnlockableByResource)
             {
-                kvp.Value.unlocksRequired++;
+                kvp.Value.UnlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.TypesToUnlock.CraftingTypesToUnlock)
             {
-                Craftable.Craftables[type].unlocksRequired++;
+                Craftable.Craftables[type].UnlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.TypesToUnlock.ResearchTypesToUnlock)
             {
-                Researchable.Researchables[type].unlocksRequired++;
+                Researchable.Researchables[type].UnlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.TypesToUnlock.BuildingTypesToUnlock)
             {
-                Building.Buildings[type].unlocksRequired++;
+                Building.Buildings[type].UnlocksRequired++;
             }
         }
 
         foreach (var kvp in Craftable.Craftables)
         {
-            if (kvp.Value.isUnlockableByResource)
+            if (kvp.Value.IsUnlockableByResource)
             {
-                kvp.Value.unlocksRequired++;
+                kvp.Value.UnlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.TypesToUnlock.CraftingTypesToUnlock)
             {
-                Craftable.Craftables[type].unlocksRequired++;
+                Craftable.Craftables[type].UnlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.TypesToUnlock.ResearchTypesToUnlock)
             {
-                Researchable.Researchables[type].unlocksRequired++;
+                Researchable.Researchables[type].UnlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.TypesToUnlock.BuildingTypesToUnlock)
             {
-                Building.Buildings[type].unlocksRequired++;
+                Building.Buildings[type].UnlocksRequired++;
             }
         }
     }
@@ -85,7 +85,7 @@ public class UnlocksRequired : MonoBehaviour
                 {
                     if (resourceToIncrement.resourceTypeToModify == resource.Key)
                     {
-                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.actualName, objModifiedBy = building.Value.gameObject });
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.ActualName, objModifiedBy = building.Value.gameObject });
                     }
                 }
 
@@ -93,7 +93,7 @@ public class UnlocksRequired : MonoBehaviour
                 {
                     if (resourceToDecrement.resourceTypeToModify == resource.Key)
                     {
-                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.actualName, objModifiedBy = building.Value.gameObject });
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = building.Value.ActualName, objModifiedBy = building.Value.gameObject });
                     }
                 }
             }
@@ -104,7 +104,7 @@ public class UnlocksRequired : MonoBehaviour
                 {
                     if (resourceToIncrement.resourceTypeToModify == resource.Key)
                     {
-                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.actualName, objModifiedBy = worker.Value.gameObject });
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.ActualName, objModifiedBy = worker.Value.gameObject });
                     }
                 }
 
@@ -112,7 +112,7 @@ public class UnlocksRequired : MonoBehaviour
                 {
                     if (resourceToDecrement.resourceTypeToModify == resource.Key)
                     {
-                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.actualName, objModifiedBy = worker.Value.gameObject });
+                        resource.Value.resourceInfoList.Add(new ResourceInfo() { name = worker.Value.ActualName, objModifiedBy = worker.Value.gameObject });
                     }
                 }
             }
@@ -122,18 +122,18 @@ public class UnlocksRequired : MonoBehaviour
                 ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
                 if (i == 0)
                 {
-                    resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(resource.Value.prefabObjTop, resource.Value.tformObjTooltipGroup);
+                    resourceInfo.uiForResourceInfo.ObjMainPanel = Instantiate(resource.Value.prefabObjTop, resource.Value.tformObjTooltipGroup);
                 }
                 else if (i == (resource.Value.resourceInfoList.Count - 1))
                 {
-                    resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(resource.Value.prefabObjBot, resource.Value.tformObjTooltipGroup);
+                    resourceInfo.uiForResourceInfo.ObjMainPanel = Instantiate(resource.Value.prefabObjBot, resource.Value.tformObjTooltipGroup);
                 }
                 else
                 {
-                    resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(resource.Value.prefabObjMid, resource.Value.tformObjTooltipGroup);
+                    resourceInfo.uiForResourceInfo.ObjMainPanel = Instantiate(resource.Value.prefabObjMid, resource.Value.tformObjTooltipGroup);
                 }
 
-                resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.objMainPanel.transform;
+                resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.ObjMainPanel.transform;
 
                 resourceInfo.uiForResourceInfo.tformInfoName = resourceInfo.uiForResourceInfo.tformNewObj.Find("Object_Name");
                 resourceInfo.uiForResourceInfo.tformInfoAmountPerSecond = resourceInfo.uiForResourceInfo.tformNewObj.Find("Object_APS");
@@ -151,7 +151,7 @@ public class UnlocksRequired : MonoBehaviour
 
             foreach (var resourceInfo in resource.Value.resourceInfoList)
             {
-                resourceInfo.uiForResourceInfo.objMainPanel.SetActive(false);
+                resourceInfo.uiForResourceInfo.ObjMainPanel.SetActive(false);
                 //resourceInfo.uiForResourceInfo.objSpacer.SetActive(false);
             }
 
@@ -168,9 +168,9 @@ public class UnlocksRequired : MonoBehaviour
         //    for (int i = 0; i < resource.Value.resourceInfoList.Count; i++)
         //    {
         //        ResourceInfo resourceInfo = resource.Value.resourceInfoList[i];
-        //        resourceInfo.uiForResourceInfo.objMainPanel = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
+        //        resourceInfo.uiForResourceInfo.ObjMainPanel = Instantiate(resource.Value.prefabResourceInfoPanel, resource.Value.tformResourceTooltip);
         //        resourceInfo.uiForResourceInfo.objSpacer = Instantiate(resource.Value.prefabResourceInfoSpacer, resource.Value.tformResourceTooltip);
-        //        resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.objMainPanel.transform;
+        //        resourceInfo.uiForResourceInfo.tformNewObj = resourceInfo.uiForResourceInfo.ObjMainPanel.transform;
         //        resourceInfo.uiForResourceInfo.tformInfoName = resourceInfo.uiForResourceInfo.tformNewObj.Find("Text_Name");
         //        resourceInfo.uiForResourceInfo.tformInfoAmountPerSecond = resourceInfo.uiForResourceInfo.tformNewObj.Find("Text_AmountPerSecond");
 

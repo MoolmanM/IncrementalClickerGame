@@ -24,7 +24,7 @@ public class Stats : MonoBehaviour
 
                 
 
-                Debug.Log(building.Value.actualName + " " + building.Value.trackedBuiltAmount);
+                Debug.Log(building.Value.ActualName + " " + building.Value.trackedBuiltAmount);
             }
             
         }

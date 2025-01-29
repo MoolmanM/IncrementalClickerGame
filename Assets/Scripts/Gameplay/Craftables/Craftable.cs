@@ -40,7 +40,7 @@ public class Craftable : GameEntity
     public CraftingType Type;
     [System.NonSerialized] public bool isCrafted;
 
-    private string _isCraftedString, _isUnlockedString;
+    private string _isCraftedString, _IsUnlockedString;
 
     // Reset variables
 
@@ -56,42 +56,42 @@ public class Craftable : GameEntity
 
     public void ResetCraftable()
     {
-        isUnlocked = false;
+        IsUnlocked = false;
         _objCrafted.SetActive(false);
-        //objMainPanel.SetActive(false);
-        canvas.enabled = false;
-        graphicRaycaster.enabled = false;
-        unlockAmount = 0;
-        isUnlocked = false;
-        isUnlockedByResource = false;
+        //ObjMainPanel.SetActive(false);
+        Canvas.enabled = false;
+        GraphicRaycaster.enabled = false;
+        UnlockAmount = 0;
+        IsUnlocked = false;
+        IsUnlockedByResource = false;
         isCrafted = false;
-        hasSeen = true;
+        HasSeen = true;
         ModifyCost();
         MakeCraftableAgain();
-        _objProgressCircle.SetActive(true);
-        _objBackground.SetActive(true);
+        ObjProgressCircle.SetActive(true);
+        ObjBackground.SetActive(true);
     }
     public void ModifyCost()
     {
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
-            float subtractionAmount = resourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (permCostSubtraction + prestigeCostSubtraction));
+            ResourceCost[i].CostAmount = ResourceCost[i].BaseCostAmount;
+            float subtractionAmount = ResourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (permCostSubtraction + prestigeCostSubtraction));
             prestigeAllCostSubtraction = 0;
             prestigeCostSubtraction = 0;
-            resourceCost[i].CostAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed craft {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
+            ResourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed craft {0}'s cost from {1} to {2}", ActualName, ResourceCost[i].BaseCostAmount, ResourceCost[i].CostAmount));
         }
     }
     protected void SetInitialValues()
     {
         InitializeObjects();
 
-        _txtHeader.text = string.Format("{0}", actualName);
+        TxtHeader.text = string.Format("{0}", ActualName);
 
         //if (TimeManager.hasPlayedBefore)
         //{
-        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
+        IsUnlocked = PlayerPrefs.GetInt(_IsUnlockedString) == 1 ? true : false;
         isCrafted = PlayerPrefs.GetInt(_isCraftedString) == 1 ? true : false;
 
         FetchPrestigeValues();
@@ -101,29 +101,29 @@ public class Craftable : GameEntity
         //{
         //    isCrafted = false;
         //}
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            objMainPanel.SetActive(true);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(true);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
         else
         {
-            objMainPanel.SetActive(false);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(false);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
 
         if (isCrafted)
         {
             _objCrafted.SetActive(true);
-            _btnMain.interactable = false;
-            _objProgressCircle.SetActive(false);
-            _objBackground.SetActive(false);
+            BtnMain.interactable = false;
+            ObjProgressCircle.SetActive(false);
+            ObjBackground.SetActive(false);
 
             if (Menu.isCraftingHidden)
             {
-                objMainPanel.SetActive(false);
+                ObjMainPanel.SetActive(false);
             }
         }
         // This is probably also not needed, but it might be.
@@ -136,9 +136,9 @@ public class Craftable : GameEntity
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -148,10 +148,10 @@ public class Craftable : GameEntity
         if (canPurchase)
         {
             trackedCraftedAmount++;
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-                Resource.Resources[resourceCost[i].AssociatedType].uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount));
+                Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+                Resource.Resources[ResourceCost[i].AssociatedType].uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(Resource.Resources[ResourceCost[i].AssociatedType].amount));
             }
 
             isCrafted = true;
@@ -161,23 +161,23 @@ public class Craftable : GameEntity
     protected void Crafted()
     {
         _objCrafted.SetActive(true);
-        _btnMain.interactable = false;
-        _objProgressCircle.SetActive(false);
-        _objBackground.SetActive(false);
+        BtnMain.interactable = false;
+        ObjProgressCircle.SetActive(false);
+        ObjBackground.SetActive(false);
 
-        //_txtHeader.text = string.Format("{0} (Crafted)", actualName);
+        //TxtHeader.text = string.Format("{0} (Crafted)", ActualName);
 
         //string htmlValue = "#D4D4D4";
 
         //if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
         //{
-        //    _imgExpand.color = greyColor;
-        //    _imgCollapse.color = greyColor;
+        //    ImgExpand.color = greyColor;
+        //    ImgCollapse.color = greyColor;
         //}
 
         if (Menu.isCraftingHidden)
         {
-            objMainPanel.SetActive(false);
+            ObjMainPanel.SetActive(false);
         }
 
         UnlockCrafting();
@@ -188,21 +188,21 @@ public class Craftable : GameEntity
     }
     protected void TestingNewCrafted()
     {
-        _btnMain.interactable = false;
-        _objProgressCirclePanel.SetActive(false);
-        _txtHeader.text = string.Format("{0} (Crafted)", actualName);
+        BtnMain.interactable = false;
+        ObjProgressCirclePanel.SetActive(false);
+        TxtHeader.text = string.Format("{0} (Crafted)", ActualName);
 
         string htmlValue = "#D4D4D4";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color greyColor))
         {
-            _imgExpand.color = greyColor;
-            _imgCollapse.color = greyColor;
+            ImgExpand.color = greyColor;
+            ImgCollapse.color = greyColor;
         }
 
         if (Menu.isCraftingHidden)
         {
-            objMainPanel.SetActive(false);
+            ObjMainPanel.SetActive(false);
         }
 
         UnlockCrafting();
@@ -214,16 +214,16 @@ public class Craftable : GameEntity
     public void MakeCraftableAgain()
     {
         // I don't think this is really needed, not until the player prestige at least.
-        _btnMain.interactable = true;
-        _objProgressCirclePanel.SetActive(true);
-        _txtHeader.text = string.Format("{0}", actualName);
+        BtnMain.interactable = true;
+        ObjProgressCirclePanel.SetActive(true);
+        TxtHeader.text = string.Format("{0}", ActualName);
 
         string htmlValue = "#333333";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
         {
-            _imgExpand.color = darkGreyColor;
-            _imgCollapse.color = darkGreyColor;
+            ImgExpand.color = darkGreyColor;
+            ImgCollapse.color = darkGreyColor;
         }
     }
     protected override void InitializeObjects()
@@ -231,11 +231,11 @@ public class Craftable : GameEntity
         base.InitializeObjects();
 
         _isCraftedString = Type.ToString() + "isCrafted";
-        _isUnlockedString = Type.ToString() + "isUnlocked";
+        _IsUnlockedString = Type.ToString() + "IsUnlocked";
 
         AssignPrestigeStrings();
 
-        _btnMain.onClick.AddListener(OnCraft);
+        BtnMain.onClick.AddListener(OnCraft);
 
         _tformObjCrafted = transform.Find("Panel_Main/Header_Panel/Image_Crafted");
         _objCrafted = _tformObjCrafted.gameObject;
@@ -243,52 +243,52 @@ public class Craftable : GameEntity
     }
     protected void SetDescriptionText(string description)
     {
-        _txtDescription.text = string.Format("{0}", description);
+        TxtDescription.text = string.Format("{0}", description);
     }
     protected void UnlockedViaResource()
     {
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            if (UIManager.isBuildingVisible && hasSeen)
+            if (UIManager.isBuildingVisible && HasSeen)
             {
                 isCraftableUnlockedEvent = true;
-                hasSeen = false;
+                HasSeen = false;
                 PointerNotification.rightAmount++;
             }
             else if (UIManager.isCraftingVisible)
             {
                 // This does run more than once each, but isn't a big deal
-                objMainPanel.SetActive(true);
-                canvas.enabled = true;
-                graphicRaycaster.enabled = true;
-                hasSeen = true;
+                ObjMainPanel.SetActive(true);
+                Canvas.enabled = true;
+                GraphicRaycaster.enabled = true;
+                HasSeen = true;
             }
-            else if (UIManager.isWorkerVisible && hasSeen)
+            else if (UIManager.isWorkerVisible && HasSeen)
             {
                 isCraftableUnlockedEvent = true;
-                hasSeen = false;
+                HasSeen = false;
                 PointerNotification.leftAmount++;
             }
-            else if (UIManager.isResearchVisible && hasSeen)
+            else if (UIManager.isResearchVisible && HasSeen)
             {
                 isCraftableUnlockedEvent = true;
-                hasSeen = false;
+                HasSeen = false;
                 PointerNotification.leftAmount++;
             }
         }
     }
     private void CheckIfUnlocked()
     {
-        if (!isUnlocked)
+        if (!IsUnlocked)
         {
-            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
+            if (GetCurrentFill() >= 0.8f & !IsUnlockedByResource && IsUnlockableByResource)
             {
-                isUnlockedByResource = true;
-                unlockAmount++;
+                IsUnlockedByResource = true;
+                UnlockAmount++;
 
-                if (unlockAmount == unlocksRequired)
+                if (UnlockAmount == UnlocksRequired)
                 {
-                    isUnlocked = true;
+                    IsUnlocked = true;
 
                     UnlockedViaResource();
 
@@ -324,9 +324,9 @@ public class Craftable : GameEntity
     }
     protected void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            timer = maxValue;
             if (!isCrafted)
             {
                 CheckIfPurchaseable();
@@ -338,7 +338,7 @@ public class Craftable : GameEntity
     }
     void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_IsUnlockedString, IsUnlocked ? 1 : 0);
         PlayerPrefs.SetInt(_isCraftedString, isCrafted ? 1 : 0);
 
         SavePrestigeValues();

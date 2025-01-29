@@ -19,9 +19,9 @@ public class Hut : Building
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -31,19 +31,19 @@ public class Hut : Building
         if (canPurchase)
         {
             _selfCount++;
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-                resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);                
-                resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].AssociatedType].amount, resourceCost[i].CostAmount);              
+                Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+                ResourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);                
+                ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[ResourceCost[i].AssociatedType].amount, ResourceCost[i].CostAmount);              
             }
             events.GenerateWorker();
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
     }
     protected override void ModifyDescriptionText()
     {
-        _txtDescription.text = string.Format("Increases population by 1");
+        TxtDescription.text = string.Format("Increases population by 1");
     }
 }

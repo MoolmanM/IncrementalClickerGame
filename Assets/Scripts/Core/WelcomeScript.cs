@@ -20,7 +20,7 @@ public class WelcomeScript : MonoBehaviour
         {
             foreach (var resource in Resource.Resources)
             {
-                if (resource.Value.isUnlocked)
+                if (resource.Value.IsUnlocked)
                 {
                     GameObject newObj = Instantiate(objPrefabEarnedPanel, tformContent);
 

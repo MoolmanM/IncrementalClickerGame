@@ -46,7 +46,7 @@ public struct ResourceInfo
 
 public struct UiForResourceInfo
 {
-    public GameObject objMainPanel, objSpacer, objTop, objMid, objBot, objGroup;
+    public GameObject ObjMainPanel, objSpacer, objTop, objMid, objBot, objGroup;
     public TMP_Text textInfoName, textInfoAmountPerSecond, textObjName, textObjAPS;
     public Transform tformNewObj, tformInfoName, tformInfoAmountPerSecond;
 }
@@ -63,20 +63,20 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [System.NonSerialized] public GameObject objTooltipGroup;
 
     [System.NonSerialized] public float amount, amountPerSecond;
-    [System.NonSerialized] public bool isUnlocked;
+    [System.NonSerialized] public bool IsUnlocked;
     [System.NonSerialized] public UiForResource uiForResource;
-    [System.NonSerialized] public GameObject objMainPanel;
-    [System.NonSerialized] public Canvas canvas;
-    [System.NonSerialized] public GraphicRaycaster graphicRaycaster;
+    [System.NonSerialized] public GameObject ObjMainPanel;
+    [System.NonSerialized] public Canvas Canvas;
+    [System.NonSerialized] public GraphicRaycaster GraphicRaycaster;
 
     public float storageAmount, baseStorageAmount;
     public ResourceType Type;
 
-    protected string _perSecondString, _amountString, _storageAmountString, _isUnlockedString;
+    protected string _perSecondString, _amountString, _storageAmountString, _IsUnlockedString;
 
     protected Transform _tformTxtAmount, _tformTxtAmountPerSecond, _tformTxtStorage, _tformImgbar;
     protected Image _imgBar;
-    protected float _timer = 0.1f;
+    protected float timer = 0.1f;
 
 
     public float debugAmountToIncrease;
@@ -93,19 +93,19 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         amount = 0;
         amountPerSecond = 0;
-        canvas.enabled = false;
-        graphicRaycaster.enabled = false;
-        isUnlocked = false;
+        Canvas.enabled = false;
+        GraphicRaycaster.enabled = false;
+        IsUnlocked = false;
         storageAmount = baseStorageAmount;
         uiForResource.txtAmount.text = string.Format("{0:0.00}", amount);
         StaticMethods.ModifyAPSText(amountPerSecond, uiForResource.txtAmountPerSecond);
         GetCurrentFill();
-        Resources[ResourceType.Food].isUnlocked = true;
-        Resources[ResourceType.Lumber].isUnlocked = true;
-        Resources[ResourceType.Lumber].canvas.enabled = true;
-        Resources[ResourceType.Food].canvas.enabled = true;
-        Resources[ResourceType.Lumber].graphicRaycaster.enabled = true;
-        Resources[ResourceType.Food].graphicRaycaster.enabled = true;
+        Resources[ResourceType.Food].IsUnlocked = true;
+        Resources[ResourceType.Lumber].IsUnlocked = true;
+        Resources[ResourceType.Lumber].Canvas.enabled = true;
+        Resources[ResourceType.Food].Canvas.enabled = true;
+        Resources[ResourceType.Lumber].GraphicRaycaster.enabled = true;
+        Resources[ResourceType.Food].GraphicRaycaster.enabled = true;
         // Set storage amount back to original storage amount
         // Remove the resourceinfo prefabs?
     }
@@ -128,11 +128,11 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                 if (amountPerSecond == 0)
                 {
-                    resourceInfo.uiForResourceInfo.objMainPanel.SetActive(false);
+                    resourceInfo.uiForResourceInfo.ObjMainPanel.SetActive(false);
                 }
                 else
                 {
-                    resourceInfo.uiForResourceInfo.objMainPanel.SetActive(true);
+                    resourceInfo.uiForResourceInfo.ObjMainPanel.SetActive(true);
                 }
 
                 if (amountPerSecond < 0)
@@ -207,23 +207,23 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         InitializeObjects();
         //if (TimeManager.hasPlayedBefore)
         //{
-        isUnlocked = PlayerPrefs.GetInt(_isUnlockedString) == 1 ? true : false;
-        if (isUnlocked)
+        IsUnlocked = PlayerPrefs.GetInt(_IsUnlockedString) == 1 ? true : false;
+        if (IsUnlocked)
         {
             amount = PlayerPrefs.GetFloat(_amountString, amount);
             amountPerSecond = PlayerPrefs.GetFloat(_perSecondString, amountPerSecond);
             storageAmount = PlayerPrefs.GetFloat(_storageAmountString, storageAmount);
         }
         //}
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            objMainPanel.SetActive(true);
-            canvas.enabled = true;
+            ObjMainPanel.SetActive(true);
+            Canvas.enabled = true;
         }
         else
         {
-            objMainPanel.SetActive(false);
-            canvas.enabled = false;
+            ObjMainPanel.SetActive(false);
+            Canvas.enabled = false;
         }
     }
     private void SetStartingResource()
@@ -244,14 +244,14 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         uiForResource.txtAmountPerSecond = _tformTxtAmountPerSecond.GetComponent<TMP_Text>();
         uiForResource.txtStorageAmount = _tformTxtStorage.GetComponent<TMP_Text>();
 
-        objMainPanel = gameObject;
-        canvas = gameObject.GetComponent<Canvas>();
-        graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
+        ObjMainPanel = gameObject;
+        Canvas = gameObject.GetComponent<Canvas>();
+        GraphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
 
         _perSecondString = Type.ToString() + "PS";
         _amountString = Type.ToString() + "A";
         _storageAmountString = Type.ToString() + "Storage";
-        _isUnlockedString = Type.ToString() + "Unlocked";
+        _IsUnlockedString = Type.ToString() + "Unlocked";
 
         InitializeTooltipPrefab();
     }
@@ -275,11 +275,11 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected virtual void UpdateResource()
     {
         // Updates the resource 10 times per second, which is why I divide the amount displayed by 10 so it displays the amount per second for the player.
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            if ((_timer -= Time.deltaTime) <= 0)
+            if ((timer -= Time.deltaTime) <= 0)
             {
-                _timer = 0.1f;
+                timer = 0.1f;
 
                 if (amount >= (storageAmount - amountPerSecond))
                 {
@@ -320,7 +320,7 @@ public class Resource : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         PlayerPrefs.SetFloat(_amountString, amount);
         PlayerPrefs.SetFloat(_perSecondString, amountPerSecond);
         PlayerPrefs.SetFloat(_storageAmountString, storageAmount);
-        PlayerPrefs.SetInt(_isUnlockedString, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_IsUnlockedString, IsUnlocked ? 1 : 0);
     }
 
 }

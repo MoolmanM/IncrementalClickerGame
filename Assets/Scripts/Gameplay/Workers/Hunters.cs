@@ -6,7 +6,7 @@ public class Hunters : Worker
 {
     private Worker _worker;
     private bool hasEnoughResources;
-    private float _timer = 0.1f;
+    private float timer = 0.1f;
 
     void Awake()
     {
@@ -163,9 +163,9 @@ public class Hunters : Worker
     //    // But I can't think of another solution at this moment.
     //    if (_resourcesToDecrement != null)
     //    {
-    //        if ((_timer -= Time.deltaTime) <= 0)
+    //        if ((timer -= Time.deltaTime) <= 0)
     //        {
-    //            _timer = 0.1f;
+    //            timer = 0.1f;
 
     //            for (int i = 0; i < _resourcesToDecrement.Length; i++)
     //            {

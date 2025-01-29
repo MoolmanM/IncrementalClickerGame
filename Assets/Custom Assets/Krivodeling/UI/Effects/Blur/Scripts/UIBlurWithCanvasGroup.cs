@@ -6,7 +6,7 @@ namespace Krivodeling.UI.Effects.Examples
     {
         #region Variables
         private UIBlur uiblur;
-        private CanvasGroup canvasGroup;
+        private CanvasGroup CanvasGroup;
         #endregion
 
         #region Methods
@@ -14,20 +14,20 @@ namespace Krivodeling.UI.Effects.Examples
         {
             SetComponents();
 
-            uiblur.onBeginBlur.AddListener(() => canvasGroup.blocksRaycasts = true);
+            uiblur.onBeginBlur.AddListener(() => CanvasGroup.blocksRaycasts = true);
             uiblur.onBlurChanged.AddListener(OnBlurChanged);
-            uiblur.onEndBlur.AddListener(() => canvasGroup.blocksRaycasts = false);
+            uiblur.onEndBlur.AddListener(() => CanvasGroup.blocksRaycasts = false);
         }
 
         private void SetComponents()
         {
             uiblur = GetComponent<UIBlur>();
-            canvasGroup = GetComponent<CanvasGroup>();
+            CanvasGroup = GetComponent<CanvasGroup>();
         }
 
         private void OnBlurChanged(float value)
         {
-            canvasGroup.alpha = value;
+            CanvasGroup.alpha = value;
         }
         #endregion
     }

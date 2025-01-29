@@ -31,13 +31,13 @@ public class StoragePile : StorageBuilding
     //        modifyAmount = Resource.Resources[resourcesToIncrement[i].resourceTypeToModify].storageAmount * storageAmountMultiplier;
     //        if (i > 0)
     //        {
-    //            oldString = _txtDescription.text;
+    //            oldString = TxtDescription.text;
 
-    //            _txtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> storage by <color=#FF0AF3>{2}</color>.", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
+    //            TxtDescription.text = string.Format("{0} \nIncrease <color=#F3FF0A>{1}</color> storage by <color=#FF0AF3>{2}</color>.", oldString, resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
     //        }
     //        else
     //        {
-    //            _txtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> storage by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
+    //            TxtDescription.text = string.Format("Increase <color=#F3FF0A>{0}</color> storage by <color=#FF0AF3>{1}</color>.", resourcesToIncrement[i].resourceTypeToModify.ToString(), NumberToLetter.FormatNumber(modifyAmount));
     //        }
 
     //    }
@@ -47,9 +47,9 @@ public class StoragePile : StorageBuilding
     //{
     //    bool canPurchase = true;
 
-    //    for (int i = 0; i < resourceCost.Length; i++)
+    //    for (int i = 0; i < ResourceCost.Length; i++)
     //    {
-    //        if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+    //        if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
     //        {
     //            canPurchase = false;
     //            break;
@@ -59,11 +59,11 @@ public class StoragePile : StorageBuilding
     //    if (canPurchase)
     //    {
     //        _selfCount++;
-    //        for (int i = 0; i < resourceCost.Length; i++)
+    //        for (int i = 0; i < ResourceCost.Length; i++)
     //        {
-    //            Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-    //            resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
-    //            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
+    //            Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+    //            ResourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
+    //            ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[ResourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(ResourceCost[i].CostAmount));
     //        }
     //        ModifyStorage();
     //        //buildingContributionAPS = 0;
@@ -72,7 +72,7 @@ public class StoragePile : StorageBuilding
     //        ModifyDescriptionText();
     //    }
 
-    //    _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+    //    TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
     //}
     //private void ModifyStorage()
     //{

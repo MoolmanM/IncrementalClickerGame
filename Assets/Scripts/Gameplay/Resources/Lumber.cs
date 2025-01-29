@@ -12,8 +12,8 @@ public class Lumber : Resource
         _resource = GetComponent<Resource>();
         Resources.Add(Type, _resource);
         SetInitialValues();
-        isUnlocked = true;
-        objMainPanel.SetActive(true);
-        canvas.enabled = true;
+        IsUnlocked = true;
+        ObjMainPanel.SetActive(true);
+        Canvas.enabled = true;
     }
 }

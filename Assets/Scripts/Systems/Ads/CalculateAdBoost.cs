@@ -8,7 +8,7 @@ public class CalculateAdBoost : MonoBehaviour
 {
     public Slider adAmountFillBar;
     public TMP_Text txtHeader, txtBody, txtBoostLeft;
-    public int _timeRemaining;
+    public int timeremaining;
     public static bool isAdBoostActivated;
     public static float adBoostMultiplier = 2;
     public uint adBoostAmountWatched;
@@ -22,17 +22,17 @@ public class CalculateAdBoost : MonoBehaviour
     public bool isPopupActive;
     public GameObject boostNotification;
 
-    protected float _timer = 0.1f;
-    protected readonly float _maxValue = 1f;
+    protected float timer = 0.1f;
+    protected readonly float maxValue = 1f;
 
     private void Start()
     {
-        _timeRemaining = PlayerPrefs.GetInt("Boost_Time_Remaining", _timeRemaining);
+        timeremaining = PlayerPrefs.GetInt("Boost_Time_Remaining", timeremaining);
         isAdBoostActivated = PlayerPrefs.GetInt("Is_Boost_Activated") == 1 ? true : false;
         adBoostAmountWatched = (uint)PlayerPrefs.GetInt("Amount_Boost_Button", (int)adBoostAmountWatched);
 
 
-        if (_timeRemaining > 0)
+        if (timeremaining > 0)
         {
             isTimerRunning = true;
         }
@@ -86,8 +86,8 @@ public class CalculateAdBoost : MonoBehaviour
     private void AddFourHours()
     {
         adBoostAmountWatched++;
-        _timeRemaining += 14400;
-        if (_timeRemaining > 0)
+        timeremaining += 14400;
+        if (timeremaining > 0)
         {
             isTimerRunning = true;
         }
@@ -100,12 +100,12 @@ public class CalculateAdBoost : MonoBehaviour
     }
     private void MultiplyAmountPerSecond()
     {
-        if (_timeRemaining > 0 && !hasMultipliedAPS)
+        if (timeremaining > 0 && !hasMultipliedAPS)
         {
             hasMultipliedAPS = true;
             foreach (var item in Resource.Resources)
             {
-                if (item.Value.isUnlocked)
+                if (item.Value.IsUnlocked)
                 {
                     item.Value.amountPerSecond *= adBoostMultiplier;
                     StaticMethods.ModifyAPSText(item.Value.amountPerSecond, item.Value.uiForResource.txtAmountPerSecond);
@@ -117,7 +117,7 @@ public class CalculateAdBoost : MonoBehaviour
     {
         foreach (var item in Resource.Resources)
         {
-            if (item.Value.isUnlocked)
+            if (item.Value.IsUnlocked)
             {
                 item.Value.amountPerSecond /= adBoostMultiplier;
                 Debug.Log("Before: " + item.Value.amountPerSecond + " Text: " + item.Value.uiForResource.txtAmountPerSecond);
@@ -181,20 +181,20 @@ public class CalculateAdBoost : MonoBehaviour
     }
     void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            timer = maxValue;
 
             if (isTimerRunning)
             {
-                if (_timeRemaining > 0)
+                if (timeremaining > 0)
                 {
-                    _timeRemaining -= 1;
+                    timeremaining -= 1;
                     if (isAdBoostActivated == false)
                     {
                         isAdBoostActivated = true;
                     }
-                    //UpdateTimerText(_timeRemaining);
+                    //UpdateTimerText(timeremaining);
                 }
                 else
                 {
@@ -202,7 +202,7 @@ public class CalculateAdBoost : MonoBehaviour
                     isAdBoostActivated = false;
                     DivideAmountPerSecond();
                     hasMultipliedAPS = false;
-                    _timeRemaining = 0;
+                    timeremaining = 0;
                 }
             }
 
@@ -214,13 +214,13 @@ public class CalculateAdBoost : MonoBehaviour
                 RestartDay();
             }
 
-            UpdateTimerText(_timeRemaining);
+            UpdateTimerText(timeremaining);
         }
 
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt("Boost_Time_Remaining", _timeRemaining);
+        PlayerPrefs.SetInt("Boost_Time_Remaining", timeremaining);
         PlayerPrefs.SetInt("Is_Boost_Activated", isAdBoostActivated ? 1 : 0);
         PlayerPrefs.SetInt("Amount_Ads_Watched", (int)adBoostAmountWatched);
     }

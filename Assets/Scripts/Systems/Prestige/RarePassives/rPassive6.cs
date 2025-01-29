@@ -19,7 +19,7 @@ public class rPassive6 : RarePassive
 
         foreach (var craft in Craftable.Craftables)
         {
-            if (craft.Value.isUnlocked)
+            if (craft.Value.IsUnlocked)
             {
                 craftingTypesInCurrentRun.Add(craft.Key);
             }
@@ -59,7 +59,7 @@ public class rPassive6 : RarePassive
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Decrease cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Decrease cost of crafting '{0}' by {1}%", Craftable.Craftables[craftingTypeChosen].ActualName, percentageAmount * 100);
     }
     public override void InitializePermanentStat()
     {

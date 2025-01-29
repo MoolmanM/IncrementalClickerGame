@@ -70,7 +70,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var building in buildingCountAddition)
     //        {
-    //            //Debug.Log(string.Format("Modified building {0}'s count from {1} to {2}", Building.Buildings[building.Key].actualName, Building.Buildings[building.Key].countAddition, building.Value));
+    //            //Debug.Log(string.Format("Modified building {0}'s count from {1} to {2}", Building.Buildings[building.Key].ActualName, Building.Buildings[building.Key].countAddition, building.Value));
     //            Building.Buildings[building.Key].permCountAddition += building.Value;
     //            Building.Buildings[building.Key].prestigeCountAddition += building.Value;
 
@@ -91,7 +91,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var building in buildingMultiplierAddition)
     //        {
-    //            //Debug.Log(string.Format("Modified building {0}'s multi from {1} to {2}", Building.Buildings[building.Key].actualName, Building.Buildings[building.Key].multiplierAddition, building.Value));
+    //            //Debug.Log(string.Format("Modified building {0}'s multi from {1} to {2}", Building.Buildings[building.Key].ActualName, Building.Buildings[building.Key].multiplierAddition, building.Value));
     //            Building.Buildings[building.Key].prestigeMultiplierAddition += building.Value;
     //            Building.Buildings[building.Key].prestigeMultiplierAddition += building.Value;
 
@@ -112,7 +112,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var worker in workerMultiplierAddition)
     //        {
-    //            //Debug.Log(string.Format("Modified worker {0}'s multi from {1} to {2}", Worker.Workers[worker.Key].actualName, Worker.Workers[worker.Key].multiplierAddition, worker.Value));
+    //            //Debug.Log(string.Format("Modified worker {0}'s multi from {1} to {2}", Worker.Workers[worker.Key].ActualName, Worker.Workers[worker.Key].multiplierAddition, worker.Value));
     //            Worker.Workers[worker.Key].prestigeMultiplierAddition += worker.Value;
     //            Worker.Workers[worker.Key].permMultiplierAddition += worker.Value;
 
@@ -133,7 +133,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var building in buildingCostSubtraction)
     //        {
-    //            //Debug.Log(string.Format("Modified building {0}'s cost from {1} to {2}", Building.Buildings[building.Key].actualName, Building.Buildings[building.Key].costSubtraction, building.Value));
+    //            //Debug.Log(string.Format("Modified building {0}'s cost from {1} to {2}", Building.Buildings[building.Key].ActualName, Building.Buildings[building.Key].costSubtraction, building.Value));
     //            Building.Buildings[building.Key].prestigeCostSubtraction += building.Value;
     //            Building.Buildings[building.Key].permCostSubtraction += building.Value;
 
@@ -154,7 +154,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var craftable in craftableCostSubtraction)
     //        {
-    //            //Debug.Log(string.Format("Modified research {0}'s cost from {1} to {2}", Craftable.Craftables[craftable.Key].actualName, Craftable.Craftables[craftable.Key].costSubtraction, craftable.Value));
+    //            //Debug.Log(string.Format("Modified research {0}'s cost from {1} to {2}", Craftable.Craftables[craftable.Key].ActualName, Craftable.Craftables[craftable.Key].costSubtraction, craftable.Value));
     //            Craftable.Craftables[craftable.Key].prestigeCostSubtraction += craftable.Value;
     //            Craftable.Craftables[craftable.Key].permCostSubtraction += craftable.Value;
 
@@ -175,7 +175,7 @@ public class BoxCache : MonoBehaviour
     //    {
     //        foreach (var researchable in researchableCostSubtraction)
     //        {
-    //            //Debug.Log(string.Format("Modified research {0}'s cost from {1} to {2}", Researchable.Researchables[researchable.Key].actualName, Researchable.Researchables[researchable.Key].costSubtraction, researchable.Value));
+    //            //Debug.Log(string.Format("Modified research {0}'s cost from {1} to {2}", Researchable.Researchables[researchable.Key].ActualName, Researchable.Researchables[researchable.Key].costSubtraction, researchable.Value));
     //            Researchable.Researchables[researchable.Key].prestigeCostSubtraction += researchable.Value;
     //            Researchable.Researchables[researchable.Key].permCostSubtraction += researchable.Value;
 

@@ -220,14 +220,14 @@ public class PermanentStats : MonoBehaviour
             strBuildingCountAddition.Add(item.Key, "");
             if (strBuildingCountAddition.ContainsKey(item.Key))
             {
-                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>{0}</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].actualName);
+                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>{0}</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].ActualName);
             }
         }
         foreach (var item in nextBuildingCountAddition)
         {
             if (!strBuildingCountAddition.ContainsKey(item.Key))
             {
-                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>0</color><color=#00C8D4>(+{0})</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].actualName);
+                strBuildingCountAddition[item.Key] = string.Format("Gain <color=#08F1FF>0</color><color=#00C8D4>(+{0})</color> additional <color=#E1341E>{1}</color>", item.Value, Building.Buildings[item.Key].ActualName);
             }
             else
             {
@@ -247,14 +247,14 @@ public class PermanentStats : MonoBehaviour
             strBuildingMultiplierAddition.Add(item.Key, "");
             if (strBuildingMultiplierAddition.ContainsKey(item.Key))
             {
-                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in nextBuildingMultiplierAddition)
         {
             if (!strBuildingMultiplierAddition.ContainsKey(item.Key))
             {
-                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
             else
             {
@@ -274,14 +274,14 @@ public class PermanentStats : MonoBehaviour
             strWorkerMultiplierAddition.Add(item.Key, "");
             if (strWorkerMultiplierAddition.ContainsKey(item.Key))
             {
-                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Worker.Workers[item.Key].actualName, item.Value * 100);
+                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Worker.Workers[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in nextWorkerMultiplierAddition)
         {
             if (!strWorkerMultiplierAddition.ContainsKey(item.Key))
             {
-                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Worker.Workers[item.Key].actualName, item.Value * 100);
+                strWorkerMultiplierAddition[item.Key] = string.Format("Increased production of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Worker.Workers[item.Key].ActualName, item.Value * 100);
             }
             else
             {
@@ -301,14 +301,14 @@ public class PermanentStats : MonoBehaviour
             strBuildingCostSubtraction.Add(item.Key, "");
             if (strBuildingCostSubtraction.ContainsKey(item.Key))
             {
-                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in nextBuildingCostSubtraction)
         {
             if (!strBuildingCostSubtraction.ContainsKey(item.Key))
             {
-                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Building.Buildings[item.Key].actualName, item.Value * 100);
+                strBuildingCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Building.Buildings[item.Key].ActualName, item.Value * 100);
             }
             else
             {
@@ -328,14 +328,14 @@ public class PermanentStats : MonoBehaviour
             strResearchableCostSubtraction.Add(item.Key, "");
             if (strResearchableCostSubtraction.ContainsKey(item.Key))
             {
-                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Researchable.Researchables[item.Key].actualName, item.Value * 100);
+                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Researchable.Researchables[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in nextResearchableCostSubtraction)
         {
             if (!strResearchableCostSubtraction.ContainsKey(item.Key))
             {
-                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Researchable.Researchables[item.Key].actualName, item.Value * 100);
+                strResearchableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Researchable.Researchables[item.Key].ActualName, item.Value * 100);
             }
             else
             {
@@ -355,14 +355,14 @@ public class PermanentStats : MonoBehaviour
             strCraftableCostSubtraction.Add(item.Key, "");
             if (strCraftableCostSubtraction.ContainsKey(item.Key))
             {
-                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Craftable.Craftables[item.Key].actualName, item.Value * 100);
+                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>{1:0.00}%</color>", Craftable.Craftables[item.Key].ActualName, item.Value * 100);
             }
         }
         foreach (var item in nextCraftableCostSubtraction)
         {
             if (!strCraftableCostSubtraction.ContainsKey(item.Key))
             {
-                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Craftable.Craftables[item.Key].actualName, item.Value * 100);
+                strCraftableCostSubtraction[item.Key] = string.Format("Decreased cost of <color=#E1341E>{0}</color> by <color=#08F1FF>0</color><color=#00C8D4>(+{1:0.00}%)</color>", Craftable.Craftables[item.Key].ActualName, item.Value * 100);
             }
             else
             {

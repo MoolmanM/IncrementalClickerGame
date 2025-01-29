@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AutoBot : MonoBehaviour
 {
-    private float _timer = 0.1f;
+    private float timer = 0.1f;
     public int craftUnlockedAmount, craftedAmount;
 
     private IEnumerator BuyPurchaseable()
@@ -12,7 +12,7 @@ public class AutoBot : MonoBehaviour
         craftUnlockedAmount = 0;
         foreach (var kvp in Craftable.Craftables)
         {
-            if (kvp.Value.isUnlocked)
+            if (kvp.Value.IsUnlocked)
             {
                 craftUnlockedAmount += 1;
             }
@@ -34,7 +34,7 @@ public class AutoBot : MonoBehaviour
     {
         foreach (var kvp in Building.Buildings)
         {
-            if (kvp.Value.isPurchaseable && kvp.Value.isUnlocked)
+            if (kvp.Value.IsPurchaseable && kvp.Value.IsUnlocked)
             {
                 kvp.Value.OnBuild();
 
@@ -47,7 +47,7 @@ public class AutoBot : MonoBehaviour
     {
         foreach (var kvp in Researchable.Researchables)
         {
-            if (kvp.Value.isPurchaseable && kvp.Value.isUnlocked && !kvp.Value.isResearched && !kvp.Value._isResearchStarted)
+            if (kvp.Value.IsPurchaseable && kvp.Value.IsUnlocked && !kvp.Value.isResearched && !kvp.Value._isResearchStarted)
             {
                 kvp.Value.OnResearch();
                 
@@ -60,7 +60,7 @@ public class AutoBot : MonoBehaviour
     {
         foreach (var kvp in Craftable.Craftables)
         {
-            if (kvp.Value.isPurchaseable && kvp.Value.isUnlocked && !kvp.Value.isCrafted)
+            if (kvp.Value.IsPurchaseable && kvp.Value.IsUnlocked && !kvp.Value.isCrafted)
             {
                 kvp.Value.OnCraft();
                 craftedAmount++;
@@ -72,9 +72,9 @@ public class AutoBot : MonoBehaviour
 
     void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = 0.3f;
+            timer = 0.3f;
             StartCoroutine(BuyPurchaseable());
 
         }

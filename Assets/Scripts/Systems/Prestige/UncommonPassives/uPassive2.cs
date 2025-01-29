@@ -19,7 +19,7 @@ public class uPassive2 : UncommonPassive
 
         foreach (var worker in Worker.Workers)
         {
-            if (worker.Value.isUnlocked)
+            if (worker.Value.IsUnlocked)
             {
                 workerTypesInCurrentRun.Add(worker.Key);
             }
@@ -37,7 +37,7 @@ public class uPassive2 : UncommonPassive
     }
     private void ModifyStatDescription(float percentageAmount)
     {
-        description = string.Format("Increase production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].actualName, percentageAmount * 100);
+        description = string.Format("Increase production of worker '{0}' by {1}%", Worker.Workers[workerTypeChosen].ActualName, percentageAmount * 100);
     }
     private void AddToPrestigeCache(float percentageAmount)
     {

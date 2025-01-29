@@ -136,7 +136,7 @@ public class BoxCacheDeprecated : MonoBehaviour
             {
                 Building.Buildings[cachedBuilding.Key].SetSelfCount(cachedBuilding.Value);
 
-                Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].actualName, cachedBuilding.Value));
+                Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].ActualName, cachedBuilding.Value));
             }
         }
 
@@ -151,7 +151,7 @@ public class BoxCacheDeprecated : MonoBehaviour
             {
                 //Building.Buildings[cachedBuilding.Key].SetSelfCount(cachedBuilding.Value);
 
-                //Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].actualName, cachedBuilding.Value));
+                //Debug.Log(string.Format("Increased the initial self count of {0} by {1}", Building.Buildings[cachedBuilding.Key].ActualName, cachedBuilding.Value));
 
                 ResetCache.resetBuildingSelfCountModified.Add(cachedBuilding.Key, cachedBuilding.Value);
             }
@@ -176,7 +176,7 @@ public class BoxCacheDeprecated : MonoBehaviour
                     building.Value.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
                     building.Value.UpdateDescription();
 
-                    if (building.Value.isUnlocked)
+                    if (building.Value.IsUnlocked)
                     {
                         float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
                         Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.Value.ReturnSelfCount();
@@ -252,7 +252,7 @@ public class BoxCacheDeprecated : MonoBehaviour
                     building.ModifyMultiplier(buildingResourceToModify.currentResourceMultiplier);
                     building.UpdateDescription();
 
-                    if (building.isUnlocked)
+                    if (building.IsUnlocked)
                     {
                         float oldAmountPerSecond = Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond;
                         Resource.Resources[buildingResourceToModify.resourceTypeToModify].amountPerSecond += differenceAmount * building.ReturnSelfCount();
@@ -342,16 +342,16 @@ public class BoxCacheDeprecated : MonoBehaviour
             foreach (var researchable in Researchable.Researchables)
             {
                 //Researchable researchable = Researchable.Researchables[cachedResearch.Key];
-                for (int i = 0; i < researchable.Value.resourceCost.Length; i++)
+                for (int i = 0; i < researchable.Value.ResourceCost.Length; i++)
                 {
-                    ResourceCost resourceCost = researchable.Value.resourceCost[i];
-                    float oldResourceCost = resourceCost.costAmount;
+                    ResourceCost ResourceCost = researchable.Value.ResourceCost[i];
+                    float oldResourceCost = ResourceCost.costAmount;
                     float amountToDeduct = oldResourceCost * cachedAllResearchablesCostReduced;
-                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                    resourceCost.costAmount = newResourceCost;
-                    researchable.Value.UpdateResourceCostPassive(resourceCost.costAmount);
+                    float newResourceCost = ResourceCost.costAmount - amountToDeduct;
+                    ResourceCost.costAmount = newResourceCost;
+                    researchable.Value.UpdateResourceCostPassive(ResourceCost.costAmount);
 
-                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.actualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
+                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.Value.ActualName, oldResourceCost, newResourceCost, cachedAllResearchablesCostReduced * 100));
                 }
 
                 permanentStats.allResearchablesCostReduced += cachedAllResearchablesCostReduced;
@@ -369,16 +369,16 @@ public class BoxCacheDeprecated : MonoBehaviour
             foreach (var craft in Craftable.Craftables)
             {
                 Craftable craftable = Craftable.Craftables[craft.Key];
-                for (int i = 0; i < craftable.resourceCost.Length; i++)
+                for (int i = 0; i < craftable.ResourceCost.Length; i++)
                 {
-                    ResourceCost resourceCost = craftable.resourceCost[i];
-                    float oldResourceCost = resourceCost.costAmount;
+                    ResourceCost ResourceCost = craftable.ResourceCost[i];
+                    float oldResourceCost = ResourceCost.costAmount;
                     float amountToDeduct = oldResourceCost * cachedAllCraftablesCostReduced;
-                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                    resourceCost.costAmount = newResourceCost;
-                    craftable.UpdateResourceCostPassive(resourceCost.costAmount);
+                    float newResourceCost = ResourceCost.costAmount - amountToDeduct;
+                    ResourceCost.costAmount = newResourceCost;
+                    craftable.UpdateResourceCostPassive(ResourceCost.costAmount);
 
-                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
+                    Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.ActualName, oldResourceCost, newResourceCost, cachedAllCraftablesCostReduced * 100));
                 }
 
                 permanentStats.allCraftablesCostReduced += cachedAllCraftablesCostReduced;
@@ -396,18 +396,18 @@ public class BoxCacheDeprecated : MonoBehaviour
             foreach (var cachedBuilding in cachedBuildingCostReduced)
             {
                 Building building = Building.Buildings[cachedBuilding.Key];
-                for (int i = 0; i < building.resourceCost.Length; i++)
+                for (int i = 0; i < building.ResourceCost.Length; i++)
                 {
-                    ResourceCost resourceCost = building.resourceCost[i];
-                    float oldResourceCost = resourceCost.BaseCostAmount;
+                    ResourceCost ResourceCost = building.ResourceCost[i];
+                    float oldResourceCost = ResourceCost.BaseCostAmount;
                     float amountToDeduct = oldResourceCost * cachedBuilding.Value;
-                    float newResourceCost = resourceCost.BaseCostAmount - amountToDeduct;
-                    resourceCost.costAmount = newResourceCost;
-                    building.UpdateResourceCostPassive(resourceCost.costAmount);
+                    float newResourceCost = ResourceCost.BaseCostAmount - amountToDeduct;
+                    ResourceCost.costAmount = newResourceCost;
+                    building.UpdateResourceCostPassive(ResourceCost.costAmount);
 
                     if (cachedBuilding.Value > 0)
                     {
-                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.actualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", building.ActualName, oldResourceCost, newResourceCost, cachedBuilding.Value * 100));
                     }
 
                 }
@@ -440,18 +440,18 @@ public class BoxCacheDeprecated : MonoBehaviour
             foreach (var cachedCraft in cachedCraftableCostReduced)
             {
                 Craftable craftable = Craftable.Craftables[cachedCraft.Key];
-                for (int i = 0; i < craftable.resourceCost.Length; i++)
+                for (int i = 0; i < craftable.ResourceCost.Length; i++)
                 {
-                    ResourceCost resourceCost = craftable.resourceCost[i];
-                    float oldResourceCost = resourceCost.BaseCostAmount;
+                    ResourceCost ResourceCost = craftable.ResourceCost[i];
+                    float oldResourceCost = ResourceCost.BaseCostAmount;
                     float amountToDeduct = oldResourceCost * cachedCraft.Value;
-                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                    resourceCost.costAmount = newResourceCost;
-                    craftable.UpdateResourceCostPassive(resourceCost.costAmount);
+                    float newResourceCost = ResourceCost.costAmount - amountToDeduct;
+                    ResourceCost.costAmount = newResourceCost;
+                    craftable.UpdateResourceCostPassive(ResourceCost.costAmount);
 
                     if (cachedCraft.Value > 0)
                     {
-                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.actualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", craftable.ActualName, oldResourceCost, newResourceCost, cachedCraft.Value * 100));
                     }
 
 
@@ -485,18 +485,18 @@ public class BoxCacheDeprecated : MonoBehaviour
             foreach (var cachedResearch in cachedResearchableCostReduced)
             {
                 Researchable researchable = Researchable.Researchables[cachedResearch.Key];
-                for (int i = 0; i < researchable.resourceCost.Length; i++)
+                for (int i = 0; i < researchable.ResourceCost.Length; i++)
                 {
-                    ResourceCost resourceCost = researchable.resourceCost[i];
-                    float oldResourceCost = resourceCost.costAmount;
+                    ResourceCost ResourceCost = researchable.ResourceCost[i];
+                    float oldResourceCost = ResourceCost.costAmount;
                     float amountToDeduct = oldResourceCost * cachedResearch.Value;
-                    float newResourceCost = resourceCost.costAmount - amountToDeduct;
-                    resourceCost.costAmount = newResourceCost;
-                    researchable.UpdateResourceCostPassive(resourceCost.costAmount);
+                    float newResourceCost = ResourceCost.costAmount - amountToDeduct;
+                    ResourceCost.costAmount = newResourceCost;
+                    researchable.UpdateResourceCostPassive(ResourceCost.costAmount);
 
                     if (cachedResearch.Value > 0)
                     {
-                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.actualName, oldResourceCost, newResourceCost, cachedResearch.Value * 100));
+                        Debug.Log(string.Format("Modified the cost amount of {0}  by {3}%,  from {1} to {2}", researchable.ActualName, oldResourceCost, newResourceCost, cachedResearch.Value * 100));
                     }
 
                 }

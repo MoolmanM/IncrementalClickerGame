@@ -15,7 +15,7 @@ public class Events : MonoBehaviour
     private float workerEatAmount = 0.20f;
     public float totalEatAmount;
 
-    private float _timer = 1f;
+    private float timer = 1f;
     // Use the Info event to display stuff like: "You've entered the bronze age"
     private void StoneAgeEvents()
     {
@@ -219,9 +219,9 @@ public class Events : MonoBehaviour
     {
         //if (hutSelfCount != 0 && Worker.TotalWorkerCount < hutSelfCount)
         //{
-        //    if ((_timer -= Time.deltaTime) <= 0)
+        //    if ((timer -= Time.deltaTime) <= 0)
         //    {
-        //        _timer = 10f;
+        //        timer = 10f;
 
         //        eventHappened = true;
         //        eventGood = true;
@@ -292,7 +292,7 @@ public class Events : MonoBehaviour
                         hasWorkerStarved = true;
                         kvp.Value.OnMinusButton();
                         Worker.UnassignedWorkerCount--;
-                        //kvp.Value.txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", kvp.Value.actualName.ToString(), kvp.Value.workerCount);
+                        //kvp.Value.txtHeader.text = string.Format("{0} [<color=#FFCBFA>{1}</color>]", kvp.Value.ActualName.ToString(), kvp.Value.workerCount);
                     }
                 }
             }
@@ -368,9 +368,9 @@ public class Events : MonoBehaviour
     {
         // Should maybe have all of these methods in their own class so they execute at the same time instead of in this order.
         //GenerateWorker();
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = 1f;
+            timer = 1f;
             StoneAgeEvents();
             //KillWorker();
         }

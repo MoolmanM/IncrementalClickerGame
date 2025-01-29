@@ -82,16 +82,16 @@ public abstract class Researchable : GameEntity
 
     public void ResetResearchable()
     {
-        isUnlocked = false;
-        canvas.enabled = false;
-        graphicRaycaster.enabled = false;
-        unlockAmount = 0;
-        isUnlockedByResource = false;
+        IsUnlocked = false;
+        Canvas.enabled = false;
+        GraphicRaycaster.enabled = false;
+        UnlockAmount = 0;
+        IsUnlockedByResource = false;
         isResearched = false;
         _isResearchStarted = false;
-        hasSeen = true;
+        HasSeen = true;
         _currentTimer = 0f;
-        _txtHeader.text = string.Format("{0}", actualName);
+        TxtHeader.text = string.Format("{0}", ActualName);
 
         ModifyTimeToCompleteResearch();
         ModifyCost();
@@ -99,14 +99,14 @@ public abstract class Researchable : GameEntity
     }
     public void ModifyCost()
     {
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
-            float subtractionAmount = resourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (prestigeCostSubtraction + permCostSubtraction));
+            ResourceCost[i].CostAmount = ResourceCost[i].BaseCostAmount;
+            float subtractionAmount = ResourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (prestigeCostSubtraction + permCostSubtraction));
             prestigeAllCostSubtraction = 0;
             prestigeCostSubtraction = 0;
-            resourceCost[i].CostAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed research {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
+            ResourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed research {0}'s cost from {1} to {2}", ActualName, ResourceCost[i].BaseCostAmount, ResourceCost[i].CostAmount));
         }
     }
     public void ModifyTimeToCompleteResearch()
@@ -115,7 +115,7 @@ public abstract class Researchable : GameEntity
         float subtractionAmount = baseSecondsToCompleteResearch * (prestigeTimeSubtraction + permTimeSubtraction);
         prestigeTimeSubtraction = 0;
         secondsToCompleteResearch -= subtractionAmount;
-        Debug.Log(string.Format("Changed research {0}'s time from {1} to {2}", actualName, baseSecondsToCompleteResearch, secondsToCompleteResearch));
+        Debug.Log(string.Format("Changed research {0}'s time from {1} to {2}", ActualName, baseSecondsToCompleteResearch, secondsToCompleteResearch));
     }
     public void SetInitialValues()
     {
@@ -124,7 +124,7 @@ public abstract class Researchable : GameEntity
         _isResearchStarted = PlayerPrefs.GetInt(_stringIsResearchStarted) == 1 ? true : false;
         isResearched = PlayerPrefs.GetInt(_stringIsResearched) == 1 ? true : false;
         _researchTimeRemaining = PlayerPrefs.GetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
-        isUnlocked = PlayerPrefs.GetInt(_stringIsUnlocked) == 1 ? true : false;
+        IsUnlocked = PlayerPrefs.GetInt(_stringIsUnlocked) == 1 ? true : false;
 
         FetchPrestigeValues();
 
@@ -141,25 +141,25 @@ public abstract class Researchable : GameEntity
             {
                 secondsToCompleteResearch = _researchTimeRemaining - (float)TimeManager.difference.TotalSeconds;
                 Debug.Log("You still have ongoing research");
-                //_objProgressCirclePanel.SetActive(false);
+                //ObjProgressCirclePanel.SetActive(false);
             }
         }
 
         else if (isResearched && !_isResearchStarted)
         {
-            _objProgressCircle.SetActive(false);
-            _objBackground.SetActive(false);
-            _txtHeader.text = string.Format("{0}", actualName);
-            _btnMain.interactable = false;
+            ObjProgressCircle.SetActive(false);
+            ObjBackground.SetActive(false);
+            TxtHeader.text = string.Format("{0}", ActualName);
+            BtnMain.interactable = false;
             imgResearchFill.fillAmount = 1;
 
             if (Menu.isResearchHidden)
             {
-                if (objMainPanel.activeSelf)
+                if (ObjMainPanel.activeSelf)
                 {
-                    objMainPanel.SetActive(false);
-                    canvas.enabled = false;
-                    graphicRaycaster.enabled = false;
+                    ObjMainPanel.SetActive(false);
+                    Canvas.enabled = false;
+                    GraphicRaycaster.enabled = false;
                 }
             }
         }
@@ -182,19 +182,19 @@ public abstract class Researchable : GameEntity
 
                 if (span.Days == 0 && span.Hours == 0 && span.Minutes == 0)
                 {
-                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{2:%s}s</b>)", actualName, percentage * 100, span.Duration());
+                    TxtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{2:%s}s</b>)", ActualName, percentage * 100, span.Duration());
                 }
                 else if (span.Days == 0 && span.Hours == 0)
                 {
-                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
+                    TxtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%m}m {1:%s}s</b>)", ActualName, percentage * 100, span.Duration());
                 }
                 else if (span.Days == 0)
                 {
-                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%h}h {1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
+                    TxtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%h}h {1:%m}m {1:%s}s</b>)", ActualName, percentage * 100, span.Duration());
                 }
                 else
                 {
-                    _txtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", actualName, percentage * 100, span.Duration());
+                    TxtHeader.text = string.Format("{0} <color=#F3FF0A>[{1:0}%]</color> (<b>{1:%d}d {1:%h}h {1:%m}m {1:%s}s</b>)", ActualName, percentage * 100, span.Duration());
                 }
 
                 imgResearchFill.fillAmount = percentage;
@@ -216,9 +216,9 @@ public abstract class Researchable : GameEntity
 
                 bool canPurchase = true;
 
-                for (int i = 0; i < resourceCost.Length; i++)
+                for (int i = 0; i < ResourceCost.Length; i++)
                 {
-                    if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+                    if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
                     {
                         canPurchase = false;
                         break;
@@ -227,12 +227,12 @@ public abstract class Researchable : GameEntity
 
                 if (canPurchase)
                 {
-                    for (int i = 0; i < resourceCost.Length; i++)
+                    for (int i = 0; i < ResourceCost.Length; i++)
                     {
-                        Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+                        Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
                     }
-                    _objProgressCircle.SetActive(false);
-                    _objBackground.SetActive(false);
+                    ObjProgressCircle.SetActive(false);
+                    ObjBackground.SetActive(false);
                     StartResearching();
                 }
             }
@@ -258,46 +258,46 @@ public abstract class Researchable : GameEntity
         UnlockWorkerJob();
         UnlockResource();
 
-        _objProgressCircle.SetActive(false);
-        _objBackground.SetActive(false);
-        _txtHeader.text = string.Format("{0}", actualName);
-        _btnMain.interactable = false;
+        ObjProgressCircle.SetActive(false);
+        ObjBackground.SetActive(false);
+        TxtHeader.text = string.Format("{0}", ActualName);
+        BtnMain.interactable = false;
         imgResearchFill.fillAmount = 1;
 
         if (Menu.isResearchHidden)
         {
-            if (objMainPanel.activeSelf)
+            if (ObjMainPanel.activeSelf)
             {
-                objMainPanel.SetActive(false);
-                canvas.enabled = false;
-                graphicRaycaster.enabled = false;
+                ObjMainPanel.SetActive(false);
+                Canvas.enabled = false;
+                GraphicRaycaster.enabled = false;
             }
         }
     }
     public void MakeResearchableAgain()
     {
         // This will probably only happen after prestige.
-        _btnMain.interactable = true;
-        _objProgressCirclePanel.SetActive(true);
-        _txtHeader.text = string.Format("{0}", actualName);
+        BtnMain.interactable = true;
+        ObjProgressCirclePanel.SetActive(true);
+        TxtHeader.text = string.Format("{0}", ActualName);
 
         string htmlValue = "#333333";
 
         if (ColorUtility.TryParseHtmlString(htmlValue, out Color darkGreyColor))
         {
-            _imgExpand.color = darkGreyColor;
-            _imgCollapse.color = darkGreyColor;
+            ImgExpand.color = darkGreyColor;
+            ImgCollapse.color = darkGreyColor;
         }
     }
     public void StartResearching()
     {
         researchSimulActive++;
         _isResearchStarted = true;
-        //_objProgressCirclePanel.SetActive(false);
+        //ObjProgressCirclePanel.SetActive(false);
     }
     public void SetDescriptionText(string description)
     {
-        _txtDescription.text = string.Format("{0}", description);
+        TxtDescription.text = string.Format("{0}", description);
     }
     protected override void InitializeObjects()
     {
@@ -310,7 +310,7 @@ public abstract class Researchable : GameEntity
 
         AssignPrestigeStrings();
 
-        _btnMain.onClick.AddListener(OnResearch);
+        BtnMain.onClick.AddListener(OnResearch);
 
         tformResearchFill = transform.Find("Panel_Main/Header_Panel/Image_Research_Fill");
         imgResearchFill = tformResearchFill.GetComponent<Image>();
@@ -318,50 +318,50 @@ public abstract class Researchable : GameEntity
         //_objCheckmark = _tformObjCheckmark.gameObject;
         //_objCheckmark.SetActive(false);
 
-        if (isUnlocked)
+        if (IsUnlocked)
         {
-            objMainPanel.SetActive(true);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(true);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
         else
         {
-            objMainPanel.SetActive(false);
-            canvas.enabled = false;
-            graphicRaycaster.enabled = false;
+            ObjMainPanel.SetActive(false);
+            Canvas.enabled = false;
+            GraphicRaycaster.enabled = false;
         }
     }
     protected void UnlockedViaResource()
     {
-        if (isUnlocked)
+        if (IsUnlocked)
         {
             if (UIManager.isResearchVisible)
             {
-                objMainPanel.SetActive(true);
-                canvas.enabled = true;
-                graphicRaycaster.enabled = true;
-                hasSeen = true;
+                ObjMainPanel.SetActive(true);
+                Canvas.enabled = true;
+                GraphicRaycaster.enabled = true;
+                HasSeen = true;
             }
-            else if (hasSeen)
+            else if (HasSeen)
             {
                 isResearchableUnlockedEvent = true;
-                hasSeen = false;
+                HasSeen = false;
                 PointerNotification.rightAmount++;
             }
         }
     }
     private void CheckIfUnlocked()
     {
-        if (!isUnlocked)
+        if (!IsUnlocked)
         {
-            if (GetCurrentFill() >= 0.8f & !isUnlockedByResource && isUnlockableByResource)
+            if (GetCurrentFill() >= 0.8f & !IsUnlockedByResource && IsUnlockableByResource)
             {
-                isUnlockedByResource = true;
-                unlockAmount++;
+                IsUnlockedByResource = true;
+                UnlockAmount++;
 
-                if (unlockAmount == unlocksRequired)
+                if (UnlockAmount == UnlocksRequired)
                 {
-                    isUnlocked = true;
+                    IsUnlocked = true;
 
                     UnlockedViaResource();
 
@@ -403,9 +403,9 @@ public abstract class Researchable : GameEntity
     }
     protected void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            timer = maxValue;
             if (!isResearched || !_isResearchStarted)
             {
                 CheckIfPurchaseable();
@@ -422,7 +422,7 @@ public abstract class Researchable : GameEntity
         PlayerPrefs.SetInt(_stringIsResearchStarted, _isResearchStarted ? 1 : 0);
         PlayerPrefs.SetInt(_stringIsResearched, isResearched ? 1 : 0);
         PlayerPrefs.SetFloat(_stringResearchTimeRemaining, _researchTimeRemaining);
-        PlayerPrefs.SetInt(_stringIsUnlocked, isUnlocked ? 1 : 0);
+        PlayerPrefs.SetInt(_stringIsUnlocked, IsUnlocked ? 1 : 0);
 
         SavePrestigeValues();
     }

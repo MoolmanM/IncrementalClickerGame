@@ -11,7 +11,7 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
     public Energy energy;
     public PopupEvent PointerDownHandler, PointerUpHandler;
     public static bool hasNotEnoughEnergy;
-    public Transform canvasMain;
+    public Transform CanvasMain;
 
     private uint _poweredCount;
     private GameObject _objPopupCircle;
@@ -35,7 +35,7 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
 
         _txtPowerCounter = tformtxtPowerCounter.GetComponent<TMP_Text>();
 
-        _poweredCount = (uint)PlayerPrefs.GetInt(actualName + "PoweredCount", (int)_poweredCount);
+        _poweredCount = (uint)PlayerPrefs.GetInt(ActualName + "PoweredCount", (int)_poweredCount);
 
         _txtPowerCounter.text = _poweredCount.ToString();
     }
@@ -43,9 +43,9 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
     {
         bool canPurchase = true;
 
-        for (int i = 0; i < resourceCost.Length; i++)
+        for (int i = 0; i < ResourceCost.Length; i++)
         {
-            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
+            if (ResourceCost[i].CurrentAmount < ResourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -55,15 +55,15 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
         if (canPurchase)
         {
             _selfCount++;
-            for (int i = 0; i < resourceCost.Length; i++)
+            for (int i = 0; i < ResourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
-                resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].AssociatedType].amount, resourceCost[i].CostAmount);
+                Resource.Resources[ResourceCost[i].AssociatedType].amount -= ResourceCost[i].CostAmount;
+                ResourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
+                ResourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[ResourceCost[i].AssociatedType].amount, ResourceCost[i].CostAmount);
             }
         }
 
-        _txtHeader.text = string.Format("{0} ({1})", actualName, _selfCount);
+        TxtHeader.text = string.Format("{0} ({1})", ActualName, _selfCount);
     }
     private void ModifyAmountPerSecond(int changeValue)
     {
@@ -144,10 +144,10 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
     }
     private void InitializePopupCircleButtons()
     {
-        Vector2 vectorCircle = new Vector2(_objProgressCircle.transform.position.x, _objProgressCircle.transform.position.y);
+        Vector2 vectorCircle = new Vector2(ObjProgressCircle.transform.position.x, ObjProgressCircle.transform.position.y);
         GameObject prefabCirclePanel = Resources.Load<GameObject>("Popup_Circle_Prefab/Popup_Circle_Panel");
 
-        _objPopupCircle = Instantiate(prefabCirclePanel, vectorCircle, new Quaternion(0, 0, 0, 0), canvasMain);
+        _objPopupCircle = Instantiate(prefabCirclePanel, vectorCircle, new Quaternion(0, 0, 0, 0), CanvasMain);
         Transform tformBtnPlus1 = _objPopupCircle.transform.Find("Plus/Button_+1");
         Transform tformBtnPlus10 = _objPopupCircle.transform.Find("Plus/Button_+10");
         Transform tformBtnPlus100 = _objPopupCircle.transform.Find("Plus/Button_+100");
@@ -243,9 +243,9 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
     }
     protected override void Update()
     {
-        if ((_timer -= Time.deltaTime) <= 0)
+        if ((timer -= Time.deltaTime) <= 0)
         {
-            _timer = _maxValue;
+            timer = maxValue;
             CheckIfPurchaseable();
             UpdateResourceCostTexts();
         }
@@ -267,6 +267,6 @@ public class Power : Building, IPointerDownHandler, IPointerUpHandler
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(actualName + "PoweredCount", (int)_poweredCount);
+        PlayerPrefs.SetInt(ActualName + "PoweredCount", (int)_poweredCount);
     }
 }
