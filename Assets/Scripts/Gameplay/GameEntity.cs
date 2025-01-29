@@ -5,8 +5,14 @@ using UnityEngine.UI;
 
 public struct UiForResourceCost
 {
-    public TMP_Text textCostName;
-    public TMP_Text textCostAmount;
+    public TMP_Text CostNameText;
+    public TMP_Text CostAmountText;
+
+    public UiForResourceCost(TMP_Text costNameText, TMP_Text costAmountText)
+    {
+        CostNameText = costNameText;
+        CostAmountText = costAmountText;
+    }
 }
 
 [System.Serializable]
@@ -129,8 +135,8 @@ public abstract class GameEntity : MonoBehaviour
             Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
             Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
 
-            resourceCost[i].uiForResourceCost.textCostName = _tformCostName.GetComponent<TMP_Text>();
-            resourceCost[i].uiForResourceCost.textCostAmount = _tformCostAmount.GetComponent<TMP_Text>();
+            resourceCost[i].uiForResourceCost.CostNameText = _tformCostName.GetComponent<TMP_Text>();
+            resourceCost[i].uiForResourceCost.CostAmountText = _tformCostAmount.GetComponent<TMP_Text>();
         }
 
         #endregion
@@ -258,7 +264,7 @@ public abstract class GameEntity : MonoBehaviour
         {
             //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             resourceCost[i].costAmount *= Mathf.Pow(building.costMultiplier, building._selfCount);
-            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
         }
 
         for (int i = 0; i < building.resourcesToIncrement.Count; i++)
@@ -343,7 +349,7 @@ public abstract class GameEntity : MonoBehaviour
                     strResourceCost = string.Format("{0:0.00}/{1:0.00}(<color=#08F1FF>{2:%d}d{2:%h}h</color>)", NumberToLetter.FormatNumber(current), NumberToLetter.FormatNumber(cost), timeSpan.Duration());
                 }
             }
-            
+
         }
         else
         {
@@ -384,7 +390,7 @@ public abstract class GameEntity : MonoBehaviour
                 building.Value.objMainPanel.SetActive(true);
 
                 if (UIManager.isBuildingVisible)
-                {                    
+                {
                     building.Value.canvas.enabled = true;
                     building.Value.graphicRaycaster.enabled = true;
                     building.Value.hasSeen = true;
@@ -518,9 +524,9 @@ public abstract class GameEntity : MonoBehaviour
                     {
                         CheckIfBuildingUnlocked();
                     }
-                    
-                    
-                    
+
+
+
                     PointerNotification.HandleRightAnim();
                     PointerNotification.HandleLeftAnim();
                 }
@@ -632,7 +638,7 @@ public abstract class GameEntity : MonoBehaviour
                     InitialBuildingUnlock(Building.Buildings[buildingType]);
                     Building.Buildings[buildingType].isUnlocked = true;
                     Building.Buildings[buildingType].CheckIfPurchaseable();
-                    
+
                     if (!UIManager.isBuildingVisible)
                     {
                         Building.isBuildingUnlockedEvent = true;
@@ -688,8 +694,8 @@ public abstract class GameEntity : MonoBehaviour
 
             if (!_objBtnExpand.activeSelf && isUnlocked)
             {
-                resourceCost[i].uiForResourceCost.textCostName.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
-                CalculateResourceCosts(resourceCost[i].uiForResourceCost.textCostAmount, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
+                resourceCost[i].uiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
+                CalculateResourceCosts(resourceCost[i].uiForResourceCost.CostAmountText, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
             }
         }
 

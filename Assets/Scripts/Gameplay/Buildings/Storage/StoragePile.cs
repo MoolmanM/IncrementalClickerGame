@@ -63,7 +63,7 @@ public class StoragePile : StorageBuilding
     //        {
     //            Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
     //            resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
-    //            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+    //            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
     //        }
     //        ModifyStorage();
     //        //buildingContributionAPS = 0;

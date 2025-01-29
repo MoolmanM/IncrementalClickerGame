@@ -84,7 +84,7 @@ public abstract class Building : GameEntity
         {
             //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
             resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
-            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
         }
 
         for (int i = 0; i < resourcesToIncrement.Count; i++)
@@ -112,7 +112,7 @@ public abstract class Building : GameEntity
             prestigeCostSubtraction = 0;
             resourceCost[i].costAmount -= subtractionAmount;
             Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
-            resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
         }
     }
     public void ModifyMultiplier()
@@ -246,7 +246,7 @@ public abstract class Building : GameEntity
                 Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
                 //resourceCost[i].baseCostAmount = 0;
                 resourceCost[i].costAmount = resourceCost[i].baseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].uiForResourceCost.textCostAmount.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+                resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
             }
             ModifyAmountPerSecond();
 
