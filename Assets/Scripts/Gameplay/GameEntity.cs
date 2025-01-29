@@ -18,23 +18,61 @@ public struct UiForResourceCost
 [System.Serializable]
 public struct ResourceCost
 {
-    public ResourceType associatedType;
-    [System.NonSerialized] public float currentAmount;
-    public float costAmount;
-    public float baseCostAmount;
-    public UiForResourceCost uiForResourceCost;
+    public ResourceType AssociatedType;
+    public float CostAmount;
+    public float BaseCostAmount;
+    public UiForResourceCost UiForResourceCost;
+
+    // // Keeping track of CurrentAmount might be handled by another method or class
+    [NonSerialized]
+    public float CurrentAmount;
+
+    public ResourceCost(ResourceType associatedType, float costAmount, float baseCostAmount, UiForResourceCost uiForResourceCost)
+    {
+        AssociatedType = associatedType;
+        CostAmount = costAmount;
+        BaseCostAmount = baseCostAmount;
+        UiForResourceCost = uiForResourceCost;
+        CurrentAmount = 0;
+    }
 }
 
 [System.Serializable]
 public struct TypesToUnlock
 {
-    public ResourceType[] resourceTypesToUnlock;
-    public BuildingType[] buildingTypesToUnlock;
-    public ResearchType[] researchTypesToUnlock;
-    public CraftingType[] craftingTypesToUnlock;
-    public WorkerType[] workerTypesToUnlock;
-    public bool isUnlockingResource, isUnlockingResearch, isUnlockingCrafting, isUnlockingBuilding, isUnlockingWorker;
+    // Arrays hold the unlockable types for various categories
+    public ResourceType[] ResourceTypesToUnlock;
+    public BuildingType[] BuildingTypesToUnlock;
+    public ResearchType[] ResearchTypesToUnlock;
+    public CraftingType[] CraftingTypesToUnlock;
+    public WorkerType[] WorkerTypesToUnlock;
+
+    // Flags to track which category is being unlocked
+    public bool IsUnlockingResource;
+    public bool IsUnlockingResearch;
+    public bool IsUnlockingCrafting;
+    public bool IsUnlockingBuilding;
+    public bool IsUnlockingWorker;
+
+    public TypesToUnlock(
+        ResourceType[] resourceTypesToUnlock, BuildingType[] buildingTypesToUnlock,
+        ResearchType[] researchTypesToUnlock, CraftingType[] craftingTypesToUnlock,
+        WorkerType[] workerTypesToUnlock, bool isUnlockingResource, bool isUnlockingResearch,
+        bool isUnlockingCrafting, bool isUnlockingBuilding, bool isUnlockingWorker)
+    {
+        ResourceTypesToUnlock = resourceTypesToUnlock;
+        BuildingTypesToUnlock = buildingTypesToUnlock;
+        ResearchTypesToUnlock = researchTypesToUnlock;
+        CraftingTypesToUnlock = craftingTypesToUnlock;
+        WorkerTypesToUnlock = workerTypesToUnlock;
+        IsUnlockingResource = isUnlockingResource;
+        IsUnlockingResearch = isUnlockingResearch;
+        IsUnlockingCrafting = isUnlockingCrafting;
+        IsUnlockingBuilding = isUnlockingBuilding;
+        IsUnlockingWorker = isUnlockingWorker;
+    }
 }
+
 public abstract class GameEntity : MonoBehaviour
 {
     public ResourceCost[] resourceCost;
@@ -68,49 +106,49 @@ public abstract class GameEntity : MonoBehaviour
 
     private void OnValidate()
     {
-        if (typesToUnlock.buildingTypesToUnlock.Length != 0)
+        if (typesToUnlock.BuildingTypesToUnlock.Length != 0)
         {
-            typesToUnlock.isUnlockingBuilding = true;
+            typesToUnlock.IsUnlockingBuilding = true;
         }
         else
         {
-            typesToUnlock.isUnlockingBuilding = false;
+            typesToUnlock.IsUnlockingBuilding = false;
         }
 
-        if (typesToUnlock.craftingTypesToUnlock.Length != 0)
+        if (typesToUnlock.CraftingTypesToUnlock.Length != 0)
         {
-            typesToUnlock.isUnlockingCrafting = true;
+            typesToUnlock.IsUnlockingCrafting = true;
         }
         else
         {
-            typesToUnlock.isUnlockingCrafting = false;
+            typesToUnlock.IsUnlockingCrafting = false;
         }
 
-        if (typesToUnlock.researchTypesToUnlock.Length != 0)
+        if (typesToUnlock.ResearchTypesToUnlock.Length != 0)
         {
-            typesToUnlock.isUnlockingResearch = true;
+            typesToUnlock.IsUnlockingResearch = true;
         }
         else
         {
-            typesToUnlock.isUnlockingResearch = false;
+            typesToUnlock.IsUnlockingResearch = false;
         }
 
-        if (typesToUnlock.workerTypesToUnlock.Length != 0)
+        if (typesToUnlock.WorkerTypesToUnlock.Length != 0)
         {
-            typesToUnlock.isUnlockingWorker = true;
+            typesToUnlock.IsUnlockingWorker = true;
         }
         else
         {
-            typesToUnlock.isUnlockingWorker = false;
+            typesToUnlock.IsUnlockingWorker = false;
         }
 
-        if (typesToUnlock.resourceTypesToUnlock.Length != 0)
+        if (typesToUnlock.ResourceTypesToUnlock.Length != 0)
         {
-            typesToUnlock.isUnlockingResource = true;
+            typesToUnlock.IsUnlockingResource = true;
         }
         else
         {
-            typesToUnlock.isUnlockingResource = false;
+            typesToUnlock.IsUnlockingResource = false;
         }
     }
     protected virtual void InitializeObjects()
@@ -135,8 +173,8 @@ public abstract class GameEntity : MonoBehaviour
             Transform _tformCostName = _tformNewObj.Find("Cost_Name_Panel/Text_CostName");
             Transform _tformCostAmount = _tformNewObj.Find("Cost_Amount_Panel/Text_CostAmount");
 
-            resourceCost[i].uiForResourceCost.CostNameText = _tformCostName.GetComponent<TMP_Text>();
-            resourceCost[i].uiForResourceCost.CostAmountText = _tformCostAmount.GetComponent<TMP_Text>();
+            resourceCost[i].UiForResourceCost.CostNameText = _tformCostName.GetComponent<TMP_Text>();
+            resourceCost[i].UiForResourceCost.CostAmountText = _tformCostAmount.GetComponent<TMP_Text>();
         }
 
         #endregion
@@ -262,9 +300,9 @@ public abstract class GameEntity : MonoBehaviour
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-            resourceCost[i].costAmount *= Mathf.Pow(building.costMultiplier, building._selfCount);
-            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+            //Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+            resourceCost[i].CostAmount *= Mathf.Pow(building.costMultiplier, building._selfCount);
+            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
         }
 
         for (int i = 0; i < building.resourcesToIncrement.Count; i++)
@@ -370,8 +408,8 @@ public abstract class GameEntity : MonoBehaviour
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            add = resourceCost[i].currentAmount;
-            div = resourceCost[i].costAmount;
+            add = resourceCost[i].CurrentAmount;
+            div = resourceCost[i].CostAmount;
             if (add > div)
             {
                 add = div;
@@ -508,19 +546,19 @@ public abstract class GameEntity : MonoBehaviour
                 if (unlockAmount == unlocksRequired)
                 {
                     isUnlocked = true;
-                    if (typesToUnlock.isUnlockingResearch)
+                    if (typesToUnlock.IsUnlockingResearch)
                     {
                         CheckIfResearchUnlocked();
                     }
-                    if (typesToUnlock.isUnlockingCrafting)
+                    if (typesToUnlock.IsUnlockingCrafting)
                     {
                         CheckIfCraftingUnlocked();
                     }
-                    if (typesToUnlock.isUnlockingWorker)
+                    if (typesToUnlock.IsUnlockingWorker)
                     {
                         CheckIfWorkerUnlocked();
                     }
-                    if (typesToUnlock.isUnlockingBuilding)
+                    if (typesToUnlock.IsUnlockingBuilding)
                     {
                         CheckIfBuildingUnlocked();
                     }
@@ -535,9 +573,9 @@ public abstract class GameEntity : MonoBehaviour
     }
     protected void UnlockResource()
     {
-        if (typesToUnlock.isUnlockingResource)
+        if (typesToUnlock.IsUnlockingResource)
         {
-            foreach (var resource in typesToUnlock.resourceTypesToUnlock)
+            foreach (var resource in typesToUnlock.ResourceTypesToUnlock)
             {
                 Resource.Resources[resource].InitializeAmount();
                 Resource.Resources[resource].isUnlocked = true;
@@ -549,9 +587,9 @@ public abstract class GameEntity : MonoBehaviour
     }
     protected void UnlockWorkerJob()
     {
-        if (typesToUnlock.isUnlockingWorker)
+        if (typesToUnlock.IsUnlockingWorker)
         {
-            foreach (var worker in typesToUnlock.workerTypesToUnlock)
+            foreach (var worker in typesToUnlock.WorkerTypesToUnlock)
             {
                 Worker.Workers[worker].isUnlocked = true;
                 Worker.Workers[worker].objMainPanel.SetActive(true);
@@ -589,9 +627,9 @@ public abstract class GameEntity : MonoBehaviour
     }
     protected void UnlockCrafting()
     {
-        if (typesToUnlock.isUnlockingCrafting)
+        if (typesToUnlock.IsUnlockingCrafting)
         {
-            foreach (CraftingType craft in typesToUnlock.craftingTypesToUnlock)
+            foreach (CraftingType craft in typesToUnlock.CraftingTypesToUnlock)
             {
                 Craftable.Craftables[craft].unlockAmount++;
 
@@ -626,9 +664,9 @@ public abstract class GameEntity : MonoBehaviour
     }
     protected void UnlockBuilding()
     {
-        if (typesToUnlock.isUnlockingBuilding)
+        if (typesToUnlock.IsUnlockingBuilding)
         {
-            foreach (BuildingType buildingType in typesToUnlock.buildingTypesToUnlock)
+            foreach (BuildingType buildingType in typesToUnlock.BuildingTypesToUnlock)
             {
                 Building.Buildings[buildingType].unlockAmount++;
                 Building.Buildings[buildingType].objMainPanel.SetActive(true);
@@ -658,9 +696,9 @@ public abstract class GameEntity : MonoBehaviour
     }
     protected void UnlockResearchable()
     {
-        if (typesToUnlock.isUnlockingResearch)
+        if (typesToUnlock.IsUnlockingResearch)
         {
-            foreach (ResearchType research in typesToUnlock.researchTypesToUnlock)
+            foreach (ResearchType research in typesToUnlock.ResearchTypesToUnlock)
             {
                 Researchable.Researchables[research].unlockAmount++;
 
@@ -690,12 +728,12 @@ public abstract class GameEntity : MonoBehaviour
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].currentAmount = Resource.Resources[resourceCost[i].associatedType].amount;
+            resourceCost[i].CurrentAmount = Resource.Resources[resourceCost[i].AssociatedType].amount;
 
             if (!_objBtnExpand.activeSelf && isUnlocked)
             {
-                resourceCost[i].uiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i].associatedType.ToString());
-                CalculateResourceCosts(resourceCost[i].uiForResourceCost.CostAmountText, resourceCost[i].currentAmount, resourceCost[i].costAmount, Resource.Resources[resourceCost[i].associatedType].amountPerSecond, Resource.Resources[resourceCost[i].associatedType].storageAmount);
+                resourceCost[i].UiForResourceCost.CostNameText.text = string.Format("{0}", resourceCost[i].AssociatedType.ToString());
+                CalculateResourceCosts(resourceCost[i].UiForResourceCost.CostAmountText, resourceCost[i].CurrentAmount, resourceCost[i].CostAmount, Resource.Resources[resourceCost[i].AssociatedType].amountPerSecond, Resource.Resources[resourceCost[i].AssociatedType].storageAmount);
             }
         }
 

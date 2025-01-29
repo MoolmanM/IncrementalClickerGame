@@ -75,12 +75,12 @@ public class Craftable : GameEntity
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].costAmount = resourceCost[i].baseCostAmount;
-            float subtractionAmount = resourceCost[i].baseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (permCostSubtraction + prestigeCostSubtraction));
+            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
+            float subtractionAmount = resourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (permCostSubtraction + prestigeCostSubtraction));
             prestigeAllCostSubtraction = 0;
             prestigeCostSubtraction = 0;
-            resourceCost[i].costAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed craft {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
+            resourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed craft {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
         }
     }
     protected void SetInitialValues()
@@ -138,7 +138,7 @@ public class Craftable : GameEntity
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -150,8 +150,8 @@ public class Craftable : GameEntity
             trackedCraftedAmount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                Resource.Resources[resourceCost[i].associatedType].uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount));
+                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+                Resource.Resources[resourceCost[i].AssociatedType].uiForResource.txtAmount.text = string.Format("{0:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount));
             }
 
             isCrafted = true;

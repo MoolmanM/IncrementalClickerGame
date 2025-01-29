@@ -16,15 +16,15 @@ public class UnlocksRequired : MonoBehaviour
             {
                 kvp.Value.unlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.craftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
             {
                 Craftable.Craftables[type].unlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.researchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
             {
                 Researchable.Researchables[type].unlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.buildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
             {
                 Building.Buildings[type].unlocksRequired++;
             }
@@ -36,15 +36,15 @@ public class UnlocksRequired : MonoBehaviour
             {
                 kvp.Value.unlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.craftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
             {
                 Craftable.Craftables[type].unlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.researchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
             {
                 Researchable.Researchables[type].unlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.buildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
             {
                 Building.Buildings[type].unlocksRequired++;
             }
@@ -56,15 +56,15 @@ public class UnlocksRequired : MonoBehaviour
             {
                 kvp.Value.unlocksRequired++;
             }
-            foreach (CraftingType type in kvp.Value.typesToUnlock.craftingTypesToUnlock)
+            foreach (CraftingType type in kvp.Value.typesToUnlock.CraftingTypesToUnlock)
             {
                 Craftable.Craftables[type].unlocksRequired++;
             }
-            foreach (ResearchType type in kvp.Value.typesToUnlock.researchTypesToUnlock)
+            foreach (ResearchType type in kvp.Value.typesToUnlock.ResearchTypesToUnlock)
             {
                 Researchable.Researchables[type].unlocksRequired++;
             }
-            foreach (BuildingType type in kvp.Value.typesToUnlock.buildingTypesToUnlock)
+            foreach (BuildingType type in kvp.Value.typesToUnlock.BuildingTypesToUnlock)
             {
                 Building.Buildings[type].unlocksRequired++;
             }

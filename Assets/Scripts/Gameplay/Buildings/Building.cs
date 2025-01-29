@@ -82,9 +82,9 @@ public abstract class Building : GameEntity
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            //Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-            resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
-            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+            //Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+            resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
+            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
         }
 
         for (int i = 0; i < resourcesToIncrement.Count; i++)
@@ -107,12 +107,12 @@ public abstract class Building : GameEntity
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].costAmount = resourceCost[i].baseCostAmount;
-            float subtractionAmount = resourceCost[i].baseCostAmount * (prestigeCostSubtraction + permCostSubtraction);
+            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
+            float subtractionAmount = resourceCost[i].BaseCostAmount * (prestigeCostSubtraction + permCostSubtraction);
             prestigeCostSubtraction = 0;
-            resourceCost[i].costAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
-            resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].associatedType].amount, resourceCost[i].costAmount);
+            resourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed building {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
+            resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", Resource.Resources[resourceCost[i].AssociatedType].amount, resourceCost[i].CostAmount);
         }
     }
     public void ModifyMultiplier()
@@ -205,7 +205,7 @@ public abstract class Building : GameEntity
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].costAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
+            resourceCost[i].CostAmount = PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
         }
 
         if (isUnlocked)
@@ -230,7 +230,7 @@ public abstract class Building : GameEntity
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -243,10 +243,10 @@ public abstract class Building : GameEntity
             trackedBuiltAmount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                //resourceCost[i].baseCostAmount = 0;
-                resourceCost[i].costAmount = resourceCost[i].baseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+                //resourceCost[i].BaseCostAmount = 0;
+                resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount * Mathf.Pow(costMultiplier, _selfCount);
+                resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
             }
             ModifyAmountPerSecond();
 
@@ -314,8 +314,8 @@ public abstract class Building : GameEntity
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            _costString[i] = Type.ToString() + resourceCost[i].associatedType.ToString();
-            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].costAmount);
+            _costString[i] = Type.ToString() + resourceCost[i].AssociatedType.ToString();
+            PlayerPrefs.GetFloat(_costString[i], resourceCost[i].CostAmount);
         }
 
         ModifyDescriptionText();
@@ -416,7 +416,7 @@ public abstract class Building : GameEntity
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].costAmount);
+            PlayerPrefs.SetFloat(_costString[i], resourceCost[i].CostAmount);
         }
 
         SavePrestigeValues();

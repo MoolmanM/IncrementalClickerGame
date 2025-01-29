@@ -40,7 +40,7 @@ public class CraftableModifier : Craftable
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -51,7 +51,7 @@ public class CraftableModifier : Craftable
         {
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
             }
             isCrafted = true;
             Crafted();
@@ -77,12 +77,12 @@ public class CraftableModifier : Craftable
     {
         foreach (var resourceCost in Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].resourceCost)
         {
-            newCostAmount += resourceCost.baseCostAmount * Mathf.Pow(Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].costMultiplier, buildingToDeriveCostAmountFrom.selfCountAmount);
+            newCostAmount += resourceCost.BaseCostAmount * Mathf.Pow(Building.Buildings[buildingToDeriveCostAmountFrom.buildingType].costMultiplier, buildingToDeriveCostAmountFrom.selfCountAmount);
         }
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].costAmount = newCostAmount;
+            resourceCost[i].CostAmount = newCostAmount;
         }
     }
     protected void InitializeDescriptionText()

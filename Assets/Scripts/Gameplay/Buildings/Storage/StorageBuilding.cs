@@ -70,7 +70,7 @@ public class StorageBuilding : Building
 
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+            if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
             {
                 canPurchase = false;
                 break;
@@ -82,9 +82,9 @@ public class StorageBuilding : Building
             _selfCount++;
             for (int i = 0; i < resourceCost.Length; i++)
             {
-                Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
-                resourceCost[i].costAmount *= Mathf.Pow(costMultiplier, _selfCount);
-                resourceCost[i].uiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].associatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].costAmount));
+                Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
+                resourceCost[i].CostAmount *= Mathf.Pow(costMultiplier, _selfCount);
+                resourceCost[i].UiForResourceCost.CostAmountText.text = string.Format("{0:0.00}/{1:0.00}", NumberToLetter.FormatNumber(Resource.Resources[resourceCost[i].AssociatedType].amount), NumberToLetter.FormatNumber(resourceCost[i].CostAmount));
             }
             for (int i = 0; i < storageMultiply.Count; i++)
             {

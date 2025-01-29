@@ -101,12 +101,12 @@ public abstract class Researchable : GameEntity
     {
         for (int i = 0; i < resourceCost.Length; i++)
         {
-            resourceCost[i].costAmount = resourceCost[i].baseCostAmount;
-            float subtractionAmount = resourceCost[i].baseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (prestigeCostSubtraction + permCostSubtraction));
+            resourceCost[i].CostAmount = resourceCost[i].BaseCostAmount;
+            float subtractionAmount = resourceCost[i].BaseCostAmount * ((prestigeAllCostSubtraction + permAllCostSubtraction) + (prestigeCostSubtraction + permCostSubtraction));
             prestigeAllCostSubtraction = 0;
             prestigeCostSubtraction = 0;
-            resourceCost[i].costAmount -= subtractionAmount;
-            Debug.Log(string.Format("Changed research {0}'s cost from {1} to {2}", actualName, resourceCost[i].baseCostAmount, resourceCost[i].costAmount));
+            resourceCost[i].CostAmount -= subtractionAmount;
+            Debug.Log(string.Format("Changed research {0}'s cost from {1} to {2}", actualName, resourceCost[i].BaseCostAmount, resourceCost[i].CostAmount));
         }
     }
     public void ModifyTimeToCompleteResearch()
@@ -218,7 +218,7 @@ public abstract class Researchable : GameEntity
 
                 for (int i = 0; i < resourceCost.Length; i++)
                 {
-                    if (resourceCost[i].currentAmount < resourceCost[i].costAmount)
+                    if (resourceCost[i].CurrentAmount < resourceCost[i].CostAmount)
                     {
                         canPurchase = false;
                         break;
@@ -229,7 +229,7 @@ public abstract class Researchable : GameEntity
                 {
                     for (int i = 0; i < resourceCost.Length; i++)
                     {
-                        Resource.Resources[resourceCost[i].associatedType].amount -= resourceCost[i].costAmount;
+                        Resource.Resources[resourceCost[i].AssociatedType].amount -= resourceCost[i].CostAmount;
                     }
                     _objProgressCircle.SetActive(false);
                     _objBackground.SetActive(false);

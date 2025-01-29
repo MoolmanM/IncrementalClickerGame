@@ -399,9 +399,9 @@ public class BoxCacheDeprecated : MonoBehaviour
                 for (int i = 0; i < building.resourceCost.Length; i++)
                 {
                     ResourceCost resourceCost = building.resourceCost[i];
-                    float oldResourceCost = resourceCost.baseCostAmount;
+                    float oldResourceCost = resourceCost.BaseCostAmount;
                     float amountToDeduct = oldResourceCost * cachedBuilding.Value;
-                    float newResourceCost = resourceCost.baseCostAmount - amountToDeduct;
+                    float newResourceCost = resourceCost.BaseCostAmount - amountToDeduct;
                     resourceCost.costAmount = newResourceCost;
                     building.UpdateResourceCostPassive(resourceCost.costAmount);
 
@@ -443,7 +443,7 @@ public class BoxCacheDeprecated : MonoBehaviour
                 for (int i = 0; i < craftable.resourceCost.Length; i++)
                 {
                     ResourceCost resourceCost = craftable.resourceCost[i];
-                    float oldResourceCost = resourceCost.baseCostAmount;
+                    float oldResourceCost = resourceCost.BaseCostAmount;
                     float amountToDeduct = oldResourceCost * cachedCraft.Value;
                     float newResourceCost = resourceCost.costAmount - amountToDeduct;
                     resourceCost.costAmount = newResourceCost;
